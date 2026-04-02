@@ -1,0 +1,98 @@
+servers:
+
+  # ━━━━━ Essential (مطلوبة حتماً) ━━━━━
+  
+  filesystem:
+    type: "stdio"
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "."]
+    description: "Read/write project files"
+    shared_with: ["all"]
+    priority: "critical"
+
+  git:
+    type: "stdio"
+    command: "uvx"
+    args: ["mcp-server-git", "--repository", "."]
+    description: "Git version control"
+    shared_with: ["all"]
+    priority: "critical"
+
+  github:
+    type: "stdio"
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-github"]
+    env:
+      GITHUB_PERSONAL_ACCESS_TOKEN: "${GITHUB_TOKEN}"
+    description: "GitHub API"
+    shared_with: ["orchestrator", "devops"]
+    priority: "high"
+
+  mssql:
+    type: "stdio"
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-mssql"]
+    env:
+      MSSQL_CONNECTION_STRING: "${DB_CONNECTION_STRING}"
+    description: "SQL Server database"
+    shared_with: ["database", "backend", "testing"]
+    priority: "critical"
+
+  terminal:
+    type: "stdio"
+    command: "npx"
+    args: ["-y", "@anthropic/mcp-shell"]
+    description: "Terminal command execution"
+    shared_with: ["all"]
+    priority: "critical"
+    allowed_commands:
+      - "dotnet"
+      - "npm"
+      - "npx"
+      - "docker"
+      - "docker-compose"
+      - "git"
+      - "curl"
+      - "mkdir"
+      - "cp"
+      - "mv"
+      - "cat"
+      - "ls"
+      - "find"
+      - "grep"
+
+  # ━━━━━ Integration (للتكاملات) ━━━━━
+  
+  axios:
+    type: "stdio"
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-axios"]
+    description: "HTTP requests for API testing"
+    shared_with: ["backend", "security", "integration", "testing"]
+    priority: "high"
+
+  # ━━━━━ Productivity (للإنتاجية) ━━━━━
+  
+  memory:
+    type: "stdio"
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-memory"]
+    description: "Persistent context across sessions"
+    shared_with: ["orchestrator"]
+    priority: "high"
+
+  search:
+    type: "stdio"
+    command: "npx"
+    args: ["-y", "mcp-grep"]
+    description: "Code search"
+    shared_with: ["all"]
+    priority: "medium"
+
+  browser:
+    type: "stdio"
+    command: "npx"
+    args: ["-y", "@anthropic/mcp-puppeteer"]
+    description: "Browser automation"
+    shared_with: ["frontend", "testing"]
+    priority: "low"

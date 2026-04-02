@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mojaz-db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=MojazDev@2025!
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+
+  api:
+    build:
+      context: ./src/backend
+      dockerfile: Mojaz.API/Dockerfile
+    container_name: mojaz-api
+    depends_on:
+      - sqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MojazDB;User Id=sa;Password=MojazDev@2025!;TrustServerCertificate=True
+    ports:
+      - "5000:8080"
+
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    container_name: mojaz-frontend
+    depends_on:
+      - api
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+    ports:
+      - "3000:3000"
+
+volumes:
+  sqlserver-data:

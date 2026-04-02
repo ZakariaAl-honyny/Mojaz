@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Mojaz.API/Mojaz.API.csproj" />
+  <Project Path="Mojaz.Application/Mojaz.Application.csproj" />
+  <Project Path="Mojaz.Domain/Mojaz.Domain.csproj" />
+  <Project Path="Mojaz.Infrastructure/Mojaz.Infrastructure.csproj" />
+  <Project Path="Mojaz.Shared/Mojaz.Shared.csproj" />
+</Solution>

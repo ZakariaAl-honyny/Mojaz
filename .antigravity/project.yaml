@@ -1,0 +1,26 @@
+
+project:
+  name: "Mojaz (مُجاز)"
+  description: "Government Driving License Platform — MVP v1.0"
+  version: "1.0.0"
+  language: "multi" # C# + TypeScript
+  
+workspace:
+  root: "."
+  backend: "src/backend"
+  frontend: "src/frontend"
+  tests: "tests"
+  specs: "specs"
+  docs: "docs"
+
+context:
+  always_include:
+    - "AGENTS.md"
+    - "docs/PRD.md"
+  
+  auto_include_patterns:
+    - "specs/**/*.md"        # Active spec files
+    - "src/backend/Mojaz.Domain/Entities/*.cs"
+    - "src/backend/Mojaz.Shared/*.cs"
+    - "src/frontend/src/types/*.ts"
+    - "src/frontend/public/locales/*.json"

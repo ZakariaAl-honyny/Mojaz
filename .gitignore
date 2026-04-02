@@ -1,0 +1,239 @@
+## ═══════════════════════════════════════════════
+## Mojaz — .gitignore
+## Covers: .NET, Node.js, IDE files, OS files
+## ═══════════════════════════════════════════════
+
+# ─── .NET / C# ────────────────────────────────
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+nupkg/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio files
+.vs/
+*.csproj.user
+*.dbmdl
+*.jfm
+launchSettings.json
+
+# Rider
+.idea/
+*.sln.iml
+
+# NuGet
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+project.nuget.cache
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# StyleCop
+StyleCopReport.xml
+
+# Files built by Visual Studio
+*_i.c
+*_p.c
+*_h.h
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.log
+*.tlog
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# Chutzpah
+_Chutzpah*
+
+# Visual C++ cache files
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Visual Studio Trace Files
+*.e2e
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# TeamCity
+_TeamCity*
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# MFractors
+*.mfractor*
+
+# CodeRush
+.cr/personal
+
+# Python Tools for Visual Studio (PTVS)
+__pycache__/
+*.pyc
+
+# Cake
+tools/**
+!tools/packages.config
+
+# Azure Tools
+csx/
+*.build.csdef
+
+# Azure Stream Analytics
+ASALocalRun/
+
+# Local History for Visual Studio
+.localhistory/
+
+# Visual Studio History
+.vshistory/
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# ─── Node.js / Next.js ────────────────────────
+node_modules/
+.pnp
+.pnp.js
+.next/
+out/
+build/
+dist/
+
+# Testing
+coverage/
+
+# Misc
+.env*.local
+*.local
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Vercel
+.vercel
+
+# Turborepo
+.turbo
+
+# ─── OS Files ──────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini
+._*
+
+# ─── IDE / Editor ──────────────────────────────
+# VS Code
+.vscode/
+
+# Visual Studio
+.vs/
+
+# JetBrains Rider
+.idea/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+\#*\#
+.\#*
+
+# ─── Docker ────────────────────────────────────
+docker-compose.override.yml
+
+# ─── Secrets / Environment ─────────────────────
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+appsettings.Development.json
+appsettings.Local.json
+*.secrets.json
+
+# ─── Documentation builds ──────────────────────
+site/
+
+# ─── Test results ──────────────────────────────
+TestResults/
+*.trx

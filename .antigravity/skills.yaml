@@ -1,0 +1,106 @@
+skills:
+
+  mojaz-architecture-check:
+    name: "Mojaz Architecture Validator"
+    trigger: "on_save"
+    file_patterns: ["src/backend/**/*.cs"]
+    instructions: |
+      Validate the saved file follows Mojaz architecture rules:
+      
+      CHECK 1: Layer Dependencies
+      - Domain/ must NOT reference any other project
+      - Shared/ must NOT reference any other project
+      - Application/ can reference Domain + Shared only
+      - Infrastructure/ can reference Application + Domain + Shared
+      - API/ can reference all
+      
+      CHECK 2: Controller Rules
+      - Must return ActionResult<ApiResponse<T>>
+      - Must NOT contain business logic (only service calls)
+      - Must have [Authorize] attribute
+      - Must have [ApiVersion] attribute
+      
+      CHECK 3: No Hardcoded Values
+      - Search for hardcoded numbers that should be in SystemSettings:
+        age limits, attempt counts, time durations, fee amounts
+      - Flag any magic numbers
+      
+      CHECK 4: Soft Delete
+      - No calls to .Remove() or .Delete() on entities with IsDeleted
+      - Should set IsDeleted = true instead
+      
+      CHECK 5: Audit Log
+      - Sensitive operations must call IAuditLogService
+      
+      Report violations as warnings in the IDE.
+
+  mojaz-rtl-check:
+    name: "Mojaz RTL Validator"
+    trigger: "on_save"
+    file_patterns: ["src/frontend/**/*.tsx"]
+    instructions: |
+      Validate the saved component follows RTL rules:
+      
+      CHECK 1: No Inline Strings
+      - Flag any hardcoded Arabic or English text
+      - Must use useTranslations() hook
+      
+      CHECK 2: Directional CSS
+      - Flag use of 'left'/'right' in className
+      - Should use 'start'/'end' or RTL-aware utilities
+      - Exception: intentionally LTR elements (numbers, code)
+      
+      CHECK 3: Icon Direction
+      - Arrow icons should use RTL-aware variants
+      - ChevronLeft/ChevronRight should swap based on locale
+      
+      Report violations as warnings.
+
+  mojaz-api-contract:
+    name: "API Contract Validator"
+    trigger: "on_save"
+    file_patterns: ["src/backend/Mojaz.API/Controllers/**/*.cs"]
+    instructions: |
+      Validate API controller follows Mojaz contract:
+      
+      1. All methods return ApiResponse<T> or ApiResponse<PagedResult<T>>
+      2. All methods are async
+      3. FluentValidation used for request DTOs
+      4. Proper HTTP methods (GET for read, POST for create, etc.)
+      5. Route follows /api/v1/{resource} pattern
+      6. Swagger attributes present ([ProducesResponseType])
+      7. CancellationToken parameter in async methods
+
+  mojaz-gate-validator:
+    name: "Gate Validation Checker"
+    trigger: "manual"
+    instructions: |
+      Review the Gate validation implementations:
+      
+      GATE 1 (Before Application Creation):
+      □ Validates ID format and existence
+      □ Calculates age from DOB, checks vs MIN_AGE_CATEGORY_* from SystemSettings
+      □ Queries Applications table for active apps by same applicant
+      □ Checks security block (simulated in MVP)
+      
+      GATE 2 (Before Booking):
+      □ Checks application fee payment in Payments table
+      □ Validates all mandatory fields non-null
+      □ Checks training path (required vs exemption)
+      
+      GATE 3 (Before Practical/Final):
+      □ Checks MedicalExams for Fit result with ValidUntil > today
+      □ Checks TrainingRecords for Complete or Exempt status
+      □ Counts attempts in TheoryTests/PracticalTests vs MAX_*_ATTEMPTS
+      □ Checks cooling period vs COOLING_PERIOD_DAYS
+      
+      GATE 4 (Before Issuance):
+      □ Checks TheoryTests for Pass result
+      □ Checks PracticalTests for Pass result
+      □ Security re-check (simulated)
+      □ Violation check (simulated)
+      □ ID validity check
+      □ Medical validity check (ValidUntil > today)
+      □ Issuance fee payment check
+      
+      ALL limits must come from SystemSettings. Flag any hardcoded values
