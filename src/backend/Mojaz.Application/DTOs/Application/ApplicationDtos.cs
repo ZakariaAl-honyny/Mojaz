@@ -1,0 +1,83 @@
+using Mojaz.Domain.Enums;
+
+namespace Mojaz.Application.DTOs.Application;
+
+public class CreateApplicationRequest
+{
+    // Step 1: Service
+    public ServiceType ServiceType { get; set; }
+
+    // Step 2: Category
+    public Guid LicenseCategoryId { get; set; }
+
+    // Step 3: Personal Information (Updating Applicant profile)
+    public string NationalId { get; set; } = string.Empty;
+    public DateTime DateOfBirth { get; set; }
+    public string Gender { get; set; } = string.Empty;
+    public string Nationality { get; set; } = string.Empty;
+    public string? Address { get; set; }
+    public string? City { get; set; }
+    public string? Region { get; set; }
+    public string ApplicantType { get; set; } = "Citizen";
+
+    // Step 4: Details
+    public Guid? BranchId { get; set; }
+    public string PreferredLanguage { get; set; } = "ar";
+    public bool SpecialNeeds { get; set; }
+    
+    // Step 5: Review
+    public bool DataAccuracyConfirmed { get; set; }
+}
+
+public class UpdateApplicationRequest
+{
+    public ServiceType ServiceType { get; set; }
+    public Guid LicenseCategoryId { get; set; }
+    public Guid? BranchId { get; set; }
+    public string PreferredLanguage { get; set; } = "ar";
+    public bool SpecialNeeds { get; set; }
+}
+
+public class ApplicationDto
+{
+    public Guid Id { get; set; }
+    public string ApplicationNumber { get; set; } = string.Empty;
+    public ServiceType ServiceType { get; set; }
+    public Guid LicenseCategoryId { get; set; }
+    public string LicenseCategoryNameEn { get; set; } = string.Empty;
+    public string LicenseCategoryNameAr { get; set; } = string.Empty;
+    public Guid? BranchId { get; set; }
+    public ApplicationStatus Status { get; set; }
+    public string? CurrentStage { get; set; }
+    public string PreferredLanguage { get; set; } = "ar";
+    public string? SpecialNeeds { get; set; }
+    public bool DataAccuracyConfirmed { get; set; }
+    public DateTime? ExpiresAt { get; set; }
+    public DateTime CreatedAt { get; set; }
+}
+
+public class ApplicationListDto
+{
+    public Guid Id { get; set; }
+    public string ApplicationNumber { get; set; } = string.Empty;
+    public ServiceType ServiceType { get; set; }
+    public string LicenseCategoryNameEn { get; set; } = string.Empty;
+    public string LicenseCategoryNameAr { get; set; } = string.Empty;
+    public ApplicationStatus Status { get; set; }
+    public string? CurrentStage { get; set; }
+    public DateTime CreatedAt { get; set; }
+}
+
+public class ApplicationTimelineDto
+{
+    public string StageNameEn { get; set; } = string.Empty;
+    public string StageNameAr { get; set; } = string.Empty;
+    public ApplicationStatus Status { get; set; }
+    public DateTime? CompletedAt { get; set; }
+}
+
+public class ApplicationStatusUpdateRequest
+{
+    public ApplicationStatus Status { get; set; }
+    public string? Reason { get; set; }
+}
