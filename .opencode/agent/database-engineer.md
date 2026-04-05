@@ -20,8 +20,9 @@ EF Core + SQL Server specialist for the Mojaz platform.
 - Ensure soft delete patterns
 
 ## Context Files
+- .agents/skills/mojaz-project-rules/SKILL.md
 - .agents/skills/mojaz-database-EF-rules/SKILL.md
-- Database schema from AGENTS.md
+- Database schema from PRD.md
 - src/backend/Mojaz.Domain/Entities/
 - src/backend/Mojaz.Infrastructure/Persistence/
 

@@ -1,4 +1,4 @@
-# Feature 001: Backend Solution Scaffold
+# Feature 001: Backend Solution Scaffold 
 
 ## WHAT WE'RE BUILDING:
 A .NET 8 solution following Clean Architecture with 5 projects that serves as the foundation for all backend development.

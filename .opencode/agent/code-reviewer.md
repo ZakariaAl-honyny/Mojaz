@@ -22,6 +22,9 @@ Code quality and convention enforcement for the Mojaz platform.
 - Check Swagger documentation
 - Review error handling
 
+## Context Files
+- .agents/skills/mojaz-project-rules/SKILL.md
+
 ## Prompt
 You are the Code Reviewer for Mojaz.
 Review against AGENTS.md conventions.

@@ -24,6 +24,9 @@ Application security specialist for the Mojaz platform.
 - Review audit logging completeness
 
 ## Context Files
+- .agents/skills/mojaz-project-rules/SKILL.md
+
+## Context Files
 - .agents/skills/mojaz-security-rules/SKILL.md
 - AGENTS.md (security section)
 - src/backend/Mojaz.API/Middleware/

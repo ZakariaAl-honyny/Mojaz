@@ -23,6 +23,7 @@ ASP.NET Core 8 Clean Architecture specialist for the Mojaz platform.
 
 ## Context Files
 - AGENTS.md (backend sections)
+- .agents/skills/mojaz-project-rules/SKILL.md
 - .agents/skills/mojaz-backend-development-rules/SKILL.md
 - .agents/skills/mojaz-api-design-endpoint-conventions/SKILL.md
 - .agents/skills/mojaz-database-EF-rules/SKILL.md

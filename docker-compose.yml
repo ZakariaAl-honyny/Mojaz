@@ -1,42 +1,43 @@
 version: '3.8'
 
 services:
-  sqlserver:
+  mojaz-db:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: mojaz-db
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=MojazDev@2025!
-      - MSSQL_PID=Developer
+      - MSSQL_SA_PASSWORD=MojazStrongPassword2025!
     ports:
-      - "1433:1433"
-    volumes:
-      - sqlserver-data:/var/opt/mssql
+      - "1434:1433"
+    networks:
+      - mojaz-net
 
-  api:
+  mojaz-backend:
     build:
       context: ./src/backend
-      dockerfile: Mojaz.API/Dockerfile
-    container_name: mojaz-api
-    depends_on:
-      - sqlserver
+      dockerfile: Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MojazDB;User Id=sa;Password=MojazDev@2025!;TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=mojaz-db;Database=MojazDb;User Id=sa;Password=MojazStrongPassword2025!;TrustServerCertificate=True
     ports:
-      - "5000:8080"
+      - "5000:5000"
+    depends_on:
+      - mojaz-db
+    networks:
+      - mojaz-net
 
-  frontend:
+  mojaz-frontend:
     build:
       context: ./src/frontend
       dockerfile: Dockerfile
-    container_name: mojaz-frontend
-    depends_on:
-      - api
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
     ports:
       - "3000:3000"
+    depends_on:
+      - mojaz-backend
+    networks:
+      - mojaz-net
 
-volumes:
-  sqlserver-data:
+networks:
+  mojaz-net:
+    driver: bridge

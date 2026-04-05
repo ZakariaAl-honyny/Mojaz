@@ -23,6 +23,7 @@ Quality assurance and test automation specialist for the Mojaz platform.
 - Test error scenarios and edge cases
 
 ## Context Files
+- .agents/skills/mojaz-project-rules/SKILL.md
 - .agents/skills/mojaz-testing-standards-patterns/SKILL.md
 - tests/ directory
 - src/frontend/**/*.test.*
