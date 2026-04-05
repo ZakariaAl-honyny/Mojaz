@@ -1,0 +1,204 @@
+{
+  "navigation": {
+    "dashboard": "Dashboard",
+    "applications": "My Applications",
+    "appointments": "Appointments",
+    "payments": "Payments",
+    "notifications": "Notifications",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout",
+    "search": "Search...",
+    "medicalResults": "Medical Results",
+    "testResults": "Test Results",
+    "users": "Users",
+    "reports": "Reports"
+  },
+  "dashboard": {
+    "greeting": "Welcome back",
+    "activeApplications": "Active Applications",
+    "nextAppointment": "Next Appointment",
+    "paymentStatus": "Payment Status",
+    "profileStatus": "Profile Status",
+    "createNewApplication": "New License Request",
+    "applicationTimeline": "Application Timeline",
+    "timelineSubtitle": "Track your driving license progress"
+  },
+  "application": {
+    "create": {
+      "title": "Create New Application",
+      "subtitle": "Begin your driving license journey now",
+      "next": "Next",
+      "prev": "Back",
+      "submit": "Submit Application",
+      "success": "Application submitted successfully",
+      "steps": {
+        "service": "Service",
+        "category": "Category",
+        "personal": "Personal",
+        "details": "Details",
+        "review": "Review"
+      },
+      "fields": {
+        "serviceType": "Service Type",
+        "newLicense": "New License",
+        "renewal": "Renewal",
+        "replacement": "Replacement",
+        "category": "License Category",
+        "motorcycle": "Motorcycle",
+        "privateCar": "Private Car",
+        "publicTaxi": "Public Taxi",
+        "heavyVehicle": "Heavy Vehicle",
+        "nationalId": "National ID / Iqama",
+        "dateOfBirth": "Date of Birth",
+        "nationality": "Nationality",
+        "gender": "Gender",
+        "male": "Male",
+        "female": "Female",
+        "phone": "Phone Number",
+        "email": "Email Address",
+        "address": "Street Address",
+        "city": "City",
+        "region": "Region",
+        "applicantType": "Applicant Type",
+        "citizen": "Citizen",
+        "resident": "Resident",
+        "preferredCenter": "Preferred Branch",
+        "testLanguage": "Test Language",
+        "arabic": "Arabic",
+        "english": "English",
+        "specialNeeds": "Special Needs / Medical Conditions",
+        "confirmAccuracy": "I confirm that all provided data is true and accurate."
+      }
+    },
+    "status": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "inreview": "In Review",
+      "paid": "Paid",
+      "medicaldone": "Medical Done",
+      "theorydone": "Theory Done",
+      "practicaldone": "Practical Done",
+      "approved": "Approved",
+      "issued": "Issued",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    },
+    "timeline": {
+      "stages": {
+        "creation": "Application Creation",
+        "documentReview": "Document Review",
+        "payment": "Fee Payment",
+        "medical": "Medical Examination",
+        "theory": "Theory Training & Test",
+        "practical": "Practical Training & Test",
+        "issuance": "License Issuance"
+      },
+      "status": {
+        "completed": "Completed",
+        "current": "In Progress...",
+        "pending": "Pending",
+        "failed": "Failed"
+      }
+    },
+    "details": {
+      "title": "Application Details",
+      "submittedOn": "Submitted on",
+      "cancelButton": "Cancel Application",
+      "payButton": "Pay Now",
+      "timelineTitle": "Application Progress",
+      "documentsTitle": "Required Documents",
+      "docId": "National ID / Iqama",
+      "docMedical": "Medical Report",
+      "manageDocsButton": "Manage Documents",
+      "paymentsTitle": "Payments",
+      "noPaymentsMsg": "No pending payments right now."
+    }
+  },
+  "applications": {
+     "title": "My Applications",
+     "subtitle": "Track and manage your requests",
+     "employee": {
+        "title": "Application Queue",
+        "subtitle": "Review and process license requests",
+        "columns": {
+          "number": "App Number",
+          "applicant": "Applicant",
+          "category": "Category",
+          "status": "Status",
+          "stage": "Stage",
+          "submittedAt": "Submitted At",
+          "actions": "Actions"
+        },
+        "filters": {
+          "search": "Search number or name...",
+          "status": "Status",
+          "stage": "Stage",
+          "category": "Category"
+        },
+        "empty": "No applications found.",
+        "review": {
+          "title": "Application Review",
+          "subtitle": "Processing request for {number}",
+          "applicantInfo": "Applicant Information",
+          "documents": "Uploaded Documents",
+          "decision": "Administrative Decision",
+          "approve": "Approve Application",
+          "reject": "Reject with Reason",
+          "onHold": "Place on Hold",
+          "remarks": "Decision Remarks",
+          "remarksPlaceholder": "Enter reason for rejection or approval notes...",
+          "history": "Action History"
+        }
+     }
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Access your Mojaz account",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "password": "Password",
+      "submit": "Login",
+      "forgotPassword": "Forgot Password?",
+      "noAccount": "Don't have an account?",
+      "register": "Register Now"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join Mojaz for driving license services",
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Create Account",
+      "hasAccount": "Already have an account?",
+      "login": "Login here"
+    },
+    "forgotPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter your email or phone to receive a verification code",
+      "identifier": "Email or Phone Number",
+      "submit": "Send Verification Code",
+      "backToLogin": "Back to Login",
+      "success": "Verification code sent successfully"
+    },
+    "resetPassword": {
+      "title": "Set New Password",
+      "subtitle": "Enter the OTP code and your new password",
+      "otp": "Verification Code (OTP)",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Change Password",
+      "success": "Password changed successfully"
+    },
+    "otp": {
+      "title": "Verify Identity",
+      "subtitle": "Enter the code sent to your device",
+      "submit": "Verify",
+      "resend": "Resend Code",
+      "resendIn": "Resend in {seconds}s"
+    }
+  }
+}

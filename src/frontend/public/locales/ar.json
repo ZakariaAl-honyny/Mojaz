@@ -1,0 +1,216 @@
+{
+  "navigation": {
+    "dashboard": "لوحة التحكم",
+    "applications": "طلباتي",
+    "appointments": "المواعيد",
+    "payments": "المدفوعات",
+    "notifications": "التنبيهات",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج",
+    "search": "بحث...",
+    "medicalResults": "النتائج الطبية",
+    "testResults": "نتائج الاختبارات",
+    "users": "المستخدمين",
+    "reports": "التقارير"
+  },
+  "dashboard": {
+    "greeting": "مرحباً",
+    "activeApplications": "الطلبات النشطة",
+    "nextAppointment": "الموعد القادم",
+    "paymentStatus": "حالة الدفع",
+    "profileStatus": "حالة الملف",
+    "createNewApplication": "طلب رخصة جديد",
+    "applicationTimeline": "الجدول الزمني للطلب",
+    "timelineSubtitle": "تتبع مراحل تقدم طلب رخصة القيادة الخاصة بك"
+  },
+  "application": {
+    "create": {
+      "title": "إنشاء طلب جديد",
+      "subtitle": "ابدأ رحلة الحصول على رخصة القيادة الخاصة بك الآن",
+      "next": "التالي",
+      "prev": "السابق",
+      "submit": "تقديم الطلب",
+      "success": "تم تقديم الطلب بنجاح",
+      "steps": {
+        "service": "الخدمة",
+        "category": "الفئة",
+        "personal": "البيانات",
+        "details": "التفاصيل",
+        "review": "المراجعة"
+      },
+      "fields": {
+        "serviceType": "نوع الخدمة",
+        "newLicense": "رخصة جديدة",
+        "renewal": "تجديد رخصة",
+        "replacement": "بدل فاقد/تالف",
+        "category": "فئة الرخصة",
+        "motorcycle": "دراجة نارية",
+        "privateCar": "خصوصي",
+        "publicTaxi": "أجرة عامة",
+        "heavyVehicle": "نقل ثقيل",
+        "nationalId": "رقم الهوية الوطنية / الإقامة",
+        "dateOfBirth": "تاريخ الميلاد",
+        "nationality": "الجنسية",
+        "gender": "الجنس",
+        "male": "ذكر",
+        "female": "أنثى",
+        "phone": "رقم الجوال",
+        "email": "البريد الإلكتروني",
+        "address": "العنوان الوطني",
+        "city": "المدينة",
+        "region": "المنطقة",
+        "applicantType": "نوع المتقدم",
+        "citizen": "مواطن",
+        "resident": "مقيم",
+        "preferredCenter": "الفرع المفضل",
+        "testLanguage": "لغة الاختبار",
+        "arabic": "العربية",
+        "english": "الإنجليزية",
+        "specialNeeds": "الاحتياجات الخاصة / الحالات الطبية",
+        "confirmAccuracy": "أقر بأن جميع البيانات المقدمة صحيحة ودقيقة."
+      }
+    },
+    "status": {
+      "draft": "مسودة",
+      "submitted": "مقدم",
+      "inreview": "قيد المراجعة",
+      "paid": "مدفوع",
+      "medicaldone": "الفحص الطبي مكتمل",
+      "theorydone": "الاختبار النظري مكتمل",
+      "practicaldone": "الاختبار العملي مكتمل",
+      "approved": "مقبول",
+      "issued": "تم الإصدار",
+      "rejected": "مرفوض",
+      "cancelled": "ملغي"
+    },
+    "timeline": {
+      "stages": {
+        "creation": "إنشاء الطلب",
+        "documentReview": "مراجعة المستندات",
+        "payment": "دفع الرسوم",
+        "medical": "الفحص الطبي",
+        "theory": "التدريب والاختبار النظري",
+        "practical": "التدريب والاختبار العملي",
+        "issuance": "إصدار الرخصة"
+      },
+      "status": {
+        "completed": "مكتمل",
+        "current": "قيد التنفيذ...",
+        "pending": "قيد الانتظار",
+        "failed": "فشل"
+      }
+    },
+    "details": {
+      "title": "تفاصيل الطلب",
+      "submittedOn": "تاريخ التقديم",
+      "cancelButton": "إلغاء الطلب",
+      "payButton": "ادفع الآن",
+      "timelineTitle": "تقدم الطلب",
+      "documentsTitle": "المستندات المطلوبة",
+      "docId": "الهوية الوطنية / الإقامة",
+      "docMedical": "التقرير الطبي",
+      "manageDocsButton": "إدارة المستندات",
+      "paymentsTitle": "المدفوعات",
+      "noPaymentsMsg": "لا توجد مدفوعات معلقة حالياً."
+    }
+  },
+  "applications": {
+     "title": "طلباتي",
+     "subtitle": "تتبع وإدارة طلبات رخصة القيادة الخاصة بك",
+     "employee": {
+        "title": "قائمة الطلبات",
+        "subtitle": "مراجعة ومعالجة طلبات الرخص",
+        "columns": {
+          "number": "رقم الطلب",
+          "applicant": "المتقدم",
+          "category": "الفئة",
+          "status": "الحالة",
+          "stage": "المرحلة",
+          "submittedAt": "تاريخ التقديم",
+          "actions": "الإجراءات"
+        },
+        "filters": {
+          "search": "بحث بالرقم أو الاسم...",
+          "status": "الحالة",
+          "stage": "المرحلة",
+          "category": "الفئة"
+        },
+        "empty": "لم يتم العثور على طلبات.",
+        "review": {
+          "title": "مراجعة الطلب",
+          "subtitle": "معالجة طلب رقم {number}",
+          "applicantInfo": "بيانات المتقدم",
+          "documents": "المستندات المرفوعة",
+          "decision": "القرار الإداري",
+          "approve": "اعتماد الطلب",
+          "reject": "رفض مع السبب",
+          "onHold": "وضع قيد المراجعة",
+          "remarks": "ملاحظات القرار",
+          "remarksPlaceholder": "أدخل سبب الرفض أو ملاحظات المراجعة...",
+          "history": "سجل العمليات"
+        }
+     }
+  },
+  "public": {
+    "hero": {
+       "title": "مُجاز - Mojaz",
+       "subtitle": "المنصة الحكومية الموحدة لإدارة رخص القيادة. كفاءة، شفافية، ومستقبل أكثر ذكاءً للمواطنين السعوديين."
+    },
+    "services": {
+       "new": "رخصة جديدة",
+       "renewal": "تجديد رخصة",
+       "replacement": "بدل تالف/مفقود",
+       "verification": "التحقق الرقمي"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "تسجيل الدخول",
+      "subtitle": "الوصول إلى حسابك في منصة مُجاز",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الجوال",
+      "password": "كلمة المرور",
+      "submit": "دخول",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "noAccount": "ليس لديك حساب؟",
+      "register": "إنشاء حساب جديد"
+    },
+    "register": {
+      "title": "إنشاء حساب",
+      "subtitle": "انضم إلى منصة مُجاز للحصول على خدمات رخص القيادة",
+      "fullName": "الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الجوال",
+      "password": "كلمة المرور",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "submit": "إنشاء الحساب",
+      "hasAccount": "لديك حساب بالفعل؟",
+      "login": "تسجيل الدخول"
+    },
+    "forgotPassword": {
+      "title": "استعادة كلمة المرور",
+      "subtitle": "أدخل بريدك الإلكتروني أو رقم الجوال لإرسال رمز التحقق",
+      "identifier": "البريد الإلكتروني أو رقم الجوال",
+      "submit": "إرسال رمز التحقق",
+      "backToLogin": "العودة لتسجيل الدخول",
+      "success": "تم إرسال رمز التحقق بنجاح"
+    },
+    "resetPassword": {
+      "title": "تعيين كلمة المرور",
+      "subtitle": "أدخل رمز التحقق وكلمة المرور الجديدة",
+      "otp": "رمز التحقق (OTP)",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "submit": "تغيير كلمة المرور",
+      "success": "تم تغيير كلمة المرور بنجاح"
+    },
+    "otp": {
+      "title": "التحقق من الهوية",
+      "subtitle": "أدخل رمز التحقق المرسل إليك",
+      "submit": "تحقق",
+      "resend": "إعادة إرسال الرمز",
+      "resendIn": "إعادة إرسال خلال {seconds} ثانية"
+    }
+  }
+}
