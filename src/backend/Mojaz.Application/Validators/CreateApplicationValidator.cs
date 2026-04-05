@@ -1,0 +1,48 @@
+using FluentValidation;
+using Mojaz.Application.DTOs.Application;
+
+namespace Mojaz.Application.Validators;
+
+public class CreateApplicationValidator : AbstractValidator<CreateApplicationRequest>
+{
+    public CreateApplicationValidator()
+    {
+        // Step 1: Service
+        RuleFor(x => x.ServiceType).NotEmpty().WithMessage("Service type is required.");
+
+        // Step 2: Category
+        RuleFor(x => x.LicenseCategoryId).NotEmpty().WithMessage("License category is required.");
+
+        // Step 3: Personal Information (Applicant profile updates)
+        RuleFor(x => x.NationalId)
+            .NotEmpty().WithMessage("National ID/Iqama is required.")
+            .Matches(@"^[12]\d{9}$").WithMessage("Invalid National ID or Iqama number. Must be 10 digits starting with 1 or 2.");
+
+        RuleFor(x => x.DateOfBirth)
+            .NotEmpty().WithMessage("Date of birth is required.")
+            .Must(dob => dob <= DateTime.UtcNow.AddYears(-16)).WithMessage("Applicant must be at least 16 years old.");
+
+        RuleFor(x => x.Gender)
+            .NotEmpty().WithMessage("Gender is required.")
+            .Must(g => g == "Male" || g == "Female").WithMessage("Gender must be Male or Female.");
+
+        RuleFor(x => x.Nationality).NotEmpty().WithMessage("Nationality is required.");
+        
+        RuleFor(x => x.City).NotEmpty().WithMessage("City is required.");
+        RuleFor(x => x.Region).NotEmpty().WithMessage("Region is required.");
+        
+        RuleFor(x => x.ApplicantType)
+            .NotEmpty().WithMessage("Applicant type is required.")
+            .Must(t => t == "Citizen" || t == "Resident").WithMessage("Type must be Citizen or Resident.");
+
+        // Step 4: Details
+        RuleFor(x => x.BranchId).NotEmpty().WithMessage("Preferred branch/center is required.");
+        RuleFor(x => x.PreferredLanguage)
+            .NotEmpty().WithMessage("Preferred language is required.")
+            .Must(l => l == "ar" || l == "en").WithMessage("Language must be ar or en.");
+
+        // Step 5: Review
+        RuleFor(x => x.DataAccuracyConfirmed)
+            .Equal(true).WithMessage("You must confirm that all provided data is accurate.");
+    }
+}

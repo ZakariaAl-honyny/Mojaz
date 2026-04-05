@@ -1,0 +1,70 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Mojaz.Domain.Interfaces;
+using Mojaz.Infrastructure.Persistence;
+using Mojaz.Infrastructure.Persistence.Repositories;
+using Mojaz.Infrastructure.Persistence.UnitOfWork;
+using SendGrid;
+using Hangfire;
+using Hangfire.SqlServer;
+
+namespace Mojaz.Infrastructure;
+
+/// <summary>
+/// DI registration for Infrastructure layer services.
+/// </summary>
+public static class InfrastructureServiceRegistration
+{
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        // EF Core DbContext
+        services.AddDbContext<MojazDbContext>(options =>
+            options.UseSqlServer(
+                configuration.GetConnectionString("DefaultConnection"),
+                b => b.MigrationsAssembly(typeof(MojazDbContext).Assembly.FullName)));
+
+        // Repository & UnitOfWork
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // Identity & Infrastructure Services
+        services.AddScoped<Application.Interfaces.Services.IJwtService, Identity.JwtService>();
+        services.AddScoped<Application.Interfaces.Services.IAuditService, Services.AuditService>();
+
+        // Hangfire (Phase 3 Fix)
+        services.AddHangfire(config => config
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"), new SqlServerStorageOptions
+            {
+                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                QueuePollInterval = TimeSpan.Zero,
+                UseRecommendedIsolationLevel = true,
+                DisableGlobalLocks = true
+            }));
+
+        services.AddHangfireServer();
+
+        // SendGrid Client
+        var sendGridApiKey = configuration["SendGridSettings:ApiKey"];
+        if (!string.IsNullOrEmpty(sendGridApiKey))
+        {
+            services.AddScoped<ISendGridClient>(_ => new SendGridClient(sendGridApiKey));
+        }
+        else
+        {
+            // Fallback for development
+            services.AddScoped<ISendGridClient>(_ => new SendGridClient("SG.test-key"));
+        }
+
+        // Notification & Push
+        services.AddScoped<Application.Interfaces.Services.IEmailService, Services.EmailService>();
+        services.AddScoped<Application.Interfaces.Services.ISmsService, Services.SmsService>();
+        services.AddScoped<Application.Interfaces.Services.IPushNotificationService, Services.PushNotificationService>();
+
+        return services;
+    }
+}

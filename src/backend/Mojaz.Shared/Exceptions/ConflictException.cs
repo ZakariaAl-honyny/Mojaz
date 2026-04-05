@@ -1,12 +1,10 @@
+using System;
+
 namespace Mojaz.Shared.Exceptions;
 
-/// <summary>
-/// Exception thrown when there's a conflict with the current state of the resource.
-/// </summary>
-public class ConflictException : MojazException
+public class ConflictException : Exception
 {
-    public ConflictException(string message = "Conflict with current resource state")
-        : base(message, 409)
+    public ConflictException(string message) : base(message)
     {
     }
 }

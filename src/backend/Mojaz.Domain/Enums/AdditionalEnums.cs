@@ -1,0 +1,68 @@
+namespace Mojaz.Domain.Enums;
+
+public enum DocumentStatus
+{
+    Pending,
+    Uploaded,
+    Approved,
+    Rejected
+}
+
+public enum AppointmentStatus
+{
+    Scheduled,
+    Completed,
+    Cancelled,
+    NoShow
+}
+
+public enum TrainingStatus
+{
+    InProgress,
+    Completed,
+    Exempt
+}
+
+public enum LicenseStatus
+{
+    Active,
+    Expired,
+    Suspended,
+    Revoked,
+    Replaced
+}
+
+public enum OtpPurpose
+{
+    Registration,
+    Login,
+    PasswordReset
+}
+
+public enum DestinationType
+{
+    Email,
+    Phone
+}
+
+public enum NotificationChannel
+{
+    InApp,
+    Push,
+    Email,
+    Sms
+}
+
+public enum EmailLogStatus
+{
+    Sent,
+    Failed,
+    Bounced
+}
+
+public enum SmsLogStatus
+{
+    Sent,
+    Failed,
+    Delivered
+}

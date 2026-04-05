@@ -1,21 +1,15 @@
+using System;
+using System.Collections.Generic;
+
 namespace Mojaz.Shared.Exceptions;
 
-/// <summary>
-/// Exception thrown when validation fails.
-/// </summary>
-public class ValidationException : MojazException
+public class ValidationException : Exception
 {
-    public List<string> ValidationErrors { get; }
-
-    public ValidationException(string message = "Validation failed")
-        : base(message, 400)
+    public ValidationException(IEnumerable<string> errors)
+        : base("One or more validation failures have occurred.")
     {
-        ValidationErrors = new List<string>();
+        Errors = new List<string>(errors);
     }
 
-    public ValidationException(List<string> errors)
-        : base("Validation failed", 400)
-    {
-        ValidationErrors = errors;
-    }
+    public List<string> Errors { get; }
 }
