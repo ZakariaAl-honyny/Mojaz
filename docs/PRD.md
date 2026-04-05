@@ -8,8 +8,8 @@
 **Release Type:** MVP - Version 1.0  
 
 ---
-
-## Table of Contents
+ 
+## Table of Contents 
 
 1. [Executive Summary](#1-executive-summary)
 2. [Vision & Goals](#2-vision--goals)

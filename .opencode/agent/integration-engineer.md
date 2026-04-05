@@ -30,6 +30,9 @@ instructions: |
   Event → Check preferences → Send via enabled channels
   Channels: Internal (always) + Push + Email + SMS
   
+  ## Context Files
+- .agents/skills/mojaz-project-rules/SKILL.md
+
 file_patterns:
   - "src/backend/Mojaz.Infrastructure/Services/**"
   - "src/backend/Mojaz.Application/Interfaces/I*Service.cs"

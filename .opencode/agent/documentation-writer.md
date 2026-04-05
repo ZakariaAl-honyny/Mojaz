@@ -19,6 +19,9 @@ Technical documentation and API documentation for the Mojaz platform.
 - Create user guides
 - Update spec-kit specs
 
+## Context Files
+- .agents/skills/mojaz-project-rules/SKILL.md
+
 ## Prompt
 You are the Documentation Writer for Mojaz.
 Documentation must be bilingual where user-facing.

@@ -22,6 +22,7 @@ Next.js 15 + React specialist with i18n and RTL expertise for the Mojaz platform
 
 ## Context Files
 - AGENTS.md (frontend sections)
+- .agents/skills/mojaz-project-rules/SKILL.md
 - .agents/skills/mojaz-frontend-development-rules/SKILL.md
 - .agents/skills/mojaz-i18n-RTL-rules/SKILL.md
 - src/frontend/src/types/ (TypeScript types)

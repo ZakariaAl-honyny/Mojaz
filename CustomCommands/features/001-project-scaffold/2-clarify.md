@@ -12,7 +12,7 @@
 **Decision:** Yes, HasQueryFilter(x => !x.IsDeleted) on all entities with soft delete.
 
 ### 4. Docker SQL Server Connection String
-**Format:** Server=localhost,1433;Database=MojazDB;User Id=sa;Password=MojazDev@2025!;TrustServerCertificate=True
+**Format:** Server=localhost,1433;Database=MojazDB;User Id=sa;Password=as123456;TrustServerCertificate=True
 
 ### 5. Generic vs Entity-Specific IRepository
 **Decision:** Generic IRepository<T> with option for entity-specific interfaces when custom methods needed.

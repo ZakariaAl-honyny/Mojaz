@@ -98,6 +98,19 @@ ipch/
 *.sdf
 *.cachefile
 *.VC.db
+
+# ─── Environment & Secrets ────────────────────
+.env.*.local
+appsettings.*.local.json
+*.secrets.json
+secrets/
+.user-secrets/
+
+# ─── Docker ────────────────────────────────────
+.docker/
+mssql-dev-data/
+
+
 *.VC.VC.opendb
 
 # Visual Studio profiler
@@ -223,6 +236,7 @@ docker-compose.override.yml
 
 # ─── Secrets / Environment ─────────────────────
 .env
+.env.development
 .env.local
 .env.development.local
 .env.test.local
@@ -230,6 +244,7 @@ docker-compose.override.yml
 appsettings.Development.json
 appsettings.Local.json
 *.secrets.json
+firebase-service-account.json
 
 # ─── Documentation builds ──────────────────────
 site/

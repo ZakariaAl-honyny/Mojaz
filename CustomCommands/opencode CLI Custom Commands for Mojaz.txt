@@ -1,0 +1,318 @@
+### 2.2 الأوامر المخصصة لـ OpenCode
+
+```bash
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# opencode CLI Custom Commands for Mojaz
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+```bash
+# ──────────────────────────────────────
+# Sprint Management Commands
+# ──────────────────────────────────────
+
+# Check current sprint progress
+opencode "Read IMPLEMENTATION_PLAN.md and tell me: 
+1. Which sprint are we currently in?
+2. Which features are completed (checked boxes)?
+3. Which features are in progress?
+4. What should I work on next?
+Show as a clear status table."
+
+# Start a new feature
+opencode "I'm starting feature {NNN}-{name}. 
+Read the feature spec in features/{NNN}-{name}/ and:
+1. Summarize what needs to be built
+2. List all files that need to be created/modified
+3. Identify dependencies on other features
+4. Give me the implementation order"
+```
+
+```bash
+# ──────────────────────────────────────
+# Backend Development Commands
+# ──────────────────────────────────────
+
+# Create a new entity
+opencode "Create the {EntityName} entity class in 
+src/backend/Mojaz.Domain/Entities/{EntityName}.cs
+following the schema in PRD Section 21.
+Also create the EF Core configuration in
+src/backend/Mojaz.Infrastructure/Data/Configurations/{EntityName}Configuration.cs
+Include all constraints, indexes, and relationships."
+
+# Create a new service
+opencode "Create the {Service}Service for Mojaz:
+1. Interface I{Service}Service in Mojaz.Application/Interfaces/
+2. Implementation {Service}Service in Mojaz.Application/Services/
+3. Request/Response DTOs in Mojaz.Application/DTOs/
+4. FluentValidation validators in Mojaz.Application/Validators/
+5. AutoMapper profile in Mojaz.Application/Mappings/
+Follow Clean Architecture rules from AGENTS.md.
+All configurable values from SystemSettings table."
+
+# Create a new controller
+opencode "Create the {Resource}Controller in 
+src/backend/Mojaz.API/Controllers/
+with these endpoints: {list endpoints}
+Follow rules:
+- Return ApiResponse<T> always
+- [Authorize(Roles = '{roles}')]  
+- Swagger documentation
+- CancellationToken on all async methods
+- Call service methods only (no business logic)"
+
+# Generate migration
+opencode "Run: dotnet ef migrations add {MigrationName} 
+--project src/backend/Mojaz.Infrastructure 
+--startup-project src/backend/Mojaz.API
+Then verify the migration looks correct."
+```
+
+```bash
+# ──────────────────────────────────────
+# Frontend Development Commands
+# ──────────────────────────────────────
+
+# Create a new page
+opencode "Create the {PageName} page for the {portal} portal at
+src/frontend/src/app/[locale]/({portal})/{path}/page.tsx
+Include:
+- TypeScript strict types
+- useTranslations() for ALL text
+- React Query for data fetching
+- Loading, error, and empty states
+- RTL/LTR support
+- Dark/light mode support
+- Responsive design
+Add translation keys to both ar.json and en.json"
+
+# Create a new component
+opencode "Create the {ComponentName} component at
+src/frontend/src/components/{category}/{ComponentName}.tsx
+Requirements: {requirements}
+Rules:
+- Functional component with TypeScript
+- All text via useTranslations()
+- RTL/LTR aware
+- Dark/light mode aware
+- Use cn() for conditional classes
+- Use shadcn/ui base components where applicable"
+
+# Add translations
+opencode "Add the following translation keys to both
+src/frontend/public/locales/ar.json and 
+src/frontend/public/locales/en.json
+under the '{namespace}' namespace:
+{list of keys and their AR/EN values}"
+```
+
+```bash
+# ──────────────────────────────────────
+# Testing Commands
+# ──────────────────────────────────────
+
+# Generate unit tests
+opencode "Write xUnit tests for {ServiceName}Service:
+- Test all public methods
+- Happy path and error paths
+- Boundary conditions
+- Mock external dependencies with Moq
+- Use FluentAssertions
+- Test configurable values come from SystemSettings
+Put tests in tests/Mojaz.UnitTests/Services/{ServiceName}ServiceTests.cs"
+
+# Generate Gate tests
+opencode "Write comprehensive tests for Gate {N} validation:
+- All passing conditions
+- Each individual failing condition
+- Edge cases (exact boundary values)
+- Verify values read from SystemSettings (not hardcoded)
+Put tests in tests/Mojaz.UnitTests/Validators/Gate{N}ValidatorTests.cs"
+
+# Generate E2E test
+opencode "Write a Playwright E2E test for the {flow} flow:
+- Test in both Arabic and English
+- Verify RTL layout in Arabic
+- Test on mobile viewport (375px) and desktop (1440px)
+- Include assertions for all expected elements
+Put test in e2e/{flow}.spec.ts"
+```
+
+```bash
+# ──────────────────────────────────────
+# Quality & Validation Commands
+# ──────────────────────────────────────
+
+# Architecture validation
+opencode "Scan the entire src/backend/ directory and report:
+1. Any controller with business logic (should only call services)
+2. Any hardcoded values that should be in SystemSettings
+3. Any physical deletes (should be soft delete)
+4. Any missing audit log calls on sensitive operations
+5. Any missing [Authorize] attributes
+6. Any response not wrapped in ApiResponse<T>
+Format as a violation report with file:line references."
+
+# RTL validation
+opencode "Scan src/frontend/src/ and report:
+1. Any hardcoded Arabic or English strings (should use translations)
+2. Any use of 'left'/'right' CSS that should be 'start'/'end'
+3. Any missing RTL support in new components
+4. Any translation keys in ar.json missing from en.json or vice versa
+Format as a violation report."
+
+# API contract validation
+opencode "Read all controllers in src/backend/Mojaz.API/Controllers/ 
+and verify:
+1. Total endpoint count matches ~52 from PRD
+2. All endpoints have proper HTTP method
+3. All endpoints have [Authorize] with correct roles
+4. All return ApiResponse<T>
+5. All have Swagger documentation
+Generate a complete API inventory table."
+```
+
+```bash
+# ──────────────────────────────────────
+# Integration Testing Commands
+# ──────────────────────────────────────
+
+# Test full flow
+opencode "Using the fetch tool, test the complete new license 
+issuance flow:
+1. POST /api/v1/auth/register (create applicant)
+2. POST /api/v1/auth/verify-otp
+3. POST /api/v1/auth/login (get JWT)
+4. POST /api/v1/applications (create app with category B)
+5. POST /api/v1/applications/{id}/documents (upload doc)
+6. POST /api/v1/payments/initiate (application fee)
+7. POST /api/v1/payments/{id}/confirm
+8. POST /api/v1/appointments (medical)
+9. PATCH /api/v1/medical-exams/{id}/result (Fit)
+10. POST /api/v1/theory-tests/{id}/result (Pass)
+11. POST /api/v1/practical-tests/{id}/result (Pass)
+12. PATCH /api/v1/applications/{id}/status (Approved)
+13. POST /api/v1/payments/initiate (issuance fee)
+14. POST /api/v1/payments/{id}/confirm
+15. POST /api/v1/licenses/{id}/issue
+16. GET /api/v1/licenses/{id}/download
+Report success/failure for each step."
+```
+
+### 2.3 Batch Scripts for OpenCode
+
+```bash
+#!/bin/bash
+# scripts/opencode-batch-backend-entity.sh
+# Usage: ./scripts/opencode-batch-backend-entity.sh EntityName
+
+ENTITY=$1
+
+echo "━━━ Creating $ENTITY entity, configuration, and repository ━━━"
+
+opencode "Create the complete backend implementation for $ENTITY:
+
+1. Entity: src/backend/Mojaz.Domain/Entities/$ENTITY.cs
+   - Match PRD Section 21 schema exactly
+   - Include navigation properties
+
+2. Configuration: src/backend/Mojaz.Infrastructure/Data/Configurations/${ENTITY}Configuration.cs
+   - Fluent API only
+   - All constraints, indexes, relationships
+   - String length limits
+
+3. Add DbSet to AppDbContext
+
+4. Repository: src/backend/Mojaz.Infrastructure/Repositories/${ENTITY}Repository.cs
+   - Implement I${ENTITY}Repository
+   - Include standard CRUD + soft delete
+
+5. Interface: src/backend/Mojaz.Domain/Interfaces/I${ENTITY}Repository.cs
+
+Follow all rules in AGENTS.md."
+```
+
+```bash
+#!/bin/bash
+# scripts/opencode-batch-frontend-page.sh
+# Usage: ./scripts/opencode-batch-frontend-page.sh PageName portal path
+
+PAGE=$1
+PORTAL=$2
+PATH=$3
+
+echo "━━━ Creating $PAGE page for $PORTAL portal ━━━"
+
+opencode "Create the complete frontend page for $PAGE:
+
+1. Page: src/frontend/src/app/[locale]/($PORTAL)/$PATH/page.tsx
+2. Loading: src/frontend/src/app/[locale]/($PORTAL)/$PATH/loading.tsx
+3. Error: src/frontend/src/app/[locale]/($PORTAL)/$PATH/error.tsx
+
+Include:
+- TypeScript strict types
+- useTranslations() for ALL text
+- React Query for data fetching
+- Loading skeleton, error boundary, empty state
+- RTL/LTR support
+- Dark/light mode
+- Responsive (mobile + desktop)
+
+Add all new translation keys to:
+- src/frontend/public/locales/ar.json
+- src/frontend/public/locales/en.json
+
+Follow all rules in AGENTS.md."
+```
+
+```bash
+#!/bin/bash
+# scripts/opencode-batch-feature.sh
+# Usage: ./scripts/opencode-batch-feature.sh 011 application-crud
+
+FEATURE_NUM=$1
+FEATURE_NAME=$2
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Starting Feature $FEATURE_NUM: $FEATURE_NAME"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# Step 1: Read spec and create plan
+opencode "Read the feature spec at features/$FEATURE_NUM-$FEATURE_NAME/
+and create a detailed implementation plan:
+1. List all files to create (in order)
+2. List all files to modify
+3. Identify dependencies
+4. Estimate complexity per file
+Save plan to features/$FEATURE_NUM-$FEATURE_NAME/plan.md"
+
+echo "Plan created. Review and press Enter to continue..."
+read
+
+# Step 2: Implement backend
+opencode "Implement all backend code for feature $FEATURE_NUM-$FEATURE_NAME
+following the plan at features/$FEATURE_NUM-$FEATURE_NAME/plan.md
+Create all: entities, services, DTOs, validators, controllers.
+Follow AGENTS.md rules strictly."
+
+echo "Backend done. Press Enter for frontend..."
+read
+
+# Step 3: Implement frontend
+opencode "Implement all frontend code for feature $FEATURE_NUM-$FEATURE_NAME
+following the plan at features/$FEATURE_NUM-$FEATURE_NAME/plan.md
+Create all: pages, components, hooks, translations.
+Follow AGENTS.md rules strictly."
+
+echo "Frontend done. Press Enter for tests..."
+read
+
+# Step 4: Write tests
+opencode "Write tests for feature $FEATURE_NUM-$FEATURE_NAME:
+- Backend unit tests (xUnit)
+- Frontend component tests (Jest) if applicable
+Follow testing rules in AGENTS.md."
+
+echo "━━━ Feature $FEATURE_NUM complete! ━━━"
+```
