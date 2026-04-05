@@ -1,12 +1,10 @@
+using System;
+
 namespace Mojaz.Shared.Exceptions;
 
-/// <summary>
-/// Exception thrown when authentication fails.
-/// </summary>
-public class UnauthorizedException : MojazException
+public class UnauthorizedException : Exception
 {
-    public UnauthorizedException(string message = "Unauthorized")
-        : base(message, 401)
+    public UnauthorizedException(string message = "Unauthorized access attempt.") : base(message)
     {
     }
 }

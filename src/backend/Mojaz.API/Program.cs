@@ -1,44 +1,98 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Mojaz.API.Extensions;
+using Mojaz.API.Middleware;
+using Mojaz.Application.Extensions;
+using Mojaz.Infrastructure;
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// ─── Serilog Configuration ───
+builder.Host.UseSerilog((context, config) =>
+{
+    config
+        .ReadFrom.Configuration(context.Configuration)
+        .Enrich.FromLogContext()
+        .WriteTo.Console()
+        .WriteTo.File(
+            "logs/mojaz_.log",
+            rollingInterval: RollingInterval.Day,
+            retainedFileCountLimit: 30);
+});
+
+// ─── Layer Registrations ───
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
+
+// ─── Controllers & Filters ───
+builder.Services.AddControllers(options => 
+{
+    // Note: ValidationFilter logic is typically wired via Application assembly scanning + FluentValidation
+});
+
+builder.Services.AddHttpContextAccessor();
+
+// ─── JWT Authentication ───
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtSettings["SecretKey"] ?? "MojazSuperSecretKeyForDevelopment2025!@#$%")),
+        ValidateIssuer = true,
+        ValidIssuer = jwtSettings["Issuer"] ?? "Mojaz",
+        ValidateAudience = true,
+        ValidAudience = jwtSettings["Audience"] ?? "MojazClients",
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+builder.Services.AddAuthorization();
+
+// ─── Modular Extensions (Phase 3 Fix) ───
+builder.Services.AddMojazCors(builder.Configuration);
+builder.Services.AddMojazSwagger();
+
+// ─── Health Checks ───
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ─── Middleware Pipeline (Modularized) ───
+
+app.UseMojazSecurityHeaders();
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
+    app.UseMojazSwagger();
 }
 
+app.UseMojazExceptionHandler();
+app.UseMojazRequestLogging();
+
 app.UseHttpsRedirection();
+app.UseMojazCors();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+app.UseMojazAuditLogging();
+
+app.MapControllers();
+app.MapHealthChecks("/health").AllowAnonymous();
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+// Make Program public for testing
+public partial class Program;
