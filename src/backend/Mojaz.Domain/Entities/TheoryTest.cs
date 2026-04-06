@@ -4,7 +4,7 @@ using System;
 
 namespace Mojaz.Domain.Entities;
 
-public class TheoryTest : AuditableEntity
+public class TheoryTest : SoftDeletableEntity
 {
     public Guid ApplicationId { get; set; }
     public Guid ExaminerId { get; set; }

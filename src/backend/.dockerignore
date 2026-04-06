@@ -1,0 +1,16 @@
+# .dockerignore for Mojaz Backend (ASP.NET Core)
+.git
+bin
+obj
+*.user
+*.suo
+*.swp
+*.log
+*.dbmdl
+.vs
+.env*
+Dockerfile*
+logs
+packages
+.idea
+.DS_Store

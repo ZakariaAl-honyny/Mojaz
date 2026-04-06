@@ -4,7 +4,7 @@ using System;
 
 namespace Mojaz.Domain.Entities;
 
-public class Payment : AuditableEntity
+public class Payment : SoftDeletableEntity
 {
     public Guid ApplicationId { get; set; }
     public FeeType FeeType { get; set; }
