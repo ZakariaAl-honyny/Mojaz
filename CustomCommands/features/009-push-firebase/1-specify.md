@@ -1,5 +1,7 @@
 # Feature 009: Real Push Notifications via Firebase Cloud Messaging
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Web push notification system using Firebase Cloud Messaging (FCM).
 

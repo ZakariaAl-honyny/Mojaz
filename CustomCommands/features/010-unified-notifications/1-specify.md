@@ -1,5 +1,7 @@
 # Feature 010: Unified Notification Service with 4 Channels
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Single notification service dispatching to In-App, Push, Email, SMS based on event type and user preferences.
 

@@ -1,5 +1,7 @@
 # Feature 032: Production Deployment and Launch Preparation
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Production deployment configuration and launch preparation.
 

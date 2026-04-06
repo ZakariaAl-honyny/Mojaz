@@ -1,5 +1,7 @@
 # Feature 024: License Generation with PDF Download
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 License generation with number, expiry calculation, QuestPDF, and download.
 
