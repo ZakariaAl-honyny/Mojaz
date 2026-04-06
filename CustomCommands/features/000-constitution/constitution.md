@@ -1,5 +1,7 @@
 # Mojaz Project Constitution
 
+> **Status:** To be generated via `/speckit.constitution`
+
 ## Project Identity
 - **Name:** Mojaz (مُجاز) meaning "Licensed/Authorized" in Arabic
 - **Type:** Full-Stack Web Application

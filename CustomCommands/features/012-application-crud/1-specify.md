@@ -1,5 +1,7 @@
 # Feature 012: Application Creation, Management, and Status Tracking Backend
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Complete backend for application lifecycle: create, read, update, submit, cancel, and status tracking with Gate 1 validation.
 

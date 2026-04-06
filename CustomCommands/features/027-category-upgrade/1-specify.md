@@ -1,5 +1,7 @@
 # Feature 027: License Category Upgrade with Path Validation
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Category upgrade with path validation and holding period checks.
 

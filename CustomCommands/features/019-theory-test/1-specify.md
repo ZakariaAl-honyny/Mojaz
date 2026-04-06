@@ -1,5 +1,7 @@
 # Feature 019: Theory Test Recording with Attempt Tracking and Retake Logic
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Theory test recording with attempt counting, max attempts, cooling period, and notifications.
 

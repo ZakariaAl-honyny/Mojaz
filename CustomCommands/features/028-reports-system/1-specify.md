@@ -1,5 +1,7 @@
 # Feature 028: 7 Operational Reports with Charts and Data Tables
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Comprehensive reporting system with 7 reports, charts, tables, and export.
 

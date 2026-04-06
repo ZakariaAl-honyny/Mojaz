@@ -1,5 +1,7 @@
 # Feature 022: Final Approval with Gate 4 Comprehensive Validation
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Final approval stage with Gate 4 validation, approve/reject/return actions.
 

@@ -1,6 +1,6 @@
-# Feature Specification: Backend Solution Scaffold
+# Feature Specification: 001-project-scaffold
 
-**Feature Branch**: `003-backend-scaffold`  
+**Feature Branch**: `001-project-scaffold`  
 **Created**: 2026-04-04  
 **Status**: Clarified  
 **Input**: User description: "Backend Solution Scaffold - .NET 8 Clean Architecture solution with 5 projects serving as foundation for all backend development"

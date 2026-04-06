@@ -1,5 +1,7 @@
 # Feature 008: Real SMS Delivery via Twilio with 6 Message Templates
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Production SMS service using Twilio API with bilingual message templates.
 
