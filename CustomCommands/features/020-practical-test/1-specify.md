@@ -1,5 +1,7 @@
 # Feature 020: Practical Test Recording with Additional Training Flag
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Practical test recording with additional training requirement on failure and test history.
 

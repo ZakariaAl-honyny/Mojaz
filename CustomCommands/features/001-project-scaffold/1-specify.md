@@ -1,5 +1,7 @@
 # Feature 001: Backend Solution Scaffold 
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 A .NET 8 solution following Clean Architecture with 5 projects that serves as the foundation for all backend development.
 

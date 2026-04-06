@@ -1,5 +1,7 @@
 # Feature 021: Agricultural Vehicle Category (F) Complete Support
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Complete Category F support with specialized settings, UI, and upgrade paths.
 

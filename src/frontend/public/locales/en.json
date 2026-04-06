@@ -192,7 +192,7 @@
       "confirmPassword": "Confirm Password",
       "submit": "Change Password",
       "success": "Password changed successfully"
-    },
+  },
     "otp": {
       "title": "Verify Identity",
       "subtitle": "Enter the code sent to your device",

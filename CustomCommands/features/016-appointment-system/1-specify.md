@@ -1,5 +1,7 @@
 # Feature 016: Appointment Booking, Rescheduling, and Reminder System
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Complete appointment system with available slots, booking, rescheduling, cancellation, and 24h reminders.
 

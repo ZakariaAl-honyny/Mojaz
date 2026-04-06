@@ -1,5 +1,7 @@
 # Feature 005: OTP Verification and Resend System
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 OTP verification endpoint that activates user accounts, and OTP resend endpoint with rate limiting and cooldown.
 

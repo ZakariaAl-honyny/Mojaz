@@ -1,5 +1,7 @@
 # Feature 013: Multi-Step Application Wizard (5 Steps) — Frontend
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 5-step wizard for creating license applications with validation, auto-save, and bilingual support.
 
