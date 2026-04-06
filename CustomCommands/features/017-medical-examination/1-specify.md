@@ -1,5 +1,7 @@
 # Feature 017: Medical Exam Recording by Doctor with Result Notification
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Medical examination recording system with fitness results, validity tracking, and notifications.
 

@@ -1,5 +1,7 @@
 # Feature 003: Database Foundation & Seed Data
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 The complete SQL Server database schema for the Mojaz platform with all 21 tables, relationships, constraints, indexes, and seed data for development and testing.
 

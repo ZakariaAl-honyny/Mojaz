@@ -1,5 +1,7 @@
 # Feature 030: Security Review and Production Hardening
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Security audit based on OWASP top 10 and production hardening.
 

@@ -1,5 +1,7 @@
 # Feature 025: License Renewal Simplified Workflow
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Simplified renewal workflow with existing license verification.
 

@@ -1,5 +1,7 @@
 # Feature 011: Role-Based Access Control, User Management, and System Settings
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 RBAC with 7 roles, admin user management CRUD, and system settings management.
 

@@ -1,5 +1,7 @@
 # Feature 006: User Login with JWT Access Token and Refresh Token Rotation
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Login system with JWT access tokens and refresh tokens with secure rotation.
 

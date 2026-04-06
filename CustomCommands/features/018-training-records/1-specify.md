@@ -1,5 +1,7 @@
 # Feature 018: Training Completion Recording and Exemption Management
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Training record management with hours tracking per category and exemption workflow.
 

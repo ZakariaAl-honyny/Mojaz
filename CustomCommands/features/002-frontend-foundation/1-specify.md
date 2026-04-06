@@ -1,5 +1,7 @@
 # Feature 002: Frontend Foundation for Mojaz Platform
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 A Next.js 15 application with App Router that serves as the foundation for all frontend development, including theming, i18n, layouts, and API client configuration.
 
