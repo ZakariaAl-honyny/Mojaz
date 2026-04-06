@@ -1,5 +1,9 @@
 # Feature 029: Professional Government Landing Page (9 Sections)
 
+
+> **Status:** To be generated via `/speckit.clarify`
+
+
 ## WHAT WE'RE BUILDING:
 Professional landing page with 9 sections, animations, and full bilingual support.
 

@@ -1,5 +1,7 @@
 # Feature 014: Document Upload (Applicant) and Document Review (Employee)
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 File upload for 8 document types with validation, and employee review interface.
 

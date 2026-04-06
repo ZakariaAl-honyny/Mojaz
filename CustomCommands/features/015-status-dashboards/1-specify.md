@@ -1,5 +1,7 @@
 # Feature 015: Application Timeline, Status Tracking, and Role-Based Dashboards
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Visual timeline, status badges, applicant dashboard, and employee queue.
 

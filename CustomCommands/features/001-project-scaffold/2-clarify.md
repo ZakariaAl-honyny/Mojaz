@@ -1,5 +1,7 @@
 # Clarify: Backend Solution Scaffold
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## Resolved Ambiguities
 
 ### 1. MediatR/CQRS vs Direct Service Injection
