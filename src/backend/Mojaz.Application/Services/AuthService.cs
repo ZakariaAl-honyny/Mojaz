@@ -20,6 +20,7 @@ public class AuthService : IAuthService
     private readonly IJwtService _jwtService;
     private readonly INotificationService _notificationService;
     private readonly IAuditService _auditService;
+    private readonly ISystemSettingsService _settingsService;
 
     public AuthService(
         IRepository<User> userRepository,
@@ -28,7 +29,8 @@ public class AuthService : IAuthService
         IUnitOfWork unitOfWork,
         IJwtService jwtService,
         INotificationService notificationService,
-        IAuditService auditService)
+        IAuditService auditService,
+        ISystemSettingsService settingsService)
     {
         _userRepository = userRepository;
         _otpRepository = otpRepository;
@@ -37,6 +39,7 @@ public class AuthService : IAuthService
         _jwtService = jwtService;
         _notificationService = notificationService;
         _auditService = auditService;
+        _settingsService = settingsService;
     }
 
     public async Task<ApiResponse<RegisterResponse>> RegisterAsync(RegisterRequest request)
@@ -56,7 +59,7 @@ public class AuthService : IAuthService
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password, 12),
             Role = UserRole.Applicant,
             RegistrationMethod = request.Method,
-            IsActive = true,
+            IsActive = request.Method == RegistrationMethod.Email ? false : true,
             PreferredLanguage = request.PreferredLanguage,
             IsEmailVerified = false,
             IsPhoneVerified = false
@@ -64,12 +67,16 @@ public class AuthService : IAuthService
 
         await _userRepository.AddAsync(user);
 
+        var otpValidityMinutes = request.Method == RegistrationMethod.Email 
+            ? await _settingsService.GetIntAsync("OTP_VALIDITY_MINUTES_EMAIL") ?? 15
+            : await _settingsService.GetIntAsync("OTP_VALIDITY_MINUTES_SMS") ?? 5;
+
         var otpValue = new Random().Next(100000, 999999).ToString();
         var otp = new OtpCode
         {
             UserId = user.Id,
             CodeHash = BCrypt.Net.BCrypt.HashPassword(otpValue),
-            ExpiresAt = DateTime.UtcNow.AddMinutes(5),
+            ExpiresAt = DateTime.UtcNow.AddMinutes(otpValidityMinutes),
             Purpose = OtpPurpose.Registration,
             Destination = request.Method == RegistrationMethod.Email ? request.Email! : request.Phone!,
             DestinationType = request.Method == RegistrationMethod.Email ? DestinationType.Email : DestinationType.Phone
@@ -77,6 +84,8 @@ public class AuthService : IAuthService
 
         await _otpRepository.AddAsync(otp);
         await _unitOfWork.SaveChangesAsync();
+
+        await _auditService.LogAsync("USER_REGISTERED", "User", user.Id.ToString());
 
         await _notificationService.SendAsync(new NotificationRequest
         {
@@ -182,10 +191,18 @@ public class AuthService : IAuthService
         {
             if (request.Type == OtpPurpose.Registration) 
             {
-               user.IsEmailVerified = true;
-               user.IsPhoneVerified = true;
-               user.EmailVerifiedAt = DateTime.UtcNow;
-               user.PhoneVerifiedAt = DateTime.UtcNow;
+                if (user.RegistrationMethod == RegistrationMethod.Email)
+                {
+                    user.IsEmailVerified = true;
+                    user.EmailVerifiedAt = DateTime.UtcNow;
+                    user.IsActive = true;
+                }
+                else if (user.RegistrationMethod == RegistrationMethod.Phone)
+                {
+                    user.IsPhoneVerified = true;
+                    user.PhoneVerifiedAt = DateTime.UtcNow;
+                    user.IsActive = true;
+                }
             }
             _userRepository.Update(user);
         }

@@ -6,6 +6,8 @@ using Mojaz.API.Middleware;
 using Mojaz.Application.Extensions;
 using Mojaz.Infrastructure;
 using Serilog;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,6 +68,23 @@ builder.Services.AddMojazSwagger();
 // ─── Health Checks ───
 builder.Services.AddHealthChecks();
 
+// ─── Rate Limiting ───
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("registration", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }
+        )
+    );
+});
+
 var app = builder.Build();
 
 // ─── Middleware Pipeline (Modularized) ───
@@ -89,7 +108,9 @@ app.UseAuthorization();
 
 app.UseMojazAuditLogging();
 
-app.MapControllers();
+app.UseRateLimiter();
+
+app.MapControllers().RequireRateLimiting("registration");
 app.MapHealthChecks("/health").AllowAnonymous();
 
 app.Run();
