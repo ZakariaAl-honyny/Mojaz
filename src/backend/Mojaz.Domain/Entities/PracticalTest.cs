@@ -4,7 +4,7 @@ using System;
 
 namespace Mojaz.Domain.Entities;
 
-public class PracticalTest : AuditableEntity
+public class PracticalTest : SoftDeletableEntity
 {
     public Guid ApplicationId { get; set; }
     public Guid ExaminerId { get; set; }
