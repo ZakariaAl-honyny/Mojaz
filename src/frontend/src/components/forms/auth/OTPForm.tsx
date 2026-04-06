@@ -1,148 +1,247 @@
 'use client';
 
-import {useState, useEffect} from 'react';
-import {useSearchParams} from 'next/navigation';
-import {useTranslations} from 'next-intl';
-import {Button} from '@/components/ui/button';
-import {Input} from '@/components/ui/input';
-import {Loader2, ShieldCheck, Timer, RefreshCw} from 'lucide-react';
-import apiClient from '@/lib/api-client';
-import {useRouter} from '@/i18n/routing';
+import { useState, useEffect, useRef } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations } from 'next-intl';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import { authService } from '@/services/auth.service';
+import { OtpPurpose } from '@/types/auth.types';
+import { cn } from '@/lib/utils';
+import { ShieldCheck, RefreshCw, ArrowLeft, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export default function OTPForm() {
   const t = useTranslations('auth');
-  const router = useRouter();
   const searchParams = useSearchParams();
+  const router = useRouter();
+  
   const userId = searchParams.get('userId');
-  const type = searchParams.get('type') || 'Email';
-
+  const method = searchParams.get('method') || 'email';
+  const destination = searchParams.get('dest') || '';
+  
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [activeInput, setActiveInput] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState(60); // 60 seconds cooldown
+  
+  const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+    if (cooldown > 0) {
+      const timer = setTimeout(() => setCooldown(cooldown - 1), 1000);
       return () => clearTimeout(timer);
     }
-  }, [timeLeft]);
+  }, [cooldown]);
 
   const handleChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return;
+    
     const newOtp = [...otp];
     newOtp[index] = value.slice(-1);
     setOtp(newOtp);
-
-    // Auto-focus next input
+    
+    // Auto focus next
     if (value && index < 5) {
-      const nextInput = document.getElementById(`otp-${index + 1}`);
-      nextInput?.focus();
+      inputsRef.current[index + 1]?.focus();
+      setActiveInput(index + 1);
     }
   };
 
-  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
+  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      const prevInput = document.getElementById(`otp-${index - 1}`);
-      prevInput?.focus();
+      inputsRef.current[index - 1]?.focus();
+      setActiveInput(index - 1);
     }
   };
 
-  const onSubmit = async () => {
+  const handleVerify = async () => {
     const code = otp.join('');
-    if (code.length < 6) return;
+    if (code.length < 6) {
+      setError(t('verify.invalidCode'));
+      return;
+    }
 
     setIsLoading(true);
     setError(null);
     try {
-      await apiClient.post('/auth/verify-otp', {
+      if (!userId) throw new Error('User ID missing');
+      
+      const response = await authService.verifyOtp({
         userId,
         code,
-        type: type === 'Email' ? 0 : 1 // OtpType Enum
+        type: OtpPurpose.Registration
       });
-      router.push('/login?verified=true');
+
+      if (response.success) {
+        setSuccess(t('verify.success'));
+        // Wait a bit then redirect to login or dashboard
+        setTimeout(() => {
+          router.push('/login?verified=true');
+        }, 2000);
+      } else {
+        setError(response.message || t('errors.verificationFailed'));
+      }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Verification failed. Please check the code.');
+      setError(err.response?.data?.message || t('errors.genericError'));
     } finally {
       setIsLoading(false);
     }
   };
 
-  const resendOtp = async () => {
+  const handleResend = async () => {
+    if (cooldown > 0 || isResending) return;
+
     setIsResending(true);
+    setError(null);
     try {
-      await apiClient.post('/auth/resend-otp', {
+      if (!userId) throw new Error('User ID missing');
+      
+      const response = await authService.resendOtp({
         userId,
-        type: type === 'Email' ? 0 : 1
+        type: OtpPurpose.Registration
       });
-      setTimeLeft(60);
-    } catch (err) {
-      setError('Resend failed.');
+
+      if (response.success) {
+        setSuccess(t('verify.otpResent'));
+        setCooldown(60); // Reset cooldown
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        setError(response.message || t('errors.resendFailed'));
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || t('errors.genericError'));
     } finally {
       setIsResending(false);
     }
   };
 
+  if (!userId) {
+    return (
+      <Card className="border-destructive">
+        <CardContent className="pt-6 text-center">
+          <AlertCircle className="w-12 h-12 text-destructive mx-auto mb-4" />
+          <p className="text-destructive font-semibold">{t('verify.invalidSession')}</p>
+          <Button variant="outline" className="mt-4" onClick={() => router.push('/register')}>
+            {t('verify.backToRegister')}
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <div className="w-full space-y-8 bg-white p-10 rounded-3xl shadow-2xl border border-neutral-100 text-center">
-      <div className="flex justify-center">
-        <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center text-primary-500">
-          <ShieldCheck className="w-8 h-8" />
-        </div>
-      </div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="w-full"
+    >
+      <Card className="border-none shadow-2xl bg-white/90 backdrop-blur-xl dark:bg-neutral-900/90 overflow-hidden">
+        <div className="h-2 bg-gradient-to-r from-primary-400 to-primary-600" />
+        <CardHeader className="pt-8 text-center">
+          <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4 dark:bg-primary-900/20">
+            <ShieldCheck className="w-8 h-8 text-primary-500" />
+          </div>
+          <CardTitle className="text-2xl font-bold">{t('verify.title')}</CardTitle>
+          <CardDescription className="text-base px-2">
+            {t('verify.description')} <span className="font-semibold text-neutral-900 dark:text-neutral-100">{destination}</span>
+          </CardDescription>
+        </CardHeader>
+        
+        <CardContent className="space-y-6 pt-2">
+          <AnimatePresence mode="wait">
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm flex items-center gap-2"
+              >
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                {error}
+              </motion.div>
+            )}
+            {success && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="p-3 rounded-lg bg-emerald-50 text-emerald-600 text-sm flex items-center gap-2 dark:bg-emerald-950/20"
+              >
+                <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                {success}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-      <div className="space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight text-neutral-900">{t('otp.title')}</h2>
-        <p className="text-neutral-500 font-medium">
-          {t('otp.subtitle')} <span className="text-neutral-900 font-bold">{type === 'Email' ? 'البريد الإلكتروني' : 'الجوال'}</span>
-        </p>
-      </div>
+          <div className="flex justify-between gap-2 dir-ltr">
+            {otp.map((digit, idx) => (
+              <input
+                key={idx}
+                ref={(el) => { inputsRef.current[idx] = el; }}
+                type="text"
+                inputMode="numeric"
+                maxLength={1}
+                value={digit}
+                onChange={(e) => handleChange(idx, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(idx, e)}
+                onFocus={() => setActiveInput(idx)}
+                className={cn(
+                  "w-12 h-14 text-center text-2xl font-bold rounded-lg border-2 bg-neutral-50 transition-all focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none dark:bg-neutral-800",
+                  activeInput === idx ? "border-primary-500 shadow-sm" : "border-neutral-200 dark:border-neutral-700",
+                  digit && "border-primary-500"
+                )}
+              />
+            ))}
+          </div>
 
-      {error && (
-        <div className="p-4 bg-error/10 border border-error/20 text-error text-sm rounded-xl font-medium">
-          {error}
-        </div>
-      )}
+          <Button 
+            onClick={handleVerify}
+            className="w-full h-12 bg-primary-500 hover:bg-primary-600 text-white font-bold text-lg rounded-gov shadow-lg"
+            disabled={isLoading || otp.join('').length < 6}
+          >
+            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : t('verify.confirm')}
+          </Button>
 
-      <div className="flex justify-center gap-3" dir="ltr">
-        {otp.map((digit, i) => (
-          <Input
-            key={i}
-            id={`otp-${i}`}
-            type="text"
-            maxLength={1}
-            value={digit}
-            onChange={(e) => handleChange(i, e.target.value)}
-            onKeyDown={(e) => handleKeyDown(i, e)}
-            className="w-12 h-14 text-center text-2xl font-bold rounded-xl border-neutral-200 focus:ring-2 focus:ring-primary-500"
-          />
-        ))}
-      </div>
-
-      <div className="space-y-4">
-        <Button 
-          onClick={onSubmit} 
-          className="w-full h-14 text-lg font-bold bg-primary-500 hover:bg-primary-600 transition-all rounded-2xl shadow-lg" 
-          disabled={isLoading || otp.join('').length < 6}
-        >
-          {isLoading ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : t('otp.submit')}
-        </Button>
-
-        <div className="flex items-center justify-center gap-4 text-sm font-medium">
-          {timeLeft > 0 ? (
-            <div className="flex items-center gap-2 text-neutral-500 bg-neutral-100 px-4 py-2 rounded-full">
-              <Timer className="w-4 h-4" />
-              <span>{timeLeft}s</span>
+          <div className="text-center space-y-4">
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-sm text-neutral-500">{t('verify.didntReceive')}</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleResend}
+                disabled={cooldown > 0 || isResending}
+                className={cn(
+                  "text-primary-500 hover:text-primary-600 font-semibold p-0 h-auto",
+                  cooldown > 0 && "text-neutral-400 opacity-50 cursor-not-allowed"
+                )}
+              >
+                {isResending ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-1" />
+                ) : (
+                  <RefreshCw className={cn("w-4 h-4 mr-1", cooldown > 0 ? "" : "animate-pulse")} />
+                )}
+                {cooldown > 0 
+                  ? `${t('verify.resendIn')} ${cooldown}${t('verify.seconds')}` 
+                  : t('verify.resendAction')
+                }
+              </Button>
             </div>
-          ) : (
-            <Button variant="ghost" className="gap-2 text-primary-500 hover:text-primary-600" onClick={resendOtp} disabled={isResending}>
-              {isResending ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
-              {t('otp.resend')}
-            </Button>
-          )}
-        </div>
-      </div>
-    </div>
+            
+            <button
+              onClick={() => router.back()}
+              className="text-xs text-neutral-400 hover:text-neutral-600 flex items-center justify-center gap-1 mx-auto transition-colors"
+            >
+              <ArrowLeft className="w-3 h-3 rtl:rotate-180" />
+              {t('verify.changeRegistrationInfo')}
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

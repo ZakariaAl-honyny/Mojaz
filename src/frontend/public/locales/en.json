@@ -166,15 +166,26 @@
     },
     "register": {
       "title": "Create Account",
-      "subtitle": "Join Mojaz for driving license services",
+      "subtitle": "Join Mojaz platform to access driving license services",
+      "emailTitle": "Email Registration",
+      "phoneTitle": "Phone Registration",
+      "phoneSubtitle": "Enter your details to create an account via phone",
       "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter your full name as shown in ID",
       "email": "Email Address",
       "phone": "Phone Number",
       "password": "Password",
       "confirmPassword": "Confirm Password",
+      "acceptTerms": "I agree to",
+      "termsLink": "Terms and Conditions",
       "submit": "Create Account",
-      "hasAccount": "Already have an account?",
-      "login": "Login here"
+      "processing": "Processing...",
+      "alreadyHaveAccount": "Already have an account?",
+      "loginLink": "Login",
+      "errors": {
+        "registrationFailed": "Registration failed. Please try again.",
+        "genericError": "An unexpected error occurred. Please try again later."
+      }
     },
     "forgotPassword": {
       "title": "Reset Password",
@@ -194,11 +205,24 @@
       "success": "Password changed successfully"
   },
     "otp": {
-      "title": "Verify Identity",
-      "subtitle": "Enter the code sent to your device",
-      "submit": "Verify",
-      "resend": "Resend Code",
-      "resendIn": "Resend in {seconds}s"
+      "title": "Identity Verification",
+      "subtitle": "Verify Code",
+      "description": "Verification code has been sent to",
+      "confirm": "Verify Now",
+      "invalidCode": "Please enter a valid 6-digit code",
+      "success": "Verification successful! Redirecting...",
+      "otpResent": "Verification code resent successfully",
+      "invalidSession": "Invalid verification session",
+      "backToRegister": "Back to Registration",
+      "resendAction": "Resend Code",
+      "resendIn": "Resend in",
+      "seconds": "s",
+      "didntReceive": "Didn't receive the code?",
+      "changeRegistrationInfo": "Change registration info",
+      "errors": {
+        "verificationFailed": "Invalid or expired verification code",
+        "resendFailed": "Failed to resend code. Please try again later."
+      }
     }
   }
 }
