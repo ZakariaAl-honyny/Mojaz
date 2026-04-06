@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {useAuthStore} from '@/stores/auth-store';
+import { useAuthStore } from '@/stores/auth-store';
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1',
@@ -28,14 +28,14 @@ apiClient.interceptors.response.use(
     // Handle 401 Unauthorized - Refresh Token Logic here
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const {refreshToken, setTokens, logout} = useAuthStore.getState();
-      
+      const { refreshToken, setTokens, logout } = useAuthStore.getState();
+
       if (refreshToken) {
         try {
           const resp = await axios.post(`${apiClient.defaults.baseURL}/auth/refresh-token`, {
             refreshToken
           });
-          const {accessToken, refreshToken: newRefreshToken} = resp.data.data;
+          const { accessToken, refreshToken: newRefreshToken } = resp.data.data;
           setTokens(accessToken, newRefreshToken);
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           return apiClient(originalRequest);

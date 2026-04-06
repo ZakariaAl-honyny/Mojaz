@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -81,7 +82,7 @@ export default function LoginForm() {
         <div className="space-y-3">
           <div className="flex justify-between items-center px-1">
              <Label className="text-neutral-700 font-semibold">{t('login.password')}</Label>
-             <a href="/forgot-password" className="text-xs font-bold text-primary-500 hover:text-primary-600 underline">هل نسيت كلمة المرور؟</a>
+             <Link href="/forgot-password" className="text-xs font-bold text-primary-500 hover:text-primary-600 underline">هل نسيت كلمة المرور؟</Link>
           </div>
           <div className="relative group">
             <Lock className="absolute left-4 top-3.5 h-5 w-5 text-neutral-400 group-focus-within:text-primary-500 transition-colors rtl:left-auto rtl:right-4" />
