@@ -2,11 +2,12 @@ import {useTranslations} from 'next-intl';
 import {setRequestLocale} from 'next-intl/server';
 import {Link} from '@/i18n/routing';
 
-export default function HomePage({
-  params: {locale}
+export default async function HomePage({
+  params
 }: {
-  params: {locale: string}
+  params: Promise<{locale: string}>
 }) {
+  const { locale } = await params;
   setRequestLocale(locale);
   const t = useTranslations('common');
 

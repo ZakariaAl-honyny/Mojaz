@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import LoginForm from '@/components/forms/auth/LoginForm';
 import PublicLayout from '@/components/layout/PublicLayout';
 
@@ -8,7 +9,7 @@ export default function LoginPage() {
         <div className="w-full max-w-lg">
           <LoginForm />
           <p className="mt-10 text-center text-sm font-semibold text-neutral-500">
-            ليس لديك حساب؟ <a href="/register" className="text-primary-500 hover:text-primary-600 underline">إنشاء حساب جديد</a>
+            ليس لديك حساب؟ <Link href="/register" className="text-primary-500 hover:text-primary-600 underline">إنشاء حساب جديد</Link>
           </p>
         </div>
       </div>
