@@ -2,21 +2,21 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { 
-  useReactTable, 
-  getCoreRowModel, 
-  flexRender, 
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
   createColumnHelper,
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
   getFilteredRowModel
 } from "@tanstack/react-table";
-import { 
-  Search, 
-  Filter, 
-  ChevronLeft, 
-  ChevronRight, 
+import {
+  Search,
+  Filter,
+  ChevronLeft,
+  ChevronRight,
   ExternalLink,
   MoreVertical,
   Activity
@@ -72,22 +72,22 @@ export default function EmployeeApplicationsPage() {
     columnHelper.accessor("applicationNumber", {
       header: t("columns.number"),
       cell: (info) => (
-         <div className="flex flex-col">
-            <span className="font-bold text-primary-900 border border-primary-200 bg-primary-50 px-2 py-0.5 rounded text-sm font-mono self-start cursor-pointer hover:bg-primary-100 transition-colors">
-               {info.getValue()}
-            </span>
-         </div>
+        <div className="flex flex-col">
+          <span className="font-bold text-primary-900 border border-primary-200 bg-primary-50 px-2 py-0.5 rounded text-sm font-mono self-start cursor-pointer hover:bg-primary-100 transition-colors">
+            {info.getValue()}
+          </span>
+        </div>
       ),
     }),
     columnHelper.accessor("applicantName", {
       header: t("columns.applicant"),
       cell: (info) => (
-         <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-xs font-black text-neutral-400">
-               {info.getValue().charAt(0)}
-            </div>
-            <span className="font-bold text-neutral-800">{info.getValue()}</span>
-         </div>
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-xs font-black text-neutral-400">
+            {info.getValue().charAt(0)}
+          </div>
+          <span className="font-bold text-neutral-800">{info.getValue()}</span>
+        </div>
       ),
     }),
     columnHelper.accessor("category", {
@@ -100,29 +100,29 @@ export default function EmployeeApplicationsPage() {
     columnHelper.accessor("stage", {
       header: t("columns.stage"),
       cell: (info) => (
-         <span className="flex items-center gap-1.5 text-xs font-bold text-neutral-500 uppercase tracking-widest bg-neutral-50 px-2 py-1 rounded">
-            <Activity className="w-3.5 h-3.5 text-primary-500" />
-            {info.getValue()}
-         </span>
+        <span className="flex items-center gap-1.5 text-xs font-bold text-neutral-500 uppercase tracking-widest bg-neutral-50 px-2 py-1 rounded">
+          <Activity className="w-3.5 h-3.5 text-primary-500" />
+          {info.getValue()}
+        </span>
       ),
     }),
     columnHelper.accessor("submittedAt", {
       header: t("columns.submittedAt"),
       cell: (info) => (
-         <span className="text-neutral-400 font-medium italic italic">
-            {new Date(info.getValue()).toLocaleDateString(locale as string)}
-         </span>
+        <span className="text-neutral-400 font-medium italic italic">
+          {new Date(info.getValue()).toLocaleDateString(locale as string)}
+        </span>
       ),
     }),
     columnHelper.display({
       id: "actions",
       header: t("columns.actions"),
       cell: (info) => (
-         <Link href={`/${locale}/applications/${info.row.original.id}/review`}>
-            <Button variant="ghost" className="h-10 w-10 p-0 rounded-xl hover:bg-primary-50 hover:text-primary-600">
-               <ExternalLink className="h-5 w-5" />
-            </Button>
-         </Link>
+        <Link href={`/${locale}/applications/${info.row.original.id}/review`}>
+          <Button variant="ghost" className="h-10 w-10 p-0 rounded-xl hover:bg-primary-50 hover:text-primary-600">
+            <ExternalLink className="h-5 w-5" />
+          </Button>
+        </Link>
       ),
     }),
   ];
@@ -146,10 +146,10 @@ export default function EmployeeApplicationsPage() {
     <div className="space-y-12 py-6">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="space-y-2">
-           <h1 className="text-5xl font-black text-neutral-900 tracking-tight leading-none uppercase">{t("title")}</h1>
-           <p className="text-lg text-neutral-500 max-w-xl font-medium leading-relaxed italic">
-              {t("subtitle")}
-           </p>
+          <h1 className="text-5xl font-black text-neutral-900 tracking-tight leading-none uppercase">{t("title")}</h1>
+          <p className="text-lg text-neutral-500 max-w-xl font-medium leading-relaxed italic">
+            {t("subtitle")}
+          </p>
         </div>
         <div className="flex items-center gap-3">
           <div className="relative w-80">
