@@ -18,5 +18,12 @@
         "${GITHUB_TOKEN}"
       ]
     },
+    "PlayWright": {
+      "type": "local",
+      "command": [
+        "npx",
+        "@playwright/mcp@latest"
+      ]
+    },
   }
 }
