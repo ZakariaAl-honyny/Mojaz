@@ -75,7 +75,7 @@ public class NotificationService : INotificationService
         if (request.Sms && !string.IsNullOrEmpty(user.PhoneNumber))
         {
             var body = user.PreferredLanguage == "ar" ? request.MessageAr : request.MessageEn;
-            try { await _smsService.SendSmsAsync(user.PhoneNumber, body); } catch { /* Log failure */ }
+            try { await _smsService.SendAsync(user.PhoneNumber, body); } catch { /* Log failure */ }
         }
 
         // 4. Dispatch via Push

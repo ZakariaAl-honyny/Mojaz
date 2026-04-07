@@ -2,10 +2,12 @@ using Hangfire;
 using Mojaz.Application.DTOs.Email;
 using Mojaz.Application.DTOs.Email.Templates;
 using Mojaz.Application.DTOs.Auth;
+using Mojaz.Application.Interfaces.Infrastructure;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
+using Mojaz.Shared.Constants;
 using Mojaz.Shared.Models;
 using Mojaz.Shared.Extensions;
 using System;
@@ -13,6 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using IEmailService = Mojaz.Application.Interfaces.Services.IEmailService;
+using ISmsService = Mojaz.Application.Interfaces.Services.ISmsService;
 
 namespace Mojaz.Application.Services;
 
@@ -28,6 +32,7 @@ public class AuthService : IAuthService
     private readonly ISystemSettingsService _settingsService;
     private readonly IOtpService _otpService;
     private readonly IEmailService _emailService;
+    private readonly ISmsService _smsService;
     private readonly IBackgroundJobClient _backgroundJobClient;
 
     public AuthService(
@@ -41,6 +46,7 @@ public class AuthService : IAuthService
         ISystemSettingsService settingsService,
         IOtpService otpService,
         IEmailService emailService,
+        ISmsService smsService,
         IBackgroundJobClient backgroundJobClient)
     {
         _userRepository = userRepository;
@@ -53,6 +59,7 @@ public class AuthService : IAuthService
         _settingsService = settingsService;
         _otpService = otpService;
         _emailService = emailService;
+        _smsService = smsService;
         _backgroundJobClient = backgroundJobClient;
     }
 
@@ -135,6 +142,13 @@ public class AuthService : IAuthService
             ReferenceId = user.Id.ToString()
         };
         _backgroundJobClient.Enqueue(() => _emailService.SendTemplatedAsync(emailRequest));
+
+        // Send OTP via SMS for phone registration
+        if (request.Method == RegistrationMethod.Phone && !string.IsNullOrEmpty(user.PhoneNumber))
+        {
+            var smsMessage = SmsTemplates.GetMessage(SmsTemplates.RegistrationOtp, user.PreferredLanguage ?? "ar", otpValue);
+            _backgroundJobClient.Enqueue(() => _smsService.SendAsync(user.PhoneNumber, smsMessage));
+        }
 
         var response = new RegisterResponse
         {
@@ -396,6 +410,13 @@ public class AuthService : IAuthService
                 ReferenceId = user.Id.ToString()
             };
             _backgroundJobClient.Enqueue(() => _emailService.SendTemplatedAsync(emailRequest));
+        }
+
+        // Send OTP via SMS for phone-based password recovery
+        if (request.Method == RegistrationMethod.Phone && !string.IsNullOrEmpty(user.PhoneNumber))
+        {
+            var smsMessage = SmsTemplates.GetMessage(SmsTemplates.RecoveryOtp, user.PreferredLanguage ?? "ar", otpValue);
+            _backgroundJobClient.Enqueue(() => _smsService.SendAsync(user.PhoneNumber, smsMessage));
         }
 
         await _auditService.LogAsync("FORGOT_PASSWORD_REQUEST", "User", user.Id.ToString());

@@ -31,6 +31,7 @@ public class AuthService_DuplicateChecks_Tests
     private readonly Mock<ISystemSettingsService> _settingsService = new();
     private readonly Mock<IOtpService> _otpService = new();
     private readonly Mock<IEmailService> _emailService = new();
+    private readonly Mock<ISmsService> _smsService = new();
 
     private AuthService CreateService() => new(
         _userRepo.Object,
@@ -43,6 +44,7 @@ public class AuthService_DuplicateChecks_Tests
         _settingsService.Object,
         _otpService.Object,
         _emailService.Object,
+        _smsService.Object,
         Mock.Of<IBackgroundJobClient>()
     );
 
