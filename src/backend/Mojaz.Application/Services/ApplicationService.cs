@@ -1,6 +1,9 @@
 using AutoMapper;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Mojaz.Application.DTOs.Application;
+using Mojaz.Application.DTOs.Email;
+using Mojaz.Application.DTOs.Email.Templates;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
@@ -27,6 +30,8 @@ public class ApplicationService : IApplicationService
     private readonly IMapper _mapper;
     private readonly IAuditService _auditService;
     private readonly INotificationService _notificationService;
+    private readonly IEmailService _emailService;
+    private readonly IBackgroundJobClient _backgroundJobClient;
 
     public ApplicationService(
         IRepository<ApplicationEntity> applicationRepository,
@@ -36,7 +41,9 @@ public class ApplicationService : IApplicationService
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IAuditService auditService,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        IEmailService emailService,
+        IBackgroundJobClient backgroundJobClient)
     {
         _applicationRepository = applicationRepository;
         _userRepository = userRepository;
@@ -46,6 +53,8 @@ public class ApplicationService : IApplicationService
         _mapper = mapper;
         _auditService = auditService;
         _notificationService = notificationService;
+        _emailService = emailService;
+        _backgroundJobClient = backgroundJobClient;
     }
 
     public async Task<ApiResponse<ApplicationDto>> CreateAsync(CreateApplicationRequest request, Guid userId)
@@ -125,6 +134,27 @@ public class ApplicationService : IApplicationService
             MessageAr = $"تم تقديم طلبك بنجاح. رقم الطلب: {application.ApplicationNumber}",
             MessageEn = $"Your application has been submitted successfully. Number: {application.ApplicationNumber}"
         });
+
+        // 7. Application Received Email (Hangfire)
+        if (!string.IsNullOrEmpty(user.Email))
+        {
+            var emailData = new ApplicationReceivedEmailData
+            {
+                ApplicationNumber = application.ApplicationNumber,
+                ServiceTypeAr = application.ServiceType.ToString(),
+                ServiceTypeEn = application.ServiceType.ToString(),
+                NextStepsAr = new List<string> { "الخطوة التالية 1", "الخطوة التالية 2" }, // Replace with real steps
+                NextStepsEn = new List<string> { "Next step 1", "Next step 2" } // Replace with real steps
+            };
+            var emailRequest = new TemplatedEmailRequest
+            {
+                RecipientEmail = user.Email,
+                TemplateName = "application-received",
+                TemplateData = emailData,
+                ReferenceId = application.Id.ToString()
+            };
+            _backgroundJobClient.Enqueue(() => _emailService.SendTemplatedAsync(emailRequest));
+        }
 
         return ApiResponse<ApplicationDto>.Ok(_mapper.Map<ApplicationDto>(application), "Application created successfully.");
     }
@@ -237,6 +267,39 @@ public class ApplicationService : IApplicationService
         await _auditService.LogAsync("STATUS_CHANGE", "Application", id.ToString(), oldStatus.ToString(), status.ToString());
 
         return ApiResponse<bool>.Ok(true, "Status updated.");
+    }
+
+    public async Task<ApiResponse<bool>> ConfirmAppointmentAsync(Guid appointmentId, Guid userId)
+    {
+        // Fetch appointment and user
+        var appointment = await _applicationRepository.GetByIdAsync(appointmentId);
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (appointment == null || user == null)
+            return ApiResponse<bool>.Fail(404, "Appointment or user not found.");
+
+        // Send appointment-confirmed email
+        if (!string.IsNullOrEmpty(user.Email))
+        {
+            var emailData = new AppointmentConfirmedEmailData
+            {
+                AppointmentTypeAr = appointment.ServiceType.ToString(), // Adjust as needed
+                AppointmentTypeEn = appointment.ServiceType.ToString(), // Adjust as needed
+                DateTimeAr = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm"), // Replace with actual date/time
+                DateTimeEn = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm"),
+                LocationAr = appointment.BranchId.ToString(), // Replace with actual location name if available
+                LocationEn = appointment.BranchId.ToString()
+            };
+            var emailRequest = new TemplatedEmailRequest
+            {
+                RecipientEmail = user.Email,
+                TemplateName = "appointment-confirmed",
+                TemplateData = emailData,
+                ReferenceId = appointment.Id.ToString()
+            };
+            _backgroundJobClient.Enqueue(() => _emailService.SendTemplatedAsync(emailRequest));
+        }
+
+        return ApiResponse<bool>.Ok(true, "Appointment confirmed and email sent.");
     }
 
     private string GenerateApplicationNumber()

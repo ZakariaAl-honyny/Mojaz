@@ -1,3 +1,6 @@
+using Hangfire;
+using Mojaz.Application.DTOs.Email;
+using Mojaz.Application.DTOs.Email.Templates;
 using Mojaz.Application.DTOs.Auth;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Entities;
@@ -24,6 +27,8 @@ public class AuthService : IAuthService
     private readonly IAuditService _auditService;
     private readonly ISystemSettingsService _settingsService;
     private readonly IOtpService _otpService;
+    private readonly IEmailService _emailService;
+    private readonly IBackgroundJobClient _backgroundJobClient;
 
     public AuthService(
         IRepository<User> userRepository,
@@ -34,7 +39,9 @@ public class AuthService : IAuthService
         INotificationService notificationService,
         IAuditService auditService,
         ISystemSettingsService settingsService,
-        IOtpService otpService)
+        IOtpService otpService,
+        IEmailService emailService,
+        IBackgroundJobClient backgroundJobClient)
     {
         _userRepository = userRepository;
         _otpRepository = otpRepository;
@@ -45,6 +52,8 @@ public class AuthService : IAuthService
         _auditService = auditService;
         _settingsService = settingsService;
         _otpService = otpService;
+        _emailService = emailService;
+        _backgroundJobClient = backgroundJobClient;
     }
 
     public async Task<ApiResponse<RegisterResponse>> RegisterAsync(RegisterRequest request)
@@ -93,19 +102,39 @@ public class AuthService : IAuthService
 
         await _auditService.LogAsync("USER_REGISTERED", "User", user.Id.ToString());
 
-        await _notificationService.SendAsync(new NotificationRequest
+        //await _notificationService.SendAsync(new NotificationRequest
+        //{
+        //    UserId = user.Id,
+        //    EventType = NotificationEventType.ApplicationSubmitted,
+        //    TitleAr = "تفعيل الحساب - مُجاز",
+        //    TitleEn = "Account Activation - Mojaz",
+        //    MessageAr = $"رمز التفعيل الخاص بك هو: {otpValue}",
+        //    MessageEn = $"Your activation code is: {otpValue}",
+        //    Email = request.Method == RegistrationMethod.Email,
+        //    Sms = request.Method == RegistrationMethod.Phone,
+        //    InApp = true,
+        //    Push = true
+        //});
+
+        // SEND EMAIL VIA HANGFIRE
+
+
+        // Enqueue account verification email via Hangfire
+        var emailData = new AccountVerificationEmailData
         {
-            UserId = user.Id,
-            EventType = NotificationEventType.ApplicationSubmitted,
-            TitleAr = "تفعيل الحساب - مُجاز",
-            TitleEn = "Account Activation - Mojaz",
-            MessageAr = $"رمز التفعيل الخاص بك هو: {otpValue}",
-            MessageEn = $"Your activation code is: {otpValue}",
-            Email = request.Method == RegistrationMethod.Email,
-            Sms = request.Method == RegistrationMethod.Phone,
-            InApp = true,
-            Push = true
-        });
+            OtpCode = otpValue,
+            ExpiryTime = otp.ExpiresAt.ToString("yyyy-MM-dd HH:mm"),
+            RecipientNameAr = user.FullNameAr,
+            RecipientNameEn = user.FullNameEn
+        };
+        var emailRequest = new TemplatedEmailRequest
+        {
+            RecipientEmail = user.Email,
+            TemplateName = "account-verification",
+            TemplateData = emailData,
+            ReferenceId = user.Id.ToString()
+        };
+        _backgroundJobClient.Enqueue(() => _emailService.SendTemplatedAsync(emailRequest));
 
         var response = new RegisterResponse
         {
@@ -271,19 +300,32 @@ public class AuthService : IAuthService
         await _otpRepository.AddAsync(otp);
         await _unitOfWork.SaveChangesAsync();
 
-        await _notificationService.SendAsync(new NotificationRequest
+        //await _notificationService.SendAsync(new NotificationRequest
+        //{
+        //    UserId = user.Id,
+        //    EventType = NotificationEventType.ApplicationSubmitted,
+        //    TitleAr = "رمز تفعيل جديد - مُجاز",
+        //    TitleEn = "New Activation Code - Mojaz",
+        //    MessageAr = $"رمز التفعيل الخاص بك الجديد هو: {otpValue}",
+        //    MessageEn = $"Your new activation code is: {otpValue}",
+        //    Email = otp.DestinationType == DestinationType.Email,
+        //    Sms = otp.DestinationType == DestinationType.Phone,
+        //    InApp = true,
+        //    Push = true
+        //});
+
+        // SEND EMAIL VIA HANGFIRE
+        if (!string.IsNullOrEmpty(user.Email) && otp.DestinationType == DestinationType.Email)
         {
-            UserId = user.Id,
-            EventType = NotificationEventType.ApplicationSubmitted,
-            TitleAr = "رمز تفعيل جديد - مُجاز",
-            TitleEn = "New Activation Code - Mojaz",
-            MessageAr = $"رمز التفعيل الخاص بك الجديد هو: {otpValue}",
-            MessageEn = $"Your new activation code is: {otpValue}",
-            Email = otp.DestinationType == DestinationType.Email,
-            Sms = otp.DestinationType == DestinationType.Phone,
-            InApp = true,
-            Push = true
-        });
+            _backgroundJobClient.Enqueue(() => _emailService.SendTemplatedAsync(new TemplatedEmailRequest
+            {
+                RecipientEmail = user.Email,
+                TemplateName = "account-verification",
+                TemplateData = new AccountVerificationEmailData { OtpCode = otpValue, ExpiryMinutes = 15 },
+                ReferenceId = user.Id.ToString()
+            }));
+        }
+
         await _auditService.LogAsync("OTP_RESEND_SUCCESS", "User", user.Id.ToString());
         return ApiResponse<OtpResponseDto>.Ok(new OtpResponseDto
         {
@@ -320,19 +362,41 @@ public class AuthService : IAuthService
         await _otpRepository.AddAsync(otp);
         await _unitOfWork.SaveChangesAsync();
 
-        await _notificationService.SendAsync(new NotificationRequest
+        //await _notificationService.SendAsync(new NotificationRequest
+        //{
+        //    UserId = user.Id,
+        //    EventType = NotificationEventType.ApplicationSubmitted,
+        //    TitleAr = "استعادة كلمة المرور - مُجاز",
+        //    TitleEn = "Password Recovery - Mojaz",
+        //    MessageAr = $"رمز استعادة كلمة المرور هو: {otpValue}",
+        //    MessageEn = $"Your password recovery code is: {otpValue}",
+        //    Email = request.Method == RegistrationMethod.Email,
+        //    Sms = request.Method == RegistrationMethod.Phone,
+        //    InApp = true,
+        //    Push = true
+        //});
+
+
+
+        // Enqueue password recovery email via Hangfire
+        if (request.Method == RegistrationMethod.Email)
         {
-            UserId = user.Id,
-            EventType = NotificationEventType.ApplicationSubmitted,
-            TitleAr = "استعادة كلمة المرور - مُجاز",
-            TitleEn = "Password Recovery - Mojaz",
-            MessageAr = $"رمز استعادة كلمة المرور هو: {otpValue}",
-            MessageEn = $"Your password recovery code is: {otpValue}",
-            Email = request.Method == RegistrationMethod.Email,
-            Sms = request.Method == RegistrationMethod.Phone,
-            InApp = true,
-            Push = true
-        });
+            var emailData = new PasswordRecoveryEmailData
+            {
+                OtpCode = otpValue,
+                ExpiryTime = otp.ExpiresAt.ToString("yyyy-MM-dd HH:mm"),
+                RecipientNameAr = user.FullNameAr,
+                RecipientNameEn = user.FullNameEn
+            };
+            var emailRequest = new TemplatedEmailRequest
+            {
+                RecipientEmail = user.Email,
+                TemplateName = "password-recovery",
+                TemplateData = emailData,
+                ReferenceId = user.Id.ToString()
+            };
+            _backgroundJobClient.Enqueue(() => _emailService.SendTemplatedAsync(emailRequest));
+        }
 
         await _auditService.LogAsync("FORGOT_PASSWORD_REQUEST", "User", user.Id.ToString());
 

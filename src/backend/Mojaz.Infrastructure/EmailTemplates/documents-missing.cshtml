@@ -1,0 +1,47 @@
+﻿@using Mojaz.Application.DTOs.Email.Templates
+@model DocumentsMissingEmailData
+@{
+    Layout = "_BaseLayout.cshtml";
+}
+
+@section Ar {
+    <h2 style="color: #b91c1c; font-family: 'Cairo', sans-serif;">نواقض في مستندات الطلب</h2>
+    <p>يرجى العلم بأنه قد تمت مراجعة مستندات طلبكم رقم: <span style="font-weight: bold;">@Model.ApplicationNumber</span> وتم العثور على ملاحظات تتطلب إجراءً منكم:</p>
+    
+    <div style="background: #fef2f2; border-right: 4px solid #ef4444; padding: 15px; margin: 20px 0; border-radius: 8px;">
+        <h3 style="color: #991b1b; font-size: 16px; margin: 0 0 10px 0;">المستندات المطلوبة أو المرفوضة:</h3>
+        <ul style="padding-right: 20px; color: #991b1b;">
+            @foreach (var doc in Model.MissingDocumentsAr ?? new List<string>())
+            {
+                <li style="margin-bottom: 5px;">@doc</li>
+            }
+        </ul>
+    </div>
+    
+    <p>يرجى إعادة رفع المستندات المطلوبة من خلال البوابة الإلكترونية قبل تاريخ: <strong style="color: #b91c1c;">@Model.DeadlineDateAr</strong> لتجنب إلغاء الطلب.</p>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/members/applications/@Model.ApplicationId" style="display: inline-block; background-color: #006C35; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">رفع المستندات الآن</a>
+    </div>
+}
+
+@section En {
+    <h2 style="color: #b91c1c;">Incomplete or Rejected Documents</h2>
+    <p>Please be informed that your documents for application <span style="font-weight: bold;">@Model.ApplicationNumber</span> have been reviewed, and we require additional information or corrections:</p>
+    
+    <div style="background: #fef2f2; border-left: 4px solid #ef4444; padding: 15px; margin: 20px 0; border-radius: 8px;">
+        <h3 style="color: #991b1b; font-size: 16px; margin: 0 0 10px 0;">Missing or Rejected Documents:</h3>
+        <ul style="padding-left: 20px; color: #991b1b;">
+            @foreach (var doc in Model.MissingDocumentsEn ?? new List<string>())
+            {
+                <li style="margin-bottom: 5px;">@doc</li>
+            }
+        </ul>
+    </div>
+    
+    <p>Please re-upload the requested documents via the member portal before: <strong style="color: #b91c1c;">@Model.DeadlineDateEn</strong> to avoid application cancellation.</p>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/members/applications/@Model.ApplicationId" style="display: inline-block; background-color: #006C35; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">Upload Documents Now</a>
+    </div>
+}

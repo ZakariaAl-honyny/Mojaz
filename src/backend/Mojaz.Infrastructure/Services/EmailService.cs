@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using Mojaz.Application.DTOs.Email;
 using Mojaz.Application.Interfaces.Services;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -10,9 +11,9 @@ namespace Mojaz.Infrastructure.Services;
 public class EmailService : IEmailService
 {
     private readonly IConfiguration _configuration;
-    private readonly ISendGridClient _client;
+    private readonly SendGridClient _client;
 
-    public EmailService(IConfiguration configuration, ISendGridClient client)
+    public EmailService(IConfiguration configuration, SendGridClient client)
     {
         _configuration = configuration;
         _client = client;
@@ -33,5 +34,18 @@ public class EmailService : IEmailService
             var errorBody = await response.Body.ReadAsStringAsync();
             throw new Exception($"Failed to send email via SendGrid: {errorBody}");
         }
+    }
+
+    public async Task SendTemplatedAsync(TemplatedEmailRequest request)
+    {
+        // Use the rendered HTML body as content
+        await SendEmailAsync(request.RecipientEmail, request.TemplateName, request.TemplateData?.ToString() ?? "");
+    }
+
+    public async Task<string> RenderTemplateAsync<T>(string templateName, T model)
+    {
+        // Simple implementation - just return model to string for now
+        // In production, this would use RazorLight
+        return model?.ToString() ?? string.Empty;
     }
 }

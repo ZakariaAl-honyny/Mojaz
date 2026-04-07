@@ -5,6 +5,7 @@ using Mojaz.API.Extensions;
 using Mojaz.API.Middleware;
 using Mojaz.Application.Extensions;
 using Mojaz.Infrastructure;
+using Mojaz.Infrastructure.Extensions;
 using Serilog;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
@@ -59,6 +60,9 @@ builder.Services.AddRateLimiter(options =>
         )
     );
 });
+
+// ─── Email Services Registration ───
+builder.Services.AddMojazEmail(builder.Configuration);
 
 var app = builder.Build();
 

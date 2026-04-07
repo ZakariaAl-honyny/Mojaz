@@ -13,6 +13,7 @@ using Mojaz.Shared;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Xunit;
+using Hangfire;
 
 namespace Mojaz.Application.Tests;
 
@@ -26,6 +27,7 @@ public class ApplicationServiceTests
     private readonly Mock<IMapper> _mapper = new();
     private readonly Mock<IAuditService> _auditService = new();
     private readonly Mock<INotificationService> _notificationService = new();
+    private readonly Mock<IEmailService> _emailService = new();
 
     private ApplicationService CreateService() => new(
         _applicationRepo.Object,
@@ -35,7 +37,9 @@ public class ApplicationServiceTests
         _unitOfWork.Object,
         _mapper.Object,
         _auditService.Object,
-        _notificationService.Object
+        _notificationService.Object,
+        _emailService.Object,
+        Mock.Of<IBackgroundJobClient>()
     );
 
     [Fact]
