@@ -33,6 +33,7 @@ namespace Mojaz.Infrastructure.Persistence
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<SystemSetting> SystemSettings { get; set; }
         public DbSet<FeeStructure> FeeStructures { get; set; }
+        public DbSet<EmailLog> EmailLogs { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

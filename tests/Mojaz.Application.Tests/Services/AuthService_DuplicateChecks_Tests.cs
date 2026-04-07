@@ -14,6 +14,7 @@ using Mojaz.Domain.Interfaces;
 using Mojaz.Shared.Models;
 using Moq;
 using Xunit;
+using Hangfire;
 
 namespace Mojaz.Application.Tests.Services;
 
@@ -29,6 +30,7 @@ public class AuthService_DuplicateChecks_Tests
     private readonly Mock<IAuditService> _auditService = new();
     private readonly Mock<ISystemSettingsService> _settingsService = new();
     private readonly Mock<IOtpService> _otpService = new();
+    private readonly Mock<IEmailService> _emailService = new();
 
     private AuthService CreateService() => new(
         _userRepo.Object,
@@ -39,7 +41,9 @@ public class AuthService_DuplicateChecks_Tests
         _notificationService.Object,
         _auditService.Object,
         _settingsService.Object,
-        _otpService.Object
+        _otpService.Object,
+        _emailService.Object,
+        Mock.Of<IBackgroundJobClient>()
     );
 
     [Fact]

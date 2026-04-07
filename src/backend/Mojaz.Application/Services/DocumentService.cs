@@ -1,9 +1,12 @@
 using Mojaz.Application.DTOs.Document;
+using Mojaz.Application.DTOs.Email;
+using Mojaz.Application.DTOs.Email.Templates;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Shared.Models;
+using Hangfire;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,19 +21,28 @@ public class DocumentService : IDocumentService
 {
     private readonly IRepository<ApplicationDocument> _documentRepository;
     private readonly IRepository<ApplicationEntity> _applicationRepository;
+    private readonly IRepository<User> _userRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IAuditService _auditService;
+    private readonly IEmailService _emailService;
+    private readonly IBackgroundJobClient _backgroundJobClient;
 
     public DocumentService(
         IRepository<ApplicationDocument> documentRepository,
         IRepository<ApplicationEntity> applicationRepository,
+        IRepository<User> userRepository,
         IUnitOfWork unitOfWork,
-        IAuditService auditService)
+        IAuditService auditService,
+        IEmailService emailService,
+        IBackgroundJobClient backgroundJobClient)
     {
         _documentRepository = documentRepository;
         _applicationRepository = applicationRepository;
+        _userRepository = userRepository;
         _unitOfWork = unitOfWork;
         _auditService = auditService;
+        _emailService = emailService;
+        _backgroundJobClient = backgroundJobClient;
     }
 
     public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, UploadDocumentRequest request, Guid userId)
@@ -86,6 +98,38 @@ public class DocumentService : IDocumentService
         await _auditService.LogAsync("REVIEW_DOCUMENT", "Document", documentId.ToString(), "Pending", document.Status.ToString());
 
         return ApiResponse<bool>.Ok(true, "Document reviewed.");
+    }
+
+    public async Task<ApiResponse<bool>> NotifyMissingDocumentsAsync(Guid applicationId, List<string> missingDocumentsAr, List<string> missingDocumentsEn, DateTime deadline)
+    {
+        var application = await _applicationRepository.GetByIdAsync(applicationId);
+        if (application == null) return ApiResponse<bool>.Fail(404, "Application not found.");
+
+        var user = await _userRepository.GetByIdAsync(application.ApplicantId);
+        if (user != null && !string.IsNullOrEmpty(user.Email))
+        {
+            var emailData = new DocumentsMissingEmailData
+            {
+                ApplicationId = applicationId.ToString(),
+                ApplicationNumber = application.ApplicationNumber,
+                MissingDocumentsAr = missingDocumentsAr,
+                MissingDocumentsEn = missingDocumentsEn,
+                DeadlineDateAr = deadline.ToString("yyyy-MM-dd"),
+                DeadlineDateEn = deadline.ToString("yyyy-MM-dd")
+            };
+
+            _backgroundJobClient.Enqueue(() => _emailService.SendTemplatedAsync(new TemplatedEmailRequest
+            {
+                RecipientEmail = user.Email,
+                TemplateName = "documents-missing",
+                TemplateData = emailData,
+                ReferenceId = applicationId.ToString()
+            }));
+
+            await _auditService.LogAsync("NOTIFY_MISSING_DOCUMENTS", "Application", applicationId.ToString(), null, "Sent");
+        }
+
+        return ApiResponse<bool>.Ok(true, "Missing documents notification sent.");
     }
 
     public async Task<ApiResponse<bool>> DeleteAsync(Guid documentId, Guid userId)
