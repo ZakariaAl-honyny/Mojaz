@@ -10,7 +10,7 @@ public interface IAuthService
     Task<ApiResponse<RegisterResponse>> RegisterAsync(RegisterRequest request);
     Task<ApiResponse<LoginResponse>> LoginAsync(LoginRequest request);
     Task<ApiResponse<bool>> VerifyOtpAsync(VerifyOtpRequest request);
-    Task<ApiResponse<bool>> ResendOtpAsync(ResendOtpRequest request);
+    Task<ApiResponse<OtpResponseDto>> ResendOtpAsync(ResendOtpRequest request);
     Task<ApiResponse<LoginResponse>> RefreshTokenAsync(RefreshTokenRequest request);
     Task<ApiResponse<bool>> LogoutAsync(LogoutRequest request);
     Task<ApiResponse<bool>> ForgotPasswordAsync(ForgotPasswordRequest request);

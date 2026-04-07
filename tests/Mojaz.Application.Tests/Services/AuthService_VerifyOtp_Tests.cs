@@ -17,8 +17,7 @@ using Xunit;
 
 namespace Mojaz.Application.Tests.Services;
 
-
-public class AuthService_DuplicateChecks_Tests
+public class AuthService_VerifyOtp_Tests
 {
     private readonly Mock<IRepository<User>> _userRepo = new();
     private readonly Mock<IOtpRepository> _otpRepo = new();
@@ -43,56 +42,51 @@ public class AuthService_DuplicateChecks_Tests
     );
 
     [Fact]
-    public async Task RegisterAsync_ExistingEmail_ReturnsBadRequest()
+    public async Task VerifyOtpAsync_NoValidOtp_ReturnsBadRequest()
     {
         // Arrange
         var service = CreateService();
-        var email = "duplicate@mojaz.gov.sa";
-        var request = new RegisterRequest
-        {
-            FullName = "New User",
-            Email = email,
-            Password = "Password123!",
-            Method = RegistrationMethod.Email
-        };
-
-        // Mock ExistsAsync to return true for email
-        _userRepo.Setup(r => r.ExistsAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
+        _otpRepo.Setup(r => r.GetLatestByDestinationAndPurposeAsync(It.IsAny<string>(), It.IsAny<OtpPurpose>()))
+                 .ReturnsAsync((OtpCode?)null);
 
         // Act
-        var result = await service.RegisterAsync(request);
+        var result = await service.VerifyOtpAsync(new VerifyOtpRequest { Destination = "test@resend.com", Code = "123456", Purpose = OtpPurpose.Registration });
 
         // Assert
-        result.Success.Should().BeFalse();
         result.StatusCode.Should().Be(400);
-        result.Message.Should().Contain("already exists");
+        result.Message.Should().Be("invalid_otp_or_expired");
     }
 
     [Fact]
-    public async Task RegisterAsync_ExistingPhone_ReturnsBadRequest()
+    public async Task VerifyOtpAsync_CorrectCode_ReturnsSuccessAndActivatesUser()
     {
         // Arrange
         var service = CreateService();
-        var phone = "+966500000000";
-        var request = new RegisterRequest
-        {
-            FullName = "New User",
-            Phone = phone,
-            Password = "Password123!",
-            Method = RegistrationMethod.Phone
+        var user = new User { Id = Guid.NewGuid(), Email = "test@resend.com", RegistrationMethod = RegistrationMethod.Email, IsActive = false };
+        var otp = new OtpCode 
+        { 
+            CodeHash = "hashed_123456", 
+            UserId = user.Id, 
+            ExpiresAt = DateTime.UtcNow.AddMinutes(10), 
+            MaxAttempts = 3,
+            Purpose = OtpPurpose.Registration
         };
 
-        // Mock ExistsAsync to return true for phone
-        _userRepo.Setup(r => r.ExistsAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
+        _userRepo.Setup(r => r.GetByIdAsync(user.Id, It.IsAny<CancellationToken>()))
+                 .ReturnsAsync(user);
+
+        _otpRepo.Setup(r => r.GetLatestByDestinationAndPurposeAsync(It.IsAny<string>(), It.IsAny<OtpPurpose>()))
+                 .ReturnsAsync(otp);
+
+        _otpService.Setup(s => s.VerifyOtpHash("123456", "hashed_123456")).Returns(true);
 
         // Act
-        var result = await service.RegisterAsync(request);
+        var result = await service.VerifyOtpAsync(new VerifyOtpRequest { Destination = "test@resend.com", Code = "123456", Purpose = OtpPurpose.Registration });
 
         // Assert
-        result.Success.Should().BeFalse();
-        result.StatusCode.Should().Be(400);
-        result.Message.Should().Contain("already exists");
+        result.Success.Should().BeTrue();
+        user.IsActive.Should().BeTrue();
+        user.IsEmailVerified.Should().BeTrue();
+        otp.IsUsed.Should().BeTrue();
     }
 }
