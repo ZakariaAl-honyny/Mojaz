@@ -47,7 +47,7 @@ public class AuthController : ControllerBase
     /// Verify an OTP code for a specific user and purpose.
     /// </summary>
     [HttpPost("verify-otp")]
-    [ProducesResponseType(typeof(ApiResponse<LoginResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpRequest request)
     {
@@ -59,7 +59,7 @@ public class AuthController : ControllerBase
     /// Resend an OTP code to the user's destination.
     /// </summary>
     [HttpPost("resend-otp")]
-    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<OtpResponseDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status429TooManyRequests)]
     public async Task<IActionResult> ResendOtp([FromBody] ResendOtpRequest request)
     {

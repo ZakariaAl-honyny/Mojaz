@@ -19,13 +19,14 @@ namespace Mojaz.Application.Tests.Services;
 public class AuthService_RegisterPhone_Tests
 {
     private readonly Mock<IRepository<User>> _userRepo = new();
-    private readonly Mock<IRepository<OtpCode>> _otpRepo = new();
+    private readonly Mock<IOtpRepository> _otpRepo = new();
     private readonly Mock<IRepository<RefreshToken>> _refreshTokenRepo = new();
     private readonly Mock<IUnitOfWork> _unitOfWork = new();
     private readonly Mock<IJwtService> _jwtService = new();
     private readonly Mock<INotificationService> _notificationService = new();
     private readonly Mock<IAuditService> _auditService = new();
     private readonly Mock<ISystemSettingsService> _settingsService = new();
+    private readonly Mock<IOtpService> _otpService = new();
 
     private AuthService CreateService() => new(
         _userRepo.Object,
@@ -35,7 +36,8 @@ public class AuthService_RegisterPhone_Tests
         _jwtService.Object,
         _notificationService.Object,
         _auditService.Object,
-        _settingsService.Object
+        _settingsService.Object,
+        _otpService.Object
     );
 
     [Fact]
@@ -67,7 +69,7 @@ public class AuthService_RegisterPhone_Tests
         
         _userRepo.Verify(r => r.AddAsync(It.Is<User>(u => 
             u.PhoneNumber == request.Phone && 
-            u.IsActive == true &&
+            u.IsActive == false &&
             u.RegistrationMethod == RegistrationMethod.Phone
         ), It.IsAny<CancellationToken>()), Times.Once);
 
@@ -75,7 +77,7 @@ public class AuthService_RegisterPhone_Tests
             o.Destination == request.Phone && 
             o.DestinationType == DestinationType.Phone &&
             o.Purpose == OtpPurpose.Registration
-        ), It.IsAny<CancellationToken>()), Times.Once);
+        )), Times.Once);
 
         _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }

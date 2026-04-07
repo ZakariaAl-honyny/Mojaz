@@ -36,31 +36,6 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddHttpContextAccessor();
 
-// ─── JWT Authentication ───
-var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtSettings["SecretKey"] ?? "MojazSuperSecretKeyForDevelopment2025!@#$%")),
-        ValidateIssuer = true,
-        ValidIssuer = jwtSettings["Issuer"] ?? "Mojaz",
-        ValidateAudience = true,
-        ValidAudience = jwtSettings["Audience"] ?? "MojazClients",
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero
-    };
-});
-
-builder.Services.AddAuthorization();
-
 // ─── Modular Extensions (Phase 3 Fix) ───
 builder.Services.AddMojazCors(builder.Configuration);
 builder.Services.AddMojazSwagger();
