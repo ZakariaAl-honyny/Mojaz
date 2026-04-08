@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
 using FluentValidation;
+using Mojaz.Application.Services;
 using System.Reflection;
 
 namespace Mojaz.Application.Extensions
@@ -13,6 +14,9 @@ namespace Mojaz.Application.Extensions
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             // Register FluentValidation validators in this assembly
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            // Register application services
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuditLogService, AuditLogService>();
             return services;
         }
     }

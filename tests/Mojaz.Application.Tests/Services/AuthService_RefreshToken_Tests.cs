@@ -82,7 +82,7 @@ public class AuthService_RefreshToken_Tests
         var user = new User { Id = userId, FullNameEn = "User One", Role = UserRole.Applicant, IsActive = true };
         _userRepo.Setup(r => r.GetByIdAsync(userId, It.IsAny<CancellationToken>())).ReturnsAsync(user);
 
-        _jwtService.Setup(j => j.GenerateAccessToken(user.Id, user.FullNameEn, user.Role.ToString())).Returns("new_access_token");
+        _jwtService.Setup(j => j.GenerateAccessToken(user.Id, user.FullNameEn, user.AppRole)).Returns("new_access_token");
         _jwtService.Setup(j => j.GenerateRefreshToken()).Returns("new_refresh_token");
 
         var service = CreateService();

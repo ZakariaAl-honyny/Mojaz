@@ -1,9 +1,12 @@
 using System.Text;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using Hangfire;
+using Hangfire.Dashboard;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Mojaz.API.Extensions;
+using Mojaz.API.Filters;
 using Mojaz.API.Middleware;
 using Mojaz.Application.Extensions;
 using Mojaz.Infrastructure;
@@ -55,6 +58,12 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddMojazCors(builder.Configuration);
 builder.Services.AddMojazSwagger();
 
+// ─── Authorization Policies ───
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicies();
+});
+
 // ─── Health Checks ───
 builder.Services.AddHealthChecks();
 
@@ -105,6 +114,13 @@ app.UseRateLimiter();
 
 app.MapControllers().RequireRateLimiting("registration");
 app.MapHealthChecks("/health").AllowAnonymous();
+
+// ─── Hangfire Dashboard (Phase 6) ───
+// Dashboard accessible at /hangfire (requires authorization in production)
+app.MapHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new DashboardAuthorizationFilter() }
+});
 
 app.Run();
 

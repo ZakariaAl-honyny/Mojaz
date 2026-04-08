@@ -17,6 +17,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using IEmailService = Mojaz.Application.Interfaces.Services.IEmailService;
 using ISmsService = Mojaz.Application.Interfaces.Services.ISmsService;
+using Microsoft.AspNetCore.Http;
 
 namespace Mojaz.Application.Services;
 
@@ -193,7 +194,7 @@ public class AuthService : IAuthService
         if (!user.IsEmailVerified && !user.IsPhoneVerified)
             return ApiResponse<LoginResponse>.Fail(403, "Account is not verified.");
 
-        var accessToken = _jwtService.GenerateAccessToken(user.Id, user.FullNameEn, user.Role.ToString());
+        var accessToken = _jwtService.GenerateAccessToken(user.Id, user.FullNameEn, user.AppRole);
         var refreshTokenValue = _jwtService.GenerateRefreshToken();
 
         var refreshToken = new RefreshToken
@@ -464,7 +465,7 @@ public class AuthService : IAuthService
         if (user == null || !user.IsActive)
             return ApiResponse<LoginResponse>.Fail(403, "User not found or inactive.");
 
-        var newAccessToken = _jwtService.GenerateAccessToken(user.Id, user.FullNameEn, user.Role.ToString());
+        var newAccessToken = _jwtService.GenerateAccessToken(user.Id, user.FullNameEn, user.AppRole);
         var newRefreshTokenValue = _jwtService.GenerateRefreshToken();
 
         storedToken.IsRevoked = true;
@@ -506,5 +507,30 @@ public class AuthService : IAuthService
         }
 
         return ApiResponse<bool>.Ok(true, "Logged out successfully.");
+    }
+
+    public async Task<ApiResponse<bool>> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword)
+    {
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null)
+        {
+            return ApiResponse<bool>.Fail(404, "User not found");
+        }
+
+        // Verify current password
+        if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.PasswordHash))
+        {
+            return ApiResponse<bool>.Fail(400, "Current password is incorrect");
+        }
+
+        // Hash and set new password
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        user.RequiresPasswordReset = false;
+        _userRepository.Update(user);
+        await _unitOfWork.SaveChangesAsync();
+
+        await _auditService.LogAsync("PASSWORD_CHANGED", "User", userId.ToString());
+
+        return ApiResponse<bool>.Ok(true, "Password changed successfully.");
     }
 }

@@ -5,9 +5,11 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
 using System.Threading.Tasks;
+using Hangfire;
 
 namespace Mojaz.Infrastructure.Services;
 
+[AutomaticRetry(Attempts = 3)]
 public class EmailService : IEmailService
 {
     private readonly IConfiguration _configuration;

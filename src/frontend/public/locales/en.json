@@ -12,7 +12,77 @@
     "medicalResults": "Medical Results",
     "testResults": "Test Results",
     "users": "Users",
-    "reports": "Reports"
+    "reports": "Reports",
+    "auditLogs": "Audit Logs"
+  },
+  "admin": {
+    "users": {
+      "title": "User Management",
+      "search": "Search...",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role",
+      "status": "Status",
+      "actions": "Actions",
+      "active": "Active",
+      "inactive": "Inactive",
+      "add": "Add User",
+      "noUsers": "No users found"
+    },
+    "settings": {
+      "title": "System Settings",
+      "key": "Key",
+      "value": "Value",
+      "description": "Description",
+      "actions": "Actions",
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "noSettings": "No settings found"
+    },
+    "audit": {
+      "title": "Audit Logs",
+      "entity": "Entity",
+      "action": "Action",
+      "user": "User",
+      "date": "Date",
+      "details": "Details",
+      "noLogs": "No logs found",
+      "search": "Search by entity...",
+      "previous": "Previous",
+      "next": "Next"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your preferences and account settings",
+    "notifications": {
+      "title": "Notification Settings",
+      "description": "Choose your preferred notification channels",
+      "email": "Email",
+      "emailDesc": "Receive notifications via email",
+      "sms": "SMS",
+      "smsDesc": "Receive notifications via text message",
+      "push": "Push Notifications",
+      "pushDesc": "Receive notifications on your device",
+      "inApp": "In-App Notifications",
+      "inAppDesc": "In-app notifications are always enabled",
+      "success": "Settings saved successfully",
+      "error": "Failed to save settings"
+    },
+    "account": {
+      "title": "Account Settings",
+      "language": "Preferred Language",
+      "languageDesc": "Choose your interface language"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications at this time",
+    "markAsRead": "Mark as read",
+    "viewAll": "View all notifications"
   },
   "dashboard": {
     "greeting": "Welcome back",
