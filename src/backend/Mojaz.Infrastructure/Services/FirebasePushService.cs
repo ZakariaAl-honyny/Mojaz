@@ -8,12 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 
 namespace Mojaz.Infrastructure.Services;
 
 /// <summary>
 /// Implementation of push notification service using Firebase FCM.
 /// </summary>
+[AutomaticRetry(Attempts = 3)]
 public class FirebasePushService : IPushNotificationService
 {
     private readonly IRepository<PushToken> _pushTokenRepository;

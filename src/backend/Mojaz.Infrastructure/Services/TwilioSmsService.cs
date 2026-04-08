@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
+using Hangfire;
 
 namespace Mojaz.Infrastructure.Services
 {
+    [AutomaticRetry(Attempts = 3)]
     public class TwilioSmsService : ISmsService
     {
         private readonly TwilioSettings _settings;

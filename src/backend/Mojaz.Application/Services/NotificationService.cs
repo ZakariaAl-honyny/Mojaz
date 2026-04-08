@@ -1,3 +1,4 @@
+using Hangfire;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
@@ -8,11 +9,13 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using ApplicationEntity = Mojaz.Domain.Entities.Application;
+using ISmsService = Mojaz.Application.Interfaces.Infrastructure.ISmsService;
 
 namespace Mojaz.Application.Services;
 
 /// <summary>
 /// Orchestrator for sending multi-channel notifications (Email, SMS, Push).
+/// Uses Hangfire to enqueue async jobs for external channels.
 /// </summary>
 public class NotificationService : INotificationService
 {
@@ -23,6 +26,7 @@ public class NotificationService : INotificationService
     private readonly IEmailService _emailService;
     private readonly ISmsService _smsService;
     private readonly IPushNotificationService _pushNotificationService;
+    private readonly IBackgroundJobClient _backgroundJobClient;
 
     public NotificationService(
         IRepository<Notification> notificationRepository,
@@ -31,7 +35,8 @@ public class NotificationService : INotificationService
         IUnitOfWork unitOfWork,
         IEmailService emailService,
         ISmsService smsService,
-        IPushNotificationService pushNotificationService)
+        IPushNotificationService pushNotificationService,
+        IBackgroundJobClient backgroundJobClient)
     {
         _notificationRepository = notificationRepository;
         _applicationRepository = applicationRepository;
@@ -40,6 +45,7 @@ public class NotificationService : INotificationService
         _emailService = emailService;
         _smsService = smsService;
         _pushNotificationService = pushNotificationService;
+        _backgroundJobClient = backgroundJobClient;
     }
 
     public async Task SendAsync(NotificationRequest request)
@@ -47,7 +53,7 @@ public class NotificationService : INotificationService
         var user = await _userRepository.GetByIdAsync(request.UserId);
         if (user == null) return;
 
-        // 1. Record in Database
+        // 1. Record in Database (In-App notifications are always sent - mandatory)
         var notification = new Notification
         {
             UserId = request.UserId,
@@ -63,35 +69,35 @@ public class NotificationService : INotificationService
 
         await _notificationRepository.AddAsync(notification);
 
-        // 2. Dispatch via Email
-        if (request.Email && !string.IsNullOrEmpty(user.Email))
+        // 2. Dispatch via Email (Hangfire async job) - only if user enabled email notifications
+        if (request.Email && !string.IsNullOrEmpty(user.Email) && user.EnableEmail)
         {
             var subject = user.PreferredLanguage == "ar" ? request.TitleAr : request.TitleEn;
             var body = user.PreferredLanguage == "ar" ? request.MessageAr : request.MessageEn;
-            try { await _emailService.SendEmailAsync(user.Email, subject, body); } catch { /* Log failure but don't block workflow */ }
+            // Enqueue email job - service method has [AutomaticRetry] attribute
+            _backgroundJobClient.Enqueue(() => _emailService.SendEmailAsync(user.Email, subject, body));
         }
 
-        // 3. Dispatch via SMS
-        if (request.Sms && !string.IsNullOrEmpty(user.PhoneNumber))
+        // 3. Dispatch via SMS (Hangfire async job) - only if user enabled SMS notifications
+        if (request.Sms && !string.IsNullOrEmpty(user.PhoneNumber) && user.EnableSms)
         {
             var body = user.PreferredLanguage == "ar" ? request.MessageAr : request.MessageEn;
-            try { await _smsService.SendAsync(user.PhoneNumber, body); } catch { /* Log failure */ }
+            // Enqueue SMS job - service method has [AutomaticRetry] attribute
+            _backgroundJobClient.Enqueue(() => _smsService.SendAsync(user.PhoneNumber, body));
         }
 
-        // 4. Dispatch via Push
-        if (request.Push)
+        // 4. Dispatch via Push (Hangfire async job) - only if user enabled push notifications
+        if (request.Push && user.EnablePush)
         {
-            try 
-            { 
-                await _pushNotificationService.SendToUserAsync(request.UserId, new PushMessage
-                {
-                    TitleAr = request.TitleAr,
-                    TitleEn = request.TitleEn,
-                    BodyAr = request.MessageAr,
-                    BodyEn = request.MessageEn
-                }); 
-            } 
-            catch { /* Log failure */ }
+            // Enqueue push notification job - service method has [AutomaticRetry] attribute
+            var pushMessage = new PushMessage
+            {
+                TitleAr = request.TitleAr,
+                TitleEn = request.TitleEn,
+                BodyAr = request.MessageAr,
+                BodyEn = request.MessageEn
+            };
+            _backgroundJobClient.Enqueue(() => _pushNotificationService.SendToUserAsync(request.UserId, pushMessage));
         }
 
         await _unitOfWork.SaveChangesAsync();
@@ -99,18 +105,23 @@ public class NotificationService : INotificationService
 
     public async Task<ApiResponse<PagedResult<NotificationDto>>> GetUserNotificationsAsync(Guid userId, int page = 1, int pageSize = 20)
     {
-        var notifications = await _notificationRepository.FindAsync(n => n.UserId == userId);
-        var totalCount = notifications.Count;
-        var pagedItems = notifications.OrderByDescending(n => n.SentAt)
+        var allNotifications = await _notificationRepository.FindAsync(n => n.UserId == userId);
+        var totalCount = allNotifications.Count;
+        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+        
+        var pagedItems = allNotifications.OrderByDescending(n => n.SentAt)
                                       .Skip((page - 1) * pageSize)
                                       .Take(pageSize)
                                       .Select(n => new NotificationDto
                                       {
                                           Id = n.Id,
-                                          Title = n.TitleAr, // Localize for MVP
-                                          Message = n.MessageAr,
-                                          SentAt = n.SentAt,
-                                          IsRead = n.IsRead
+                                          TitleAr = n.TitleAr,
+                                          TitleEn = n.TitleEn,
+                                          MessageAr = n.MessageAr,
+                                          MessageEn = n.MessageEn,
+                                          EventType = n.EventType,
+                                          IsRead = n.IsRead,
+                                          CreatedAt = n.SentAt
                                       })
                                       .ToList();
 
@@ -123,6 +134,12 @@ public class NotificationService : INotificationService
         };
 
         return ApiResponse<PagedResult<NotificationDto>>.Ok(result);
+    }
+
+    public async Task<ApiResponse<int>> GetUnreadCountAsync(Guid userId)
+    {
+        var count = await _notificationRepository.CountAsync(n => n.UserId == userId && !n.IsRead);
+        return ApiResponse<int>.Ok(count);
     }
 
     public async Task<bool> MarkAsReadAsync(Guid userId, Guid notificationId)

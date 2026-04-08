@@ -1379,7 +1379,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000001001"),
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 7, 18, 30, 46, 707, DateTimeKind.Utc).AddTicks(8293),
+                            CreatedAt = new DateTime(2026, 4, 8, 5, 4, 58, 582, DateTimeKind.Utc).AddTicks(2704),
                             Description = "OTP validity in minutes for SMS",
                             IsEncrypted = false,
                             SettingKey = "OTP_VALIDITY_MINUTES_SMS",
@@ -1389,7 +1389,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000001002"),
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 7, 18, 30, 46, 707, DateTimeKind.Utc).AddTicks(8324),
+                            CreatedAt = new DateTime(2026, 4, 8, 5, 4, 58, 582, DateTimeKind.Utc).AddTicks(2730),
                             Description = "OTP validity in minutes for Email",
                             IsEncrypted = false,
                             SettingKey = "OTP_VALIDITY_MINUTES_EMAIL",
@@ -1399,7 +1399,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000001003"),
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 7, 18, 30, 46, 707, DateTimeKind.Utc).AddTicks(8329),
+                            CreatedAt = new DateTime(2026, 4, 8, 5, 4, 58, 582, DateTimeKind.Utc).AddTicks(2735),
                             Description = "Max OTP verification attempts",
                             IsEncrypted = false,
                             SettingKey = "OTP_MAX_ATTEMPTS",
@@ -1409,7 +1409,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000001004"),
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 7, 18, 30, 46, 707, DateTimeKind.Utc).AddTicks(8334),
+                            CreatedAt = new DateTime(2026, 4, 8, 5, 4, 58, 582, DateTimeKind.Utc).AddTicks(2739),
                             Description = "Cooldown in seconds before resending OTP",
                             IsEncrypted = false,
                             SettingKey = "OTP_RESEND_COOLDOWN_SECONDS",
@@ -1419,7 +1419,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000001005"),
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 7, 18, 30, 46, 707, DateTimeKind.Utc).AddTicks(8338),
+                            CreatedAt = new DateTime(2026, 4, 8, 5, 4, 58, 582, DateTimeKind.Utc).AddTicks(2742),
                             Description = "Max OTP resends per hour",
                             IsEncrypted = false,
                             SettingKey = "OTP_MAX_RESEND_PER_HOUR",
@@ -1429,7 +1429,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000007001"),
                             Category = "Email",
-                            CreatedAt = new DateTime(2026, 4, 7, 18, 30, 46, 707, DateTimeKind.Utc).AddTicks(8461),
+                            CreatedAt = new DateTime(2026, 4, 8, 5, 4, 58, 582, DateTimeKind.Utc).AddTicks(2799),
                             Description = "Deduplication window in seconds for outgoing emails",
                             IsEncrypted = false,
                             SettingKey = "EMAIL_DEDUP_WINDOW_SECONDS",
@@ -1439,7 +1439,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000007002"),
                             Category = "Email",
-                            CreatedAt = new DateTime(2026, 4, 7, 18, 30, 46, 707, DateTimeKind.Utc).AddTicks(8467),
+                            CreatedAt = new DateTime(2026, 4, 8, 5, 4, 58, 582, DateTimeKind.Utc).AddTicks(2803),
                             Description = "Maximum retry attempts for failed emails",
                             IsEncrypted = false,
                             SettingKey = "EMAIL_MAX_RETRIES",
@@ -1449,7 +1449,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000007003"),
                             Category = "Email",
-                            CreatedAt = new DateTime(2026, 4, 7, 18, 30, 46, 707, DateTimeKind.Utc).AddTicks(8475),
+                            CreatedAt = new DateTime(2026, 4, 8, 5, 4, 58, 582, DateTimeKind.Utc).AddTicks(2807),
                             Description = "Base delay in seconds for email retry exponential backoff",
                             IsEncrypted = false,
                             SettingKey = "EMAIL_RETRY_BASE_DELAY_SECONDS",

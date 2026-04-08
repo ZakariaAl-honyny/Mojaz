@@ -119,7 +119,7 @@ public class AuthService_Login_Tests
         _userRepo.Setup(r => r.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>()))
                  .ReturnsAsync(new List<User> { user });
         
-        _jwtService.Setup(j => j.GenerateAccessToken(user.Id, user.FullNameEn, user.Role.ToString())).Returns("fake_access_token");
+        _jwtService.Setup(j => j.GenerateAccessToken(user.Id, user.FullNameEn, user.AppRole)).Returns("fake_access_token");
         _jwtService.Setup(j => j.GenerateRefreshToken()).Returns("fake_refresh_token");
 
         var service = CreateService();

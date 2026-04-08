@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mojaz.Application.DTOs.Auth;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Enums;
 using Mojaz.Shared.Models;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Mojaz.API.Controllers;
@@ -92,6 +94,30 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
     {
         var result = await _authService.ResetPasswordAsync(request);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Change password for authenticated user.
+    /// </summary>
+    [HttpPost("change-password")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized(new ApiResponse<bool>
+            {
+                Success = false,
+                Message = "Invalid token",
+                StatusCode = StatusCodes.Status401Unauthorized
+            });
+        }
+
+        var result = await _authService.ChangePasswordAsync(userId, request.CurrentPassword, request.NewPassword);
         return StatusCode(result.StatusCode, result);
     }
 

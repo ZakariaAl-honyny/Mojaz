@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Mojaz.Application.Interfaces.Services;
+using Mojaz.Domain.Enums;
 
 namespace Mojaz.Infrastructure.Identity;
 
@@ -17,7 +18,7 @@ public class JwtService : IJwtService
         _configuration = configuration;
     }
 
-    public string GenerateAccessToken(Guid userId, string fullName, string role)
+    public string GenerateAccessToken(Guid userId, string fullName, AppRole role)
     {
         var secretKey = _configuration["JwtSettings:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey is missing.");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
@@ -27,7 +28,7 @@ public class JwtService : IJwtService
         {
             new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
             new Claim(JwtRegisteredClaimNames.Name, fullName),
-            new Claim(ClaimTypes.Role, role),
+            new Claim(ClaimTypes.Role, role.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
