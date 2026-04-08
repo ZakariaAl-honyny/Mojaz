@@ -37,7 +37,7 @@ public class AuditService : IAuditService
             Id = Guid.NewGuid(),
             UserId = userId,
             ActionType = action,
-            EntityName = entityType,
+            EntityName = entityType ?? "Unknown",
             EntityId = entityIdGuid.ToString(),
             Payload = $"{{ \"OldValues\": {oldValues ?? "{}"}, \"NewValues\": {newValues ?? "{}"} }}",
             Timestamp = DateTime.UtcNow

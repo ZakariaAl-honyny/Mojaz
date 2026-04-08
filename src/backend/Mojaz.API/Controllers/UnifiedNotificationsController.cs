@@ -81,9 +81,9 @@ namespace Mojaz.API.Controllers
             var result = await _notificationService.MarkAllAsReadAsync(userId);
             if (result)
             {
-                return Ok(ApiResponse<object>.Ok(null, "All notifications marked as read."));
+                return Ok(ApiResponse<object>.Ok(new { }, "All notifications marked as read."));
             }
-            return Ok(ApiResponse<object>.Ok(null, "No unread notifications to mark."));
+            return Ok(ApiResponse<object>.Ok(new { }, "No unread notifications to mark."));
         }
     }
 }

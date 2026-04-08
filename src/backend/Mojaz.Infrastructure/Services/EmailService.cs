@@ -44,10 +44,10 @@ public class EmailService : IEmailService
         await SendEmailAsync(request.RecipientEmail, request.TemplateName, request.TemplateData?.ToString() ?? "");
     }
 
-    public async Task<string> RenderTemplateAsync<T>(string templateName, T model)
+    public Task<string> RenderTemplateAsync<T>(string templateName, T model)
     {
         // Simple implementation - just return model to string for now
         // In production, this would use RazorLight
-        return model?.ToString() ?? string.Empty;
+        return Task.FromResult(model?.ToString() ?? string.Empty);
     }
 }

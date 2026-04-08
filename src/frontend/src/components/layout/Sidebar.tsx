@@ -77,6 +77,7 @@ export default function Sidebar({ collapsed = false }: { collapsed?: boolean }) 
     // Admin/Manager Items
     { href: '/users', icon: User, label: t('users'), roles: ['Admin', 'Manager'] },
     { href: '/reports', icon: FileText, label: t('reports'), roles: ['Admin', 'Manager'] },
+    { href: '/system-settings', icon: Settings, label: t('settings'), roles: ['Admin', 'Manager'] },
   ];
 
   const filteredItems = menuItems.filter(item => 

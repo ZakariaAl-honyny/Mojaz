@@ -19,8 +19,7 @@ public class CreateApplicationValidator : AbstractValidator<CreateApplicationReq
             .Matches(@"^[12]\d{9}$").WithMessage("Invalid National ID or Iqama number. Must be 10 digits starting with 1 or 2.");
 
         RuleFor(x => x.DateOfBirth)
-            .NotEmpty().WithMessage("Date of birth is required.")
-            .Must(dob => dob <= DateTime.UtcNow.AddYears(-16)).WithMessage("Applicant must be at least 16 years old.");
+            .NotEmpty().WithMessage("Date of birth is required.");
 
         RuleFor(x => x.Gender)
             .NotEmpty().WithMessage("Gender is required.")

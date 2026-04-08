@@ -66,7 +66,7 @@ namespace Mojaz.Infrastructure.Services
             }
         }
 
-        private static string NormalizePhoneNumber(string phoneNumber)
+        public static string NormalizePhoneNumber(string phoneNumber)
         {
             // Ensure phone number is in E.164 format
             if (string.IsNullOrEmpty(phoneNumber))
@@ -88,7 +88,7 @@ namespace Mojaz.Infrastructure.Services
             return cleaned;
         }
 
-        private static string MaskPhoneNumber(string phoneNumber)
+        public static string MaskPhoneNumber(string phoneNumber)
         {
             if (string.IsNullOrEmpty(phoneNumber) || phoneNumber.Length < 6)
                 return "****";

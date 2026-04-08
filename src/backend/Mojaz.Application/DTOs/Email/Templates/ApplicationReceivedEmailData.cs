@@ -2,10 +2,10 @@ namespace Mojaz.Application.DTOs.Email.Templates
 {
     public class ApplicationReceivedEmailData
     {
-        public string ApplicationNumber { get; set; }
-        public string ServiceTypeAr { get; set; }
-        public string ServiceTypeEn { get; set; }
-        public List<string> NextStepsAr { get; set; }
-        public List<string> NextStepsEn { get; set; }
+        public required string ApplicationNumber { get; set; } = default!;
+        public required string ServiceTypeAr { get; set; } = default!;
+        public required string ServiceTypeEn { get; set; } = default!;
+        public required List<string> NextStepsAr { get; set; } = default!;
+        public required List<string> NextStepsEn { get; set; } = default!;
     }
 }

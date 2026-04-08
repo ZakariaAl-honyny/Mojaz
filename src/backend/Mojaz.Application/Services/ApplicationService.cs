@@ -31,6 +31,7 @@ public class ApplicationService : IApplicationService
     private readonly IAuditService _auditService;
     private readonly INotificationService _notificationService;
     private readonly IEmailService _emailService;
+    private readonly IRepository<ApplicationStatusHistory> _historyRepository;
     private readonly IBackgroundJobClient _backgroundJobClient;
 
     public ApplicationService(
@@ -43,7 +44,8 @@ public class ApplicationService : IApplicationService
         IAuditService auditService,
         INotificationService notificationService,
         IEmailService emailService,
-        IBackgroundJobClient backgroundJobClient)
+        IBackgroundJobClient backgroundJobClient,
+        IRepository<ApplicationStatusHistory> historyRepository)
     {
         _applicationRepository = applicationRepository;
         _userRepository = userRepository;
@@ -55,36 +57,60 @@ public class ApplicationService : IApplicationService
         _notificationService = notificationService;
         _emailService = emailService;
         _backgroundJobClient = backgroundJobClient;
+        _historyRepository = historyRepository;
     }
 
-    public async Task<ApiResponse<ApplicationDto>> CreateAsync(CreateApplicationRequest request, Guid userId)
+    public async Task<ApiResponse<EligibilityCheckResult>> CheckEligibilityAsync(Guid userId, EligibilityCheckRequest request)
     {
-        // 1. Eligibility Check (Gate 1)
         var category = await _categoryRepository.GetByIdAsync(request.LicenseCategoryId);
-        if (category == null) return ApiResponse<ApplicationDto>.Fail(400, "Invalid license category.");
+        if (category == null) return ApiResponse<EligibilityCheckResult>.Fail(400, "Invalid license category.");
 
         var ageLimitSetting = (await _settingsRepository.FindAsync(s => s.SettingKey == $"MIN_AGE_CATEGORY_{category.Code}")).FirstOrDefault();
-        if (ageLimitSetting == null) return ApiResponse<ApplicationDto>.Fail(400, "System setting error: Age limit not found.");
+        if (ageLimitSetting == null) return ApiResponse<EligibilityCheckResult>.Fail(400, "System setting error: Age limit not found.");
 
         if (!int.TryParse(ageLimitSetting.SettingValue, out int minAge))
             minAge = 18; // Default fallback
 
         var user = await _userRepository.GetByIdAsync(userId);
-        if (user == null) return ApiResponse<ApplicationDto>.Fail(404, "User not found.");
+        if (user == null) return ApiResponse<EligibilityCheckResult>.Fail(404, "User not found.");
+
+        var reasons = new List<string>();
 
         var today = DateTime.UtcNow;
         var age = today.Year - user.DateOfBirth.Year;
         if (user.DateOfBirth.Date > today.AddYears(-age)) age--;
 
         if (age < minAge)
-            return ApiResponse<ApplicationDto>.Fail(400, $"Minimum age for category {category.Code} is {minAge}. Your age is {age}.");
+        {
+            reasons.Add($"Minimum age for category {category.Code} is {minAge}. Your age is {age}.");
+        }
 
-        // 2. Active Application Check
+        // Active Application Check
         var activeApps = await _applicationRepository.FindAsync(a => a.ApplicantId == userId && 
-            (a.Status != ApplicationStatus.Active && a.Status != ApplicationStatus.Cancelled && a.Status != ApplicationStatus.Rejected));
+            (a.Status != ApplicationStatus.Active && a.Status != ApplicationStatus.Cancelled && a.Status != ApplicationStatus.Rejected && a.Status != ApplicationStatus.Expired && a.Status != ApplicationStatus.Issued));
         
         if (activeApps.Any())
-            return ApiResponse<ApplicationDto>.Fail(400, "You already have an active application in progress.");
+        {
+            reasons.Add("You already have an active application in progress.");
+        }
+
+        return ApiResponse<EligibilityCheckResult>.Ok(new EligibilityCheckResult 
+        { 
+            IsEligible = !reasons.Any(), 
+            Reasons = reasons 
+        });
+    }
+
+    public async Task<ApiResponse<ApplicationDto>> CreateAsync(CreateApplicationRequest request, Guid userId)
+    {
+        var eligibilityResult = await CheckEligibilityAsync(userId, new EligibilityCheckRequest { LicenseCategoryId = request.LicenseCategoryId });
+        if (!eligibilityResult.Success)
+            return ApiResponse<ApplicationDto>.Fail(eligibilityResult.StatusCode, eligibilityResult.Message);
+        if (!eligibilityResult.Data!.IsEligible)
+            return ApiResponse<ApplicationDto>.Fail(400, string.Join(" ", eligibilityResult.Data.Reasons));
+
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null) return ApiResponse<ApplicationDto>.Fail(404, "User not found.");
 
         // 3. Update User Profile (Applicant Data)
         user.NationalId = request.NationalId;
@@ -98,8 +124,8 @@ public class ApplicationService : IApplicationService
         
         _userRepository.Update(user);
 
-        // 4. Create Application
-        var appValidityMonthsSetting = (await _settingsRepository.FindAsync(s => s.SettingKey == "APPLICATION_VALIDITY_MONTH_COUNT")).FirstOrDefault();
+        // 4. Create Application (as Draft)
+        var appValidityMonthsSetting = (await _settingsRepository.FindAsync(s => s.SettingKey == "APPLICATION_VALIDITY_MONTHS")).FirstOrDefault();
         int validityMonths = appValidityMonthsSetting != null ? int.Parse(appValidityMonthsSetting.SettingValue) : 6;
 
         var application = new ApplicationEntity
@@ -109,54 +135,34 @@ public class ApplicationService : IApplicationService
             ServiceType = request.ServiceType,
             LicenseCategoryId = request.LicenseCategoryId,
             BranchId = request.BranchId,
-            Status = ApplicationStatus.Submitted,
-            CurrentStage = "01: Application Submission",
+            Status = ApplicationStatus.Draft,
             PreferredLanguage = request.PreferredLanguage,
             SpecialNeeds = request.SpecialNeeds,
-            DataAccuracyConfirmed = request.DataAccuracyConfirmed,
-            ExpiresAt = DateTime.UtcNow.AddMonths(validityMonths)
+            DataAccuracyConfirmed = false,
+            ExpiresAt = DateTime.UtcNow.AddMonths(validityMonths),
+            CurrentStage = ApplicationStages.Submission
         };
 
         await _applicationRepository.AddAsync(application);
+
+        // 5. Add Initial Status History
+        var history = new ApplicationStatusHistory
+        {
+            ApplicationId = application.Id,
+            FromStatus = ApplicationStatus.Draft, // Starting status
+            ToStatus = ApplicationStatus.Draft,
+            ChangedBy = userId,
+            ChangedAt = DateTime.UtcNow,
+            Notes = "Initial draft creation"
+        };
+        await _historyRepository.AddAsync(history);
+        
         await _unitOfWork.SaveChangesAsync();
 
         // 5. Audit Logging
-        await _auditService.LogAsync("CREATE_APPLICATION", "Application", application.Id.ToString(), null, application.ApplicationNumber);
+        await _auditService.LogAsync("CREATE_DRAFT_APPLICATION", "Application", application.Id.ToString(), null, application.ApplicationNumber);
 
-        // 6. Notifications
-        await _notificationService.SendAsync(new NotificationRequest
-        {
-            UserId = userId,
-            ApplicationId = application.Id,
-            EventType = NotificationEventType.ApplicationSubmitted,
-            TitleAr = "تم تقديم طلب جديد",
-            TitleEn = "Application Submitted",
-            MessageAr = $"تم تقديم طلبك بنجاح. رقم الطلب: {application.ApplicationNumber}",
-            MessageEn = $"Your application has been submitted successfully. Number: {application.ApplicationNumber}"
-        });
-
-        // 7. Application Received Email (Hangfire)
-        if (!string.IsNullOrEmpty(user.Email))
-        {
-            var emailData = new ApplicationReceivedEmailData
-            {
-                ApplicationNumber = application.ApplicationNumber,
-                ServiceTypeAr = application.ServiceType.ToString(),
-                ServiceTypeEn = application.ServiceType.ToString(),
-                NextStepsAr = new List<string> { "الخطوة التالية 1", "الخطوة التالية 2" }, // Replace with real steps
-                NextStepsEn = new List<string> { "Next step 1", "Next step 2" } // Replace with real steps
-            };
-            var emailRequest = new TemplatedEmailRequest
-            {
-                RecipientEmail = user.Email,
-                TemplateName = "application-received",
-                TemplateData = emailData,
-                ReferenceId = application.Id.ToString()
-            };
-            _backgroundJobClient.Enqueue(() => _emailService.SendTemplatedAsync(emailRequest));
-        }
-
-        return ApiResponse<ApplicationDto>.Ok(_mapper.Map<ApplicationDto>(application), "Application created successfully.");
+        return ApiResponse<ApplicationDto>.Ok(_mapper.Map<ApplicationDto>(application), "Application draft created successfully.");
     }
 
     public async Task<ApiResponse<ApplicationDto>> GetByIdAsync(Guid id, Guid userId, string role)
@@ -171,31 +177,268 @@ public class ApplicationService : IApplicationService
         return ApiResponse<ApplicationDto>.Ok(_mapper.Map<ApplicationDto>(application));
     }
 
-    public async Task<ApiResponse<PagedResult<ApplicationDto>>> GetListAsync(Guid userId, string role, int page = 1, int pageSize = 20)
+    public async Task<ApiResponse<PagedResult<ApplicationDto>>> GetListAsync(Guid userId, string role, ApplicationFilterRequest filters)
     {
-        Expression<Func<ApplicationEntity, bool>> predicate = a => true;
-        
-        if (role == Roles.Applicant)
+        // Build base query with includes
+        var baseQuery = _applicationRepository.Query()
+            .Include(a => a.Applicant)
+            .Include(a => a.LicenseCategory)
+            .Where(a => !a.IsDeleted);
+
+        // Apply role-scoped filter as per FR-007 and T024
+        IQueryable<ApplicationEntity> query = role switch
         {
-            predicate = a => a.ApplicantId == userId;
+            Roles.Applicant => baseQuery.Where(a => a.ApplicantId == userId),
+            Roles.Receptionist => baseQuery.Where(a => a.CurrentStage == ApplicationStages.DocumentReview),
+            Roles.Doctor => baseQuery.Where(a => a.CurrentStage == ApplicationStages.MedicalExam),
+            Roles.Examiner => baseQuery.Where(a => a.CurrentStage == ApplicationStages.TheoryTest || a.CurrentStage == ApplicationStages.PracticalTest),
+            Roles.Manager or Roles.Admin or Roles.Security => baseQuery, // Full access for Manager/Admin/Security oversight
+            _ => baseQuery.Where(a => false) // Invalid role - return nothing
+        };
+
+        // Apply Status filter (FR-009)
+        if (filters.Status.HasValue)
+        {
+            query = query.Where(a => a.Status == filters.Status.Value);
         }
 
-        var apps = await _applicationRepository.FindAsync(predicate);
-        var total = apps.Count;
-        var pagedApps = apps.OrderByDescending(a => a.CreatedAt)
-                           .Skip((page - 1) * pageSize)
-                           .Take(pageSize)
-                           .ToList();
-
-        var result = new PagedResult<ApplicationDto>
+        // Apply CurrentStage filter (FR-009)
+        if (!string.IsNullOrEmpty(filters.CurrentStage))
         {
-            Items = _mapper.Map<List<ApplicationDto>>(pagedApps),
-            TotalCount = total,
+            query = query.Where(a => a.CurrentStage == filters.CurrentStage);
+        }
+
+        // Apply ServiceType filter (FR-009)
+        if (filters.ServiceType.HasValue)
+        {
+            query = query.Where(a => a.ServiceType == filters.ServiceType.Value);
+        }
+
+        // Apply LicenseCategoryId filter (FR-009)
+        if (filters.LicenseCategoryId.HasValue)
+        {
+            query = query.Where(a => a.LicenseCategoryId == filters.LicenseCategoryId.Value);
+        }
+
+        // Apply BranchId filter (FR-009)
+        if (filters.BranchId.HasValue)
+        {
+            query = query.Where(a => a.BranchId == filters.BranchId.Value);
+        }
+
+        // Apply Date range filter (CreatedAt) (FR-009)
+        if (filters.From.HasValue)
+        {
+            query = query.Where(a => a.CreatedAt >= filters.From.Value);
+        }
+
+        if (filters.To.HasValue)
+        {
+            query = query.Where(a => a.CreatedAt <= filters.To.Value);
+        }
+
+        // Apply search filter (FR-009: ApplicationNumber or Applicant Name)
+        if (!string.IsNullOrWhiteSpace(filters.Search))
+        {
+            var searchLower = filters.Search.ToLower();
+            query = query.Where(a => a.ApplicationNumber.ToLower().Contains(searchLower) || 
+                                     (a.Applicant.FullNameAr != null && a.Applicant.FullNameAr.ToLower().Contains(searchLower)) ||
+                                     (a.Applicant.FullNameEn != null && a.Applicant.FullNameEn.ToLower().Contains(searchLower)));
+        }
+
+        // Get total count before pagination
+        var totalCount = await query.CountAsync();
+
+        // Apply dynamic sorting (FR-009)
+        var sortBy = (filters.SortBy ?? "createdat").ToLower();
+        var sortDir = (filters.SortDir ?? "desc").ToLower();
+        var isDescending = sortDir == "desc";
+
+        query = sortBy switch
+        {
+            "applicationnumber" => isDescending ? query.OrderByDescending(a => a.ApplicationNumber) : query.OrderBy(a => a.ApplicationNumber),
+            "status" => isDescending ? query.OrderByDescending(a => a.Status) : query.OrderBy(a => a.Status),
+            "stage" => isDescending ? query.OrderByDescending(a => a.CurrentStage) : query.OrderBy(a => a.CurrentStage),
+            "servicetype" => isDescending ? query.OrderByDescending(a => a.ServiceType) : query.OrderBy(a => a.ServiceType),
+            _ => isDescending ? query.OrderByDescending(a => a.CreatedAt) : query.OrderBy(a => a.CreatedAt)
+        };
+
+        // Apply pagination (FR-009: default 20, max 100)
+        var page = Math.Max(1, filters.Page);
+        var pageSize = Math.Min(Math.Max(1, filters.PageSize), 100);
+        
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        // Map to DTOs
+        var dtos = _mapper.Map<List<ApplicationDto>>(items);
+
+        var pagedResult = new PagedResult<ApplicationDto>
+        {
+            Items = dtos,
+            TotalCount = totalCount,
             Page = page,
             PageSize = pageSize
         };
+
+        return ApiResponse<PagedResult<ApplicationDto>>.Ok(pagedResult);
+    }
+
+    public async Task<ApiResponse<List<ApplicationTimelineDto>>> GetTimelineAsync(Guid id, Guid userId, string role)
+    {
+        // 1. Verify application exists
+        var application = await _applicationRepository.GetByIdAsync(id);
+        if (application == null) return ApiResponse<List<ApplicationTimelineDto>>.Fail(404, "Application not found.");
+
+        // 2. Enforce ownership/role-scoped access as per FR-007
+        var isAuthorized = role switch
+        {
+            Roles.Applicant => application.ApplicantId == userId,
+            Roles.Receptionist => application.CurrentStage == ApplicationStages.DocumentReview,
+            Roles.Doctor => application.CurrentStage == ApplicationStages.MedicalExam,
+            Roles.Examiner => application.CurrentStage == ApplicationStages.TheoryTest || application.CurrentStage == ApplicationStages.PracticalTest,
+            Roles.Manager or Roles.Admin or Roles.Security => true,
+            _ => false
+        };
+
+        if (!isAuthorized)
+            return ApiResponse<List<ApplicationTimelineDto>>.Fail(403, "Unauthorized access.");
+
+        // 3. Query ApplicationStatusHistory ordered by ChangedAt ASC
+        var historyRecords = await _historyRepository.FindAsync(h => h.ApplicationId == id);
+        var orderedHistory = historyRecords.OrderBy(h => h.ChangedAt).ToList();
+
+        // 4. Resolve ChangedBy to FullName
+        var timelineDtos = new List<ApplicationTimelineDto>();
+        foreach (var record in orderedHistory)
+        {
+            var dto = new ApplicationTimelineDto
+            {
+                Id = record.Id,
+                FromStatus = record.FromStatus,
+                ToStatus = record.ToStatus,
+                Notes = record.Notes,
+                ChangedByUserId = record.ChangedBy.ToString(),
+                ChangedAt = record.ChangedAt
+            };
+
+            // Resolve ChangedBy to FullName
+            if (record.ChangedBy != Guid.Empty)
+            {
+                var user = await _userRepository.GetByIdAsync(record.ChangedBy);
+                dto.ChangedByName = user?.FullNameAr ?? user?.FullNameEn ?? "System";
+            }
+            else
+            {
+                dto.ChangedByName = "System";
+            }
+
+            timelineDtos.Add(dto);
+        }
+
+        return ApiResponse<List<ApplicationTimelineDto>>.Ok(timelineDtos);
+    }
+
+    public async Task<ApiResponse<ApplicationDto>> SubmitAsync(Guid id, SubmitApplicationRequest request, Guid userId)
+    {
+        var application = await _applicationRepository.GetByIdAsync(id);
+        if (application == null) return ApiResponse<ApplicationDto>.Fail(404, "Application not found.");
+
+        if (application.ApplicantId != userId)
+            return ApiResponse<ApplicationDto>.Fail(403, "Unauthorized.");
+
+        if (application.Status != ApplicationStatus.Draft)
+            return ApiResponse<ApplicationDto>.Fail(400, "Only draft applications can be submitted.");
+
+        // 1. Data Accuracy Check
+        if (!request.DataAccuracyConfirmed)
+            return ApiResponse<ApplicationDto>.Fail(400, "Data accuracy must be confirmed.");
+
+        // 2. Completeness Check
+        var completenessResult = await CheckCompletenessAsync(application, userId);
+        if (!completenessResult.IsEligible)
+            return ApiResponse<ApplicationDto>.Fail(400, string.Join(" ", completenessResult.Reasons));
+
+        // 3. Re-Verify Gate 1 Eligibility
+        var eligibilityResult = await CheckEligibilityAsync(userId, new EligibilityCheckRequest { LicenseCategoryId = application.LicenseCategoryId });
+        if (!eligibilityResult.Data!.IsEligible)
+            return ApiResponse<ApplicationDto>.Fail(400, "Eligibility check failed at submission: " + string.Join(" ", eligibilityResult.Data.Reasons));
+
+        var oldStatus = application.Status;
+
+        // 4. Update Application
+        application.Status = ApplicationStatus.Submitted;
+        application.SubmittedAt = DateTime.UtcNow;
+        application.DataAccuracyConfirmed = true;
+        application.CurrentStage = ApplicationStages.DocumentReview;
+
+        _applicationRepository.Update(application);
+
+        // 5. Add Status History
+        var history = new ApplicationStatusHistory
+        {
+            ApplicationId = application.Id,
+            FromStatus = oldStatus,
+            ToStatus = application.Status,
+            ChangedBy = userId,
+            ChangedAt = DateTime.UtcNow,
+            Notes = "Application submitted by applicant"
+        };
+        await _historyRepository.AddAsync(history);
+
+        await _unitOfWork.SaveChangesAsync();
+
+        // 6. Audit Log
+        await _auditService.LogAsync("SUBMIT_APPLICATION", "Application", application.Id.ToString(), oldStatus.ToString(), application.Status.ToString());
+
+        // 7. Notifications
+        await _notificationService.SendAsync(new NotificationRequest
+        {
+            UserId = userId,
+            ApplicationId = application.Id,
+            EventType = NotificationEventType.ApplicationSubmitted,
+            TitleAr = "تم تقديم الطلب بنجاح",
+            TitleEn = "Application Submitted Successfully",
+            MessageAr = $"تم تقديم طلبك بنجاح برقم: {application.ApplicationNumber}",
+            MessageEn = $"Your application has been submitted successfully with number: {application.ApplicationNumber}",
+            InApp = true
+        });
+
+        // Enqueue Email Notification
+        var user = await _userRepository.GetByIdAsync(userId);
+        var email = user?.Email ?? string.Empty;
+        var name = user?.FullNameAr ?? string.Empty;
+        _backgroundJobClient.Enqueue<IEmailService>(x => x.SendTemplatedAsync(new TemplatedEmailRequest
+        {
+            RecipientEmail = email,
+            TemplateName = "ApplicationSubmitted",
+            TemplateData = new { application.ApplicationNumber, Name = name },
+            ReferenceId = application.Id.ToString()
+        }));
+
+        return ApiResponse<ApplicationDto>.Ok(_mapper.Map<ApplicationDto>(application), "Application submitted successfully.");
+    }
+
+    private async Task<EligibilityCheckResult> CheckCompletenessAsync(ApplicationEntity app, Guid userId)
+    {
+        var reasons = new List<string>();
+        var user = await _userRepository.GetByIdAsync(userId);
+
+        if (user == null) { reasons.Add("User profile not found."); return new EligibilityCheckResult { IsEligible = false, Reasons = reasons }; }
+
+        // User Profile Check
+        if (string.IsNullOrEmpty(user.NationalId)) reasons.Add("National ID is missing in profile.");
+        if (user.DateOfBirth == default) reasons.Add("Date of birth is missing in profile.");
+        if (string.IsNullOrEmpty(user.Gender)) reasons.Add("Gender is missing in profile.");
+        if (string.IsNullOrEmpty(user.Nationality)) reasons.Add("Nationality is missing in profile.");
+
+        // Application Data Check
+        if (app.LicenseCategoryId == Guid.Empty) reasons.Add("License category is not selected.");
+        if (app.BranchId == null || app.BranchId == Guid.Empty) reasons.Add("Preferred branch is not selected.");
         
-        return ApiResponse<PagedResult<ApplicationDto>>.Ok(result);
+        return new EligibilityCheckResult { IsEligible = !reasons.Any(), Reasons = reasons };
     }
 
     public async Task<bool> IsOwnerAsync(Guid applicationId, Guid userId)
@@ -204,46 +447,105 @@ public class ApplicationService : IApplicationService
         return application != null && application.ApplicantId == userId;
     }
 
-    public async Task<ApiResponse<bool>> UpdateAsync(Guid id, UpdateApplicationRequest request, Guid userId)
+    public async Task<ApiResponse<ApplicationDto>> UpdateDraftAsync(Guid id, UpdateDraftRequest request, Guid userId)
     {
         var application = await _applicationRepository.GetByIdAsync(id);
-        if (application == null) return ApiResponse<bool>.Fail(404, "Application not found.");
+        if (application == null) return ApiResponse<ApplicationDto>.Fail(404, "Application not found.");
 
         if (application.ApplicantId != userId)
-            return ApiResponse<bool>.Fail(403, "Unauthorized.");
+            return ApiResponse<ApplicationDto>.Fail(403, "Unauthorized.");
 
         if (application.Status != ApplicationStatus.Draft && application.Status != ApplicationStatus.Submitted)
-            return ApiResponse<bool>.Fail(400, "Only draft or submitted applications can be modified.");
+            return ApiResponse<ApplicationDto>.Fail(400, "Only draft or submitted applications can be modified.");
 
-        application.ServiceType = request.ServiceType;
-        application.LicenseCategoryId = request.LicenseCategoryId;
-        application.BranchId = request.BranchId;
-        application.PreferredLanguage = request.PreferredLanguage;
-        application.SpecialNeeds = request.SpecialNeeds;
+        if (request.ServiceType.HasValue) application.ServiceType = request.ServiceType.Value;
+        if (request.LicenseCategoryId.HasValue) application.LicenseCategoryId = request.LicenseCategoryId.Value;
+        if (request.BranchId.HasValue) application.BranchId = request.BranchId;
+        if (request.PreferredLanguage != null) application.PreferredLanguage = request.PreferredLanguage;
+        if (request.SpecialNeeds.HasValue) application.SpecialNeeds = request.SpecialNeeds.Value;
 
         _applicationRepository.Update(application);
         await _unitOfWork.SaveChangesAsync();
 
-        return ApiResponse<bool>.Ok(true, "Application updated.");
+        await _auditService.LogAsync("UPDATE_DRAFT_APPLICATION", "Application", application.Id.ToString(), null, application.ApplicationNumber);
+
+        return ApiResponse<ApplicationDto>.Ok(_mapper.Map<ApplicationDto>(application), "Application draft updated.");
     }
 
-    public async Task<ApiResponse<bool>> CancelAsync(Guid id, string reason, Guid userId)
+    public async Task<ApiResponse<bool>> CancelAsync(Guid id, string reason, Guid userId, string role)
     {
         var application = await _applicationRepository.GetByIdAsync(id);
         if (application == null) return ApiResponse<bool>.Fail(404, "Application not found.");
 
-        if (application.ApplicantId != userId)
+        // Terminal state guard - block if status is already terminal
+        var terminalStatuses = new[]
+        {
+            ApplicationStatus.Cancelled,
+            ApplicationStatus.Expired,
+            ApplicationStatus.Issued,
+            ApplicationStatus.Active,
+            ApplicationStatus.Rejected
+        };
+
+        if (terminalStatuses.Contains(application.Status))
+            return ApiResponse<bool>.Fail(400, "Application cannot be cancelled in current state.");
+
+        // Ownership check - allow Manager/Admin/Receptionist to cancel any application as per FR-008
+        var isAuthorizedRole = role == Roles.Manager || role == Roles.Admin || role == Roles.Receptionist;
+        if (!isAuthorizedRole && application.ApplicantId != userId)
             return ApiResponse<bool>.Fail(403, "Unauthorized.");
 
-        if (application.Status == ApplicationStatus.Active || application.Status == ApplicationStatus.Cancelled)
-             return ApiResponse<bool>.Fail(400, "Application cannot be cancelled in current state.");
+        var oldStatus = application.Status;
 
+        // Update application
         application.Status = ApplicationStatus.Cancelled;
         application.CancelledAt = DateTime.UtcNow;
         application.CancellationReason = reason;
 
         _applicationRepository.Update(application);
+
+        // Add ApplicationStatusHistory record with reason in Notes
+        var history = new ApplicationStatusHistory
+        {
+            ApplicationId = application.Id,
+            FromStatus = oldStatus,
+            ToStatus = ApplicationStatus.Cancelled,
+            ChangedBy = userId,
+            ChangedAt = DateTime.UtcNow,
+            Notes = $"Cancellation reason: {reason}"
+        };
+        await _historyRepository.AddAsync(history);
+
         await _unitOfWork.SaveChangesAsync();
+
+        // Write AuditLog entry
+        await _auditService.LogAsync("CANCEL_APPLICATION", "Application", application.Id.ToString(), oldStatus.ToString(), ApplicationStatus.Cancelled.ToString());
+
+        // Create in-app notification synchronously
+        await _notificationService.SendAsync(new NotificationRequest
+        {
+            UserId = userId,
+            ApplicationId = application.Id,
+            EventType = NotificationEventType.ApplicationCancelled,
+            TitleAr = "تم إلغاء الطلب",
+            TitleEn = "Application Cancelled",
+            MessageAr = $"تم إلغاء طلبك برقم: {application.ApplicationNumber}",
+            MessageEn = $"Your application has been cancelled with number: {application.ApplicationNumber}",
+            InApp = true
+        });
+
+        // Enqueue Hangfire Push notification job
+        _backgroundJobClient.Enqueue<INotificationService>(x => x.SendAsync(new NotificationRequest
+        {
+            UserId = userId,
+            ApplicationId = application.Id,
+            EventType = NotificationEventType.ApplicationCancelled,
+            TitleAr = "تم إلغاء الطلب",
+            TitleEn = "Application Cancelled",
+            MessageAr = $"تم إلغاء طلبك برقم: {application.ApplicationNumber}",
+            MessageEn = $"Your application has been cancelled with number: {application.ApplicationNumber}",
+            Push = true
+        }));
 
         return ApiResponse<bool>.Ok(true, "Application cancelled.");
     }
@@ -286,8 +588,8 @@ public class ApplicationService : IApplicationService
                 AppointmentTypeEn = appointment.ServiceType.ToString(), // Adjust as needed
                 DateTimeAr = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm"), // Replace with actual date/time
                 DateTimeEn = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm"),
-                LocationAr = appointment.BranchId.ToString(), // Replace with actual location name if available
-                LocationEn = appointment.BranchId.ToString()
+                LocationAr = appointment.BranchId.ToString() ?? "N/A", // Replace with actual location name if available
+                LocationEn = appointment.BranchId.ToString() ?? "N/A"
             };
             var emailRequest = new TemplatedEmailRequest
             {

@@ -20,7 +20,7 @@ namespace Mojaz.Infrastructure.Repositories
             _dedupSettings = dedupOptions.Value;
         }
 
-        public async Task<EmailLog> FindDuplicateAsync(string recipientEmail, string templateName, string referenceId)
+        public async Task<EmailLog?> FindDuplicateAsync(string recipientEmail, string templateName, string referenceId)
         {
             var dedupWindowSeconds = _dedupSettings.DedupWindowSeconds;
             var windowStart = DateTime.UtcNow.AddSeconds(-dedupWindowSeconds);

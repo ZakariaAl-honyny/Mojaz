@@ -106,7 +106,8 @@ public class AuthService_ResendOtp_Tests
 
         // Assert
         result.Success.Should().BeTrue();
-        result.Data.DestinationMasked.Should().NotBeEmpty();
+        result.Data.Should().NotBeNull();
+        result.Data!.DestinationMasked.Should().NotBeEmpty();
         _otpRepo.Verify(r => r.AddAsync(It.Is<OtpCode>(o => o.UserId == user.Id)), Times.Once);
         _notificationService.Verify(n => n.SendAsync(It.IsAny<NotificationRequest>()), Times.Once);
     }

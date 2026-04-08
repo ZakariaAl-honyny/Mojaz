@@ -20,13 +20,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Initialize Firebase Admin SDK
 var firebaseConfig = builder.Configuration.GetSection("Firebase");
 var serviceAccountPath = firebaseConfig["ServiceAccountPath"];
-if (!string.IsNullOrEmpty(serviceAccountPath))
+if (!string.IsNullOrEmpty(serviceAccountPath) && File.Exists(serviceAccountPath))
 {
     FirebaseApp.Create(new AppOptions
     {
         Credential = GoogleCredential.FromFile(serviceAccountPath),
         ProjectId = firebaseConfig["ProjectId"]
     });
+}
+else
+{
+    Console.WriteLine("Warning: Firebase ServiceAccountPath not found or file does not exist. Push notifications will be disabled.");
 }
 
 // ─── Serilog Configuration ───

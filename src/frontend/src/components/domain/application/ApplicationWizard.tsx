@@ -27,7 +27,20 @@ const CATEGORIES = [
 
 export function ApplicationWizard() {
   const t = useTranslations("application.create");
+  const [currentStep, setCurrentStep] = useState(1);
   const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    serviceType: "",
+    categoryId: "",
+    nationalId: "",
+    dateOfBirth: "",
+    phone: "",
+    city: "",
+    preferredCenter: "",
+    testLanguage: "ar",
+    specialNeeds: "",
+    confirmAccuracy: false,
+  });
 
   const calculateAge = (dob: string) => {
     if (!dob) return 0;
