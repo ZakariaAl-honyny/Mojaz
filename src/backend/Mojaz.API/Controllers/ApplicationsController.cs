@@ -58,34 +58,55 @@ public class ApplicationsController : ControllerBase
     }
 
     /// <summary>
+    /// Check if the current user is eligible to apply for a specific license category.
+    /// </summary>
+    [HttpGet("eligibility")]
+    [Authorize(Roles = "Applicant")]
+    [ProducesResponseType(typeof(ApiResponse<EligibilityCheckResult>), 200)]
+    public async Task<IActionResult> CheckEligibilityAsync([FromQuery] EligibilityCheckRequest request)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _applicationService.CheckEligibilityAsync(userId, request);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
     /// List applications (paginated and filterable).
     /// </summary>
     [HttpGet]
     [Authorize]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<ApplicationDto>>), 200)]
-    public async Task<IActionResult> GetListAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    public async Task<IActionResult> GetListAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 20,
+        [FromQuery] ApplicationStatus? status = null, [FromQuery] string? currentStage = null,
+        [FromQuery] ServiceType? serviceType = null, [FromQuery] Guid? licenseCategoryId = null,
+        [FromQuery] Guid? branchId = null, [FromQuery] string? search = null,
+        [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null,
+        [FromQuery] string sortBy = "createdAt", [FromQuery] string sortDir = "desc")
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
-        var result = await _applicationService.GetListAsync(userId, role, page, pageSize);
-        return StatusCode(result.StatusCode, result);
-    }
+        
+        var filters = new ApplicationFilterRequest
+        {
+            Page = page,
+            PageSize = pageSize,
+            Status = status,
+            CurrentStage = currentStage,
+            ServiceType = serviceType,
+            LicenseCategoryId = licenseCategoryId,
+            BranchId = branchId,
+            Search = search,
+            From = from,
+            To = to,
+            SortBy = sortBy,
+            SortDir = sortDir
+        };
+        
+         var result = await _applicationService.GetListAsync(userId, role, filters);
+         return StatusCode(result.StatusCode, result);
+     }
 
-    /// <summary>
-    /// Update a draft/submitted application.
-    /// </summary>
-    [HttpPut("{id}")]
-    [Authorize(Roles = "Applicant")]
-    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
-    public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateApplicationRequest request)
-    {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var result = await _applicationService.UpdateAsync(id, request, userId);
-        return StatusCode(result.StatusCode, result);
-    }
-
-    /// <summary>
+     /// <summary>
     /// Update the official status of an application in the workflow.
     /// </summary>
     [HttpPatch("{id}/status")]
