@@ -18,7 +18,7 @@
         "${GITHUB_TOKEN}"
       ]
     },
-    "PlayWright": {
+    "play wright": {
       "type": "local",
       "command": [
         "npx",

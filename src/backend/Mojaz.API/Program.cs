@@ -1,4 +1,6 @@
 using System.Text;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Mojaz.API.Extensions;
@@ -11,6 +13,18 @@ using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Initialize Firebase Admin SDK
+var firebaseConfig = builder.Configuration.GetSection("Firebase");
+var serviceAccountPath = firebaseConfig["ServiceAccountPath"];
+if (!string.IsNullOrEmpty(serviceAccountPath))
+{
+    FirebaseApp.Create(new AppOptions
+    {
+        Credential = GoogleCredential.FromFile(serviceAccountPath),
+        ProjectId = firebaseConfig["ProjectId"]
+    });
+}
 
 // ─── Serilog Configuration ───
 builder.Host.UseSerilog((context, config) =>

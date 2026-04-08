@@ -1,6 +1,5 @@
 ---
 name: "Backend Architect"
-model: opencode/minmax-v2-pro-free
 role: "ASP.NET Core 8 Clean Architecture specialist"
 activation: "When working on src/backend/**"
 mode: subagent
