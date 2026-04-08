@@ -5,6 +5,6 @@ namespace Mojaz.Application.Interfaces.Repositories
 {
     public interface IEmailLogRepository
     {
-        Task<EmailLog> FindDuplicateAsync(string recipientEmail, string templateName, string referenceId);
+        Task<EmailLog?> FindDuplicateAsync(string recipientEmail, string templateName, string referenceId);
     }
 }

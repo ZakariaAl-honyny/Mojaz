@@ -121,17 +121,17 @@ public class PaymentService : IPaymentService
         
         await _unitOfWork.SaveChangesAsync();
 
-        return ApiResponse<PaymentDto>.Ok(new PaymentDto { Id = payment.Id, TransactionId = payment.TransactionReference, Status = payment.Status, Success = request.Success });
+        return ApiResponse<PaymentDto>.Ok(new PaymentDto { Id = payment.Id, TransactionId = payment.TransactionReference ?? string.Empty, Status = payment.Status, Success = request.Success });
     }
 
     public async Task<ApiResponse<IEnumerable<PaymentDto>>> GetByApplicationIdAsync(Guid applicationId)
     {
         var payments = await _paymentRepository.FindAsync(p => p.ApplicationId == applicationId);
-        return ApiResponse<IEnumerable<PaymentDto>>.Ok(payments.Select(p => new PaymentDto { Id = p.Id, Amount = p.Amount, Status = p.Status, TransactionId = p.TransactionReference }));
+        return ApiResponse<IEnumerable<PaymentDto>>.Ok(payments.Select(p => new PaymentDto { Id = p.Id, Amount = p.Amount, Status = p.Status, TransactionId = p.TransactionReference ?? string.Empty }));
     }
 
-    public async Task<ApiResponse<bool>> VerifyPaymentAsync(Guid paymentId)
+    public Task<ApiResponse<bool>> VerifyPaymentAsync(Guid paymentId)
     {
-        return ApiResponse<bool>.Ok(true);
+        return Task.FromResult(ApiResponse<bool>.Ok(true));
     }
 }

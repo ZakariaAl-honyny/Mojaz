@@ -3,6 +3,7 @@ namespace Mojaz.Domain.Enums;
 public enum NotificationEventType
 {
     ApplicationSubmitted,
+    ApplicationCancelled,
     ApplicationRejected,
     StatusChanged,
     AppointmentBooked,

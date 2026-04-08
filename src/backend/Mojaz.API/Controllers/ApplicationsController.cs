@@ -76,37 +76,42 @@ public class ApplicationsController : ControllerBase
     [HttpGet]
     [Authorize]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<ApplicationDto>>), 200)]
-    public async Task<IActionResult> GetListAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 20,
-        [FromQuery] ApplicationStatus? status = null, [FromQuery] string? currentStage = null,
-        [FromQuery] ServiceType? serviceType = null, [FromQuery] Guid? licenseCategoryId = null,
-        [FromQuery] Guid? branchId = null, [FromQuery] string? search = null,
-        [FromQuery] DateTime? from = null, [FromQuery] DateTime? to = null,
-        [FromQuery] string sortBy = "createdAt", [FromQuery] string sortDir = "desc")
+    public async Task<IActionResult> GetListAsync([FromQuery] ApplicationFilterRequest filters)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
         
-        var filters = new ApplicationFilterRequest
-        {
-            Page = page,
-            PageSize = pageSize,
-            Status = status,
-            CurrentStage = currentStage,
-            ServiceType = serviceType,
-            LicenseCategoryId = licenseCategoryId,
-            BranchId = branchId,
-            Search = search,
-            From = from,
-            To = to,
-            SortBy = sortBy,
-            SortDir = sortDir
-        };
-        
-         var result = await _applicationService.GetListAsync(userId, role, filters);
-         return StatusCode(result.StatusCode, result);
-     }
+        var result = await _applicationService.GetListAsync(userId, role, filters);
+        return StatusCode(result.StatusCode, result);
+    }
 
-     /// <summary>
+    /// <summary>
+    /// Update a draft application.
+    /// </summary>
+    [HttpPut("{id}/draft")]
+    [Authorize(Roles = "Applicant")]
+    public async Task<IActionResult> UpdateDraftAsync(Guid id, [FromBody] UpdateDraftRequest request)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _applicationService.UpdateDraftAsync(id, request, userId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Submit a draft application.
+    /// </summary>
+    [HttpPatch("{id}/submit")]
+    [Authorize(Roles = "Applicant")]
+    [ProducesResponseType(typeof(ApiResponse<ApplicationDto>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
+    public async Task<IActionResult> SubmitAsync(Guid id, [FromBody] SubmitApplicationRequest request)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _applicationService.SubmitAsync(id, request, userId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
     /// Update the official status of an application in the workflow.
     /// </summary>
     [HttpPatch("{id}/status")]
@@ -123,12 +128,31 @@ public class ApplicationsController : ControllerBase
     /// Cancel an active application.
     /// </summary>
     [HttpPatch("{id}/cancel")]
-    [Authorize]
+    [Authorize(Roles = "Applicant,Receptionist,Manager")]
     [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
-    public async Task<IActionResult> CancelAsync(Guid id, [FromQuery] string reason)
+    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 403)]
+    public async Task<IActionResult> CancelAsync(Guid id, [FromBody] CancelApplicationRequest request)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var result = await _applicationService.CancelAsync(id, reason, userId);
+        var role = User.FindFirstValue(ClaimTypes.Role)!;
+        var result = await _applicationService.CancelAsync(id, request.Reason, userId, role);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Get application timeline (status history).
+    /// </summary>
+    [HttpGet("{id}/timeline")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<List<ApplicationTimelineDto>>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 403)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
+    public async Task<IActionResult> GetTimelineAsync(Guid id)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var role = User.FindFirstValue(ClaimTypes.Role)!;
+        var result = await _applicationService.GetTimelineAsync(id, userId, role);
         return StatusCode(result.StatusCode, result);
     }
 }

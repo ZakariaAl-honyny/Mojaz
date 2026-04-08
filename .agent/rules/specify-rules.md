@@ -32,9 +32,9 @@ tests/
 C# 12 / .NET 8 LTS: Follow standard conventions
 
 ## Recent Changes
+- 012-application-crud: Added [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
 - 011-rbac-user-settings: Added [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
 - 010-unified-notifications: Added C# 12 / .NET 8 (Backend), TypeScript 5 / Next.js 15 (Frontend) + EF Core 8, Hangfire, Firebase Admin SDK (C#), Firebase JS SDK (Web), SendGrid, Twilio
-- 009-push-notifications: Added C# (ASP.NET Core 8), TypeScript (Next.js 15) + Firebase Admin SDK (.NET), Firebase JS SDK (TS), next-intl
 
 
 <!-- MANUAL ADDITIONS START -->

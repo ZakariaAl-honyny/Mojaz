@@ -28,7 +28,7 @@ public class DevController : ControllerBase
         {
             "account-verification" => new AccountVerificationEmailData { OtpCode = "123456", ExpiryMinutes = 15 },
             "password-recovery" => new PasswordRecoveryEmailData { OtpCode = "654321", ExpiryMinutes = 30 },
-            "application-received" => new ApplicationReceivedEmailData { ApplicationNumber = "MOJ-2025-12345678", ServiceTypeAr = "خدمة المرور", ServiceTypeEn = "Traffic Service" },
+            "application-received" => new ApplicationReceivedEmailData { ApplicationNumber = "MOJ-2025-12345678", ServiceTypeAr = "خدمة المرور", ServiceTypeEn = "Traffic Service", NextStepsAr = new List<string> { "خطوة 1", "خطوة 2" }, NextStepsEn = new List<string> { "Step 1", "Step 2" } },
             "appointment-confirmed" => new AppointmentConfirmedEmailData { 
                 AppointmentDateAr = "الجمعة، 10 مايو 2025", AppointmentDateEn = "Friday, May 10, 2025", 
                 TimeSlot = "10:00 AM - 11:00 AM", BranchNameAr = "مدرسة تعليم القيادة بشمال جدة", BranchNameEn = "North Jeddah Driving School", 

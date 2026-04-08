@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import LoginForm from '@/components/forms/auth/LoginForm';
 import PublicLayout from '@/components/layout/PublicLayout';
 

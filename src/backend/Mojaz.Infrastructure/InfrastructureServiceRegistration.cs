@@ -79,6 +79,15 @@ public static class InfrastructureServiceRegistration
         // JWT Authentication & Authorization
         services.AddMojazAuthentication(configuration);
 
+        // Background Jobs - Process Expired Applications (FR-005, Phase 8)
+        services.AddScoped<Mojaz.Infrastructure.Jobs.ProcessExpiredApplicationsJob>();
+        
+        // Recurring job registration
+        RecurringJob.AddOrUpdate<Mojaz.Infrastructure.Jobs.ProcessExpiredApplicationsJob>(
+            "mojaz-expire-applications",
+            job => job.ExecuteAsync(),
+            Cron.Daily(2)); // Daily at 02:00 UTC (FR-005)
+
         return services;
     }
 }

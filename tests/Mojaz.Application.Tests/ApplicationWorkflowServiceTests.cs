@@ -37,14 +37,14 @@ public class ApplicationWorkflowServiceTests
     }
 
     [Fact]
-    public async Task Service_IsConstructedProperly_ShouldNotBeNull()
+    public void Service_IsConstructedProperly_ShouldNotBeNull()
     {
         // Assert
         _service.Should().NotBeNull();
     }
 
     [Fact]
-    public async Task ValidateWorkflow_WithValidApplication_ShouldSucceed()
+    public void ValidateWorkflow_WithValidApplication_ShouldSucceed()
     {
         // Arrange
         var appId = Guid.NewGuid();

@@ -22,8 +22,8 @@ namespace Mojaz.Application.Interfaces.Notifications
     /// <summary>
     /// Interface for Hangfire Push Notification job processor.
     /// </summary>
-    public interface IPushJobProcessor
-    {
-        Task ExecuteAsync(Guid userId, string titleAr, string titleEn, string bodyAr, string bodyEn, string data = null);
-    }
+public interface IPushJobProcessor
+{
+    Task ExecuteAsync(Guid userId, string titleAr, string titleEn, string bodyAr, string bodyEn, string? data = null);
+}
 }

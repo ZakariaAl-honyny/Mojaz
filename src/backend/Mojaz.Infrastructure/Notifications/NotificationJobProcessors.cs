@@ -132,13 +132,13 @@ namespace Mojaz.Infrastructure.Notifications
         /// <summary>
         /// Enqueue push notification job for async processing.
         /// </summary>
-        public static string Enqueue(Guid userId, string titleAr, string titleEn, string bodyAr, string bodyEn, string data = null)
+        public static string Enqueue(Guid userId, string titleAr, string titleEn, string bodyAr, string bodyEn, string? data = null)
         {
             return BackgroundJob.Enqueue<PushJobProcessor>(processor => 
                 processor.ExecuteAsync(userId, titleAr, titleEn, bodyAr, bodyEn, data));
         }
 
-        public async Task ExecuteAsync(Guid userId, string titleAr, string titleEn, string bodyAr, string bodyEn, string data = null)
+        public async Task ExecuteAsync(Guid userId, string titleAr, string titleEn, string bodyAr, string bodyEn, string? data = null)
         {
             LogInfo("Processing push notification job. UserId: {UserId}", userId);
             
