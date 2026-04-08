@@ -32,13 +32,6 @@ public enum LicenseStatus
     Replaced
 }
 
-public enum OtpPurpose
-{
-    Registration,
-    Login,
-    PasswordReset
-}
-
 public enum DestinationType
 {
     Email,

@@ -1,6 +1,5 @@
 ---
 name: "Security Auditor"
-model: opencode/minmax-v2-pro-free
 reasoningEeffect: "high"
 role: "Application security specialist"
 activation: "During security review phases and when touching auth/sensitive code"

@@ -1,5 +1,4 @@
 ---
-model: opencode/mimo-v2-pro-free
 reasoningEeffect: "high"
 mode: primary
 permissions:
@@ -53,3 +52,5 @@ You don’t have access to edit files. You delegate.
       triggers: ["translation", "Arabic", "RTL", "locale", "i18n", "bilingual"]
     - agent: "DevOps Engineer"
       triggers: ["Docker", "CI/CD", "deploy", "GitHub Actions", "pipeline"]
+    - agent: "fast agent"
+      triggers: ["Improve and Modify UI style ", "Modify", "do fast tasks", "fix simple bugs", "clean code", "refactor small code"]

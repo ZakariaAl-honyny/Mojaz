@@ -68,3 +68,10 @@ export interface LoginResponse {
   refreshToken: string;
   user: UserDto;
 }
+
+export interface LoginRequest {
+  email?: string;
+  phone?: string;
+  nationalId?: string;
+  password: string;
+}

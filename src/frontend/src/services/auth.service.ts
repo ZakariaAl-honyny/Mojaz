@@ -48,5 +48,17 @@ export const authService = {
   async logout(refreshToken: string): Promise<ApiResponse<void>> {
     const response = await apiClient.post<ApiResponse<void>>('/auth/logout', { refreshToken });
     return response.data;
+  },
+
+  /**
+   * Change password for authenticated user
+   */
+  async changePassword(currentPassword: string, newPassword: string): Promise<ApiResponse<boolean>> {
+    const response = await apiClient.post<ApiResponse<boolean>>('/auth/change-password', {
+      currentPassword,
+      newPassword,
+      confirmPassword: newPassword
+    });
+    return response.data;
   }
 };

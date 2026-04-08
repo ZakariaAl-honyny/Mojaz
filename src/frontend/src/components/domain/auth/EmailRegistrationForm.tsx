@@ -16,6 +16,7 @@ import { authService } from '@/services/auth.service';
 import { RegistrationMethod } from '@/types/auth.types';
 import { cn } from '@/lib/utils';
 import { Mail, User, Lock, AlertCircle, Loader2 } from 'lucide-react';
+import { Link } from '@/i18n/routing';
 
 const registerSchema = z.object({
   fullName: z.string().min(3, 'Full name must be at least 3 characters'),
@@ -178,7 +179,7 @@ export function EmailRegistrationForm() {
                   className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                 >
                   {t('register.acceptTerms')}{' '}
-                  <a href="/terms" className="text-primary-500 hover:underline">{t('register.termsLink')}</a>
+                  <Link href="/terms" className="text-primary-500 hover:underline">{t('register.termsLink')}</Link>
                 </label>
                 {errors.termsAccepted && <p className="text-[10px] text-destructive">{errors.termsAccepted.message}</p>}
               </div>
@@ -203,9 +204,9 @@ export function EmailRegistrationForm() {
         <CardFooter className="flex justify-center border-t py-4 mt-2">
           <p className="text-sm text-neutral-500">
             {t('register.alreadyHaveAccount')}{' '}
-            <a href="/login" className="text-primary-500 font-semibold hover:underline">
+            <Link href="/login" className="text-primary-500 font-semibold hover:underline">
               {t('register.loginLink')}
-            </a>
+            </Link>
           </p>
         </CardFooter>
       </Card>

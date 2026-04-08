@@ -31,3 +31,10 @@ public class UserDto
     public bool IsActive { get; set; }
     public string PreferredLanguage { get; set; } = "ar";
 }
+
+public class ChangePasswordRequest
+{
+    public string CurrentPassword { get; set; } = string.Empty;
+    public string NewPassword { get; set; } = string.Empty;
+    public string ConfirmPassword { get; set; } = string.Empty;
+}

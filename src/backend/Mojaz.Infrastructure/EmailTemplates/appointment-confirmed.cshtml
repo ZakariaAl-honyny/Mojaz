@@ -1,0 +1,27 @@
+﻿@using Mojaz.Application.DTOs.Email.Templates
+@model AppointmentConfirmedEmailData
+@{
+    Layout = "_BaseLayout.cshtml";
+}
+
+@section Ar {
+    <h2 style="color: #006C35; font-family: 'Cairo', sans-serif;">تأكيد الموعد</h2>
+    <p>تم تأكيد حجز موعدك بنجاح. يرجى الحضور في الموعد المحدد:</p>
+    <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; margin: 20px 0;">
+        <p style="margin: 5px 0;"><strong>نوع الموعد:</strong> @Model.AppointmentTypeAr</p>
+        <p style="margin: 5px 0;"><strong>التاريخ والوقت:</strong> <span style="color: #006C35;">@Model.DateTimeAr</span></p>
+        <p style="margin: 5px 0;"><strong>الموقع:</strong> @Model.LocationAr</p>
+    </div>
+    <p style="color: #b91c1c; font-size: 14px;">ملاحظة: يرجى التواجد قبل الموعد بـ 15 دقيقة وإحضار الهوية الوطنية.</p>
+}
+
+@section En {
+    <h2 style="color: #006C35;">Appointment Confirmed</h2>
+    <p>Your appointment has been confirmed. Please arrive on time:</p>
+    <div style="background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; margin: 20px 0;">
+        <p style="margin: 5px 0;"><strong>Appointment Type:</strong> @Model.AppointmentTypeEn</p>
+        <p style="margin: 5px 0;"><strong>Date & Time:</strong> <span style="color: #006C35;">@Model.DateTimeEn</span></p>
+        <p style="margin: 5px 0;"><strong>Location:</strong> @Model.LocationEn</p>
+    </div>
+    <p style="color: #b91c1c; font-size: 14px;">Note: Please arrive 15 minutes early and bring your National ID.</p>
+}

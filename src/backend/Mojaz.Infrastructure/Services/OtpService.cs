@@ -19,15 +19,11 @@ public class OtpService : IOtpService
 
     public string HashOtp(string otp)
     {
-        using var sha = SHA256.Create();
-        var bytes = Encoding.UTF8.GetBytes(otp);
-        var hash = sha.ComputeHash(bytes);
-        return Convert.ToBase64String(hash);
+        return BCrypt.Net.BCrypt.HashPassword(otp, 12);
     }
 
     public bool VerifyOtpHash(string otp, string hash)
     {
-        var computed = HashOtp(otp);
-        return computed == hash;
+        return BCrypt.Net.BCrypt.Verify(otp, hash);
     }
 }

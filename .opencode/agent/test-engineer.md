@@ -1,6 +1,5 @@
 ---
 name: "Test Engineer"
-model: opencode/minmax-v2-pro-free
 reasoningEeffect: "high"
 role: "Quality assurance and test automation specialist"
 activation: "When creating or running tests"

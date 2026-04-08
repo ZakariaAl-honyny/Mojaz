@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Mojaz.Domain.Entities;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Infrastructure.Persistence;
 using Mojaz.Infrastructure.Persistence.Repositories;
@@ -8,6 +9,7 @@ using Mojaz.Infrastructure.Persistence.UnitOfWork;
 using SendGrid;
 using Hangfire;
 using Hangfire.SqlServer;
+using Mojaz.Infrastructure.Authentication;
 
 namespace Mojaz.Infrastructure;
 
@@ -63,7 +65,28 @@ public static class InfrastructureServiceRegistration
         // Notification & Push
         services.AddScoped<Application.Interfaces.Services.IEmailService, Services.EmailService>();
         services.AddScoped<Application.Interfaces.Services.ISmsService, Services.SmsService>();
-        services.AddScoped<Application.Interfaces.Services.IPushNotificationService, Services.PushNotificationService>();
+        services.AddScoped<Application.Interfaces.Infrastructure.ISmsService, Services.TwilioSmsService>();
+        services.AddScoped<Application.Interfaces.Services.IPushNotificationService>(provider => 
+            new Services.FirebasePushService(
+                provider.GetRequiredService<IRepository<PushToken>>(),
+                provider.GetRequiredService<IUnitOfWork>(),
+                provider.GetRequiredService<MojazDbContext>()
+            ));
+        services.AddScoped<Application.Interfaces.Services.IOtpService, Services.OtpService>();
+        services.AddScoped<Application.Interfaces.Services.ISystemSettingsService, Services.SystemSettingsService>();
+        services.AddScoped<IOtpRepository, OtpRepository>();
+
+        // JWT Authentication & Authorization
+        services.AddMojazAuthentication(configuration);
+
+        // Background Jobs - Process Expired Applications (FR-005, Phase 8)
+        services.AddScoped<Mojaz.Infrastructure.Jobs.ProcessExpiredApplicationsJob>();
+        
+        // Recurring job registration
+        RecurringJob.AddOrUpdate<Mojaz.Infrastructure.Jobs.ProcessExpiredApplicationsJob>(
+            "mojaz-expire-applications",
+            job => job.ExecuteAsync(),
+            Cron.Daily(2)); // Daily at 02:00 UTC (FR-005)
 
         return services;
     }

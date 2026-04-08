@@ -1,0 +1,26 @@
+@model Mojaz.Application.DTOs.Email.Templates.ApplicationReceivedEmailData
+@{
+    ViewBag.Title = "Application Received";
+}
+@section Ar {
+    <h2 style="color:#006C35;"> „ «” ·«„ «·ÿ·»</h2>
+    <p>—ﬁ„ «·ÿ·»: <b>@Model.ApplicationNumber</b></p>
+    <p>‰Ê⁄ «·Œœ„…: @Model.ServiceTypeAr</p>
+    <ul>
+        @foreach (var step in Model.NextStepsAr ?? new List<string>())
+        {
+            <li>@step</li>
+        }
+    </ul>
+}
+@section En {
+    <h2 style="color:#006C35;">Application Received</h2>
+    <p>Application Number: <b>@Model.ApplicationNumber</b></p>
+    <p>Service Type: @Model.ServiceTypeEn</p>
+    <ul>
+        @foreach (var step in Model.NextStepsEn ?? new List<string>())
+        {
+            <li>@step</li>
+        }
+    </ul>
+}

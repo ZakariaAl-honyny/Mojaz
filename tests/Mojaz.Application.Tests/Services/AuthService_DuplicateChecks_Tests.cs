@@ -14,19 +14,24 @@ using Mojaz.Domain.Interfaces;
 using Mojaz.Shared.Models;
 using Moq;
 using Xunit;
+using Hangfire;
 
 namespace Mojaz.Application.Tests.Services;
+
 
 public class AuthService_DuplicateChecks_Tests
 {
     private readonly Mock<IRepository<User>> _userRepo = new();
-    private readonly Mock<IRepository<OtpCode>> _otpRepo = new();
+    private readonly Mock<IOtpRepository> _otpRepo = new();
     private readonly Mock<IRepository<RefreshToken>> _refreshTokenRepo = new();
     private readonly Mock<IUnitOfWork> _unitOfWork = new();
     private readonly Mock<IJwtService> _jwtService = new();
     private readonly Mock<INotificationService> _notificationService = new();
     private readonly Mock<IAuditService> _auditService = new();
     private readonly Mock<ISystemSettingsService> _settingsService = new();
+    private readonly Mock<IOtpService> _otpService = new();
+    private readonly Mock<IEmailService> _emailService = new();
+    private readonly Mock<ISmsService> _smsService = new();
 
     private AuthService CreateService() => new(
         _userRepo.Object,
@@ -36,7 +41,11 @@ public class AuthService_DuplicateChecks_Tests
         _jwtService.Object,
         _notificationService.Object,
         _auditService.Object,
-        _settingsService.Object
+        _settingsService.Object,
+        _otpService.Object,
+        _emailService.Object,
+        _smsService.Object,
+        Mock.Of<IBackgroundJobClient>()
     );
 
     [Fact]
