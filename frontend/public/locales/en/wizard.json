@@ -1,0 +1,135 @@
+{
+  "create": {
+    "title": "New Application",
+    "subtitle": "Fill in the required information to obtain your driving license",
+    "submit": "Submit Application",
+    "saveDraft": "Save as Draft"
+  },
+  "steps": {
+    "service": "Select Service",
+    "category": "License Category",
+    "personal": "Personal Information",
+    "details": "Application Details",
+    "review": "Review & Submit"
+  },
+  "back": "Back",
+  "next": "Next",
+  "submitting": "Submitting...",
+  "save": "Save"
+},
+  "common": {
+    "select": "Select...",
+    "yes": "Yes",
+    "no": "No",
+    "currentLocale": "en",
+    "loading": "Loading...",
+    "retry": "Retry",
+    "error": "Error",
+    "success": "Success"
+  },
+  "step1": {
+    "newlicense": {
+      "title": "New License",
+      "description": "Apply for a new driving license for the first time"
+    },
+    "renew": {
+      "title": "Renew License",
+      "description": "Renew your current driving license"
+    },
+    "upgrade": {
+      "title": "Upgrade Category",
+      "description": "Upgrade to a higher license category"
+    },
+    "international": {
+      "title": "International License",
+      "description": "Obtain an international driving license"
+    }
+  },
+  "step2": {
+    "title": "Select License Category",
+    "disabledMessage": "{{count}} categories are not available due to your age",
+    "yourAge": "Your age: {{age}} years"
+  },
+  "step3": {
+    "nationalId": "National ID",
+    "nationalIdPlaceholder": "Enter your National ID number",
+    "dateOfBirth": "Date of Birth",
+    "nationality": "Nationality",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "mobileNumber": "Mobile Number",
+    "mobileNumberPlaceholder": "05xxxxxxxx",
+    "email": "Email Address",
+    "emailPlaceholder": "example@email.com",
+    "region": "Region",
+    "city": "City",
+    "address": "Address",
+    "addressPlaceholder": "Enter your full address"
+  },
+  "step4": {
+    "title": "Application Details",
+    "applicantType": "Applicant Type",
+    "citizen": "Citizen",
+    "resident": "Resident",
+    "preferredCenter": "Preferred Exam Center",
+    "testLanguage": "Test Language",
+    "arabic": "Arabic",
+    "english": "English",
+    "appointmentPreference": "Preferred Appointment Time",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening",
+    "noPreference": "No Preference",
+    "specialNeedsDeclaration": "I have special needs",
+    "specialNeedsInfo": "Select if you require special arrangements for the test",
+    "specialNeedsNote": "Describe your special needs",
+    "specialNeedsNotePlaceholder": "Please describe your special needs..."
+  },
+  "step5": {
+    "title": "Review & Submit",
+    "edit": "Edit",
+    "serviceType": "Service Type",
+    "category": "License Category",
+    "declaration": "I declare that all provided information is correct and I agree to the terms and conditions",
+    "successMessage": "Application submitted successfully!",
+    "errorFetch": "Failed to load application details"
+  },
+  "validation": {
+    "step2": {
+      "categoryRequired": "Please select a license category"
+    },
+    "step3": {
+      "nationalIdRequired": "National ID is required",
+      "nationalIdPattern": "National ID must be 10 digits",
+      "dateOfBirthRequired": "Date of birth is required",
+      "nationalityRequired": "Nationality is required",
+      "genderRequired": "Gender is required",
+      "mobileNumberRequired": "Mobile number is required",
+      "mobileNumberPattern": "Mobile number must start with 05",
+      "emailRequired": "Email is required",
+      "emailPattern": "Invalid email format",
+      "regionRequired": "Region is required",
+      "cityRequired": "City is required",
+      "addressRequired": "Address is required",
+      "ageUnderMinimum": "Your age is below the minimum required for this category"
+    },
+    "step4": {
+      "applicantTypeRequired": "Applicant type is required",
+      "preferredCenterRequired": "Preferred exam center is required",
+      "specialNeedsNoteRequired": "Please describe your special needs"
+    },
+    "step5": {
+      "declarationRequired": "You must accept the declaration to submit the application"
+    }
+  },
+  "autoSave": {
+    "saved": "Auto-saved",
+    "saving": "Saving..."
+  },
+  "errors": {
+    "loadFailed": "Failed to load data",
+    "submitFailed": "Failed to submit application",
+    "networkError": "Network error"
+  }
+}

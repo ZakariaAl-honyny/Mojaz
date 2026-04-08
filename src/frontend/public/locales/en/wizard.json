@@ -1,0 +1,182 @@
+{
+  "autoSave": {
+    "saving": "Saving...",
+    "saved": "Saved",
+    "notSaved": "Not saved yet",
+    "saveFailed": "Save failed - check your connection",
+    "justNow": "Just now",
+    "oneMinuteAgo": "1 minute ago",
+    "minutesAgo": "{{count}} minutes ago",
+    "connectionIssues": "Connection issues. Data is saved locally in your browser.",
+    "lastSaved": "Last saved:"
+  },
+  "steps": {
+    "service": {
+      "label": "Service Selection",
+      "title": "Select Service Type",
+      "description": "Please choose the service you wish to apply for from the options below"
+    },
+    "category": {
+      "label": "License Category",
+      "title": "Choose License Category",
+      "description": "Select the category of driving license you wish to obtain"
+    },
+    "personal": {
+      "label": "Personal Info",
+      "title": "Personal Information",
+      "description": "Please complete your personal details to verify eligibility"
+    },
+    "details": {
+      "label": "Application Details",
+      "title": "Application Details",
+      "description": "Enter additional application details and preferred center"
+    },
+    "review": {
+      "label": "Review & Submit",
+      "title": "Review & Submit",
+      "description": "Review your application data and accept declaration before final submission"
+    }
+  },
+  "navigation": {
+    "back": "Previous",
+    "next": "Next",
+    "submit": "Submit Application",
+    "processing": "Processing..."
+  },
+  "step1": {
+    "newLicense": {
+      "title": "New Driving License",
+      "description": "Apply for a driving license for the first time"
+    },
+    "renewal": {
+      "title": "License Renewal",
+      "description": "Renew your existing driving license before expiry"
+    },
+    "replacement": {
+      "title": "Replacement (Damaged/Lost)",
+      "description": "Issue a replacement for a damaged or lost license"
+    },
+    "categoryUpgrade": {
+      "title": "Category Upgrade",
+      "description": "Add a new category to your current driving license"
+    },
+    "testRetake": {
+      "title": "Test Retake",
+      "description": "Book a new appointment for a driving test retake"
+    },
+    "appointmentBooking": {
+      "title": "Book Appointment",
+      "description": "Schedule a visit to Traffic Dept or Exam Centers"
+    },
+    "notAvailable": "This service is currently not available in the MVP version"
+  },
+  "step2": {
+    "title": "Choose License Category",
+    "minAge": "Min Age: {{age}} years",
+    "years": "years",
+    "ageError": "Sorry, you must be {{minAge}} years or older for this category",
+    "disabledMessage": "{{count}} category not available for your age",
+    "errorLoading": "Failed to load categories",
+    "errorLoadingMessage": "We encountered a problem while fetching the license categories. Please try again.",
+    "retry": "Retry",
+    "categoryA": { "title": "Category A - Motorcycle" },
+    "categoryB": { "title": "Category B - Private Car" },
+    "categoryC": { "title": "Category C - Commercial Vehicle" },
+    "categoryD": { "title": "Category D - Bus" },
+    "categoryE": { "title": "Category E - Heavy Vehicle" },
+    "categoryF": { "title": "Category F - Agricultural Vehicle" }
+  },
+  "step3": {
+    "title": "Personal Information",
+    "nationalId": "National ID",
+    "dateOfBirth": "Date of Birth",
+    "nationality": "Nationality",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "mobileNumber": "Mobile Number",
+    "email": "Email",
+    "region": "Region",
+    "city": "City",
+    "address": "Address",
+    "addressPlaceholder": "Enter detailed address"
+  },
+  "step4": {
+    "title": "Application Details",
+    "applicantType": "Applicant Type",
+    "citizen": "Citizen",
+    "resident": "Resident",
+    "visitor": "Visitor",
+    "preferredCenter": "Preferred Driving Center",
+    "selectCenter": "Select Driving Center",
+    "loadingCenters": "Loading centers...",
+    "testLanguage": "Test Language",
+    "arabic": "Arabic",
+    "english": "English",
+    "appointmentPreference": "Appointment Preference",
+    "noPreference": "No Preference",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening",
+    "specialNeedsDeclaration": "Do you have special needs?",
+    "specialNeedsInfo": "Please disclose any special needs to enable us to provide necessary support during tests",
+    "specialNeedsNote": "Details",
+    "specialNeedsNotePlaceholder": "Describe your special needs..."
+  },
+  "step5": {
+    "title": "Review & Submit",
+    "description": "Please review your application before final submission",
+    "serviceType": "Service Type",
+    "category": "License Category",
+    "personalInfo": "Personal Information",
+    "center": "Driving Center",
+    "ar": "Arabic",
+    "en": "English",
+    "declaration": "I declare that all entered information is correct and I accept the terms and conditions for issuing a driving license.",
+    "edit": "Edit",
+    "submit": "Submit Application",
+    "submitting": "Submitting...",
+    "successMessage": "Your application has been submitted successfully!"
+  },
+  "validation": {
+    "step1": {
+      "serviceRequired": "Please select a service to continue"
+    },
+    "step2": {
+      "categoryRequired": "Please select a license category to continue",
+      "ageError": "Sorry, you must be {{age}} years or older for this category"
+    },
+    "step3": {
+      "nationalIdFormat": "National ID must be 10 digits",
+      "dobInvalid": "Invalid Date of Birth",
+      "nationalityRequired": "Nationality is required",
+      "genderRequired": "Gender is required",
+      "mobileFormat": "Invalid mobile number (example: +9665XXXXXXXX)",
+      "emailFormat": "Invalid email address",
+      "addressMin": "Address must be at least 5 characters",
+      "cityRequired": "City is required",
+      "regionRequired": "Region is required"
+    },
+    "step4": {
+      "centerRequired": "Please select a driving center",
+      "specialNeedsNoteRequired": "Please describe your special needs"
+    },
+    "step5": {
+      "declarationRequired": "You must accept the declaration to continue"
+    }
+  },
+  "loading": "Loading...",
+  "existingApp": {
+    "title": "You Have an Active Application",
+    "message": "You have an existing application with number",
+    "applicationNumber": "Application Number: {{number}}",
+    "status": "Status: {{status}}",
+    "viewApplication": "View Application"
+  },
+  "common": {
+    "select": "Select",
+    "currentLocale": "en",
+    "yes": "Yes",
+    "no": "No"
+  }
+}
