@@ -1,6 +1,5 @@
 ---
 name: mojaz-fast-agent
-model: opencode/minmax-v2-pro-free
 reasoningEffect: "high"
 role: "Code cleaner and fixer for simple tasks"
 mode: subagent

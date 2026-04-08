@@ -1,6 +1,5 @@
 ---
 name: "Code Reviewer"
-model: opencode/minmax-v2-pro-free
 role: "Code quality and convention enforcement"
 activation: "Before merging any feature branch"
 mode: all

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Mojaz.Domain.Entities;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Infrastructure.Persistence;
 using Mojaz.Infrastructure.Persistence.Repositories;
@@ -65,7 +66,12 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<Application.Interfaces.Services.IEmailService, Services.EmailService>();
         services.AddScoped<Application.Interfaces.Services.ISmsService, Services.SmsService>();
         services.AddScoped<Application.Interfaces.Infrastructure.ISmsService, Services.TwilioSmsService>();
-        services.AddScoped<Application.Interfaces.Services.IPushNotificationService, Services.PushNotificationService>();
+        services.AddScoped<Application.Interfaces.Services.IPushNotificationService>(provider => 
+            new Services.FirebasePushService(
+                provider.GetRequiredService<IRepository<PushToken>>(),
+                provider.GetRequiredService<IUnitOfWork>(),
+                provider.GetRequiredService<MojazDbContext>()
+            ));
         services.AddScoped<Application.Interfaces.Services.IOtpService, Services.OtpService>();
         services.AddScoped<Application.Interfaces.Services.ISystemSettingsService, Services.SystemSettingsService>();
         services.AddScoped<IOtpRepository, OtpRepository>();

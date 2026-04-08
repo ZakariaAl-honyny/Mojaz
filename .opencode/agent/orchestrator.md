@@ -1,5 +1,4 @@
 ---
-model: opencode/minmax-v2-pro-free
 reasoningEeffect: "high"
 mode: primary
 permissions:
