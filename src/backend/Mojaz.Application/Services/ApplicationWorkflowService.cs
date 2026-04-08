@@ -1,4 +1,7 @@
 using Mojaz.Application.Interfaces.Services;
+using Mojaz.Application.DTOs.Email;
+using Mojaz.Application.DTOs.Email.Templates;
+using Hangfire;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
@@ -13,17 +16,26 @@ namespace Mojaz.Application.Services;
 public class ApplicationWorkflowService : IApplicationWorkflowService
 {
     private readonly IRepository<ApplicationEntity> _applicationRepository;
+    private readonly IRepository<User> _userRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly INotificationService _notificationService;
+    private readonly IEmailService _emailService;
+    private readonly IBackgroundJobClient _backgroundJobClient;
 
     public ApplicationWorkflowService(
         IRepository<ApplicationEntity> applicationRepository,
+        IRepository<User> userRepository,
         IUnitOfWork unitOfWork,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        IEmailService emailService,
+        IBackgroundJobClient backgroundJobClient)
     {
         _applicationRepository = applicationRepository;
+        _userRepository = userRepository;
         _unitOfWork = unitOfWork;
         _notificationService = notificationService;
+        _emailService = emailService;
+        _backgroundJobClient = backgroundJobClient;
     }
 
     public async Task<ApiResponse<bool>> AdvanceStageAsync(Guid applicationId, ApplicationStatus nextStatus, string notes, Guid userId)
@@ -50,6 +62,29 @@ public class ApplicationWorkflowService : IApplicationWorkflowService
             MessageEn = $"Your application status has been updated to: {nextStatus}"
         });
 
+        // Send Decision Email if status is final (Approved/Rejected)
+        if (nextStatus == ApplicationStatus.Approved || nextStatus == ApplicationStatus.Rejected)
+        {
+            var user = await _userRepository.GetByIdAsync(application.ApplicantId);
+            if (user != null && !string.IsNullOrEmpty(user.Email))
+            {
+                var emailData = new ApplicationDecisionEmailData
+                {
+                    ApplicationNumber = application.ApplicationNumber,
+                    IsApproved = nextStatus == ApplicationStatus.Approved,
+                    ReasonAr = notes,
+                    ReasonEn = notes
+                };
+                _backgroundJobClient.Enqueue(() => _emailService.SendTemplatedAsync(new TemplatedEmailRequest
+                {
+                    RecipientEmail = user.Email,
+                    TemplateName = "application-decision",
+                    TemplateData = emailData,
+                    ReferenceId = application.Id.ToString()
+                }));
+            }
+        }
+
         return ApiResponse<bool>.Ok(true, "Application stage advanced.");
     }
 
@@ -74,6 +109,24 @@ public class ApplicationWorkflowService : IApplicationWorkflowService
             MessageAr = $"نعتذر، تم رفض طلبك للسبب التالي: {reason}",
             MessageEn = $"We regret to inform you that your application has been rejected for: {reason}"
         });
+
+        var userForRejection = await _userRepository.GetByIdAsync(application.ApplicantId);
+        if (userForRejection != null && !string.IsNullOrEmpty(userForRejection.Email))
+        {
+            _backgroundJobClient.Enqueue(() => _emailService.SendTemplatedAsync(new TemplatedEmailRequest
+            {
+                RecipientEmail = userForRejection.Email,
+                TemplateName = "application-decision",
+                TemplateData = new ApplicationDecisionEmailData
+                {
+                    ApplicationNumber = application.ApplicationNumber,
+                    IsApproved = false,
+                    ReasonAr = reason,
+                    ReasonEn = reason
+                },
+                ReferenceId = application.Id.ToString()
+            }));
+        }
 
         return ApiResponse<bool>.Ok(true, "Application rejected.");
     }

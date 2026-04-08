@@ -1,6 +1,5 @@
 ---
 name: "DevOps Engineer"
-model: opencode/minmax-v2-pro-free
 reasoningEffect: "high"
 role: "Infrastructure, CI/CD, and deployment specialist"
 activation: "When working on Docker, GitHub Actions, deployment"

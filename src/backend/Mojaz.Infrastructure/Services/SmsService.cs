@@ -23,7 +23,7 @@ public class SmsService : ISmsService
         }
     }
 
-    public async Task SendSmsAsync(string phoneNumber, string message)
+    public async Task SendAsync(string phoneNumber, string message)
     {
         var fromNumber = _configuration["Twilio:FromNumber"];
         if (string.IsNullOrEmpty(fromNumber)) throw new Exception("Twilio FromNumber is missing.");
@@ -33,4 +33,7 @@ public class SmsService : ISmsService
         
         await MessageResource.CreateAsync(to: to, from: from, body: message);
     }
+
+    // Keep the old method for backward compatibility
+    public Task SendSmsAsync(string phoneNumber, string message) => SendAsync(phoneNumber, message);
 }

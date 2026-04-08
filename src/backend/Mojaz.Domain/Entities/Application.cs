@@ -11,7 +11,7 @@ public class Application : SoftDeletableEntity
     public ServiceType ServiceType { get; set; }
     public Guid LicenseCategoryId { get; set; }
     public Guid? BranchId { get; set; }
-    public ApplicationStatus Status { get; set; }
+    public ApplicationStatus Status { get; set; } = ApplicationStatus.Draft;
     public string? CurrentStage { get; set; }
     public string PreferredLanguage { get; set; } = "ar";
     public bool SpecialNeeds { get; set; }
@@ -27,4 +27,5 @@ public class Application : SoftDeletableEntity
     
     public virtual User Applicant { get; set; } = null!;
     public virtual LicenseCategory LicenseCategory { get; set; } = null!;
+    public virtual ICollection<ApplicationStatusHistory> StatusHistory { get; set; } = [];
 }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Enums;
+using Mojaz.Shared.Models;
 using System.Security.Claims;
 
 namespace Mojaz.API.Controllers
@@ -23,26 +23,45 @@ namespace Mojaz.API.Controllers
         /// <summary>
         /// Get all notifications for the current user (paginated).
         /// </summary>
-        [HttpGet]
-        [Authorize]
-
         /// <param name="page">Page number (default: 1)</param>
         /// <param name="pageSize">Page size (default: 20)</param>
         /// <returns>Paged list of notifications</returns>
-        [ProducesResponseType(typeof(Mojaz.Shared.PagedResult<Mojaz.Domain.Entities.Notification>), 200)]
+        [HttpGet]
+        [Authorize]
+        [ProducesResponseType(typeof(ApiResponse<PagedResult<NotificationDto>>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 401)]
         public async Task<IActionResult> GetNotifications([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-            // Assume repository is injected via NotificationService
-            var notifications = await _notificationService.GetUserNotificationsAsync(userId, page, pageSize);
-            return Ok(notifications);
+            var result = await _notificationService.GetUserNotificationsAsync(userId, page, pageSize);
+            return StatusCode(result.StatusCode, result);
         }
 
         /// <summary>
-        /// Mark a notification as read.
+        /// Get unread notification count for the current user.
         /// </summary>
+        /// <returns>Unread count</returns>
+        [HttpGet("unread-count")]
+        [Authorize]
+        [ProducesResponseType(typeof(ApiResponse<int>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 401)]
+        public async Task<IActionResult> GetUnreadCount()
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var result = await _notificationService.GetUnreadCountAsync(userId);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        /// <summary>
+        /// Mark a single notification as read.
+        /// </summary>
+        /// <param name="id">Notification ID to mark as read</param>
+        /// <returns>Success result</returns>
         [HttpPatch("{id}/read")]
         [Authorize]
+        [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 401)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 404)]
         public async Task<IActionResult> MarkAsRead(Guid id)
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -55,11 +74,16 @@ namespace Mojaz.API.Controllers
         /// </summary>
         [HttpPatch("read-all")]
         [Authorize]
+        [ProducesResponseType(typeof(ApiResponse<object>), 200)]
         public async Task<IActionResult> MarkAllAsRead()
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _notificationService.MarkAllAsReadAsync(userId);
-            return Ok(new { Success = result });
+            if (result)
+            {
+                return Ok(ApiResponse<object>.Ok(new { }, "All notifications marked as read."));
+            }
+            return Ok(ApiResponse<object>.Ok(new { }, "No unread notifications to mark."));
         }
     }
 }

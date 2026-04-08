@@ -70,5 +70,10 @@ namespace Mojaz.Infrastructure.Persistence.Repositories
         {
             return await _dbSet.AnyAsync(predicate, ct);
         }
+
+        public IQueryable<T> Query()
+        {
+            return _dbSet.AsQueryable();
+        }
     }
 }

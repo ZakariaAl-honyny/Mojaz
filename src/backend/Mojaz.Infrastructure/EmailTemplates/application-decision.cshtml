@@ -1,0 +1,26 @@
+@model Mojaz.Application.DTOs.Email.Templates.ApplicationDecisionEmailData
+@{
+    ViewBag.Title = "Application Decision";
+    var isApproved = (Model.DecisionEn?.ToLowerInvariant() ?? "").Contains("approve");
+    var headerColor = isApproved ? "#006C35" : "#b71c1c";
+}
+@section Ar {
+    <h2 style="color:@headerColor;">ﬁ—«— «·ÿ·»</h2>
+    <p>«·ﬁ—«—: <b>@Model.DecisionAr</b></p>
+    @if (!string.IsNullOrWhiteSpace(Model.ReasonAr))
+    {
+        <div style="margin-top:12px;background:#fff3f3;color:#b71c1c;padding:10px;border-radius:6px;">
+            «·”»»: @Model.ReasonAr
+        </div>
+    }
+}
+@section En {
+    <h2 style="color:@headerColor;">Application Decision</h2>
+    <p>Decision: <b>@Model.DecisionEn</b></p>
+    @if (!string.IsNullOrWhiteSpace(Model.ReasonEn))
+    {
+        <div style="margin-top:12px;background:#fff3f3;color:#b71c1c;padding:10px;border-radius:6px;">
+            Reason: @Model.ReasonEn
+        </div>
+    }
+}
