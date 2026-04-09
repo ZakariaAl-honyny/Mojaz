@@ -1,0 +1,47 @@
+{
+  "title": "Dashboard",
+  "applicant": {
+    "welcome": "Welcome, <highlight>{name}</highlight>",
+    "activeApplications": "Active Applications",
+    "pendingActions": "Pending Actions",
+    "recentApplications": "Recent Applications",
+    "noApplications": "You don't have any active applications at the moment.",
+    "startNew": "Start New Application"
+  },
+  "employee": {
+    "workQueue": "Work Queue",
+    "stalledAlert": "Stalled Applications ({count})",
+    "searchPlaceholder": "Search by application number or name...",
+    "filters": {
+      "status": "Status",
+      "service": "Service",
+      "category": "Category"
+    }
+  },
+  "manager": {
+    "kpis": {
+      "todayLoad": "Today's Load",
+      "passRate": "Pass Rate",
+      "theory": "Theory",
+      "practical": "Practical"
+    },
+    "charts": {
+      "statusDistribution": "Application Status Distribution"
+    }
+  },
+  "timeline": {
+    "title": "Application Progress",
+    "stages": {
+      "Draft": "Draft",
+      "Submitted": "Submitted",
+      "InReview": "In Review",
+      "MedicalExamination": "Medical Examination",
+      "TheoryTest": "Theory Test",
+      "PracticalTest": "Practical Test",
+      "Approved": "Approved",
+      "Payment": "Final Payment",
+      "Issuance": "License Issuance",
+      "Active": "License Active"
+    }
+  }
+}
