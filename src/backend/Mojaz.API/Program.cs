@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Mojaz.API.Extensions;
 using Mojaz.API.Filters;
 using Mojaz.API.Middleware;
-using Mojaz.Application.Extensions;
+using Mojaz.Application;
 using Mojaz.Infrastructure;
 using Mojaz.Infrastructure.Extensions;
 using Serilog;
@@ -46,7 +46,12 @@ builder.Host.UseSerilog((context, config) =>
             retainedFileCountLimit: 30);
 });
 
+// ─── Memory Cache (Required by SystemSettingsService) ───
+builder.Services.AddMemoryCache();
+
 // ─── Layer Registrations ───
+// IMPORTANT: AddApplicationServices must come BEFORE AddInfrastructureServices
+// because Infrastructure services (like ProcessAppointmentRemindersJob) depend on Application services
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
@@ -132,6 +137,23 @@ if (!Directory.Exists(uploadsPath))
 {
     Directory.CreateDirectory(uploadsPath);
     Log.Information("Created uploads directory at: {Path}", uploadsPath);
+}
+
+// ─── Hangfire Jobs Registration (Phase 8) ───
+try 
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+        recurringJobManager.AddOrUpdate<Mojaz.Infrastructure.Jobs.ProcessExpiredApplicationsJob>(
+            "mojaz-expire-applications",
+            job => job.ExecuteAsync(),
+            Cron.Daily(2));
+    }
+}
+catch (Exception ex)
+{
+    Log.Error(ex, "Failed to register Hangfire recurring jobs");
 }
 
 app.Run();

@@ -29,5 +29,17 @@ public static class HangfireExtensions
             });
 
         Log.Information("Registered recurring job: expire-applications (daily at 02:00 UTC)");
+
+        // Process appointment reminders - runs every hour
+        RecurringJob.AddOrUpdate<ProcessAppointmentRemindersJob>(
+            "process-appointment-reminders",
+            job => job.ExecuteAsync(),
+            Cron.Hourly,
+            new RecurringJobOptions
+            {
+                TimeZone = TimeZoneInfo.Utc
+            });
+
+        Log.Information("Registered recurring job: process-appointment-reminders (hourly)");
     }
 }

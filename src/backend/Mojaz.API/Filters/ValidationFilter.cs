@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 
 namespace Mojaz.API.Filters;
 

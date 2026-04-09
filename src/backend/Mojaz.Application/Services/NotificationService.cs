@@ -3,7 +3,7 @@ using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
