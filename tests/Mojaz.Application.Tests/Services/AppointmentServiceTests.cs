@@ -5,6 +5,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Mojaz.Application.DTOs.Appointments;
+using Mojaz.Application.Interfaces;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Application.Services;
 using Mojaz.Domain.Entities;
@@ -24,6 +25,7 @@ public class AppointmentServiceTests
     private readonly Mock<IRepository<ApplicationEntity>> _applicationRepositoryMock;
     private readonly Mock<ISystemSettingsService> _systemSettingsServiceMock;
     private readonly Mock<INotificationService> _notificationServiceMock;
+    private readonly Mock<ITrainingService> _trainingServiceMock;
     private readonly IMapper _mapper;
     private readonly AppointmentService _service;
 
@@ -33,6 +35,7 @@ public class AppointmentServiceTests
         _applicationRepositoryMock = new Mock<IRepository<ApplicationEntity>>();
         _systemSettingsServiceMock = new Mock<ISystemSettingsService>();
         _notificationServiceMock = new Mock<INotificationService>();
+        _trainingServiceMock = new Mock<ITrainingService>();
 
         // AutoMapper configuration
         var config = new MapperConfiguration(cfg =>
@@ -46,7 +49,8 @@ public class AppointmentServiceTests
             _applicationRepositoryMock.Object,
             _systemSettingsServiceMock.Object,
             _notificationServiceMock.Object,
-            _mapper);
+            _mapper,
+            _trainingServiceMock.Object);
     }
 
     #region GetAvailableSlotsAsync Tests

@@ -45,7 +45,15 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008006"), SettingKey = "WORKING_HOURS_END", SettingValue = "16:00", Category = "Appointment", Description = "End of working hours for appointments (24-hour format)", IsEncrypted = false },
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008007"), SettingKey = "REMINDER_HOURS_BEFORE", SettingValue = "24", Category = "Appointment", Description = "Hours before appointment to send reminder notification", IsEncrypted = false },
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008008"), SettingKey = "MIN_BOOKING_DAYS_AHEAD", SettingValue = "1", Category = "Appointment", Description = "Minimum days in advance an appointment must be booked", IsEncrypted = false },
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008009"), SettingKey = "MAX_BOOKING_DAYS_AHEAD", SettingValue = "30", Category = "Appointment", Description = "Maximum days in advance an appointment can be booked", IsEncrypted = false }
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008009"), SettingKey = "MAX_BOOKING_DAYS_AHEAD", SettingValue = "30", Category = "Appointment", Description = "Maximum days in advance an appointment can be booked", IsEncrypted = false },
+
+                // Training SystemSettings seed data
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009001"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_A", SettingValue = "8", Category = "Training", Description = "Minimum training hours for Category A (Motorcycle)", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009002"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_B", SettingValue = "20", Category = "Training", Description = "Minimum training hours for Category B (Private)", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009003"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_C", SettingValue = "30", Category = "Training", Description = "Minimum training hours for Category C (Public Transport)", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009004"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_D", SettingValue = "40", Category = "Training", Description = "Minimum training hours for Category D (Heavy Vehicles)", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009005"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_E", SettingValue = "40", Category = "Training", Description = "Minimum training hours for Category E (Industrial)", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009006"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_F", SettingValue = "20", Category = "Training", Description = "Minimum training hours for Category F (Special Needs)", IsEncrypted = false }
             );
         }
     }

@@ -1,0 +1,50 @@
+{
+  "status": {
+    "required": "مطلوب",
+    "inprogress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "exempted": "معفى"
+  },
+  "arc": {
+    "hoursLabel": "ساعة تدريب"
+  },
+  "form": {
+    "title": "تسجيل ساعات التدريب",
+    "hoursLabel": "الساعات الإضافية",
+    "notesLabel": "ملاحظات إضافية",
+    "notesPlaceholder": "أدخل أي ملاحظات حول هذه الجلسة...",
+    "submitButton": "تسجيل الساعات"
+  },
+  "history": {
+    "title": "تفاصيل سجل التدريب",
+    "centerName": "اسم المركز",
+    "trainerName": "اسم المدرب",
+    "certificateNumber": "رقم الشهادة",
+    "lastUpdated": "آخر تحديث",
+    "completedHours": "الساعات المنجزة",
+    "notApplicable": "غير متوفر"
+  },
+  "validation": {
+    "hoursRequired": "يرجى إدخال الساعات",
+    "hoursInvalid": "قيمة الساعات غير صالحة",
+    "hoursMin": "يجب تسجيل 0.5 ساعة على الأقل",
+    "hoursMax": "لا يمكن تسجيل أكثر من 8 ساعات في المرة الواحدة",
+    "notesMax": "الملاحظات طويلة جداً",
+    "reasonMin": "يجب أن يكون السبب 10 أحرف على الأقل",
+    "reasonMax": "السبب طويل جداً",
+    "documentRequired": "يجب إرفاق مستند داعم"
+  },
+  "page": {
+    "title": "إدارة السجل التدريبي",
+    "subtitle": "تسجيل ومتابعة ساعات تدريب المتقدم",
+    "applicantInfo": "بيانات المتقدم",
+    "errorLoading": "حدث خطأ أثناء تحميل بيانات التدريب",
+    "notFound": "لم يتم العثور على طلب تدريب",
+    "exemptionSection": "طلبات الإعفاء",
+    "requestExemption": "تقديم طلب إعفاء",
+    "noHistory": "لا توجد سجلات تدريب حالية لهذا الطلب",
+    "queueTitle": "قائمة انتظار مراجعة الإعفاءات",
+    "queueSubtitle": "مراجعة وإدارة طلبات الإعفاء التدريبي المعلقة",
+    "noPending": "لا توجد طلبات إعفاء معلقة حالياً"
+  }
+}

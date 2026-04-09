@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Mojaz.Application.Interfaces;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Application.Services;
 using FluentValidation;
@@ -29,6 +30,9 @@ public static class ApplicationServiceRegistration
         
         // ─── Dashboards & Reporting ───
         services.AddScoped<IDashboardService, DashboardService>();
+
+        // ─── Training ───
+        services.AddScoped<ITrainingService, TrainingService>();
 
         // ─── Notifications ───
         services.AddScoped<INotificationService, NotificationService>();

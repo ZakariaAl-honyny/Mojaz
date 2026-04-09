@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileText, CreditCard, Activity, CalendarClock } from "lucide-react";
 import Link from "next/link";
+import { GateLockIndicator } from "@/components/domain/training/GateLockIndicator";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { locale, id } = await params;
@@ -30,12 +31,13 @@ export default async function ApplicationDetailsPage({ params }: { params: Promi
 
   const timelineStages: TimelineStage[] = [
     { id: "1", nameKey: "creation", status: "completed", timestamp: "2025-01-10T08:30:00Z" },
-    { id: "2", nameKey: "documentReview", status: "current" },
-    { id: "3", nameKey: "payment", status: "pending" },
-    { id: "4", nameKey: "medical", status: "pending" },
-    { id: "5", nameKey: "theory", status: "pending" },
-    { id: "6", nameKey: "practical", status: "pending" },
-    { id: "7", nameKey: "issuance", status: "pending" },
+    { id: "2", nameKey: "documentReview", status: "completed", timestamp: "2025-01-11T10:00:00Z" },
+    { id: "3", nameKey: "training", status: "current", extraContent: <GateLockIndicator isLocked={true} /> },
+    { id: "4", nameKey: "payment", status: "pending" },
+    { id: "5", nameKey: "medical", status: "pending" },
+    { id: "6", nameKey: "theory", status: "pending" },
+    { id: "7", nameKey: "practical", status: "pending" },
+    { id: "8", nameKey: "issuance", status: "pending" },
   ];
 
   return (
