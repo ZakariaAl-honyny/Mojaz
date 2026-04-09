@@ -8,7 +8,7 @@ using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Shared.Constants;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using Mojaz.Shared.Extensions;
 using System;
 using System.Collections.Generic;

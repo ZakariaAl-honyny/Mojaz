@@ -1,7 +1,7 @@
 using AutoMapper;
 using Mojaz.Application.DTOs.Application;
 using Mojaz.Domain.Entities;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using DomainApplication = Mojaz.Domain.Entities.Application;
 
 namespace Mojaz.Application.Mappings;

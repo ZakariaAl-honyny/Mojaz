@@ -6,6 +6,7 @@ namespace Mojaz.Shared;
 public class Result<T>
 {
     public bool IsSuccess { get; private set; }
+    public bool IsFailure => !IsSuccess;
     public T? Value { get; private set; }
     public string? Error { get; private set; }
     public List<string>? Errors { get; private set; }
