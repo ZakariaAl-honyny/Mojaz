@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Mojaz.Application.DTOs.Auth;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Enums;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using System.Security.Claims;
 using System.Threading.Tasks;
 

@@ -1,81 +1,104 @@
-# Implementation Plan: 015-status-dashboards
+# Implementation Plan: [FEATURE]
 
-**Branch**: `015-status-dashboards` | **Date**: 2026-04-09 | **Spec**: specs/015-status-dashboards/spec.md
-**Input**: Feature specification from `/specs/015-status-dashboards/spec.md`
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
 ## Summary
 
-Build the visual heartbeat of the Mojaz platform: a shared status badge system, a vertical animated 10-stage application timeline, a rich applicant self-service dashboard, role-specific employee dashboards, a TanStack Table-powered employee work queue, and a structured application detail view for multiple roles.
+[Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
 
-**Language/Version**: TypeScript 5, C# 12 (.NET 8)
-**Primary Dependencies**: Next.js 15 (App Router), Tailwind CSS 4, shadcn/ui, TanStack Table v8, Lucide React, Framer Motion 11, Recharts 2, ASP.NET Core 8
-**Storage**: SQL Server 2022 / Entity Framework Core 8
-**Testing**: Jest + React Testing Library (Frontend), xUnit + Moq (Backend)
-**Target Platform**: Web Browsers (Responsive Desktop/Tablet/Mobile)
-**Project Type**: Full-Stack Web Application (Government Portal)
-**Performance Goals**: < 2 seconds Response time, independent suspense boundaries, debounce search (300ms)
-**Constraints**: Fully bilingual (RTL/Arabic default), Dark/Light mode, WCAG 2.1 AA compliance
-**Scale/Scope**: 7 user roles, 8 services, 10 workflow stages
+<!--
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
+-->
+
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- **I. Clean Architecture**: DTOs mapped cleanly from backend Application context boundaries to minimize data over-fetching. Role specific queries are located in the Service layer.
-- **II. Security First**: Dashboards are highly role-scoped via RBAC endpoint constraints (`[Authorize(Roles="Role")]`), strict `UserId` filtering for applicants, and conditional UI rendering.
-- **III. Config over Hardcoding**: Stall limits for tables (e.g. stalled application views) read dynamically from `SystemSettings`. Timestamp logic guarantees UTC.
-- **IV. Internationalization**: Timeline connectors mirror physically in RTL via Tailwind logicals (`ms-`, `me-`). All labels supplied via `next-intl`.
-- **V. API Contracts**: All Dashboard aggregation and list endpoints will use strictly validated `ApiResponse<T>` wrappers with `PagedResult<T>` when dealing with rows.
-- **VI. Test Discipline**: TanStack Table and Timeline component unit testing via RTL. E2E workflows test role segregation.
-- **VII. Async-First Notifications**: Timeline relies on async data feeds and doesn't block notifications.
-
-All gates PASSED.
+[Gates determined based on constitution file]
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/015-status-dashboards/
+specs/[###-feature]/
 ├── plan.md              # This file (/speckit.plan command output)
 ├── research.md          # Phase 0 output (/speckit.plan command)
 ├── data-model.md        # Phase 1 output (/speckit.plan command)
 ├── quickstart.md        # Phase 1 output (/speckit.plan command)
+├── contracts/           # Phase 1 output (/speckit.plan command)
 └── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
 ```
 
 ### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
 
 ```text
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
+src/
+├── models/
+├── services/
+├── cli/
+└── lib/
+
+tests/
+├── contract/
+├── integration/
+└── unit/
+
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
 backend/
 ├── src/
-│   ├── Mojaz.Application/
-│   │   ├── Dashboards/             # Dashboard aggregation queries
-│   │   └── Applications/           # Timelines and Queue queries
-│   └── Mojaz.API/
-│       └── Controllers/
-│           ├── DashboardController.cs
-│           └── ApplicationsController.cs
-           
+│   ├── models/
+│   ├── services/
+│   └── api/
+└── tests/
+
 frontend/
 ├── src/
-│   ├── app/[locale]/
-│   │   ├── (applicant)/dashboard/page.tsx
-│   │   └── (employee)/dashboard/page.tsx
-│   └── components/
-│       ├── shared/
-│       │   ├── status-badge.tsx
-│       │   └── application-timeline.tsx
-│       └── employee/
-│           ├── dashboard/
-│           │   ├── manager-dashboard.tsx
-│           │   ├── receptionist-dashboard.tsx
-│           │   └── ...
-│           └── queue/
-│               ├── employee-application-queue.tsx
-│               └── columns.tsx
+│   ├── components/
+│   ├── pages/
+│   └── services/
+└── tests/
+
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
+
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
-**Structure Decision**: Standard Mojaz Monorepo layout matching Clean Architecture implementation pattern.
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
+
+## Complexity Tracking
+
+> **Fill ONLY if Constitution Check has violations that must be justified**
+
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |

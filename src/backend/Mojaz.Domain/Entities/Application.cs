@@ -12,7 +12,7 @@ public class Application : SoftDeletableEntity
     public Guid LicenseCategoryId { get; set; }
     public Guid? BranchId { get; set; }
     public ApplicationStatus Status { get; set; } = ApplicationStatus.Draft;
-    public string? CurrentStage { get; set; }
+    public string CurrentStage { get; set; } = string.Empty;
     public string PreferredLanguage { get; set; } = "ar";
     public bool SpecialNeeds { get; set; }
     public bool DataAccuracyConfirmed { get; set; }

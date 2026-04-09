@@ -10,6 +10,7 @@ using SendGrid;
 using Hangfire;
 using Hangfire.SqlServer;
 using Mojaz.Infrastructure.Authentication;
+using Mojaz.Infrastructure.Jobs;
 
 namespace Mojaz.Infrastructure;
 
@@ -29,6 +30,9 @@ public static class InfrastructureServiceRegistration
         // Repository & UnitOfWork
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        
+        // Appointment Repository
+        services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
         // Identity & Infrastructure Services
         services.AddScoped<Application.Interfaces.Services.IJwtService, Identity.JwtService>();
@@ -83,12 +87,9 @@ public static class InfrastructureServiceRegistration
         // Background Jobs - Process Expired Applications (FR-005, Phase 8)
         services.AddScoped<Mojaz.Infrastructure.Jobs.ProcessExpiredApplicationsJob>();
         
-        // Recurring job registration
-        RecurringJob.AddOrUpdate<Mojaz.Infrastructure.Jobs.ProcessExpiredApplicationsJob>(
-            "mojaz-expire-applications",
-            job => job.ExecuteAsync(),
-            Cron.Daily(2)); // Daily at 02:00 UTC (FR-005)
-
+        // Background Jobs - Appointment Reminders
+        services.AddScoped<ProcessAppointmentRemindersJob>();
+        
         return services;
     }
 }

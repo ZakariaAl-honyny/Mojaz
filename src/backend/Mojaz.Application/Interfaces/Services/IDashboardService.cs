@@ -1,5 +1,5 @@
 using Mojaz.Application.Dashboards.Dtos;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 
 namespace Mojaz.Application.Interfaces.Services;
 

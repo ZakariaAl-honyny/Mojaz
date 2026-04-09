@@ -4,7 +4,7 @@ using Mojaz.Application.DTOs.Email.Templates;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using Hangfire;
 using System;
 using System.Linq;

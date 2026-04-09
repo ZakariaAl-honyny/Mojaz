@@ -1,0 +1,77 @@
+{
+  "appointment": {
+    "title": "Book Appointment",
+    "book": "Book Appointment",
+    "reschedule": "Reschedule",
+    "cancel": "Cancel",
+    "selectDate": "Select Date",
+    "selectTime": "Select Time",
+    "availableSlots": "Available Slots",
+    "noSlotsAvailable": "No available slots",
+    "slotAvailable": "Slot available",
+    "slotFull": "Slot is full",
+    "confirmBooking": "Confirm Booking",
+    "confirmReschedule": "Confirm Reschedule",
+    "confirmCancel": "Confirm Cancel",
+    "bookingSuccess": "Appointment booked successfully",
+    "rescheduleSuccess": "Appointment rescheduled successfully",
+    "cancelSuccess": "Appointment cancelled successfully",
+    "bookingFailed": "Failed to book appointment",
+    "rescheduleFailed": "Failed to reschedule appointment",
+    "cancelFailed": "Failed to cancel appointment",
+    "maxRescheduleReached": "You have reached the maximum reschedule limit",
+    "slotAlreadyBooked": "This slot is already booked",
+    "pastDate": "Cannot book a past date",
+    "tooFarAhead": "Cannot book more than 30 days ahead",
+    "tooSoon": "Must book at least 1 day ahead",
+    "status": {
+      "scheduled": "Scheduled",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "noShow": "No Show"
+    },
+    "types": {
+      "medicalExam": "Medical Exam",
+      "theoryTest": "Theory Test",
+      "practicalTest": "Practical Test"
+    },
+    "reminder": {
+      "title": "Appointment Reminder",
+      "message": "You have an appointment tomorrow at {time}",
+      "messageTomorrow": "You have an appointment tomorrow at {time} at {branch} branch"
+    },
+    "calendar": {
+      "today": "Today",
+      "previousMonth": "Previous Month",
+      "nextMonth": "Next Month",
+      "weekdays": {
+        "sunday": "Sun",
+        "monday": "Mon",
+        "tuesday": "Tue",
+        "wednesday": "Wed",
+        "thursday": "Thu",
+        "friday": "Fri",
+        "saturday": "Sat"
+      },
+      "months": {
+        "january": "January",
+        "february": "February",
+        "march": "March",
+        "april": "April",
+        "may": "May",
+        "june": "June",
+        "july": "July",
+        "august": "August",
+        "september": "September",
+        "october": "October",
+        "november": "November",
+        "december": "December"
+      }
+    },
+    "reason": {
+      "label": "Cancellation Reason",
+      "placeholder": "Enter cancellation reason"
+    },
+    "rescheduleCount": "Reschedule count: {count}/{max}"
+  }
+}

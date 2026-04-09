@@ -34,6 +34,19 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000007002"), SettingKey = "EMAIL_MAX_RETRIES", SettingValue = "3", Category = "Email", Description = "Maximum retry attempts for failed emails", IsEncrypted = false },
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000007003"), SettingKey = "EMAIL_RETRY_BASE_DELAY_SECONDS", SettingValue = "60", Category = "Email", Description = "Base delay in seconds for email retry exponential backoff", IsEncrypted = false }
             );
+
+            // Appointment SystemSettings seed data
+            builder.HasData(
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008001"), SettingKey = "MAX_RESCHEDULE_COUNT", SettingValue = "3", Category = "Appointment", Description = "Maximum number of times an applicant can reschedule an appointment", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008002"), SettingKey = "DEFAULT_APPOINTMENT_DURATION_MINUTES", SettingValue = "30", Category = "Appointment", Description = "Default duration of an appointment slot in minutes", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008003"), SettingKey = "MAX_APPOINTMENTS_PER_SLOT", SettingValue = "2", Category = "Appointment", Description = "Maximum number of appointments allowed per time slot per branch", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008004"), SettingKey = "SLOT_BUFFER_MINUTES", SettingValue = "15", Category = "Appointment", Description = "Buffer time between appointments in minutes", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008005"), SettingKey = "WORKING_HOURS_START", SettingValue = "08:00", Category = "Appointment", Description = "Start of working hours for appointments (24-hour format)", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008006"), SettingKey = "WORKING_HOURS_END", SettingValue = "16:00", Category = "Appointment", Description = "End of working hours for appointments (24-hour format)", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008007"), SettingKey = "REMINDER_HOURS_BEFORE", SettingValue = "24", Category = "Appointment", Description = "Hours before appointment to send reminder notification", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008008"), SettingKey = "MIN_BOOKING_DAYS_AHEAD", SettingValue = "1", Category = "Appointment", Description = "Minimum days in advance an appointment must be booked", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008009"), SettingKey = "MAX_BOOKING_DAYS_AHEAD", SettingValue = "30", Category = "Appointment", Description = "Maximum days in advance an appointment can be booked", IsEncrypted = false }
+            );
         }
     }
 }

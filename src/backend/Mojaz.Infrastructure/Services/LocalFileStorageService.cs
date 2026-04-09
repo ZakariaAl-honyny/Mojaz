@@ -1,6 +1,6 @@
 using Mojaz.Application.Interfaces.Infrastructure;
 using Mojaz.Application.Interfaces.Services;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using System;
 using System.IO;
 using System.Threading.Tasks;
