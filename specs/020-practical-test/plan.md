@@ -1,148 +1,105 @@
-# Implementation Plan: 020 — Practical Test Recording
+# Implementation Plan: [FEATURE]
 
-**Branch**: `020-practical-test` | **Date**: 2026-04-09 | **Spec**: [spec.md](./spec.md)
-**Input**: Feature specification from `/specs/020-practical-test/spec.md`
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
----
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
 ## Summary
 
-Feature 020 implements Stage 07 (Practical Test) of the Mojaz driving license issuance workflow. It follows the same architectural pattern as Feature 019 (Theory Test) but introduces two key differentiators: (a) **the additional-training flag** — on failure, an Examiner can flag the applicant as requiring additional training hours before they can rebook, and (b) **booking gate enforcement** for that flag in the `AppointmentBookingValidator`. The backend adds `IPracticalRepository`, `IPracticalService`, `PracticalService`, `PracticalTestsController`, and related DTOs/validators/mappings. The frontend adds a `PracticalResultForm`, `PracticalTestHistory`, and `TestAttemptBadge` (reuse from theory), wired to a new `practical.service.ts`. A database migration adds `PracticalAttemptCount` and `AdditionalTrainingRequired` to the `Applications` table, and populates `SystemSettings` with `MIN_PASS_SCORE_PRACTICAL`, `MAX_PRACTICAL_ATTEMPTS`, and `COOLING_PERIOD_DAYS_PRACTICAL`.
-
----
+[Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
 
-**Language/Version**: C# 12 / .NET 8 (backend); TypeScript 5 / Next.js 15 App Router (frontend)
-**Primary Dependencies**:
-- Backend: ASP.NET Core 8, EF Core 8, AutoMapper, FluentValidation, Hangfire, Serilog, Moq, xUnit, FluentAssertions
-- Frontend: React Query 5, React Hook Form 7, Zod 3, next-intl 3, shadcn/ui, Tailwind CSS 4
+<!--
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
+-->
 
-**Storage**: SQL Server 2022 — `PracticalTests` table (already exists), `Applications` table (columns to add)
-**Testing**: xUnit + Moq + FluentAssertions (backend); Jest + React Testing Library (frontend); Playwright (E2E)
-**Target Platform**: Web service (Linux server / IIS); web app (Next.js SSR)
-**Project Type**: Full-stack web application (GovTech)
-**Performance Goals**: API response < 2s at p95; notification dispatch < 5 min
-**Constraints**: All business values from `SystemSettings`; no hardcoded thresholds; UTC everywhere; soft delete only
-**Scale/Scope**: MVP — ~10k users; 52 API endpoints total; this feature adds 2 endpoints
-
----
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-| Principle | Check | Status |
-|-----------|-------|--------|
-| **I. Clean Architecture** | `PracticalService` in Application; `PracticalRepository` in Infrastructure; Controller thin; no DbContext outside Infrastructure | ✅ PASS |
-| **I. Clean Architecture** | `IPracticalService` and `IPracticalRepository` interfaces defined in Application; implemented in Infrastructure | ✅ PASS |
-| **II. Security First** | `[Authorize(Roles = "Examiner")]` on result endpoint; ownership check (Applicant can only view own history) in service layer | ✅ PASS |
-| **II. Security First** | All inputs validated via FluentValidation before state change; audit log on every result | ✅ PASS |
-| **III. Configuration over Hardcoding** | `MIN_PASS_SCORE_PRACTICAL`, `MAX_PRACTICAL_ATTEMPTS`, `COOLING_PERIOD_DAYS_PRACTICAL` from `SystemSettings`; never in code | ✅ PASS |
-| **III. Configuration over Hardcoding** | Soft delete on `PracticalTest` entity (inherits `SoftDeletableEntity`) | ✅ PASS |
-| **IV. Internationalization** | All frontend text in `public/locales/{ar,en}/practical.json` via `next-intl`; RTL/LTR logical properties | ✅ PASS |
-| **V. API Contract** | `POST /api/v1/practical-tests/{appId}/result` returns `ApiResponse<PracticalTestDto>`; `GET /api/v1/practical-tests/{appId}/history` returns `ApiResponse<PagedResult<PracticalTestDto>>` | ✅ PASS |
-| **VI. Test Discipline** | Unit tests for `PracticalService` in `Mojaz.Application.Tests`; 80%+ coverage on service methods | ✅ PASS |
-| **VII. Async Notifications** | In-App synchronous; Push/Email/SMS via Hangfire background jobs on pass, fail, and rejection | ✅ PASS |
-
-**Post-design re-check**: After Phase 1 design, re-verify that:
-- `Application` entity additions (`PracticalAttemptCount`, `AdditionalTrainingRequired`) do not introduce business logic in the Domain layer
-- `AppointmentBookingValidator` extension for practical test gates injects `IPracticalService` (not the concrete implementation)
-
-**No Complexity Tracking violations** — all patterns are direct mirrors of the already-approved Feature 019 structure.
-
----
+[Gates determined based on constitution file]
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/020-practical-test/
-├── plan.md              ← This file
-├── research.md          ← Phase 0 output
-├── data-model.md        ← Phase 1 output
-├── contracts/           ← Phase 1 output
-│   ├── POST_practical-tests_{appId}_result.md
-│   └── GET_practical-tests_{appId}_history.md
-├── quickstart.md        ← Phase 1 output
-├── checklists/
-│   └── requirements.md
-└── tasks.md             ← Phase 2 output (/speckit.tasks — NOT created by /speckit.plan)
+specs/[###-feature]/
+├── plan.md              # This file (/speckit.plan command output)
+├── research.md          # Phase 0 output (/speckit.plan command)
+├── data-model.md        # Phase 1 output (/speckit.plan command)
+├── quickstart.md        # Phase 1 output (/speckit.plan command)
+├── contracts/           # Phase 1 output (/speckit.plan command)
+└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
 ```
 
 ### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
 
 ```text
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
 src/
-├── backend/
-│   ├── Mojaz.Domain/
-│   │   └── Entities/
-│   │       ├── PracticalTest.cs            ← UPDATE: add Score, IsAbsent, PassingScore, ConductedAt, Examiner nav
-│   │       └── Application.cs              ← UPDATE: add PracticalAttemptCount, AdditionalTrainingRequired,
-│   │                                                  PracticalTests navigation collection
-│   │
-│   ├── Mojaz.Application/
-│   │   ├── Interfaces/
-│   │   │   ├── IPracticalRepository.cs     ← NEW
-│   │   │   └── IPracticalService.cs        ← NEW
-│   │   ├── DTOs/
-│   │   │   └── Practical/
-│   │   │       ├── SubmitPracticalResultRequest.cs  ← NEW
-│   │   │       └── PracticalTestDto.cs              ← NEW
-│   │   ├── Validators/
-│   │   │   └── SubmitPracticalResultValidator.cs    ← NEW
-│   │   ├── Mappings/
-│   │   │   └── PracticalMappingProfile.cs           ← NEW
-│   │   └── Services/
-│   │       ├── PracticalService.cs                  ← NEW
-│   │       └── AppointmentBookingValidator.cs        ← UPDATE: add practical gate check
-│   │
-│   ├── Mojaz.Infrastructure/
-│   │   ├── Repositories/
-│   │   │   └── PracticalRepository.cs      ← NEW
-│   │   ├── Configurations/
-│   │   │   └── PracticalTestConfiguration.cs        ← NEW (EF config)
-│   │   └── Migrations/                     ← NEW: add PracticalAttemptCount + AdditionalTrainingRequired
-│   │
-│   └── Mojaz.API/
-│       ├── Controllers/
-│       │   └── PracticalTestsController.cs ← NEW
-│       └── Program.cs                      ← UPDATE: register IPracticalRepository, IPracticalService
-│
-├── frontend/
-│   ├── public/
-│   │   └── locales/
-│   │       ├── ar/practical.json           ← NEW
-│   │       └── en/practical.json           ← NEW
-│   └── src/
-│       ├── types/
-│       │   └── practical.types.ts          ← NEW
-│       ├── services/
-│       │   └── practical.service.ts        ← NEW
-│       ├── components/
-│       │   └── domain/
-│       │       └── practical/
-│       │           ├── PracticalResultForm.tsx   ← NEW
-│       │           ├── PracticalTestHistory.tsx  ← NEW
-│       │           └── TestAttemptBadge.tsx      ← REUSE from theory (or copy-adapt)
-│       └── app/
-│           └── [locale]/
-│               └── (employee)/
-│                   └── practical-results/
-│                       └── page.tsx         ← NEW
-│
+├── models/
+├── services/
+├── cli/
+└── lib/
+
 tests/
-└── backend/
-    └── Mojaz.Application.Tests/
-        └── Services/
-            └── PracticalServiceTests.cs     ← NEW
+├── contract/
+├── integration/
+└── unit/
+
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+src/
+| backend/
+  │   ├── models/
+  │   ├── services/
+  │   └── api/
+  └── tests/
+
+| frontend/
+  ├── src/
+  │   ├── app/
+  │   ├── components/
+  │   ├── pages/
+  │   └── services/
+  └── tests/
+
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
+
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
-**Structure Decision**: Web application pattern (Option 2) — same full-stack structure as Feature 019.
-
----
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
 
 ## Complexity Tracking
 
-> No constitution violations to justify. All patterns mirror Feature 019 (approved and delivered).
+> **Fill ONLY if Constitution Check has violations that must be justified**
+
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |

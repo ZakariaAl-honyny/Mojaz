@@ -1,17 +1,48 @@
 using FluentValidation;
 using Mojaz.Application.DTOs.Application;
+using Mojaz.Domain.Interfaces;
+using Mojaz.Domain.Entities;
+using Mojaz.Application.Interfaces.Services;
 
 namespace Mojaz.Application.Validators;
 
 public class CreateApplicationValidator : AbstractValidator<CreateApplicationRequest>
 {
-    public CreateApplicationValidator()
+    public CreateApplicationValidator(
+        IRepository<LicenseCategory> categoryRepository,
+        ISystemSettingsService settingsService)
     {
         // Step 1: Service
         RuleFor(x => x.ServiceType).NotEmpty().WithMessage("Service type is required.");
 
         // Step 2: Category
-        RuleFor(x => x.LicenseCategoryId).NotEmpty().WithMessage("License category is required.");
+        RuleFor(x => x.LicenseCategoryId)
+            .NotEmpty().WithMessage("License category is required.")
+            .CustomAsync(async (categoryId, context, cancellationToken) =>
+            {
+                var category = await categoryRepository.GetByIdAsync(categoryId);
+                if (category == null)
+                {
+                    context.AddFailure("LicenseCategoryId", "Invalid license category.");
+                    return;
+                }
+
+                var request = context.InstanceToValidate;
+                var settingKey = $"MIN_AGE_CATEGORY_{category.Code}";
+                var minAgeStr = await settingsService.GetAsync(settingKey);
+                
+                if (int.TryParse(minAgeStr, out var minAge))
+                {
+                    var today = DateTime.UtcNow;
+                    var age = today.Year - request.DateOfBirth.Year;
+                    if (request.DateOfBirth.Date > today.AddYears(-age)) age--;
+
+                    if (age < minAge)
+                    {
+                        context.AddFailure("DateOfBirth", $"You must be at least {minAge} years old for {category.NameEn} (Category {category.Code}).");
+                    }
+                }
+            });
 
         // Step 3: Personal Information (Applicant profile updates)
         RuleFor(x => x.NationalId)

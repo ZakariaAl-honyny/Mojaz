@@ -12,6 +12,7 @@ using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Application.Mappings;
+using Mojaz.Shared;
 using AutoMapper;
 using Xunit;
 
@@ -267,6 +268,11 @@ public class AppointmentServiceTests
         _systemSettingsServiceMock
             .Setup(x => x.GetAsync("WORKING_HOURS_END"))
             .ReturnsAsync("16:00");
+
+        // Mock training service to return completed training
+        _trainingServiceMock
+            .Setup(x => x.IsTrainingCompleteAsync(applicationId))
+            .ReturnsAsync(new ApiResponse<bool> { Data = true, Success = true });
 
         // Mock repository Add
         Appointment? capturedAppointment = null;

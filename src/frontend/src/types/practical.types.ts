@@ -1,4 +1,4 @@
-import { TestResult } from './auth.types'; // Assuming TestResult is shared or defined here
+// No imports needed for literals below
 
 export interface PracticalTestDto {
   id: string;

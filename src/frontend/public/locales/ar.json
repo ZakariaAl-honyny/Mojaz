@@ -115,10 +115,13 @@
         "renewal": "تجديد رخصة",
         "replacement": "بدل فاقد/تالف",
         "category": "فئة الرخصة",
+        "minAge": "الحد الأدنى للسن: {age} سنة",
+        "fieldTest": "اختبار الميدان الزراعي",
         "motorcycle": "دراجة نارية",
         "privateCar": "خصوصي",
         "publicTaxi": "أجرة عامة",
         "heavyVehicle": "نقل ثقيل",
+        "agricultural": "مركبات زراعية",
         "nationalId": "رقم الهوية الوطنية / الإقامة",
         "dateOfBirth": "تاريخ الميلاد",
         "nationality": "الجنسية",
@@ -162,6 +165,7 @@
         "medical": "الفحص الطبي",
         "theory": "التدريب والاختبار النظري",
         "practical": "التدريب والاختبار العملي",
+        "fieldTest": "اختبار الميدان الزراعي",
         "issuance": "إصدار الرخصة"
       },
       "status": {

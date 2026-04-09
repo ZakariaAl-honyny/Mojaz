@@ -24,11 +24,13 @@ export default async function ApplicationDetailsPage({ params }: { params: Promi
   // Mock data for MVP Showcase
   const appData = {
     id,
-    number: "MOJ-2025-48291037",
-    category: "Private Car",
+    number: "MOJ-2025-AGRIC-01",
+    category: "Agricultural",
     status: "InReview" as ApplicationStatus,
     createdAt: "2025-01-10T08:30:00Z",
   };
+
+  const isAgricultural = appData.category === "Agricultural";
 
   const timelineStages: TimelineStage[] = [
     { id: "1", nameKey: "creation", status: "completed", timestamp: "2025-01-10T08:30:00Z" },
@@ -37,7 +39,7 @@ export default async function ApplicationDetailsPage({ params }: { params: Promi
     { id: "4", nameKey: "payment", status: "pending" },
     { id: "5", nameKey: "medical", status: "pending" },
     { id: "6", nameKey: "theory", status: "pending" },
-    { id: "7", nameKey: "practical", status: "pending" },
+    { id: "7", nameKey: isAgricultural ? "fieldTest" : "practical", status: "pending" },
     { id: "8", nameKey: "issuance", status: "pending" },
   ];
 

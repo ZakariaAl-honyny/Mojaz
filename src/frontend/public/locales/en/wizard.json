@@ -84,7 +84,11 @@
     "categoryC": { "title": "Category C - Commercial Vehicle" },
     "categoryD": { "title": "Category D - Bus" },
     "categoryE": { "title": "Category E - Heavy Vehicle" },
-    "categoryF": { "title": "Category F - Agricultural Vehicle" }
+    "categoryF": { 
+      "title": "Category F - Agricultural Vehicle",
+      "description": "Includes tractors, agricultural equipment, and farm-specific trailers.",
+      "fieldTest": "Agricultural Field Test"
+    }
   },
   "step3": {
     "title": "Personal Information",
