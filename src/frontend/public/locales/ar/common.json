@@ -5,6 +5,9 @@
     "login": "تسجيل الدخول",
     "register": "إنشاء حساب جديد"
   },
+  "register": {
+    "alreadyHaveAccount": "لديك حساب بالفعل؟"
+  },
   "toggleLanguage": "English",
   "save": "حفظ",
   "cancel": "إلغاء",

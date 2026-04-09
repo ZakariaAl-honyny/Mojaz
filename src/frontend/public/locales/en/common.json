@@ -5,6 +5,9 @@
     "login": "Login",
     "register": "Create Account"
   },
+  "register": {
+    "alreadyHaveAccount": "Already have an account?"
+  },
   "toggleLanguage": "العربية",
   "save": "Save",
   "cancel": "Cancel",
