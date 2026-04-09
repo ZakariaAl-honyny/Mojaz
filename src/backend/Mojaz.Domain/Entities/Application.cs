@@ -24,8 +24,10 @@ public class Application : SoftDeletableEntity
     public DateTime? ExpiresAt { get; set; }
     public DateTime? CancelledAt { get; set; }
     public string? CancellationReason { get; set; }
+    public int TheoryAttemptCount { get; set; } = 0;
     
     public virtual User Applicant { get; set; } = null!;
     public virtual LicenseCategory LicenseCategory { get; set; } = null!;
     public virtual ICollection<ApplicationStatusHistory> StatusHistory { get; set; } = [];
+    public virtual ICollection<TheoryTest> TheoryTests { get; set; } = [];
 }
