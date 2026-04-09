@@ -1,5 +1,6 @@
 ---
 name: "Security Auditor"
+model: opencode/nemotron-3-super-free
 reasoningEeffect: "high"
 role: "Application security specialist"
 activation: "During security review phases and when touching auth/sensitive code"

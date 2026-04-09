@@ -2,10 +2,9 @@ namespace Mojaz.Domain.Enums;
 
 public enum DocumentStatus
 {
-    Pending,
-    Uploaded,
-    Approved,
-    Rejected
+    Pending = 0,
+    Approved = 1,
+    Rejected = 2
 }
 
 public enum AppointmentStatus

@@ -126,6 +126,14 @@ app.MapHangfireDashboard("/hangfire", new DashboardOptions
     Authorization = new[] { new DashboardAuthorizationFilter() }
 });
 
+// ─── File Storage Directory Setup ───
+var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+if (!Directory.Exists(uploadsPath))
+{
+    Directory.CreateDirectory(uploadsPath);
+    Log.Information("Created uploads directory at: {Path}", uploadsPath);
+}
+
 app.Run();
 
 // Make Program public for testing
