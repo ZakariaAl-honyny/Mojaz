@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Mojaz.Shared.Exceptions;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using Microsoft.AspNetCore.Builder;
 using System.Net;
 using System.Text.Json;

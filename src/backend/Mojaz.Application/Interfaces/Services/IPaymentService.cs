@@ -1,5 +1,5 @@
 using Mojaz.Application.DTOs.Payment;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

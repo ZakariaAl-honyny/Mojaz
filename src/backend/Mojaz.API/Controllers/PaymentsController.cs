@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mojaz.Application.DTOs.Payment;
 using Mojaz.Application.Interfaces.Services;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

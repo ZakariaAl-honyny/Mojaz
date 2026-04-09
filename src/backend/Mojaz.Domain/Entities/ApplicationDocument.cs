@@ -18,8 +18,6 @@ public class ApplicationDocument : SoftDeletableEntity
     public Guid? ReviewedBy { get; set; }
     public DateTime? ReviewedAt { get; set; }
     public string? RejectionReason { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     public virtual Application Application { get; set; } = null!;
 }

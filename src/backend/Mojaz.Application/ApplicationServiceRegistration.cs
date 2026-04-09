@@ -17,6 +17,8 @@ public static class ApplicationServiceRegistration
         
         // ─── Auth & Security ───
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAuditLogService, AuditLogService>();
         
         // ─── Workflow & Business ───
         services.AddScoped<IApplicationWorkflowService, ApplicationWorkflowService>();
@@ -30,6 +32,10 @@ public static class ApplicationServiceRegistration
 
         // ─── Notifications ───
         services.AddScoped<INotificationService, NotificationService>();
+
+        // ─── Appointments ───
+        services.AddScoped<IAppointmentService, AppointmentService>();
+        services.AddScoped<AppointmentBookingValidator>();
 
         return services;
     }

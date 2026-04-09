@@ -1,5 +1,5 @@
 using Mojaz.Application.DTOs.Auth;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using System;
 using System.Threading.Tasks;
 

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 
 namespace Mojaz.API.Controllers;
 

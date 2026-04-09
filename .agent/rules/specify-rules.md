@@ -37,8 +37,8 @@ C# 12 / .NET 8 LTS: Follow standard conventions
 
 ## Recent Changes
 - 015-status-dashboards: Added [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
+- 015-status-dashboards: Added [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
 - 014-document-management: Added C# / .NET 8 (backend) · TypeScript 5 / Next.js 15 App Router (frontend) + EF Core 8, FluentValidation, AutoMapper, Hangfire, INotificationService (Feature 010), ISystemSettingsService (Feature 011)
-- 013-application-wizard: Added TypeScript 5 / Next.js 15 (App Router) + React Hook Form 7, Zod 3, Zustand 5, React Query 5, next-intl 3, next-themes, shadcn/ui, Tailwind CSS 4, Lucide React, Framer Motion 11
 
 
 <!-- MANUAL ADDITIONS START -->

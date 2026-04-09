@@ -4,7 +4,7 @@ using Mojaz.Application.DTOs.Application;
 using Mojaz.Application.Applications.Dtos;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Enums;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
