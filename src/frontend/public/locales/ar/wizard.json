@@ -1,0 +1,182 @@
+{
+  "autoSave": {
+    "saving": "جاري الحفظ...",
+    "saved": "تم الحفظ",
+    "notSaved": "لم يتم الحفظ بعد",
+    "saveFailed": "فشل الحفظ - تحقق من اتصالك",
+    "justNow": "الآن",
+    "oneMinuteAgo": "منذ دقيقة",
+    "minutesAgo": "منذ {{count}} دقائق",
+    "connectionIssues": "مشاكل في الاتصال. البيانات محفوظة محلياً في متصفحك.",
+    "lastSaved": "آخر حفظ:"
+  },
+  "steps": {
+    "service": {
+      "label": "اختيار الخدمة",
+      "title": "اختر نوع الخدمة",
+      "description": "يرجى اختيار الخدمة التي يرغب في التقديم عليها من الخيارات المتاحة أدناه"
+    },
+    "category": {
+      "label": "فئة الرخصة",
+      "title": "اختر فئة الرخصة",
+      "description": "اختر فئة رخصة القيادة التي تود الحصول عليها"
+    },
+    "personal": {
+      "label": "البيانات الشخصية",
+      "title": "البيانات الشخصية",
+      "description": "يرجى إكمال بياناتك الشخصية للتحقق من الأهلية"
+    },
+    "details": {
+      "label": "تفاصيل الطلب",
+      "title": "تفاصيل الطلب",
+      "description": "أدخل تفاصيل الطلب الإضافية واختيار مركز الفحص"
+    },
+    "review": {
+      "label": "المراجعة والتقديم",
+      "title": "المراجعة والتقديم",
+      "description": "راجع بيانات طلبك والموافقة على الإقرار قبل التقديم النهائي"
+    }
+  },
+  "navigation": {
+    "back": "السابق",
+    "next": "التالي",
+    "submit": "تقديم الطلب",
+    "processing": "جاري المعالجة..."
+  },
+  "step1": {
+    "newLicense": {
+      "title": "إصدار رخصة قيادة جديدة",
+      "description": "طلب الحصول على رخصة قيادة لأول مرة"
+    },
+    "renewal": {
+      "title": "تجديد رخصة قيادة",
+      "description": "تجديد رخصة القيادة الحالية قبل انتهائها"
+    },
+    "replacement": {
+      "title": "بدل تالف/مفقود",
+      "description": "إصدار رخصة قيادة بديلة للرخصة التالفة أو المفقودة"
+    },
+    "categoryUpgrade": {
+      "title": "ترقية فئة الرخصة",
+      "description": "إضافة فئة جديدة إلى رخصة القيادة الحالية"
+    },
+    "testRetake": {
+      "title": "إعادة اختبار",
+      "description": "حجز موعد جديد لإعادة اختبار القيادة"
+    },
+    "appointmentBooking": {
+      "title": "حجز موعد",
+      "description": "حجز موعد لمراجعة المرور أو مراكز الفحص"
+    },
+    "notAvailable": "هذه الخدمة غير متوفرة حالياً في النسخة التجريبية"
+  },
+  "step2": {
+    "title": "اختر فئة الرخصة",
+    "minAge": "الحد الأدنى للسن: {{age}} سنة",
+    "years": "سنوات",
+    "ageError": "عذراً، يجب أن يكون عمرك {{minAge}} سنة أو أكثر للحصول على هذه الفئة",
+    "disabledMessage": "{{count}} فئة غير متاحة لعمرك الحالي",
+    "errorLoading": "فشل تحميل الفئات",
+    "errorLoadingMessage": "حدثت مشكلة أثناء تحميل فئات الرخصة. يرجى المحاولة مرة أخرى.",
+    "retry": "إعادة المحاولة",
+    "categoryA": { "title": "فئة أ - دراجة نارية" },
+    "categoryB": { "title": "فئة ب - سيارة خاصة" },
+    "categoryC": { "title": "فئة ج - مركبة تجارية" },
+    "categoryD": { "title": "فئة د - حافلة" },
+    "categoryE": { "title": "فئة ه - مركبات ثقيلة" },
+    "categoryF": { "title": "فئة و - مركبات زراعية" }
+  },
+  "step3": {
+    "title": "البيانات الشخصية",
+    "nationalId": "رقم الهوية",
+    "dateOfBirth": "تاريخ الميلاد",
+    "nationality": "الجنسية",
+    "gender": "الجنس",
+    "male": "ذكر",
+    "female": "أنثى",
+    "mobileNumber": "رقم الجوال",
+    "email": "البريد الإلكتروني",
+    "region": "المنطقة",
+    "city": "المدينة",
+    "address": "العنوان",
+    "addressPlaceholder": "أدخل العنوان التفصيلي"
+  },
+  "step4": {
+    "title": "تفاصيل الطلب",
+    "applicantType": "نوع مقدم الطلب",
+    "citizen": "مواطن",
+    "resident": "مقيم",
+    "visitor": "زائر",
+    "preferredCenter": "مركز القيادة المفضل",
+    "selectCenter": "اختر مركز القيادة",
+    "loadingCenters": "جاري تحميل المراكز...",
+    "testLanguage": "لغة الاختبار",
+    "arabic": "العربية",
+    "english": "الإنجليزية",
+    "appointmentPreference": "تفضيل الموعد",
+    "noPreference": "بدون تفضيل",
+    "morning": "صباحاً",
+    "afternoon": "مساءً",
+    "evening": "ليلاً",
+    "specialNeedsDeclaration": "هل لديك احتياجات خاصة؟",
+    "specialNeedsInfo": "يرجى الإفصاح عن أي احتياجات خاصة لتمكيننا من تقديم الدعم اللازم أثناء الاختبارات",
+    "specialNeedsNote": "التفاصيل",
+    "specialNeedsNotePlaceholder": "صف الاحتياجات الخاصة..."
+  },
+  "step5": {
+    "title": "المراجعة والتقديم",
+    "description": "يرجى مراجعة بيانات طلبك قبل التقديم النهائي",
+    "serviceType": "نوع الخدمة",
+    "category": "فئة الرخصة",
+    "personalInfo": "المعلومات الشخصية",
+    "center": "مركز القيادة",
+    "ar": "العربية",
+    "en": "الإنجليزية",
+    "declaration": "أقر بصحة جميع البيانات المدخلة وبموافقتي على الشروط والأحكام الخاصة بإصدار رخصة القيادة.",
+    "edit": "تعديل",
+    "submit": "تقديم الطلب",
+    "submitting": "جاري التقديم...",
+    "successMessage": "تم تقديم طلبك بنجاح!"
+  },
+  "validation": {
+    "step1": {
+      "serviceRequired": "يرجى اختيار نوع الخدمة للمتابعة"
+    },
+    "step2": {
+      "categoryRequired": "يرجى اختيار فئة الرخصة للمتابعة",
+      "ageError": "عذراً، يجب أن يكون عمرك {{age}} سنة أو أكثر للحصول على هذه الفئة"
+    },
+    "step3": {
+      "nationalIdFormat": "رقم الهوية يجب أن يكون 10 أرقام",
+      "dobInvalid": "تاريخ الميلاد غير صالح",
+      "nationalityRequired": "الجنسية مطلوبة",
+      "genderRequired": "الجنس مطلوب",
+      "mobileFormat": "رقم الجوال غير صالح (مثال: +9665XXXXXXXX)",
+      "emailFormat": "بريد إلكتروني غير صالح",
+      "addressMin": "العنوان يجب أن يكون 5 أحرف على الأقل",
+      "cityRequired": "المدينة مطلوبة",
+      "regionRequired": "المنطقة مطلوبة"
+    },
+    "step4": {
+      "centerRequired": "يرجى اختيار مركز القيادة",
+      "specialNeedsNoteRequired": "يرجى وصف الاحتياجات الخاصة"
+    },
+    "step5": {
+      "declarationRequired": "يجب الموافقة على الإقرار للمتابعة"
+    }
+  },
+  "loading": "جاري التحميل...",
+  "existingApp": {
+    "title": "لديك طلب نشط",
+    "message": "لديك طلب مقدم مسبقاً برقم",
+    "applicationNumber": "رقم الطلب: {{number}}",
+    "status": "الحالة: {{status}}",
+    "viewApplication": "عرض الطلب"
+  },
+  "common": {
+    "select": "اختر",
+    "currentLocale": "ar",
+    "yes": "نعم",
+    "no": "لا"
+  }
+}
