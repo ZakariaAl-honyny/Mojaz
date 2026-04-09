@@ -1,0 +1,11 @@
+{
+  "Draft": "Draft",
+  "Submitted": "Submitted",
+  "InReview": "In Review",
+  "PendingPayment": "Pending Payment",
+  "DocumentsIncomplete": "Documents Incomplete",
+  "Approved": "Approved",
+  "Rejected": "Rejected",
+  "Cancelled": "Cancelled",
+  "Expired": "Expired"
+}

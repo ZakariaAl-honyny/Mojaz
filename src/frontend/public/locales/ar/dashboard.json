@@ -1,0 +1,47 @@
+{
+  "title": "لوحة التحكم",
+  "applicant": {
+    "welcome": "مرحباً، <highlight>{name}</highlight>",
+    "activeApplications": "الطلبات النشطة",
+    "pendingActions": "إجراءات معلقة",
+    "recentApplications": "الطلبات الأخيرة",
+    "noApplications": "ليس لديك أي طلبات نشطة حالياً.",
+    "startNew": "بدء طلب جديد"
+  },
+  "employee": {
+    "workQueue": "قائمة المهام",
+    "stalledAlert": "طلبات متعثرة ({count})",
+    "searchPlaceholder": "البحث برقم الطلب أو اسم مقدم الطلب...",
+    "filters": {
+      "status": "الحالة",
+      "service": "الخدمة",
+      "category": "الفئة"
+    }
+  },
+  "manager": {
+    "kpis": {
+      "todayLoad": "حمولة اليوم",
+      "passRate": "نسبة النجاح",
+      "theory": "نظري",
+      "practical": "عملي"
+    },
+    "charts": {
+      "statusDistribution": "توزيع الطلبات حسب الحالة"
+    }
+  },
+  "timeline": {
+    "title": "مسار الطلب",
+    "stages": {
+      "Draft": "مسودة",
+      "Submitted": "مُقدّم",
+      "InReview": "قيد المراجعة",
+      "MedicalExamination": "الفحص الطبي",
+      "TheoryTest": "الاختبار النظري",
+      "PracticalTest": "الاختبار العملي",
+      "Approved": "مقبول",
+      "Payment": "الدفعة النهائية",
+      "Issuance": "إصدار الرخصة",
+      "Active": "رخصة نشطة"
+    }
+  }
+}
