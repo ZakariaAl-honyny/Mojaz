@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Mojaz.Application.DTOs.Appointments;
+using Mojaz.Application.Interfaces;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
@@ -22,19 +23,22 @@ public class AppointmentService : IAppointmentService
     private readonly ISystemSettingsService _systemSettingsService;
     private readonly INotificationService _notificationService;
     private readonly IMapper _mapper;
+    private readonly ITrainingService _trainingService;
 
     public AppointmentService(
         IAppointmentRepository appointmentRepository,
         IRepository<ApplicationEntity> applicationRepository,
         ISystemSettingsService systemSettingsService,
         INotificationService notificationService,
-        IMapper mapper)
+        IMapper mapper,
+        ITrainingService trainingService)
     {
         _appointmentRepository = appointmentRepository;
         _applicationRepository = applicationRepository;
         _systemSettingsService = systemSettingsService;
         _notificationService = notificationService;
         _mapper = mapper;
+        _trainingService = trainingService;
     }
 
     public async Task<List<DaySlotsDto>> GetAvailableSlotsAsync(AppointmentType type, Guid branchId, DateOnly date, CancellationToken ct = default)
@@ -92,7 +96,8 @@ public class AppointmentService : IAppointmentService
         var validator = new AppointmentBookingValidator(
             _appointmentRepository, 
             _applicationRepository, 
-            _systemSettingsService);
+            _systemSettingsService,
+            _trainingService);
         
         var validation = await validator.ValidateBookingAsync(request, ct);
         if (!validation.IsValid)
@@ -139,7 +144,8 @@ public class AppointmentService : IAppointmentService
         var validator = new AppointmentBookingValidator(
             _appointmentRepository, 
             _applicationRepository, 
-            _systemSettingsService);
+            _systemSettingsService,
+            _trainingService);
         
         var validation = await validator.ValidateRescheduleAsync(appointmentId, request, ct);
         if (!validation.IsValid)
@@ -196,7 +202,8 @@ public class AppointmentService : IAppointmentService
         var validator = new AppointmentBookingValidator(
             _appointmentRepository, 
             _applicationRepository, 
-            _systemSettingsService);
+            _systemSettingsService,
+            _trainingService);
         
         return await validator.ValidateBookingAsync(request, ct);
     }
