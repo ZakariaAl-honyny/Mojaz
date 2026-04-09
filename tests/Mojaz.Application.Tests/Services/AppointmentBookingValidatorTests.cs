@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Mojaz.Application.DTOs.Appointments;
+using Mojaz.Application.DTOs.Theory;
 using Mojaz.Application.Interfaces;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Application.Services;
@@ -24,6 +25,7 @@ public class AppointmentBookingValidatorTests
     private readonly Mock<IRepository<ApplicationEntity>> _applicationRepositoryMock;
     private readonly Mock<ISystemSettingsService> _systemSettingsServiceMock;
     private readonly Mock<ITrainingService> _trainingServiceMock;
+    private readonly Mock<ITheoryService> _theoryServiceMock;
     private readonly AppointmentBookingValidator _validator;
 
     public AppointmentBookingValidatorTests()
@@ -32,12 +34,14 @@ public class AppointmentBookingValidatorTests
         _applicationRepositoryMock = new Mock<IRepository<ApplicationEntity>>();
         _systemSettingsServiceMock = new Mock<ISystemSettingsService>();
         _trainingServiceMock = new Mock<ITrainingService>();
+        _theoryServiceMock = new Mock<ITheoryService>();
         
         _validator = new AppointmentBookingValidator(
             _appointmentRepositoryMock.Object,
             _applicationRepositoryMock.Object,
             _systemSettingsServiceMock.Object,
-            _trainingServiceMock.Object);
+            _trainingServiceMock.Object,
+            _theoryServiceMock.Object);
     }
 
     #region ValidateBookingAsync Tests
@@ -511,6 +515,77 @@ public class AppointmentBookingValidatorTests
         // Assert - Medical exam should succeed even with incomplete training
         result.IsValid.Should().BeTrue();
         result.Errors.Should().BeEmpty();
+    }
+
+    #endregion
+
+    #region Gate 4 - Theory Test Limits Tests (Phase 4)
+
+    [Fact]
+    public async Task ValidateBookingAsync_TheoryTest_ReachedMaxAttempts_ReturnsError()
+    {
+        // Arrange
+        var applicationId = Guid.NewGuid();
+        var request = new CreateAppointmentRequest
+        {
+            ApplicationId = applicationId,
+            Type = AppointmentType.TheoryTest,
+            BranchId = Guid.NewGuid(),
+            ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
+            TimeSlot = "09:00"
+        };
+
+        var application = new ApplicationEntity { Id = applicationId, Status = ApplicationStatus.Submitted };
+        _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>())).ReturnsAsync(application);
+        _trainingServiceMock.Setup(x => x.IsTrainingCompleteAsync(applicationId)).ReturnsAsync(ApiResponse<bool>.Ok(true));
+
+        _theoryServiceMock.Setup(x => x.HasReachedMaxAttemptsAsync(applicationId)).ReturnsAsync(true);
+
+        // Act
+        var result = await _validator.ValidateBookingAsync(request);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.Contains("Maximum theory test attempts"));
+    }
+
+    [Fact]
+    public async Task ValidateBookingAsync_TheoryTest_InCoolingPeriod_ReturnsError()
+    {
+        // Arrange
+        var applicationId = Guid.NewGuid();
+        var request = new CreateAppointmentRequest
+        {
+            ApplicationId = applicationId,
+            Type = AppointmentType.TheoryTest,
+            BranchId = Guid.NewGuid(),
+            ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
+            TimeSlot = "09:00"
+        };
+
+        var application = new ApplicationEntity { Id = applicationId, Status = ApplicationStatus.Submitted };
+        _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>())).ReturnsAsync(application);
+        _trainingServiceMock.Setup(x => x.IsTrainingCompleteAsync(applicationId)).ReturnsAsync(ApiResponse<bool>.Ok(true));
+
+        _theoryServiceMock.Setup(x => x.HasReachedMaxAttemptsAsync(applicationId)).ReturnsAsync(false);
+        _theoryServiceMock.Setup(x => x.IsInCoolingPeriodAsync(applicationId)).ReturnsAsync(true);
+        
+        // Mock history for eligible date message
+        var history = ApiResponse<PagedResult<TheoryTestDto>>.Ok(new PagedResult<TheoryTestDto>
+        {
+            Items = new List<TheoryTestDto> 
+            { 
+                new TheoryTestDto { RetakeEligibleAfter = DateTime.UtcNow.AddDays(4) } 
+            }
+        });
+        _theoryServiceMock.Setup(x => x.GetHistoryAsync(applicationId, Guid.Empty, "Manager", 1, 1)).ReturnsAsync(history);
+
+        // Act
+        var result = await _validator.ValidateBookingAsync(request);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.Contains("cooling period") && e.Contains(DateTime.UtcNow.AddDays(4).ToString("yyyy-MM-dd")));
     }
 
     #endregion

@@ -53,7 +53,10 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009003"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_C", SettingValue = "30", Category = "Training", Description = "Minimum training hours for Category C (Public Transport)", IsEncrypted = false },
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009004"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_D", SettingValue = "40", Category = "Training", Description = "Minimum training hours for Category D (Heavy Vehicles)", IsEncrypted = false },
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009005"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_E", SettingValue = "40", Category = "Training", Description = "Minimum training hours for Category E (Industrial)", IsEncrypted = false },
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009006"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_F", SettingValue = "20", Category = "Training", Description = "Minimum training hours for Category F (Special Needs)", IsEncrypted = false }
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009006"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_F", SettingValue = "20", Category = "Training", Description = "Minimum training hours for Category F (Special Needs)", IsEncrypted = false },
+
+                // Theory Test SystemSettings seed data
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000010001"), SettingKey = "MIN_PASS_SCORE_THEORY", SettingValue = "80", Category = "Theory", Description = "Minimum passing score for theory test", IsEncrypted = false }
             );
         }
     }

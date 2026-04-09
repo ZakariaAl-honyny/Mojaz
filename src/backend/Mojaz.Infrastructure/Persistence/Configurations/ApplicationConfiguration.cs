@@ -21,6 +21,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(a => a.PreferredLanguage).HasMaxLength(10);
             builder.Property(a => a.SpecialNeeds).HasMaxLength(200);
             builder.Property(a => a.DataAccuracyConfirmed).IsRequired();
+            builder.Property(a => a.TheoryAttemptCount).HasDefaultValue(0);
             builder.HasOne<User>().WithMany().HasForeignKey(a => a.ApplicantId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne<LicenseCategory>().WithMany().HasForeignKey(a => a.LicenseCategoryId).OnDelete(DeleteBehavior.Restrict);
             builder.HasQueryFilter(a => !a.IsDeleted);
