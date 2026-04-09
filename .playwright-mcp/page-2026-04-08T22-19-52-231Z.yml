@@ -1,0 +1,11 @@
+- main [ref=e2]:
+  - generic [ref=e4]:
+    - heading "common.welcome" [level=1] [ref=e5]
+    - paragraph [ref=e6]: common.description
+    - generic [ref=e7]:
+      - link "common.auth.register" [ref=e8] [cursor=pointer]:
+        - /url: /ar/register
+      - link "common.auth.login" [ref=e9] [cursor=pointer]:
+        - /url: /ar/login
+    - link "common.toggleLanguage" [ref=e11] [cursor=pointer]:
+      - /url: /en
