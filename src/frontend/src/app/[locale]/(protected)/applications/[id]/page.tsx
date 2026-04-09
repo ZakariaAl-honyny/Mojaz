@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { FileText, CreditCard, Activity, CalendarClock } from "lucide-react";
 import Link from "next/link";
 import { GateLockIndicator } from "@/components/domain/training/GateLockIndicator";
+import { TheoryTestHistory } from "@/components/domain/theory/TheoryTestHistory";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { locale, id } = await params;
@@ -80,6 +81,8 @@ export default async function ApplicationDetailsPage({ params }: { params: Promi
               <ApplicationTimeline stages={timelineStages} />
             </CardContent>
           </Card>
+
+          <TheoryTestHistory applicationId={id} />
         </div>
 
         {/* Sidebar Info */}

@@ -60,11 +60,16 @@ const TrainingService = {
     return response.data;
   },
 
-  /**
-   * Get training completion status
-   */
   async getStatus(applicationId: string): Promise<ApiResponse<boolean>> {
     const response = await apiClient.get(`/Training/application/${applicationId}/status`);
+    return response.data;
+  },
+
+  /**
+   * Get all pending exemptions (Manager only)
+   */
+  async getPendingExemptions(): Promise<ApiResponse<any[]>> {
+    const response = await apiClient.get('/Training/exemptions/pending');
     return response.data;
   }
 };

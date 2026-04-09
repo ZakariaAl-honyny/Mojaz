@@ -6,6 +6,24 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
+ * Format a date string for display
+ * @param dateStr - ISO date string
+ * @param locale - Locale code (ar or en)
+ * @returns Formatted date string
+ */
+export function formatDate(dateStr: string, locale: string = 'ar'): string {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return dateStr;
+  
+  return date.toLocaleDateString(locale === 'ar' ? 'ar-SA' : 'en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+}
+
+/**
  * Calculate age from date of birth string (YYYY-MM-DD or ISO format)
  * @param dateOfBirth - Date of birth in YYYY-MM-DD format
  * @returns Current age in years
