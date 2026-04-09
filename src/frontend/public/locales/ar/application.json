@@ -1,0 +1,34 @@
+{
+  "details": {
+    "title": "تفاصيل الطلب",
+    "submittedOn": "تاريخ التقديم",
+    "cancelButton": "إلغاء الطلب",
+    "payButton": "سداد الآن",
+    "timelineTitle": "الجدول الزمني للطلب",
+    "documentsTitle": "المستندات المطلوبة",
+    "noPaymentsMsg": "لا توجد مدفوعات مسجلة لهذا الطلب.",
+    "paymentsTitle": "المدفوعات",
+    "manageDocsButton": "إدارة المستندات",
+    "docId": "الهوية الوطنية / الإقامة",
+    "docMedical": "التقرير الطبي"
+  },
+  "timeline": {
+    "stages": {
+      "creation": "إنشاء الطلب",
+      "documentReview": "مراجعة المستندات",
+      "training": "مرحلة التدريب",
+      "payment": "مرحلة السداد",
+      "medical": "مرحلة الفحص الطبي",
+      "theory": "مرحلة الاختبار النظري",
+      "practical": "مرحلة الاختبار العملي",
+      "fieldTest": "اختبار الميدان الزراعي",
+      "issuance": "إصدار الرخصة"
+    },
+    "status": {
+      "completed": "مكتمل",
+      "current": "قيد التنفيذ",
+      "pending": "معلق",
+      "failed": "غير مجتاز"
+    }
+  }
+}

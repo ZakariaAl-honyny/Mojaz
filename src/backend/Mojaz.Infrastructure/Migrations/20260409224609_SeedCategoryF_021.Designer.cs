@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mojaz.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using Mojaz.Infrastructure.Persistence;
 namespace Mojaz.Infrastructure.Migrations
 {
     [DbContext(typeof(MojazDbContext))]
-    partial class MojazDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260409224609_SeedCategoryF_021")]
+    partial class SeedCategoryF_021
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

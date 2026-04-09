@@ -14,7 +14,18 @@ const config: Config = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-  }
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/__mocks__/fileMock.js',
+  },
+  // Fix ESM import issues with next-intl
+  transformIgnorePatterns: [
+    '/node_modules/(?!(next-intl|@next-intl)/)',
+    'node_modules/(.+)\\.js$',
+  ],
+  // Add support for TypeScript
+  transform: {
+    '^.+\\.(ts|tsx)$': 'ts-jest',
+  },
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

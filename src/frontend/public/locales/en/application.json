@@ -1,0 +1,34 @@
+{
+  "details": {
+    "title": "Application Details",
+    "submittedOn": "Submitted on",
+    "cancelButton": "Cancel Application",
+    "payButton": "Pay Now",
+    "timelineTitle": "Application Timeline",
+    "documentsTitle": "Required Documents",
+    "noPaymentsMsg": "No payments recorded for this application.",
+    "paymentsTitle": "Payments",
+    "manageDocsButton": "Manage Documents",
+    "docId": "National ID / Iqama",
+    "docMedical": "Medical Report"
+  },
+  "timeline": {
+    "stages": {
+      "creation": "Application Creation",
+      "documentReview": "Document Review",
+      "training": "Training Stage",
+      "payment": "Payment Stage",
+      "medical": "Medical Exam Stage",
+      "theory": "Theory Test Stage",
+      "practical": "Practical Test Stage",
+      "fieldTest": "Agricultural Field Test",
+      "issuance": "License Issuance"
+    },
+    "status": {
+      "completed": "Completed",
+      "current": "In Progress",
+      "pending": "Pending",
+      "failed": "Failed"
+    }
+  }
+}

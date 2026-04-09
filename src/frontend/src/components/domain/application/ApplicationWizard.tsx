@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { CopyPlus, FileKey2, RefreshCw, CarFront, Bike, Truck, Activity } from "lucide-react";
+import { CopyPlus, FileKey2, RefreshCw, CarFront, Bike, Truck, Activity, Tractor } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Mock data for wizard options
@@ -23,6 +23,7 @@ const CATEGORIES = [
   { id: "private", key: "privateCar", icon: CarFront, minAge: 18 },
   { id: "taxi", key: "publicTaxi", icon: CarFront, minAge: 21 },
   { id: "heavy", key: "heavyVehicle", icon: Truck, minAge: 21 },
+  { id: "agricultural", key: "agricultural", icon: Tractor, minAge: 18 },
 ];
 
 export function ApplicationWizard() {
@@ -208,9 +209,16 @@ export function ApplicationWizard() {
                          </div>
                          <div className="text-start">
                            <h3 className="font-semibold text-lg">{t(`fields.${cat.key}` as any)}</h3>
-                           <p className="text-sm text-neutral-500 flex items-center gap-1 mt-1">
-                             <Activity className="w-4 h-4"/> Min Age: {cat.minAge}
-                           </p>
+                           <div className="flex flex-col gap-1 mt-1">
+                             <p className="text-xs text-neutral-500 flex items-center gap-1">
+                               <Activity className="w-3 h-3"/> {t("fields.minAge", { age: cat.minAge })}
+                             </p>
+                             {cat.id === "agricultural" && (
+                               <p className="text-[10px] text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full w-fit font-medium">
+                                 {t("fields.fieldTest")}
+                               </p>
+                             )}
+                           </div>
                          </div>
                       </div>
                       <div className={cn("w-6 h-6 rounded-full border-2 flex items-center justify-center", formData.categoryId === cat.id ? "border-primary-500" : "border-neutral-300")}>
