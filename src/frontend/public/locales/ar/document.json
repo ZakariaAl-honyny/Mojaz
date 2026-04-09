@@ -1,0 +1,66 @@
+{
+  "upload": {
+    "title": "رفع المستندات",
+    "dragDrop": "اسحب الملفات هنا أو انقر للتصفح",
+    "browse": "تصفح الملفات",
+    "upload": "رفع",
+    "uploading": "جاري الرفع...",
+    "remove": "إزالة",
+    "reupload": "إعادة الرفع",
+    "success": "تم رفع المستند بنجاح",
+    "error": "فشل رفع المستند",
+    "maxSize": "الحد الأقصى لحجم الملف: {{size}}MB",
+    "invalidType": "أنواع الملفات المسموح بها: PDF، JPG، PNG",
+    "selectFile": "اختر ملفاً"
+  },
+  "types": {
+    "IdCopy": "صورة عن الهوية",
+    "PersonalPhoto": "صورة شخصية",
+    "MedicalReport": "تقرير طبي",
+    "TrainingCertificate": "شهادة التدريب",
+    "AddressProof": "إثبات العنوان",
+    "GuardianConsent": "موافقة ولي الأمر",
+    "PreviousLicense": "الرخصة السابقة",
+    "AccessibilityDocuments": "وثائق تسهيلات خاصة"
+  },
+  "status": {
+    "pending": "في انتظار المراجعة",
+    "approved": "تمت الموافقة",
+    "rejected": "مرفوض"
+  },
+  "review": {
+    "title": "مراجعة المستندات",
+    "approve": "موافقة",
+    "reject": "رفض",
+    "confirmReject": "تأكيد الرفض",
+    "rejectionReason": "سبب الرفض",
+    "rejectionPlaceholder": "أدخل سبب الرفض...",
+    "bulkApprove": "موافقة جماعية على الكل",
+    "approvedCount": "تمت الموافقة على {{count}} مستند",
+    "noDocuments": "لا توجد مستندات للمراجعة"
+  },
+  "lightbox": {
+    "close": "إغلاق",
+    "download": "تنزيل",
+    "previous": "السابق",
+    "next": "التالي"
+  },
+  "conditional": {
+    "show": "يُعرض بناءً على: {{condition}}",
+    "hide": "غير مطلوب لهذا الطلب"
+  },
+  "uploadProgress": "{{progress}}%",
+  "errors": {
+    "notFound": "المستند غير موجود",
+    "unauthorized": "غير مصرح لك بالوصول",
+    "cannotDeleteAfterSubmission": "لا يمكن حذف المستندات بعد تقديم الطلب"
+  },
+  "requirements": {
+    "title": "المستندات المطلوبة",
+    "mandatory": "مطلوب",
+    "optional": "اختياري",
+    "conditional": "مشروط",
+    "uploaded": "تم الرفع",
+    "notUploaded": "لم يتم الرفع"
+  }
+}

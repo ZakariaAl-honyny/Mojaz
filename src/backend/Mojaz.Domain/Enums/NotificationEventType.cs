@@ -12,5 +12,6 @@ public enum NotificationEventType
     PaymentDue,
     PaymentSuccess,
     PaymentConfirmed,
-    LicenseIssued
+    LicenseIssued,
+    DocumentRejected
 }
