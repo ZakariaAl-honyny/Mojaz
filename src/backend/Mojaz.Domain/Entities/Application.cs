@@ -1,6 +1,7 @@
 using Mojaz.Domain.Common;
 using Mojaz.Domain.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace Mojaz.Domain.Entities;
 
@@ -25,9 +26,12 @@ public class Application : SoftDeletableEntity
     public DateTime? CancelledAt { get; set; }
     public string? CancellationReason { get; set; }
     public int TheoryAttemptCount { get; set; } = 0;
+    public int PracticalAttemptCount { get; set; } = 0;
+    public bool AdditionalTrainingRequired { get; set; } = false;
     
     public virtual User Applicant { get; set; } = null!;
     public virtual LicenseCategory LicenseCategory { get; set; } = null!;
     public virtual ICollection<ApplicationStatusHistory> StatusHistory { get; set; } = [];
     public virtual ICollection<TheoryTest> TheoryTests { get; set; } = [];
+    public virtual ICollection<PracticalTest> PracticalTests { get; set; } = [];
 }

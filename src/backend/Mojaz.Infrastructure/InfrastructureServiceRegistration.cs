@@ -42,6 +42,9 @@ public static class InfrastructureServiceRegistration
         // Theory Repository
         services.AddScoped<ITheoryRepository, TheoryRepository>();
 
+        // Practical Repository
+        services.AddScoped<IPracticalRepository, Persistence.Repositories.PracticalRepository>();
+
         // Identity & Infrastructure Services
         services.AddScoped<Application.Interfaces.Services.IJwtService, Identity.JwtService>();
         services.AddScoped<Application.Interfaces.Services.IAuditService, Services.AuditService>();

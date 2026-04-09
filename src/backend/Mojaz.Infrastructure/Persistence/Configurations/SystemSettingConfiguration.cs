@@ -56,7 +56,12 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009006"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_F", SettingValue = "20", Category = "Training", Description = "Minimum training hours for Category F (Special Needs)", IsEncrypted = false },
 
                 // Theory Test SystemSettings seed data
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000010001"), SettingKey = "MIN_PASS_SCORE_THEORY", SettingValue = "80", Category = "Theory", Description = "Minimum passing score for theory test", IsEncrypted = false }
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000010001"), SettingKey = "MIN_PASS_SCORE_THEORY", SettingValue = "80", Category = "Theory", Description = "Minimum passing score for theory test", IsEncrypted = false },
+
+                // Practical Test SystemSettings seed data
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000011001"), SettingKey = "MIN_PASS_SCORE_PRACTICAL", SettingValue = "80", Category = "Practical", Description = "Minimum passing score for practical test", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000011002"), SettingKey = "MAX_PRACTICAL_ATTEMPTS", SettingValue = "3", Category = "Practical", Description = "Maximum number of practical test attempts", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000011003"), SettingKey = "COOLING_PERIOD_DAYS_PRACTICAL", SettingValue = "7", Category = "Practical", Description = "Days applicant must wait before rebooking after practical test failure", IsEncrypted = false }
             );
         }
     }
