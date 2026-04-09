@@ -20,17 +20,23 @@ public class AppointmentBookingValidator
     private readonly IRepository<ApplicationEntity> _applicationRepository;
     private readonly ISystemSettingsService _systemSettingsService;
     private readonly ITrainingService _trainingService;
+    private readonly ITheoryService _theoryService;
+    private readonly IPracticalService _practicalService;
 
     public AppointmentBookingValidator(
         IAppointmentRepository appointmentRepository,
         IRepository<ApplicationEntity> applicationRepository,
         ISystemSettingsService systemSettingsService,
-        ITrainingService trainingService)
+        ITrainingService trainingService,
+        ITheoryService theoryService,
+        IPracticalService practicalService)
     {
         _appointmentRepository = appointmentRepository;
         _applicationRepository = applicationRepository;
         _systemSettingsService = systemSettingsService;
         _trainingService = trainingService;
+        _theoryService = theoryService;
+        _practicalService = practicalService;
     }
 
     public async Task<AppointmentValidationResult> ValidateBookingAsync(CreateAppointmentRequest request, CancellationToken ct = default)
@@ -128,6 +134,66 @@ public class AppointmentBookingValidator
             {
                 result.IsValid = false;
                 result.Errors.Add("Training requirement not fulfilled (Gate 3). Training status must be Completed or Exempted before booking tests.");
+                return result;
+            }
+        }
+
+        // Gate 4 (Theory Test Limits): Check cooling period and max attempts
+        if (request.Type == AppointmentType.TheoryTest)
+        {
+            // Check max attempts
+            if (await _theoryService.HasReachedMaxAttemptsAsync(request.ApplicationId))
+            {
+                result.IsValid = false;
+                result.Errors.Add("Maximum theory test attempts have been reached. You cannot book further attempts for this application.");
+                return result;
+            }
+
+            // Check cooling period
+            if (await _theoryService.IsInCoolingPeriodAsync(request.ApplicationId))
+            {
+                result.IsValid = false;
+                
+                // Get history to find the eligible date for a better error message
+                var history = await _theoryService.GetHistoryAsync(request.ApplicationId, Guid.Empty, "Manager", 1, 1);
+                var latestResult = history.Data?.Items.FirstOrDefault();
+                var eligibleDate = latestResult?.RetakeEligibleAfter?.ToString("yyyy-MM-dd") ?? "the required cooling period has passed";
+
+                result.Errors.Add($"You are currently in a cooling period after a failed attempt. You will be eligible to book after {eligibleDate}.");
+                return result;
+            }
+        }
+
+        // Gate 5 (Practical Test Limits): Check cooling period and max attempts
+        if (request.Type == AppointmentType.PracticalTest)
+        {
+            // Check max attempts
+            if (await _practicalService.HasReachedMaxAttemptsAsync(request.ApplicationId))
+            {
+                result.IsValid = false;
+                result.Errors.Add("Maximum practical test attempts have been reached. You cannot book further attempts for this application.");
+                return result;
+            }
+
+            // Check additional training
+            if (await _practicalService.HasAdditionalTrainingRequiredAsync(request.ApplicationId))
+            {
+                result.IsValid = false;
+                result.Errors.Add("Additional training is required before booking another practical test.");
+                return result;
+            }
+
+            // Check cooling period
+            if (await _practicalService.IsInCoolingPeriodAsync(request.ApplicationId))
+            {
+                result.IsValid = false;
+                
+                // Get history to find the eligible date for a better error message
+                var history = await _practicalService.GetHistoryAsync(request.ApplicationId, Guid.Empty, "Manager", 1, 1);
+                var latestResult = history.Data?.Items.FirstOrDefault();
+                var eligibleDate = latestResult?.RetakeEligibleAfter?.ToString("yyyy-MM-dd") ?? "the required cooling period has passed";
+
+                result.Errors.Add($"You are currently in a cooling period after a failed attempt. You will be eligible to book after {eligibleDate}.");
                 return result;
             }
         }

@@ -26,6 +26,8 @@ public class AppointmentServiceTests
     private readonly Mock<ISystemSettingsService> _systemSettingsServiceMock;
     private readonly Mock<INotificationService> _notificationServiceMock;
     private readonly Mock<ITrainingService> _trainingServiceMock;
+    private readonly Mock<ITheoryService> _theoryServiceMock;
+    private readonly Mock<IPracticalService> _practicalServiceMock;
     private readonly IMapper _mapper;
     private readonly AppointmentService _service;
 
@@ -36,6 +38,8 @@ public class AppointmentServiceTests
         _systemSettingsServiceMock = new Mock<ISystemSettingsService>();
         _notificationServiceMock = new Mock<INotificationService>();
         _trainingServiceMock = new Mock<ITrainingService>();
+        _theoryServiceMock = new Mock<ITheoryService>();
+        _practicalServiceMock = new Mock<IPracticalService>();
 
         // AutoMapper configuration
         var config = new MapperConfiguration(cfg =>
@@ -44,13 +48,22 @@ public class AppointmentServiceTests
         });
         _mapper = config.CreateMapper();
 
+        var validator = new AppointmentBookingValidator(
+            _appointmentRepositoryMock.Object,
+            _applicationRepositoryMock.Object,
+            _systemSettingsServiceMock.Object,
+            _trainingServiceMock.Object,
+            _theoryServiceMock.Object,
+            _practicalServiceMock.Object);
+
         _service = new AppointmentService(
             _appointmentRepositoryMock.Object,
             _applicationRepositoryMock.Object,
             _systemSettingsServiceMock.Object,
             _notificationServiceMock.Object,
             _mapper,
-            _trainingServiceMock.Object);
+            _trainingServiceMock.Object,
+            validator);
     }
 
     #region GetAvailableSlotsAsync Tests
