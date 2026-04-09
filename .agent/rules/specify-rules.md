@@ -16,6 +16,8 @@ Auto-generated from all feature plans. Last updated: 2026-04-09
 - No new database tables — reads/writes `Applications` via Feature 012 REST API. Wizard draft state persisted in `sessionStorage` via Zustand persist middleware. (013-application-wizard)
 - C# / .NET 8 (backend) · TypeScript 5 / Next.js 15 App Router (frontend) + EF Core 8, FluentValidation, AutoMapper, Hangfire, INotificationService (Feature 010), ISystemSettingsService (Feature 011) (014-document-management)
 - Local filesystem `uploads/` (MVP) abstracted via `IFileStorageService`; SQL Server 2022 for `ApplicationDocuments` table metadata (014-document-management)
+- C# 12 (.NET 8) backend, TypeScript 5 (Next.js 15) frontend. + ASP.NET Core, Entity Framework Core 8, FluentValidation, React, Tailwind CSS 4, shadcn/ui, TanStack Query. (017-medical-examination)
+- SQL Server 2022. (017-medical-examination)
 
 - C# 12 / .NET 8 LTS + AutoMapper 13, FluentValidation 11, EF Core 8 (SqlServer), (003-backend-scaffold)
 
@@ -36,9 +38,9 @@ tests/
 C# 12 / .NET 8 LTS: Follow standard conventions
 
 ## Recent Changes
+- 017-medical-examination: Added C# 12 (.NET 8) backend, TypeScript 5 (Next.js 15) frontend. + ASP.NET Core, Entity Framework Core 8, FluentValidation, React, Tailwind CSS 4, shadcn/ui, TanStack Query.
 - 015-status-dashboards: Added [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
 - 015-status-dashboards: Added [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
-- 014-document-management: Added C# / .NET 8 (backend) · TypeScript 5 / Next.js 15 App Router (frontend) + EF Core 8, FluentValidation, AutoMapper, Hangfire, INotificationService (Feature 010), ISystemSettingsService (Feature 011)
 
 
 <!-- MANUAL ADDITIONS START -->
