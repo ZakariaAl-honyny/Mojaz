@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using Mojaz.Application.DTOs.Appointments;
+using Mojaz.Application.Interfaces;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Application.Services;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
+using Mojaz.Shared;
 using Xunit;
 
 using ApplicationEntity = Mojaz.Domain.Entities.Application;
@@ -21,6 +23,7 @@ public class AppointmentBookingValidatorTests
     private readonly Mock<IAppointmentRepository> _appointmentRepositoryMock;
     private readonly Mock<IRepository<ApplicationEntity>> _applicationRepositoryMock;
     private readonly Mock<ISystemSettingsService> _systemSettingsServiceMock;
+    private readonly Mock<ITrainingService> _trainingServiceMock;
     private readonly AppointmentBookingValidator _validator;
 
     public AppointmentBookingValidatorTests()
@@ -28,11 +31,13 @@ public class AppointmentBookingValidatorTests
         _appointmentRepositoryMock = new Mock<IAppointmentRepository>();
         _applicationRepositoryMock = new Mock<IRepository<ApplicationEntity>>();
         _systemSettingsServiceMock = new Mock<ISystemSettingsService>();
+        _trainingServiceMock = new Mock<ITrainingService>();
         
         _validator = new AppointmentBookingValidator(
             _appointmentRepositoryMock.Object,
             _applicationRepositoryMock.Object,
-            _systemSettingsServiceMock.Object);
+            _systemSettingsServiceMock.Object,
+            _trainingServiceMock.Object);
     }
 
     #region ValidateBookingAsync Tests
@@ -287,10 +292,223 @@ public class AppointmentBookingValidatorTests
             .Setup(x => x.GetAsync("WORKING_HOURS_END"))
             .ReturnsAsync("16:00");
 
+        // Training is complete
+        _trainingServiceMock
+            .Setup(x => x.IsTrainingCompleteAsync(applicationId))
+            .ReturnsAsync(ApiResponse<bool>.Ok(true));
+
         // Act
         var result = await _validator.ValidateBookingAsync(request);
 
         // Assert
+        result.IsValid.Should().BeTrue();
+        result.Errors.Should().BeEmpty();
+    }
+
+    #endregion
+
+    #region Gate 3 - Training Requirement Tests
+
+    [Fact]
+    public async Task ValidateBookingAsync_TheoryTest_IncompleteTraining_ReturnsError()
+    {
+        // Arrange
+        var applicationId = Guid.NewGuid();
+        var branchId = Guid.NewGuid();
+        var scheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5));
+        
+        var application = new ApplicationEntity
+        {
+            Id = applicationId,
+            Status = ApplicationStatus.Submitted
+        };
+
+        var request = new CreateAppointmentRequest
+        {
+            ApplicationId = applicationId,
+            Type = AppointmentType.TheoryTest, // Theory test requires training
+            BranchId = branchId,
+            ScheduledDate = scheduledDate,
+            TimeSlot = "09:00"
+        };
+
+        _applicationRepositoryMock
+            .Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(application);
+
+        _appointmentRepositoryMock
+            .Setup(x => x.GetByApplicationIdAsync(applicationId, AppointmentType.TheoryTest, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Appointment?)null);
+
+        _systemSettingsServiceMock
+            .Setup(x => x.GetIntAsync("MIN_BOOKING_DAYS_AHEAD"))
+            .ReturnsAsync(1);
+        
+        _systemSettingsServiceMock
+            .Setup(x => x.GetIntAsync("MAX_BOOKING_DAYS_AHEAD"))
+            .ReturnsAsync(30);
+        
+        _systemSettingsServiceMock
+            .Setup(x => x.GetIntAsync("MAX_APPOINTMENTS_PER_SLOT"))
+            .ReturnsAsync(2);
+
+        _appointmentRepositoryMock
+            .Setup(x => x.GetBookedSlotCountAsync(branchId, scheduledDate, "09:00", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(0);
+
+        _systemSettingsServiceMock
+            .Setup(x => x.GetAsync("WORKING_HOURS_START"))
+            .ReturnsAsync("08:00");
+        
+        _systemSettingsServiceMock
+            .Setup(x => x.GetAsync("WORKING_HOURS_END"))
+            .ReturnsAsync("16:00");
+
+        // Training NOT complete - THIS IS THE GATE 3 CHECK
+        _trainingServiceMock
+            .Setup(x => x.IsTrainingCompleteAsync(applicationId))
+            .ReturnsAsync(ApiResponse<bool>.Ok(false));
+
+        // Act
+        var result = await _validator.ValidateBookingAsync(request);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.Contains("Training requirement not fulfilled (Gate 3)"));
+    }
+
+    [Fact]
+    public async Task ValidateBookingAsync_PracticalTest_IncompleteTraining_ReturnsError()
+    {
+        // Arrange
+        var applicationId = Guid.NewGuid();
+        var branchId = Guid.NewGuid();
+        var scheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5));
+        
+        var application = new ApplicationEntity
+        {
+            Id = applicationId,
+            Status = ApplicationStatus.Submitted
+        };
+
+        var request = new CreateAppointmentRequest
+        {
+            ApplicationId = applicationId,
+            Type = AppointmentType.PracticalTest, // Practical test requires training
+            BranchId = branchId,
+            ScheduledDate = scheduledDate,
+            TimeSlot = "09:00"
+        };
+
+        _applicationRepositoryMock
+            .Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(application);
+
+        _appointmentRepositoryMock
+            .Setup(x => x.GetByApplicationIdAsync(applicationId, AppointmentType.PracticalTest, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Appointment?)null);
+
+        _systemSettingsServiceMock
+            .Setup(x => x.GetIntAsync("MIN_BOOKING_DAYS_AHEAD"))
+            .ReturnsAsync(1);
+        
+        _systemSettingsServiceMock
+            .Setup(x => x.GetIntAsync("MAX_BOOKING_DAYS_AHEAD"))
+            .ReturnsAsync(30);
+        
+        _systemSettingsServiceMock
+            .Setup(x => x.GetIntAsync("MAX_APPOINTMENTS_PER_SLOT"))
+            .ReturnsAsync(2);
+
+        _appointmentRepositoryMock
+            .Setup(x => x.GetBookedSlotCountAsync(branchId, scheduledDate, "09:00", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(0);
+
+        _systemSettingsServiceMock
+            .Setup(x => x.GetAsync("WORKING_HOURS_START"))
+            .ReturnsAsync("08:00");
+        
+        _systemSettingsServiceMock
+            .Setup(x => x.GetAsync("WORKING_HOURS_END"))
+            .ReturnsAsync("16:00");
+
+        // Training NOT complete - THIS IS THE GATE 3 CHECK
+        _trainingServiceMock
+            .Setup(x => x.IsTrainingCompleteAsync(applicationId))
+            .ReturnsAsync(ApiResponse<bool>.Ok(false));
+
+        // Act
+        var result = await _validator.ValidateBookingAsync(request);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.Contains("Training requirement not fulfilled (Gate 3)"));
+    }
+
+    [Fact]
+    public async Task ValidateBookingAsync_MedicalExam_IncompleteTraining_ReturnsSuccess()
+    {
+        // Arrange - Medical exam does NOT require training completion
+        var applicationId = Guid.NewGuid();
+        var branchId = Guid.NewGuid();
+        var scheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5));
+        
+        var application = new ApplicationEntity
+        {
+            Id = applicationId,
+            Status = ApplicationStatus.Submitted
+        };
+
+        var request = new CreateAppointmentRequest
+        {
+            ApplicationId = applicationId,
+            Type = AppointmentType.MedicalExam, // Medical exam does NOT require training
+            BranchId = branchId,
+            ScheduledDate = scheduledDate,
+            TimeSlot = "09:00"
+        };
+
+        _applicationRepositoryMock
+            .Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(application);
+
+        _appointmentRepositoryMock
+            .Setup(x => x.GetByApplicationIdAsync(applicationId, AppointmentType.MedicalExam, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Appointment?)null);
+
+        _systemSettingsServiceMock
+            .Setup(x => x.GetIntAsync("MIN_BOOKING_DAYS_AHEAD"))
+            .ReturnsAsync(1);
+        
+        _systemSettingsServiceMock
+            .Setup(x => x.GetIntAsync("MAX_BOOKING_DAYS_AHEAD"))
+            .ReturnsAsync(30);
+        
+        _systemSettingsServiceMock
+            .Setup(x => x.GetIntAsync("MAX_APPOINTMENTS_PER_SLOT"))
+            .ReturnsAsync(2);
+
+        _appointmentRepositoryMock
+            .Setup(x => x.GetBookedSlotCountAsync(branchId, scheduledDate, "09:00", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(0);
+
+        _systemSettingsServiceMock
+            .Setup(x => x.GetAsync("WORKING_HOURS_START"))
+            .ReturnsAsync("08:00");
+        
+        _systemSettingsServiceMock
+            .Setup(x => x.GetAsync("WORKING_HOURS_END"))
+            .ReturnsAsync("16:00");
+
+        // Training NOT complete - but MedicalExam should NOT check this
+        _trainingServiceMock
+            .Setup(x => x.IsTrainingCompleteAsync(applicationId))
+            .ReturnsAsync(ApiResponse<bool>.Ok(false));
+
+        // Act
+        var result = await _validator.ValidateBookingAsync(request);
+
+        // Assert - Medical exam should succeed even with incomplete training
         result.IsValid.Should().BeTrue();
         result.Errors.Should().BeEmpty();
     }
