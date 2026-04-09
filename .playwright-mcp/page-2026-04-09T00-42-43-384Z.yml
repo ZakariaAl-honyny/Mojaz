@@ -1,0 +1,52 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - link "M Mojaz ." [ref=e6] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e7]: M
+          - generic [ref=e8]: Mojaz .
+        - navigation
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - button "تغيير إلى العربية" [ref=e11]:
+            - img
+            - generic [ref=e12]: العربية
+          - button "Toggle theme" [ref=e14]:
+            - img
+            - img
+            - generic [ref=e15]: Toggle theme
+        - link "Login" [ref=e16] [cursor=pointer]:
+          - /url: /login
+          - button "Login" [ref=e17]
+  - main [ref=e18]:
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - heading "Login" [level=2] [ref=e23]
+          - paragraph [ref=e24]: Access your Mojaz account
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - text: National ID or Email Address
+            - generic [ref=e27]:
+              - img [ref=e28]
+              - textbox "Enter National ID or Email" [ref=e31]
+          - generic [ref=e32]:
+            - generic [ref=e33]:
+              - generic [ref=e34]: Password
+              - link "Forgot Password?" [ref=e35] [cursor=pointer]:
+                - /url: /en/forgot-password
+            - generic [ref=e36]:
+              - img [ref=e37]
+              - textbox "Enter your password" [ref=e40]
+          - button "Login" [ref=e41]
+      - paragraph [ref=e42]:
+        - text: Don't have an account?
+        - link "Register Now" [ref=e43] [cursor=pointer]:
+          - /url: /en/register
+  - contentinfo [ref=e44]:
+    - generic [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]: M
+        - generic [ref=e48]: Mojaz
+      - paragraph [ref=e49]: © 2026 Mojaz Platform. All rights reserved.

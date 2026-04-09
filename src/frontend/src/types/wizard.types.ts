@@ -9,6 +9,7 @@ export enum ServiceType {
   AppointmentBooking = 'AppointmentBooking',
   Cancellation = 'Cancellation',
   DocumentDownload = 'DocumentDownload',
+  ExperienceCertificate = 'ExperienceCertificate',
 }
 
 export enum LicenseCategoryCode {
