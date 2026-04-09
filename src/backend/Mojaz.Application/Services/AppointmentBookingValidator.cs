@@ -1,4 +1,5 @@
 using Mojaz.Application.DTOs.Appointments;
+using Mojaz.Application.Interfaces;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
@@ -18,15 +19,18 @@ public class AppointmentBookingValidator
     private readonly IAppointmentRepository _appointmentRepository;
     private readonly IRepository<ApplicationEntity> _applicationRepository;
     private readonly ISystemSettingsService _systemSettingsService;
+    private readonly ITrainingService _trainingService;
 
     public AppointmentBookingValidator(
         IAppointmentRepository appointmentRepository,
         IRepository<ApplicationEntity> applicationRepository,
-        ISystemSettingsService systemSettingsService)
+        ISystemSettingsService systemSettingsService,
+        ITrainingService trainingService)
     {
         _appointmentRepository = appointmentRepository;
         _applicationRepository = applicationRepository;
         _systemSettingsService = systemSettingsService;
+        _trainingService = trainingService;
     }
 
     public async Task<AppointmentValidationResult> ValidateBookingAsync(CreateAppointmentRequest request, CancellationToken ct = default)
@@ -114,6 +118,18 @@ public class AppointmentBookingValidator
             result.IsValid = false;
             result.Errors.Add($"Time slot must be within working hours ({workingStart} - {workingEnd})");
             return result;
+        }
+
+        // Gate 3 (Training): Check if training is complete for Theory/Practical appointments
+        if (request.Type == AppointmentType.TheoryTest || request.Type == AppointmentType.PracticalTest)
+        {
+            var trainingComplete = await _trainingService.IsTrainingCompleteAsync(request.ApplicationId);
+            if (!trainingComplete.Data)
+            {
+                result.IsValid = false;
+                result.Errors.Add("Training requirement not fulfilled (Gate 3). Training status must be Completed or Exempted before booking tests.");
+                return result;
+            }
         }
 
         return result;

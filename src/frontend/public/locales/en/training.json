@@ -1,0 +1,50 @@
+{
+  "status": {
+    "required": "Required",
+    "inprogress": "In Progress",
+    "completed": "Completed",
+    "exempted": "Exempted"
+  },
+  "arc": {
+    "hoursLabel": "Training Hours"
+  },
+  "form": {
+    "title": "Record Training Hours",
+    "hoursLabel": "Additional Hours",
+    "notesLabel": "Additional Notes",
+    "notesPlaceholder": "Enter any notes about this session...",
+    "submitButton": "Record Hours"
+  },
+  "history": {
+    "title": "Training Record Details",
+    "centerName": "Center Name",
+    "trainerName": "Trainer Name",
+    "certificateNumber": "Cert. Number",
+    "lastUpdated": "Last Updated",
+    "completedHours": "Hours Completed",
+    "notApplicable": "N/A"
+  },
+  "validation": {
+    "hoursRequired": "Hours are required",
+    "hoursInvalid": "Invalid hours value",
+    "hoursMin": "Minimum 0.5 hours required",
+    "hoursMax": "Maximum 8 hours per entry",
+    "notesMax": "Notes are too long",
+    "reasonMin": "Reason must be at least 10 characters",
+    "reasonMax": "Reason is too long",
+    "documentRequired": "Supporting document is required"
+  },
+  "page": {
+    "title": "Training Record Management",
+    "subtitle": "Record and monitor applicant training progress",
+    "applicantInfo": "Applicant Information",
+    "errorLoading": "Error loading training data",
+    "notFound": "No training record found",
+    "exemptionSection": "Exemption Requests",
+    "requestExemption": "Submit Exemption Request",
+    "noHistory": "No training sessions found for this application",
+    "queueTitle": "Exemption Review Queue",
+    "queueSubtitle": "Review and manage pending training exemption requests",
+    "noPending": "There are no pending exemption requests at this time"
+  }
+}

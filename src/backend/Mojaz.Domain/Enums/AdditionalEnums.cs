@@ -15,13 +15,6 @@ public enum AppointmentStatus
     NoShow
 }
 
-public enum TrainingStatus
-{
-    InProgress,
-    Completed,
-    Exempt
-}
-
 public enum LicenseStatus
 {
     Active,

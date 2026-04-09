@@ -3,9 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Interfaces;
+using Mojaz.Application.Interfaces;
 using Mojaz.Infrastructure.Persistence;
 using Mojaz.Infrastructure.Persistence.Repositories;
 using Mojaz.Infrastructure.Persistence.UnitOfWork;
+using Mojaz.Infrastructure.Repositories;
 using SendGrid;
 using Hangfire;
 using Hangfire.SqlServer;
@@ -33,6 +35,9 @@ public static class InfrastructureServiceRegistration
         
         // Appointment Repository
         services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+
+        // Training Repository
+        services.AddScoped<ITrainingRepository, TrainingRepository>();
 
         // Identity & Infrastructure Services
         services.AddScoped<Application.Interfaces.Services.IJwtService, Identity.JwtService>();

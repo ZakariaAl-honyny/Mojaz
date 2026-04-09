@@ -18,6 +18,8 @@ Auto-generated from all feature plans. Last updated: 2026-04-09
 - Local filesystem `uploads/` (MVP) abstracted via `IFileStorageService`; SQL Server 2022 for `ApplicationDocuments` table metadata (014-document-management)
 - C# 12 (.NET 8) backend, TypeScript 5 (Next.js 15) frontend. + ASP.NET Core, Entity Framework Core 8, FluentValidation, React, Tailwind CSS 4, shadcn/ui, TanStack Query. (017-medical-examination)
 - SQL Server 2022. (017-medical-examination)
+- C# 12 / .NET 8 (backend) · TypeScript 5 / Next.js 15 App Router (frontend) + ASP.NET Core 8, EF Core 8, FluentValidation, AutoMapper, Hangfire; Next.js 15 + Tailwind CSS 4 + shadcn/ui + TanStack Query 5 + Zustand 5 + React Hook Form 7 + Zod 3 + next-intl 3 (018-training-records)
+- SQL Server 2022 — `TrainingRecords` table (existing stub, needs migration) (018-training-records)
 
 - C# 12 / .NET 8 LTS + AutoMapper 13, FluentValidation 11, EF Core 8 (SqlServer), (003-backend-scaffold)
 
@@ -38,8 +40,8 @@ tests/
 C# 12 / .NET 8 LTS: Follow standard conventions
 
 ## Recent Changes
+- 018-training-records: Added C# 12 / .NET 8 (backend) · TypeScript 5 / Next.js 15 App Router (frontend) + ASP.NET Core 8, EF Core 8, FluentValidation, AutoMapper, Hangfire; Next.js 15 + Tailwind CSS 4 + shadcn/ui + TanStack Query 5 + Zustand 5 + React Hook Form 7 + Zod 3 + next-intl 3
 - 017-medical-examination: Added C# 12 (.NET 8) backend, TypeScript 5 (Next.js 15) frontend. + ASP.NET Core, Entity Framework Core 8, FluentValidation, React, Tailwind CSS 4, shadcn/ui, TanStack Query.
-- 015-status-dashboards: Added [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
 - 015-status-dashboards: Added [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
 
 
