@@ -1,5 +1,7 @@
 ---
 name: "Integration Engineer"
+model: opencode/nemotron-3-super-free
+reasoningEeffect: "high"
 role: "External services specialist"
 mode: subagent
 ---

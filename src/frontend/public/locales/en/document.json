@@ -1,0 +1,66 @@
+{
+  "upload": {
+    "title": "Upload Documents",
+    "dragDrop": "Drag files here or click to browse",
+    "browse": "Browse Files",
+    "upload": "Upload",
+    "uploading": "Uploading...",
+    "remove": "Remove",
+    "reupload": "Re-upload",
+    "success": "Document uploaded successfully",
+    "error": "Failed to upload document",
+    "maxSize": "Maximum file size: {{size}}MB",
+    "invalidType": "Allowed file types: PDF, JPG, PNG",
+    "selectFile": "Select file"
+  },
+  "types": {
+    "IdCopy": "ID Copy",
+    "PersonalPhoto": "Personal Photo",
+    "MedicalReport": "Medical Report",
+    "TrainingCertificate": "Training Certificate",
+    "AddressProof": "Address Proof",
+    "GuardianConsent": "Guardian Consent",
+    "PreviousLicense": "Previous License",
+    "AccessibilityDocuments": "Accessibility Documents"
+  },
+  "status": {
+    "pending": "Pending Review",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "review": {
+    "title": "Review Documents",
+    "approve": "Approve",
+    "reject": "Reject",
+    "confirmReject": "Confirm Rejection",
+    "rejectionReason": "Rejection Reason",
+    "rejectionPlaceholder": "Enter rejection reason...",
+    "bulkApprove": "Bulk Approve All",
+    "approvedCount": "{{count}} document(s) approved",
+    "noDocuments": "No documents to review"
+  },
+  "lightbox": {
+    "close": "Close",
+    "download": "Download",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "conditional": {
+    "show": "Shown based on: {{condition}}",
+    "hide": "Not required for this application"
+  },
+  "uploadProgress": "{{progress}}%",
+  "errors": {
+    "notFound": "Document not found",
+    "unauthorized": "You are not authorized to access this",
+    "cannotDeleteAfterSubmission": "Documents cannot be deleted after application submission"
+  },
+  "requirements": {
+    "title": "Required Documents",
+    "mandatory": "Required",
+    "optional": "Optional",
+    "conditional": "Conditional",
+    "uploaded": "Uploaded",
+    "notUploaded": "Not Uploaded"
+  }
+}

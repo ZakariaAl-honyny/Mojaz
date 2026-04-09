@@ -74,6 +74,7 @@ public static class InfrastructureServiceRegistration
             ));
         services.AddScoped<Application.Interfaces.Services.IOtpService, Services.OtpService>();
         services.AddScoped<Application.Interfaces.Services.ISystemSettingsService, Services.SystemSettingsService>();
+        services.AddScoped<Application.Interfaces.Infrastructure.IFileStorageService, Services.LocalFileStorageService>();
         services.AddScoped<IOtpRepository, OtpRepository>();
 
         // JWT Authentication & Authorization
