@@ -39,6 +39,9 @@ public static class InfrastructureServiceRegistration
         // Training Repository
         services.AddScoped<ITrainingRepository, TrainingRepository>();
 
+        // Theory Repository
+        services.AddScoped<ITheoryRepository, TheoryRepository>();
+
         // Identity & Infrastructure Services
         services.AddScoped<Application.Interfaces.Services.IJwtService, Identity.JwtService>();
         services.AddScoped<Application.Interfaces.Services.IAuditService, Services.AuditService>();

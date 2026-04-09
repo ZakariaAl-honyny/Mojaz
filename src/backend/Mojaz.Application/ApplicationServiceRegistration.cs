@@ -34,6 +34,9 @@ public static class ApplicationServiceRegistration
         // ─── Training ───
         services.AddScoped<ITrainingService, TrainingService>();
 
+        // ─── Theory Test ───
+        services.AddScoped<ITheoryService, TheoryService>();
+
         // ─── Notifications ───
         services.AddScoped<INotificationService, NotificationService>();
 
