@@ -25,6 +25,9 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<ILicenseService, LicenseService>();
         
+        // ─── Dashboards & Reporting ───
+        services.AddScoped<IDashboardService, DashboardService>();
+
         // ─── Notifications ───
         services.AddScoped<INotificationService, NotificationService>();
 

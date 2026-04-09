@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mojaz.Application.DTOs.Application;
+using Mojaz.Application.Applications.Dtos;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Enums;
 using Mojaz.Shared.Models;
@@ -86,6 +87,20 @@ public class ApplicationsController : ControllerBase
     }
 
     /// <summary>
+    /// Get the work queue for employees based on their role
+    /// </summary>
+    [HttpGet("queue")]
+    [Authorize(Roles = "Admin,Manager,Receptionist,Doctor,Examiner,Security")]
+    [ProducesResponseType(typeof(ApiResponse<PagedResult<ApplicationSummaryDto>>), 200)]
+    public async Task<IActionResult> GetEmployeeQueueAsync([FromQuery] ApplicationFilterRequest filters)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var role = User.FindFirstValue(ClaimTypes.Role)!;
+        var result = await _applicationService.GetEmployeeQueueAsync(userId, role, filters);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
     /// Update a draft application.
     /// </summary>
     [HttpPut("{id}/draft")]
@@ -145,7 +160,7 @@ public class ApplicationsController : ControllerBase
     /// </summary>
     [HttpGet("{id}/timeline")]
     [Authorize]
-    [ProducesResponseType(typeof(ApiResponse<List<ApplicationTimelineDto>>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<List<Mojaz.Application.DTOs.Application.ApplicationTimelineDto>>), 200)]
     [ProducesResponseType(typeof(ApiResponse<object>), 403)]
     [ProducesResponseType(typeof(ApiResponse<object>), 404)]
     public async Task<IActionResult> GetTimelineAsync(Guid id)
@@ -153,6 +168,20 @@ public class ApplicationsController : ControllerBase
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
         var result = await _applicationService.GetTimelineAsync(id, userId, role);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Get the 10-stage visual workflow timeline state
+    /// </summary>
+    [HttpGet("{id}/workflow")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<ApplicationWorkflowTimelineDto>), 200)]
+    public async Task<IActionResult> GetWorkflowTimelineAsync(Guid id)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var role = User.FindFirstValue(ClaimTypes.Role)!;
+        var result = await _applicationService.GetWorkflowTimelineAsync(id, userId, role);
         return StatusCode(result.StatusCode, result);
     }
 }

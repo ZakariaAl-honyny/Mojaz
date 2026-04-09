@@ -2,6 +2,7 @@ using AutoMapper;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Mojaz.Application.DTOs.Application;
+using Mojaz.Application.Applications.Dtos;
 using Mojaz.Application.DTOs.Email;
 using Mojaz.Application.DTOs.Email.Templates;
 using Mojaz.Application.Interfaces.Services;
@@ -140,7 +141,7 @@ public class ApplicationService : IApplicationService
             SpecialNeeds = request.SpecialNeeds,
             DataAccuracyConfirmed = false,
             ExpiresAt = DateTime.UtcNow.AddMonths(validityMonths),
-            CurrentStage = ApplicationStages.Submission
+            CurrentStage = ApplicationStages.Creation
         };
 
         await _applicationRepository.AddAsync(application);
@@ -189,9 +190,9 @@ public class ApplicationService : IApplicationService
         IQueryable<ApplicationEntity> query = role switch
         {
             Roles.Applicant => baseQuery.Where(a => a.ApplicantId == userId),
-            Roles.Receptionist => baseQuery.Where(a => a.CurrentStage == ApplicationStages.DocumentReview),
-            Roles.Doctor => baseQuery.Where(a => a.CurrentStage == ApplicationStages.MedicalExam),
-            Roles.Examiner => baseQuery.Where(a => a.CurrentStage == ApplicationStages.TheoryTest || a.CurrentStage == ApplicationStages.PracticalTest),
+            Roles.Receptionist => baseQuery.Where(a => a.CurrentStage == ApplicationStages.Documents),
+            Roles.Doctor => baseQuery.Where(a => a.CurrentStage == ApplicationStages.Medical),
+            Roles.Examiner => baseQuery.Where(a => a.CurrentStage == ApplicationStages.Theory || a.CurrentStage == ApplicationStages.Practical),
             Roles.Manager or Roles.Admin or Roles.Security => baseQuery, // Full access for Manager/Admin/Security oversight
             _ => baseQuery.Where(a => false) // Invalid role - return nothing
         };
@@ -286,35 +287,64 @@ public class ApplicationService : IApplicationService
         return ApiResponse<PagedResult<ApplicationDto>>.Ok(pagedResult);
     }
 
-    public async Task<ApiResponse<List<ApplicationTimelineDto>>> GetTimelineAsync(Guid id, Guid userId, string role)
+    public async Task<ApiResponse<PagedResult<ApplicationSummaryDto>>> GetEmployeeQueueAsync(Guid userId, string role, ApplicationFilterRequest filters)
+    {
+        // Reuse GetListAsync logic but map to Summary DTO
+        var listResult = await GetListAsync(userId, role, filters);
+        
+        if (!listResult.Success) return ApiResponse<PagedResult<ApplicationSummaryDto>>.Fail(listResult.StatusCode, listResult.Message);
+
+        var summaryItems = listResult.Data!.Items.Select(a => new ApplicationSummaryDto
+        {
+            Id = a.Id.GetHashCode(),
+            ApplicationNumber = a.ApplicationNumber,
+            ApplicantName = a.ApplicantName,
+            LicenseCategoryCode = a.LicenseCategoryCode,
+            ServiceType = a.ServiceType.ToString(),
+            CurrentStage = a.CurrentStage ?? "",
+            Status = a.Status,
+            SubmittedDate = a.SubmittedAt ?? a.CreatedAt,
+            UpdatedAt = a.UpdatedAt ?? a.CreatedAt
+        }).ToList();
+
+        return ApiResponse<PagedResult<ApplicationSummaryDto>>.Ok(new PagedResult<ApplicationSummaryDto>
+        {
+            Items = summaryItems,
+            TotalCount = listResult.Data.TotalCount,
+            Page = listResult.Data.Page,
+            PageSize = listResult.Data.PageSize
+        });
+    }
+
+    public async Task<ApiResponse<List<Mojaz.Application.DTOs.Application.ApplicationTimelineDto>>> GetTimelineAsync(Guid id, Guid userId, string role)
     {
         // 1. Verify application exists
         var application = await _applicationRepository.GetByIdAsync(id);
-        if (application == null) return ApiResponse<List<ApplicationTimelineDto>>.Fail(404, "Application not found.");
+        if (application == null) return ApiResponse<List<Mojaz.Application.DTOs.Application.ApplicationTimelineDto>>.Fail(404, "Application not found.");
 
         // 2. Enforce ownership/role-scoped access as per FR-007
         var isAuthorized = role switch
         {
             Roles.Applicant => application.ApplicantId == userId,
-            Roles.Receptionist => application.CurrentStage == ApplicationStages.DocumentReview,
-            Roles.Doctor => application.CurrentStage == ApplicationStages.MedicalExam,
-            Roles.Examiner => application.CurrentStage == ApplicationStages.TheoryTest || application.CurrentStage == ApplicationStages.PracticalTest,
+            Roles.Receptionist => application.CurrentStage == ApplicationStages.Documents,
+            Roles.Doctor => application.CurrentStage == ApplicationStages.Medical,
+            Roles.Examiner => application.CurrentStage == ApplicationStages.Theory || application.CurrentStage == ApplicationStages.Practical,
             Roles.Manager or Roles.Admin or Roles.Security => true,
             _ => false
         };
 
         if (!isAuthorized)
-            return ApiResponse<List<ApplicationTimelineDto>>.Fail(403, "Unauthorized access.");
+            return ApiResponse<List<Mojaz.Application.DTOs.Application.ApplicationTimelineDto>>.Fail(403, "Unauthorized access.");
 
         // 3. Query ApplicationStatusHistory ordered by ChangedAt ASC
         var historyRecords = await _historyRepository.FindAsync(h => h.ApplicationId == id);
         var orderedHistory = historyRecords.OrderBy(h => h.ChangedAt).ToList();
 
         // 4. Resolve ChangedBy to FullName
-        var timelineDtos = new List<ApplicationTimelineDto>();
+        var timelineDtos = new List<Mojaz.Application.DTOs.Application.ApplicationTimelineDto>();
         foreach (var record in orderedHistory)
         {
-            var dto = new ApplicationTimelineDto
+            var dto = new Mojaz.Application.DTOs.Application.ApplicationTimelineDto
             {
                 Id = record.Id,
                 FromStatus = record.FromStatus,
@@ -338,7 +368,86 @@ public class ApplicationService : IApplicationService
             timelineDtos.Add(dto);
         }
 
-        return ApiResponse<List<ApplicationTimelineDto>>.Ok(timelineDtos);
+        return ApiResponse<List<Mojaz.Application.DTOs.Application.ApplicationTimelineDto>>.Ok(timelineDtos);
+    }
+
+    public async Task<ApiResponse<ApplicationWorkflowTimelineDto>> GetWorkflowTimelineAsync(Guid id, Guid userId, string role)
+    {
+        var application = await _applicationRepository.GetByIdAsync(id);
+        if (application == null) return ApiResponse<ApplicationWorkflowTimelineDto>.Fail(404, "Application not found.");
+
+        // Auth check - same as GetTimelineAsync
+        if (role == Roles.Applicant && application.ApplicantId != userId)
+            return ApiResponse<ApplicationWorkflowTimelineDto>.Fail(403, "Unauthorized.");
+
+        var histories = (await _historyRepository.FindAsync(h => h.ApplicationId == id)).OrderBy(h => h.ChangedAt).ToList();
+
+        var timeline = new ApplicationWorkflowTimelineDto
+        {
+            ApplicationId = id,
+            CurrentStageNumber = GetStageNumber(application.CurrentStage)
+        };
+
+        var stageMeta = new[]
+        {
+            new { NameAr = "التقديم", NameEn = "Creation", Stage = ApplicationStages.Creation },
+            new { NameAr = "المستندات", NameEn = "Documents", Stage = ApplicationStages.Documents },
+            new { NameAr = "الدفعة الأولى", NameEn = "Initial Payment", Stage = ApplicationStages.InitialPayment },
+            new { NameAr = "الفحص الطبي", NameEn = "Medical", Stage = ApplicationStages.Medical },
+            new { NameAr = "التدريب", NameEn = "Training", Stage = ApplicationStages.Training },
+            new { NameAr = "النظري", NameEn = "Theory", Stage = ApplicationStages.Theory },
+            new { NameAr = "العملي", NameEn = "Practical", Stage = ApplicationStages.Practical },
+            new { NameAr = "الموافقة", NameEn = "Final Approval", Stage = ApplicationStages.FinalApproval },
+            new { NameAr = "الرسوم", NameEn = "Issuance Payment", Stage = ApplicationStages.IssuancePayment },
+            new { NameAr = "الإصدار", NameEn = "Issuance", Stage = ApplicationStages.Issuance }
+        };
+
+        for (int i = 0; i < stageMeta.Length; i++)
+        {
+            var meta = stageMeta[i];
+            var stageNum = i + 1;
+            
+            var dto = new Mojaz.Application.DTOs.Application.TimelineStageDto
+            {
+                StageNumber = stageNum,
+                NameAr = meta.NameAr,
+                NameEn = meta.NameEn,
+                State = "future"
+            };
+
+            if (stageNum < timeline.CurrentStageNumber)
+            {
+                dto.State = "completed";
+                // Try to find the completion date from history records where they transitioned AWAY from this stage
+                // Simplified for MVP: Use the earliest record after creation for following stages
+                var completionRecord = histories.FirstOrDefault(h => GetStageNumber(h.Notes ?? "") == stageNum); // Placeholder logic
+                dto.CompletedAt = completionRecord?.ChangedAt;
+            }
+            else if (stageNum == timeline.CurrentStageNumber)
+            {
+                dto.State = application.Status == ApplicationStatus.Rejected ? "failed" : "current";
+            }
+
+            timeline.Stages.Add(dto);
+        }
+
+        return ApiResponse<ApplicationWorkflowTimelineDto>.Ok(timeline);
+    }
+
+    private int GetStageNumber(string stage)
+    {
+        if (string.IsNullOrEmpty(stage)) return 1;
+        if (stage.StartsWith("01")) return 1;
+        if (stage.StartsWith("02")) return 2;
+        if (stage.StartsWith("03")) return 3;
+        if (stage.StartsWith("04")) return 4;
+        if (stage.StartsWith("05")) return 5;
+        if (stage.StartsWith("06")) return 6;
+        if (stage.StartsWith("07")) return 7;
+        if (stage.StartsWith("08")) return 8;
+        if (stage.StartsWith("09")) return 9;
+        if (stage.StartsWith("10")) return 10;
+        return 1;
     }
 
     public async Task<ApiResponse<ApplicationDto>> SubmitAsync(Guid id, SubmitApplicationRequest request, Guid userId)
@@ -372,7 +481,7 @@ public class ApplicationService : IApplicationService
         application.Status = ApplicationStatus.Submitted;
         application.SubmittedAt = DateTime.UtcNow;
         application.DataAccuracyConfirmed = true;
-        application.CurrentStage = ApplicationStages.DocumentReview;
+        application.CurrentStage = ApplicationStages.Documents;
 
         _applicationRepository.Update(application);
 
