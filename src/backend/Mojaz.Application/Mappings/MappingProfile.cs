@@ -1,5 +1,6 @@
 using AutoMapper;
 using Mojaz.Application.DTOs.Appointments;
+using Mojaz.Application.DTOs.Medical;
 using Mojaz.Domain.Entities;
 
 namespace Mojaz.Application.Mappings
@@ -14,6 +15,9 @@ namespace Mojaz.Application.Mappings
                 .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt));
             
             CreateMap<AppointmentDto, Appointment>();
+
+            // Medical mappings
+            CreateMap<MedicalExamination, MedicalResultDto>();
         }
     }
 }
