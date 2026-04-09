@@ -56,6 +56,14 @@ const ApplicationService = {
   },
 
   /**
+   * Get applications with filters (for examiners/admins)
+   */
+  async getApplications(filters: any): Promise<ApiResponse<PagedResult<any>>> {
+    const response = await apiClient.get('/applications', { params: filters });
+    return response.data;
+  },
+
+  /**
    * Create a new draft application (called after Step 1)
    */
   async createApplication(serviceType: ServiceType): Promise<ApiResponse<ApplicationDraftDto>> {

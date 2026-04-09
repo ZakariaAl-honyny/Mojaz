@@ -28,7 +28,7 @@ export default function ExemptionsQueuePage() {
     );
   }
 
-  const items = response?.data?.items || [];
+  const items = response?.data || [];
 
   return (
     <div className="container mx-auto py-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -63,10 +63,10 @@ export default function ExemptionsQueuePage() {
           onClose={() => setSelectedRecord(null)}
           record={selectedRecord}
           onApprove={async (id) => {
-            await approveMutation.mutateAsync(id);
+            await approveMutation.mutateAsync({ id, data: { actionBy: 'system', notes: 'Approved via manager panel' } });
           }}
           onReject={async (id, reason) => {
-            await rejectMutation.mutateAsync({ id, data: { rejectionReason: reason } });
+            await rejectMutation.mutateAsync({ id, data: { actionBy: 'system', notes: reason } });
           }}
         />
       )}
