@@ -238,13 +238,19 @@
     "login": {
       "title": "تسجيل الدخول",
       "subtitle": "الوصول إلى حسابك في منصة مُجاز",
-      "email": "البريد الإلكتروني",
-      "phone": "رقم الجوال",
+      "identifier": "رقم الهوية أو البريد الإلكتروني",
+      "placeholderIdentifier": "أدخل رقم الهوية أو البريد الإلكتروني",
       "password": "كلمة المرور",
+      "placeholderPassword": "أدخل كلمة المرور",
       "submit": "دخول",
-      "forgotPassword": "نسيت كلمة المرور؟",
+      "forgotPassword": "هل نسيت كلمة المرور؟",
       "noAccount": "ليس لديك حساب؟",
-      "register": "إنشاء حساب جديد"
+      "registerNow": "إنشاء حساب جديد"
+    },
+    "errors": {
+      "identifierRequired": "رقم الهوية أو البريد الإلكتروني مطلوب",
+      "passwordRequired": "كلمة المرور مطلوبة",
+      "invalidCredentials": "بيانات الاعتماد غير صالحة"
     },
     "register": {
       "title": "إنشاء حساب",

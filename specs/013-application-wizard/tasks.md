@@ -75,11 +75,11 @@
 - [X] T030 [US1] Create `frontend/src/components/domain/application/wizard/steps/Step4ApplicationDetails.tsx`: renders 5 RHF-controlled fields (`applicantType` radio, `preferredCenterId` dropdown from `getExamCenters()`, `testLanguage` toggle, `appointmentPreference` radio group, `specialNeedsDeclaration` checkbox + conditional `specialNeedsNote` textarea); uses `step4Schema`; initializes from `wizardStore.step4`; on unmount writes to `setStep4()` — per spec.md FR-005
 - [X] T031 [P] [US1] Create `frontend/src/components/domain/application/wizard/shared/StepSection.tsx`: read-only section wrapper for Step 5 review; props: `titleKey`, `onEdit: () => void`, `children`; renders an "Edit" link button that calls `onEdit`; used by Step 5 for each of the 4 data sections — per spec.md US7
 - [X] T032 [US1] Create `frontend/src/components/domain/application/wizard/steps/Step5ReviewSubmit.tsx`: renders 4 `StepSection` blocks showing read-only summaries of Steps 1–4 data from Zustand store; each section's "Edit" onClick calls `goTo(stepN)`; renders declaration checkbox wired to `step5Schema`; Submit button disabled until checkbox checked; on submit calls `useApplicationWizard.submit()` with loading spinner; shows error alert on `400`/`409` responses — per spec.md US7 and FR-006
-- [ ] T033 [US1] Unit test `frontend/src/lib/validations/step1Schema.ts`: verify valid `serviceType` passes, missing value fails with correct error key — in `frontend/src/__tests__/validations/step1Schema.test.ts`
-- [ ] T034 [P] [US1] Unit test `frontend/src/lib/validations/step2Schema.ts`: verify age-valid category passes, age-invalid category fails with parameterized error; verify edge cases (exactly minimum age passes) — in `frontend/src/__tests__/validations/step2Schema.test.ts`
-- [ ] T035 [P] [US1] Unit test `frontend/src/lib/validations/step3Schema.ts`: verify valid 9-field payload passes; verify each required field individually triggers correct error key — in `frontend/src/__tests__/validations/step3Schema.test.ts`
-- [ ] T036 [P] [US1] Unit test `frontend/src/lib/validations/step4Schema.ts`: verify `specialNeedsNote` required when `specialNeedsDeclaration=true`; verify optional note allowed when `specialNeedsDeclaration=false` — in `frontend/src/__tests__/validations/step4Schema.test.ts`
-- [ ] T037 [P] [US1] Unit test `frontend/src/stores/wizard-store.ts`: verify initial state, `setStep1` updates store, `goTo` changes step, `markCompleted` adds to `completedSteps`, `resetWizard` clears all — in `frontend/src/__tests__/stores/wizard-store.test.ts`
+- [X] T033 [US1] Unit test `frontend/src/lib/validations/step1Schema.ts`: verify valid `serviceType` passes, missing value fails with correct error key — in `frontend/src/__tests__/validations/step1Schema.test.ts`
+- [X] T034 [P] [US1] Unit test `frontend/src/lib/validations/step2Schema.ts`: verify age-valid category passes, age-invalid category fails with parameterized error; verify edge cases (exactly minimum age passes) — in `frontend/src/__tests__/validations/step2Schema.test.ts`
+- [X] T035 [P] [US1] Unit test `frontend/src/lib/validations/step3Schema.ts`: verify valid 9-field payload passes; verify each required field individually triggers correct error key — in `frontend/src/__tests__/validations/step3Schema.test.ts`
+- [X] T036 [P] [US1] Unit test `frontend/src/lib/validations/step4Schema.ts`: verify `specialNeedsNote` required when `specialNeedsDeclaration=true`; verify optional note allowed when `specialNeedsDeclaration=false` — in `frontend/src/__tests__/validations/step4Schema.test.ts`
+- [X] T037 [P] [US1] Unit test `frontend/src/stores/wizard-store.ts`: verify initial state, `setStep1` updates store, `goTo` changes step, `markCompleted` adds to `completedSteps`, `resetWizard` clears all — in `frontend/src/__tests__/stores/wizard-store.test.ts`
 
 **Checkpoint**: All 5 wizard steps render, validate, and submit. The core application creation flow is end-to-end functional.
 
@@ -97,8 +97,8 @@
 
 - [X] T038 [US2] Polish `frontend/src/components/domain/application/wizard/shared/CategoryCard.tsx` (T027): implement disabled visual state — greyed-out card, lock icon overlay (`Lucide Lock`), tooltip showing "Minimum age: X years" (using `wizard.step2.categoryN.ageNote` translation key with `{{minAge}}` param); disabled cards must not be keyboard-focusable (add `aria-disabled="true"` and `tabIndex={-1}`) — per spec.md US2
 - [X] T039 [US2] Update `frontend/src/components/domain/application/wizard/steps/Step2LicenseCategory.tsx` (T028): compute `disabledCategories` set from `minAgeMap` + `applicantAge`; pass `disabled={disabledCategories.has(code)}` and `disabledReason` to each `CategoryCard`; show a global info banner at top of step when any categories are disabled (e.g., "X categories unavailable for your age") — per spec.md US2 acceptance scenarios
-- [ ] T040 [US2] Component test for `CategoryCard.tsx`: verify disabled state renders lock icon, verify click handler not called when disabled, verify `aria-disabled` attribute present — in `frontend/src/__tests__/components/CategoryCard.test.tsx`
-- [ ] T041 [P] [US2] Component test for `Step2LicenseCategory.tsx` with mocked `getLicenseCategories` returning minAges (mock 17-year-old user): verify Categories B–F are disabled, Category A is enabled, selecting A clears any error — in `frontend/src/__tests__/components/Step2LicenseCategory.test.tsx`
+- [X] T040 [US2] Component test for `CategoryCard.tsx`: verify disabled state renders lock icon, verify click handler not called when disabled, verify `aria-disabled` attribute present — in `frontend/src/__tests__/components/CategoryCard.test.tsx`
+- [X] T041 [P] [US2] Component test for `Step2LicenseCategory.tsx` with mocked `getLicenseCategories` returning minAges (mock 17-year-old user): verify Categories B–F are disabled, Category A is enabled, selecting A clears any error — in `frontend/src/__tests__/components/Step2LicenseCategory.test.tsx`
 
 **Checkpoint**: Age validation fully functional with accessible disabled states.
 
@@ -118,7 +118,7 @@
 - [X] T045 [US3] Add `isSaving: boolean` and `setSaving: (v: boolean) => void` to `wizard-store.ts` (T008) and update `useWizardAutoSave` to toggle it during in-flight saves; update `WizardShell.tsx` to render `AutoSaveIndicator` in the wizard header
 - [X] T046 [US3] Handle draft resume in `frontend/src/app/[locale]/(applicant)/applications/new/page.tsx` (T020): after `GET /api/v1/applications?status=Draft&pageSize=1` returns an item, hydrate Zustand store from the API response (call `setApplicationId`, `setStep1`, `setStep2`, `setStep3`, `setStep4`, `goTo(lastStep)`) discarding any stale sessionStorage state; show "Resuming your saved application…" indicator during hydration
 - [X] T047 [US3] Add browser-leave confirmation in `WizardShell.tsx` (T021): add `beforeunload` event listener via `useEffect`; show browser dialog "Changes you made may not be saved" when `consecutiveSaveFailures > 0` or when time since `lastSavedAt` > 30 seconds; remove listener on wizard unmount or successful submission — per spec.md edge cases
-- [ ] T048 [P] [US3] Unit test `useWizardAutoSave.ts`: mock `updateDraftApplication`; verify interval fires every 30s; verify no API call when hash unchanged; verify `consecutiveSaveFailures` increments on error; verify `resetSaveFailures` called on success — in `frontend/src/__tests__/hooks/useWizardAutoSave.test.ts` using `jest.useFakeTimers()`
+- [X] T048 [P] [US3] Unit test `useWizardAutoSave.ts`: mock `updateDraftApplication`; verify interval fires every 30s; verify no API call when hash unchanged; verify `consecutiveSaveFailures` increments on error; verify `resetSaveFailures` called on success — in `frontend/src/__tests__/hooks/useWizardAutoSave.test.ts` using `jest.useFakeTimers()`
 
 **Checkpoint**: Auto-save fires silently every 30 seconds; returning users resume seamlessly.
 
@@ -138,7 +138,7 @@
 - [X] T050 [P] [US4] RTL audit of icon directionality in `WizardProgressBar.tsx` (T022): chevrons / arrow icons separating steps must flip in RTL (add `rtl:rotate-180` or `rtl:scale-x-[-1]` to direction-indicating icons); universal icons (check, lock) must NOT flip — per AGENTS.md RTL rules
 - [X] T051 [P] [US4] RTL audit of `WizardNavButtons.tsx` (T023): in RTL mode, Back button appears on the right (logical `end`) and Next/Submit on the left (logical `start`) — implemented via `flex-row-reverse` or Tailwind `rtl:flex-row-reverse`; verify tab order remains logical
 - [X] T052 [US4] Verify all `next-intl` keys are wired: grep wizard components for any hardcoded Arabic or English display strings not behind `useTranslations('wizard')` and replace with translation keys — convention: `wizard.*` namespace only
-- [ ] T053 [P] [US4] Component test for `WizardProgressBar.tsx` RTL rendering: render with `dir="rtl"`, verify step order is visually reversed (Step 5 leftmost), verify completed step click still calls correct `goTo(step)` — in `frontend/src/__tests__/components/WizardProgressBar.test.tsx`
+- [X] T053 [P] [US4] Component test for `WizardProgressBar.tsx` RTL rendering: render with `dir="rtl"`, verify step order is visually reversed (Step 5 leftmost), verify completed step click still calls correct `goTo(step)` — in `frontend/src/__tests__/components/WizardProgressBar.test.tsx`
 
 **Checkpoint**: Full bilingual support verified — zero hardcoded strings, correct RTL layout in all steps.
 
@@ -174,8 +174,8 @@
 
 - [X] T057 [US6] In `useApplicationWizard.ts` (T024) `goNext()` implementation: after `trigger()` returns false, call `setFocus()` on the first invalid field (React Hook Form's `setFocus` API); scroll the field into view on mobile — per spec.md US6 acceptance scenario 1
 - [X] T058 [P] [US6] Verify `mode: 'onBlur'` is set on all `useForm` calls in Steps 3 and 4 so inline errors appear immediately on field blur without requiring a Next click — per spec.md US6 acceptance scenario 3
-- [ ] T059 [P] [US6] Component test `Step3PersonalInfo.tsx`: render component, click Next without filling required fields, verify error messages appear under each required field; fill all required fields, click Next, verify no errors and `goNext` called — in `frontend/src/__tests__/components/Step3PersonalInfo.test.tsx`
-- [ ] T060 [P] [US6] Component test `Step5ReviewSubmit.tsx`: render with all steps completed; verify Submit button disabled when declaration unchecked; check declaration checkbox, verify Submit enabled; click Submit, verify loading spinner appears — in `frontend/src/__tests__/components/Step5ReviewSubmit.test.tsx`
+- [X] T059 [P] [US6] Component test `Step3PersonalInfo.tsx`: render component, click Next without filling required fields, verify error messages appear under each required field; fill all required fields, click Next, verify no errors and `goNext` called — in `frontend/src/__tests__/components/Step3PersonalInfo.test.tsx`
+- [X] T060 [P] [US6] Component test `Step5ReviewSubmit.tsx`: render with all steps completed; verify Submit button disabled when declaration unchecked; check declaration checkbox, verify Submit enabled; click Submit, verify loading spinner appears — in `frontend/src/__tests__/components/Step5ReviewSubmit.test.tsx`
 
 **Checkpoint**: No invalid data can silently advance through the wizard.
 
@@ -193,7 +193,7 @@
 
 - [X] T061 [US7] In `useApplicationWizard.ts` (T024) `submit()` implementation: use React Query `useMutation` to call `submitApplication(applicationId)`; on success: call `resetWizard()`, clear sessionStorage key `mojaz-wizard-draft`, show `toast.success(t('wizard.submit.success'))`, push router to `/[locale]/applicant/applications/${id}`; on `400` error: call `goTo(1)` and display server error messages above Step 1; on `409` conflict: show error alert with link to existing application — per spec.md US7 and contracts/api.md §4
 - [X] T062 [P] [US7] Add `ExistingApplicationBanner` component `frontend/src/components/domain/application/wizard/shared/ExistingApplicationBanner.tsx`: shown when `GET /api/v1/applications` returns an active non-draft application; displays application number, status badge, and a "View Application" link button; uses translation keys `wizard.existingApp.*` — per research.md D-007
-- [ ] T063 [P] [US7] Component test `Step5ReviewSubmit.tsx`: mock Zustand store with all 4 steps filled; verify each `StepSection` renders the correct field values; verify Edit button for Step 2 triggers `goTo(2)`; mock successful submit mutation, verify redirect triggered — in `frontend/src/__tests__/components/Step5ReviewSubmit.test.tsx`
+- [X] T063 [P] [US7] Component test `Step5ReviewSubmit.tsx`: mock Zustand store with all 4 steps filled; verify each `StepSection` renders the correct field values; verify Edit button for Step 2 triggers `goTo(2)`; mock successful submit mutation, verify redirect triggered — in `frontend/src/__tests__/components/Step5ReviewSubmit.test.tsx`
 
 **Checkpoint**: Full end-to-end wizard flow tested and working — Draft created, auto-saved, submitted, redirected.
 
@@ -203,15 +203,15 @@
 
 **Purpose**: Responsive design, accessibility, E2E tests, and final quality gates.
 
-- [ ] T064 Responsive audit: test all 5 step components at 320 px, 375 px, 768 px, 1024 px, and 1440 px viewport widths; fix any overflow, truncation, or layout collapse issues — per spec.md SC-004
-- [ ] T065 [P] Accessibility audit: verify all form fields have associated `<label>` elements (or `aria-label`); verify all error messages are announced via `aria-describedby` linking field to error span; verify `role="alert"` on validation error containers; verify keyboard tab order is logical in both LTR and RTL — per spec.md SC-008
-- [ ] T066 [P] Dark mode audit: toggle dark mode in all 5 steps; verify card backgrounds, text, borders, inputs, and buttons are correctly themed via Tailwind `dark:` variants; fix any missing dark states
-- [ ] T067 [P] Loading skeleton audit: verify `Step2LicenseCategory`, `Step3PersonalInfo` (nationalities/regions), and `Step4ApplicationDetails` (exam centers) all show `shadcn/ui Skeleton` components while their React Query data is loading — replace any blank states
-- [ ] T068 [P] Retry button: wherever a lookup API call fails (categories, centers, regions), show a "Retry" button (not just an error message) that calls `refetch()` from the React Query result — per spec.md edge cases
-- [ ] T069 Playwright E2E test — happy path: navigate to `/ar/applicant/applications/new` as Applicant role user; complete all 5 steps with valid Category B data; submit; assert redirect and status "Submitted" — in `e2e/tests/wizard/happy-path.spec.ts`
-- [ ] T070 [P] Playwright E2E test — age validation: navigate to `/en/applicant/applications/new` as a 17-year-old applicant; reach Step 2; assert Categories B–F are disabled; select Category A; assert Next is enabled — in `e2e/tests/wizard/age-validation.spec.ts`
-- [ ] T071 [P] Playwright E2E test — auto-save resume: complete 3 steps, wait 31 seconds, reload page, assert wizard resumes at Step 3 with data intact — in `e2e/tests/wizard/auto-save-resume.spec.ts`
-- [ ] T072 Bundle size check: run `next build` and check output; the `new` page route should add no more than 50 KB gzipped above the existing applicant dashboard route (lazy-loaded step components via `dynamic()` if needed)
+- [X] T064 Responsive audit: test all 5 step components at 320 px, 375 px, 768 px, 1024 px, and 1440 px viewport widths; fix any overflow, truncation, or layout collapse issues — per spec.md SC-004
+- [X] T065 [P] Accessibility audit: verify all form fields have associated `<label>` elements (or `aria-label`); verify all error messages are announced via `aria-describedby` linking field to error span; verify `role="alert"` on validation error containers; verify keyboard tab order is logical in both LTR and RTL — per spec.md SC-008
+- [X] T066 [P] Dark mode audit: toggle dark mode in all 5 steps; verify card backgrounds, text, borders, inputs, and buttons are correctly themed via Tailwind `dark:` variants; fix any missing dark states
+- [X] T067 [P] Loading skeleton audit: verify `Step2LicenseCategory`, `Step3PersonalInfo` (nationalities/regions), and `Step4ApplicationDetails` (exam centers) all show `shadcn/ui Skeleton` components while their React Query data is loading — replace any blank states
+- [X] T068 [P] Retry button: wherever a lookup API call fails (categories, centers, regions), show a "Retry" button (not just an error message) that calls `refetch()` from the React Query result — per spec.md edge cases
+- [X] T069 Playwright E2E test — happy path: navigate to `/ar/applicant/applications/new` as Applicant role user; complete all 5 steps with valid Category B data; submit; assert redirect and status "Submitted" — in `e2e/tests/wizard/happy-path.spec.ts`
+- [X] T070 [P] Playwright E2E test — age validation: navigate to `/en/applicant/applications/new` as a 17-year-old applicant; reach Step 2; assert Categories B–F are disabled; select Category A; assert Next is enabled — in `e2e/tests/wizard/age-validation.spec.ts`
+- [X] T071 [P] Playwright E2E test — auto-save resume: complete 3 steps, wait 31 seconds, reload page, assert wizard resumes at Step 3 with data intact — in `e2e/tests/wizard/auto-save-resume.spec.ts`
+- [/] T072 Bundle size check: run `next build` and check output; the `new` page route should add no more than 50 KB gzipped above the existing applicant dashboard route (lazy-loaded step components via `dynamic()` if needed)
 
 ---
 
