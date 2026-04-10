@@ -54,6 +54,9 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IGate4ValidationService, Gate4ValidationService>();
         services.AddScoped<IFinalApprovalService, FinalApprovalService>();
 
+        // ─── License Renewal (Feature 025) ───
+        services.AddScoped<IRenewalService, RenewalService>();
+
         return services;
     }
 }
