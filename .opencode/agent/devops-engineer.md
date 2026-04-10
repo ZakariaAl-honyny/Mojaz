@@ -1,7 +1,6 @@
 ---
 name: "DevOps Engineer"
-model: opencode/nemotron-3-super-free
-reasoningEffect: "high"
+reasoningEeffect: "max"
 role: "Infrastructure, CI/CD, and deployment specialist"
 activation: "When working on Docker, GitHub Actions, deployment"
 mode: subagent

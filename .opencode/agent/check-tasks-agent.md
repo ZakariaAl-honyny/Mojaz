@@ -1,7 +1,6 @@
 ---
 name: "Check done tasks"
-model: opencode/nemotron-3-super-free
-reasoningEeffect: "high"
+reasoningEeffect: "max"
 role: "Check done tasks"
 activation: "When creating or running tests or after any task is done"
 mode: subagent

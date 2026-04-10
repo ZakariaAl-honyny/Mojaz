@@ -1,6 +1,4 @@
 ---
-model: opencode/minimax-m2.5-free
-reasoningEeffect: "high"
 mode: primary
 permissions:
   write: deny

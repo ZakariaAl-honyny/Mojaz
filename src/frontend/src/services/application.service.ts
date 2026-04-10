@@ -6,6 +6,10 @@ import {
   LicenseCategoryOption, 
   ExamCenter 
 } from '@/types/wizard.types';
+import { 
+  VerifyStolenReportRequest, 
+  VerifyStolenReportResponse 
+} from '@/types/application.types';
 
 export interface ApplicationDraftDto {
   id: string;
@@ -119,7 +123,15 @@ const ApplicationService = {
   async getRegions(): Promise<ApiResponse<{ code: string; nameAr: string; nameEn: string }[]>> {
     const response = await apiClient.get('/lookups/regions');
     return response.data;
-  }
+  },
+
+  /**
+   * Verify stolen report for license replacement
+   */
+  async verifyStolenReport(id: string, data: VerifyStolenReportRequest): Promise<ApiResponse<VerifyStolenReportResponse>> {
+    const response = await apiClient.patch(`/administrative/applications/${id}/verify-stolen-report`, data);
+    return response.data;
+  },
 };
 
 export default ApplicationService;

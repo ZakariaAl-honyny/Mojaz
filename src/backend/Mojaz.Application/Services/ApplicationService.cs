@@ -29,6 +29,7 @@ public class ApplicationService : IApplicationService
     private readonly IRepository<SystemSetting> _settingsRepository;
     private readonly IRepository<License> _licenseRepository;
     private readonly IRepository<ApplicationStatusHistory> _historyRepository;
+    private readonly IRepository<LicenseReplacement> _replacementRepository;
     private readonly IBackgroundJobClient _backgroundJobClient;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -48,7 +49,8 @@ public class ApplicationService : IApplicationService
         INotificationService notificationService,
         IEmailService emailService,
         IBackgroundJobClient backgroundJobClient,
-        IRepository<ApplicationStatusHistory> historyRepository)
+        IRepository<ApplicationStatusHistory> historyRepository,
+        IRepository<LicenseReplacement> replacementRepository)
     {
         _applicationRepository = applicationRepository;
         _userRepository = userRepository;
@@ -62,6 +64,7 @@ public class ApplicationService : IApplicationService
         _emailService = emailService;
         _backgroundJobClient = backgroundJobClient;
         _historyRepository = historyRepository;
+        _replacementRepository = replacementRepository;
     }
 
     public async Task<ApiResponse<EligibilityCheckResult>> CheckEligibilityAsync(Guid userId, EligibilityCheckRequest request)
@@ -215,7 +218,10 @@ public class ApplicationService : IApplicationService
         IQueryable<ApplicationEntity> query = role switch
         {
             Roles.Applicant => baseQuery.Where(a => a.ApplicantId == userId),
-            Roles.Receptionist => baseQuery.Where(a => a.CurrentStage == ApplicationStages.Documents),
+            Roles.Receptionist => baseQuery.Where(a => 
+                a.CurrentStage == ApplicationStages.Documents || 
+                (a.ServiceType == ServiceType.Replacement && 
+                 _replacementRepository.Query().Any(r => r.ApplicationId == a.Id && r.Reason == ReplacementReason.Stolen && !r.IsReportVerified))),
             Roles.Doctor => baseQuery.Where(a => a.CurrentStage == ApplicationStages.Medical),
             Roles.Examiner => baseQuery.Where(a => a.CurrentStage == ApplicationStages.Theory || a.CurrentStage == ApplicationStages.Practical),
             Roles.Manager or Roles.Admin or Roles.Security => baseQuery, // Full access for Manager/Admin/Security oversight
