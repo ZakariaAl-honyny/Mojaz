@@ -30,7 +30,7 @@ export function WizardShell() {
   const { currentStep, isSaving } = useWizardStore();
   const { goTo, direction } = useApplicationWizard();
   
-  // RTL multiplier: invert X direction for RTL
+  // RTL multiplier: invert X direction for RTL to maintain "forward/backward" spatial feeling
   const rtlMultiplier = isRTL ? -1 : 1;
   
   // Initialize auto-save functionality
@@ -54,25 +54,31 @@ export function WizardShell() {
   const StepComponent = steps[currentStep - 1];
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-0">
       {/* Progress Bar */}
       <WizardProgressBar currentStep={currentStep} onStepClick={goTo} />
 
       {/* Auto-save indicator */}
-      <div className="mt-4">
+      <div className="mt-4 min-h-[24px]">
         <AutoSaveIndicator />
       </div>
 
        {/* Step Content */}
-       <div className="mt-8">
+       <div className="mt-8 mb-20 min-h-[400px]">
          <AnimatePresence mode="wait" custom={direction}>
            <motion.div
              key={currentStep}
              custom={direction}
-             initial={{ opacity: 0, x: direction * 50 }}
+             initial={{ opacity: 0, x: direction * 50 * rtlMultiplier }}
              animate={{ opacity: 1, x: 0 }}
-             exit={{ opacity: 0, x: direction * -50 }}
-             transition={{ duration: 0.2 }}
+             exit={{ opacity: 0, x: direction * -50 * rtlMultiplier }}
+             transition={{ 
+               type: "spring",
+               stiffness: 300,
+               damping: 30,
+               opacity: { duration: 0.2 } 
+             }}
+             className="w-full"
            >
              {StepComponent && <StepComponent />}
            </motion.div>
@@ -80,9 +86,7 @@ export function WizardShell() {
        </div>
 
       {/* Navigation Buttons */}
-      <div className="mt-8">
-        <WizardNavButtons />
-      </div>
+      <WizardNavButtons />
     </div>
   );
 }
