@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mojaz.Application.DTOs.Payment;
+using Mojaz.Application.DTOs.Payments;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Shared;
 using System;
@@ -30,9 +30,11 @@ public class PaymentsController : ControllerBase
     [HttpPost("initiate")]
     [Authorize(Roles = "Applicant")]
     [ProducesResponseType(typeof(ApiResponse<PaymentDto>), 201)]
-    public async Task<IActionResult> InitiatePaymentAsync(Guid applicationId, [FromBody] InitiatePaymentRequest request)
+    public async Task<IActionResult> InitiatePaymentAsync(Guid applicationId, [FromBody] PaymentInitiateRequest request)
     {
-        var result = await _paymentService.InitiatePaymentAsync(applicationId, request);
+        // Set the ApplicationId from route parameter
+        request.ApplicationId = applicationId;
+        var result = await _paymentService.InitiatePaymentAsync(request);
         return StatusCode(result.StatusCode, result);
     }
 
@@ -49,14 +51,14 @@ public class PaymentsController : ControllerBase
     }
 
     /// <summary>
-    /// Public gateway callback simulation.
+    /// Confirm a payment (simulating gateway callback).
     /// </summary>
-    [HttpPost("callback")]
+    [HttpPost("confirm")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResponse<PaymentDto>), 200)]
-    public async Task<IActionResult> CallbackAsync([FromBody] PaymentCallback request)
+    public async Task<IActionResult> ConfirmPaymentAsync([FromBody] PaymentConfirmRequest request)
     {
-        var result = await _paymentService.ProcessCallbackAsync(request);
+        var result = await _paymentService.ConfirmPaymentAsync(request);
         return StatusCode(result.StatusCode, result);
     }
 

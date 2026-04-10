@@ -22,7 +22,7 @@ public class Gate4ValidationServiceTests
     private readonly Mock<IRepository<TheoryTest>> _theoryTestRepositoryMock;
     private readonly Mock<IRepository<PracticalTest>> _practicalTestRepositoryMock;
     private readonly Mock<IRepository<MedicalExamination>> _medicalExamRepositoryMock;
-    private readonly Mock<IRepository<Payment>> _paymentRepositoryMock;
+    private readonly Mock<IRepository<PaymentTransaction>> _paymentRepositoryMock;
     private readonly Gate4ValidationService _service;
 
     public Gate4ValidationServiceTests()
@@ -32,7 +32,7 @@ public class Gate4ValidationServiceTests
         _theoryTestRepositoryMock = new Mock<IRepository<TheoryTest>>();
         _practicalTestRepositoryMock = new Mock<IRepository<PracticalTest>>();
         _medicalExamRepositoryMock = new Mock<IRepository<MedicalExamination>>();
-        _paymentRepositoryMock = new Mock<IRepository<Payment>>();
+        _paymentRepositoryMock = new Mock<IRepository<PaymentTransaction>>();
 
         _service = new Gate4ValidationService(
             _applicationRepositoryMock.Object,
@@ -143,8 +143,8 @@ public class Gate4ValidationServiceTests
             .ReturnsAsync(new List<MedicalExamination> { new MedicalExamination { ApplicationId = applicationId, FitnessResult = medicalResult, ValidUntil = validUntil, CreatedAt = DateTime.UtcNow } });
 
         // Payments
-        var paymentStatus = paymentsCleared ? PaymentStatus.Completed : PaymentStatus.Pending;
-        _paymentRepositoryMock.Setup(x => x.FindAsync(It.IsAny<Expression<Func<Payment, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<Payment> { new Payment { ApplicationId = applicationId, Status = paymentStatus } });
+        var paymentStatus = paymentsCleared ? PaymentStatus.Paid : PaymentStatus.Pending;
+        _paymentRepositoryMock.Setup(x => x.FindAsync(It.IsAny<Expression<Func<PaymentTransaction, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<PaymentTransaction> { new PaymentTransaction { ApplicationId = applicationId, Status = paymentStatus } });
     }
 }
