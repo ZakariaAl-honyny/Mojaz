@@ -230,13 +230,19 @@
     "login": {
       "title": "Login",
       "subtitle": "Access your Mojaz account",
-      "email": "Email Address",
-      "phone": "Phone Number",
+      "identifier": "National ID or Email Address",
+      "placeholderIdentifier": "Enter National ID or Email",
       "password": "Password",
+      "placeholderPassword": "Enter your password",
       "submit": "Login",
       "forgotPassword": "Forgot Password?",
       "noAccount": "Don't have an account?",
-      "register": "Register Now"
+      "registerNow": "Register Now"
+    },
+    "errors": {
+      "identifierRequired": "National ID or Email is required",
+      "passwordRequired": "Password is required",
+      "invalidCredentials": "Invalid credentials"
     },
     "register": {
       "title": "Create Account",
