@@ -1,66 +1,105 @@
-# Implementation Plan: 024-license-issuance
+# Implementation Plan: [FEATURE]
 
-**Feature Branch**: `024-license-issuance`
-**Status**: Draft
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
-## Architecture Overview
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
-Implementation of the license finalization and PDF generation system. This feature follows the final approval and payment of the issuance fee, resulting in a signed digital driving license.
+## Summary
 
-### Tech Stack
-- **Backend**: .NET 8, EF Core 8.
-- **PDF Generation**: QuestPDF.
-- **Persistence**: `Licenses`, `Applications`, `Users`.
+[Extract from feature spec: primary requirement + technical approach from research]
 
-## Functional Breakdown
+## Technical Context
 
-### 1. License metadata & Generation (Backend)
-- **Logic**:
-    1. Verify current `Application` has `FinalApproved` status and `IssuanceFee` is `Paid`.
-    2. Generate License Number: `MOJ-{YEAR}-{8 random digits}`.
-    3. Calculate `ExpiryDate` using `ValidityYears` from the `LicenseCategory` record.
-    4. Store metadata in the `Licenses` table (tied to `User` and `Application`).
-- **Endpoint**: `POST /api/v1/licenses/{appId}/issue`
+<!--
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
+-->
 
-### 2. Digital License PDF (QuestPDF)
-- **Library**: QuestPDF.
-- **Design**:
-    - **Header**: Mojaz Logo + Ministry Information.
-    - **Body**: 
-        - Applicant Name (Bilingual).
-        - National ID / Date of Birth.
-        - License Category (A, B, C, D, E, F).
-        - Issue Date & Expiry Date.
-        - **Photo**: Embedded from approved document storage.
-        - **QR Code**: Verification link with signed payload.
-- **Endpoint**: `GET /api/v1/licenses/{id}/download`
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
-### 3. Applicant Notification & Access
-- Trigger `INotificationService` (SMS, Email, Push) with the confirmation: "Your license is ready! Download it here."
-- **Dashboard**: "My License" card appearing on the main portal for issued applicants.
+## Constitution Check
 
-## Phases of Implementation
+*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-### Phase 1: Persistence & Configuration
-1. Add `License` entity with format verification logic.
-2. Update the `LicenseCategory` settings with correct `ValidityYears`.
+[Gates determined based on constitution file]
 
-### Phase 2: Issuance Logic & API
-1. Implement `ILicenseService` and `LicenseService`.
-2. Build the "Issue" logic (Auto-status update to `Issued`).
-3. Create `POST /licenses/{appId}/issue`.
+## Project Structure
 
-### Phase 3: PDF Template & Generation
-1. Build the QuestPDF template for the bilingual license card.
-2. Integrate QR code generation (using a library like `NetBarcode` or `QRCoder`).
-3. Add the `GET /download` endpoint with secure stream serving.
+### Documentation (this feature)
 
-### Phase 4: Verification
-1. Unit tests for License Number format and Expiry calculation.
-2. Integration tests for "Gate" check completion before issuance.
-3. Verify PDF visual layout, bilingual support, and photo embedding.
+```text
+specs/[###-feature]/
+├── plan.md              # This file (/speckit.plan command output)
+├── research.md          # Phase 0 output (/speckit.plan command)
+├── data-model.md        # Phase 1 output (/speckit.plan command)
+├── quickstart.md        # Phase 1 output (/speckit.plan command)
+├── contracts/           # Phase 1 output (/speckit.plan command)
+└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
+```
 
-## Risks & Mitigations
-- **ID Collisions**: Ensure the 8-digit random part of the license number is checked for uniqueness in the database.
-- **Slow PDF Generation**: QuestPDF is highly efficient; if load is extreme, move generation to a background task and store the file in blob storage.
-- **Security Bypass**: Ensure only the `User` owner or an `Admin`/`Manager` can download the certificate.
+### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
+
+```text
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
+src/
+├── models/
+├── services/
+├── cli/
+└── lib/
+
+tests/
+├── contract/
+├── integration/
+└── unit/
+
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+src/
+| backend/
+  │   ├── models/
+  │   ├── services/
+  │   └── api/
+  └── tests/
+
+| frontend/
+  ├── src/
+  │   ├── app/
+  │   ├── components/
+  │   ├── pages/
+  │   └── services/
+  └── tests/
+
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
+
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
+```
+
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
+
+## Complexity Tracking
+
+> **Fill ONLY if Constitution Check has violations that must be justified**
+
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |

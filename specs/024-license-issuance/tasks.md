@@ -1,50 +1,78 @@
-# Tasks: 024-license-issuance
+# Tasks: License Issuance (Feature 024)
 
-**Input**: Design documents from `specs/024-license-issuance/`
-**Prerequisites**: plan.md ✅ | spec.md ✅
-**Branch**: `024-license-issuance`
-**Created**: 2026-04-06
+**Input**: Design documents from `/specs/024-license-issuance/`
+**Prerequisites**: plan.md ✅ | spec.md ✅ | research.md ✅ | data-model.md ✅ | contracts/api-contracts.md ✅
 
-## Phase 1: Persistence & Generation Logic (Priority: P1)
+## Format: `[ID] [P?] [Story] Description — file path`
 
-- [ ] **T2401**: Create `License` entity (LicenseNumber, IssueDate, ExpiryDate, Category).
-- [ ] **T2402**: Add unique format generator logic for `MOJ-{YEAR}-{8 random digits}`.
-- [ ] **T2403**: Map `ValidityYears` (5 or 10) correctly to categories in the DB seeder.
-- [ ] **T2404**: Update `ApplicationDbContext` with `Licenses` DbSet.
+- **[P]**: Can run in parallel (different files, no dependencies)
+- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
+- Path Conventions: `src/backend/Mojaz.Domain/`, `src/backend/Mojaz.Application/`, `src/backend/Mojaz.Infrastructure/`, `src/backend/Mojaz.API/`, `tests/Mojaz.Application.Tests/`
 
-## Phase 2: Domain Logic & API (Priority: P1)
+---
 
-- [ ] **T2405**: Create `ILicenseService` and `LicenseService` in the Application layer.
-- [ ] **T2406**: Implement `IssueLicenseAsync` (Verify status/payment, generate number, create record).
-- [ ] **T2407**: Add `POST /api/v1/licenses/{appId}/issue` (Post-Approval/Payment).
-- [ ] **T2408**: Add `GET /api/v1/licenses/my-license` for applicants.
-- [ ] **T2409**: Implement `GetLicensePdfAsync` using `QuestPDF`.
+## Phase 1: Setup (Initialize structure, configs, dependencies)
 
-## Phase 3: PDF Template & QR (Priority: P1)
+**Purpose**: Project initialization and base interface declarations.
 
-- [ ] **T2410**: Build the `DigitalLicensePdf` layout (Bilingual AR/EN, Lucide Icons).
-- [ ] **T2411**: Embed applicant photo from document storage (Feature 014).
-- [ ] **T2412**: Integrate QR code generator with secure validation URL.
-- [ ] **T2413**: Add `GET /api/v1/licenses/{id}/download` endpoint with secure stream serving.
+- [x] T001 Define `IBlobStorageService` interface in `src/backend/Mojaz.Application/Interfaces/IBlobStorageService.cs`
+- [x] T002 Define `ILicensePdfGenerator` interface in `src/backend/Mojaz.Application/Interfaces/Infrastructure/ILicensePdfGenerator.cs`
 
-## Phase 4: Frontend & Notifications (Priority: P2)
+---
 
-- [ ] **T2414**: Create `LicenseCard` component in the applicant dashboard (Dashboard card).
-- [ ] **T2415**: Add "Download PDF" button with loading state.
-- [ ] **T2416**: Trigger `INotificationService` on license issuance.
+## Phase 2: Tests (TDD: write tests for entities, services, API)
 
-## Phase 5: Verification (Priority: P2)
+**Purpose**: Establish validity logic before core implementation.
 
-- [ ] **T2417**: Unit tests for License Number format and collision avoidance.
-- [ ] **T2418**: Unit tests for Category-based Expiry calculation (5 vs 10 years).
-- [ ] **T2419**: Verify PDF content: check for correct bilingual data and photo visibility.
-- [ ] **T2420**: Verify only the license owner can access the PDF download (403 for others).
+- [ ] T000 [US1] Write unit tests for license number generation format and expiry date calculation based on category in `tests/Mojaz.Application.Tests/Services/LicenseIssuanceServiceTests.cs`
+- [ ] T000 [US2] Write unit tests for PDF generation triggers and blob storage upload success in `tests/Mojaz.Application.Tests/Services/LicenseIssuanceServiceTests.cs`
+- [ ] T000 [US4] Write unit tests for issuance idempotency (expect 409 Conflict on second attempt) in `tests/Mojaz.Application.Tests/Services/LicenseIssuanceServiceTests.cs`
+- [ ] T000 [US6] Write unit tests for secure download authorization (Applicant vs Other) in `tests/Mojaz.Application.Tests/Services/LicenseIssuanceServiceTests.cs`
 
-## Success Criteria Checklist
+---
 
-- [ ] Unique license number generated in the correct format.
-- [ ] Expiry date calculated correctly per category.
-- [ ] High-quality bilingual PDF generated with photo and QR.
-- [ ] Applicant notified on issuance success.
-- [ ] Application status transitions to `Issued/Completed`.
-- [ ] Build completes without errors.
+## Phase 3: Core (Implement Domain, Application, Infrastructure, API, and UI)
+
+**Purpose**: Implement the generation logic, PDF rendering, and API endpoints.
+
+### Foundational (Blocking)
+- [x] T003 Update `License` entity to include `BlobUrl` field in `src/backend/Mojaz.Domain/Entities/License.cs`
+- [x] T004 Create database migration for the updated License entity format
+- [x] T005 Implement `BlobStorageService` (local fallback for MVP) in `src/backend/Mojaz.Infrastructure/Services/BlobStorageService.cs`
+- [x] T006 Register `BlobStorageService` in DI in `src/backend/Mojaz.Infrastructure/InfrastructureServiceRegistration.cs`
+
+### User Story 1 - License Generation & Expiry (P1)
+- [x] T007 [US1] Create unit tests for metadata generation logic in `tests/Mojaz.Application.Tests/Services/LicenseIssuanceServiceTests.cs`
+- [x] T008 [US1] Create `LicenseDto` response model in `src/backend/Mojaz.Application/DTOs/License/LicenseDto.cs`
+- [x] T009 [US1] Implement base metadata generation functionality in `src/backend/Mojaz.Application/Services/LicenseService.cs`
+
+### User Story 2 & 3 - Bilingual PDF Generation (P2)
+- [x] T010 [US2] Implement `QuestPdfLicenseGenerator` in `src/backend/Mojaz.Infrastructure/Documents/QuestPdfLicenseGenerator.cs`
+- [x] T011 [US2] Register QuestPDF and configure bilingual layout logic
+- [x] T012 [US2] Register `QuestPdfLicenseGenerator` into the infrastructure DI container
+
+### User Story 4 & 5 - Issue License API & Idempotency (P3)
+- [x] T013 [US4] Configure QuestPDF license in `Program.cs`
+- [x] T014 [US4] Integrate PDF generation, local storage, and DB persistence in `src/backend/Mojaz.Application/Services/LicenseService.cs`
+- [x] T015 [US4] Create `POST /api/v1/licenses/issue/{appId}` endpoint in `src/backend/Mojaz.API/Controllers/LicensesController.cs`
+- [x] T016 [US4] Implement idempotency check (409 Conflict) for issuance in `src/backend/Mojaz.Application/Services/LicenseService.cs`
+
+### User Story 6 - Provide Secure PDF Download API (P4)
+- [x] T017 [US6] Create `GET /api/v1/licenses/{id}/download` endpoint in `src/backend/Mojaz.API/Controllers/LicensesController.cs`
+- [x] T018 [US6] Enforce authorization check for secure downloading in `src/backend/Mojaz.API/Controllers/LicensesController.cs`
+
+---
+
+## Phase 4: Integration (Wire everything together, handle errors, logging)
+
+**Purpose**: Connect notifications and verify the end-to-end issuance flow.
+
+- [x] T019 Implement asynchronous hangfire notification dispatch (Push/Email/SMS) inside `LicenseService` in `src/backend/Mojaz.Application/Services/LicenseService.cs`
+
+---
+
+## Phase 5: Polish (i18n translations, RTL support, Dark Mode, Final Validation)
+
+**Purpose**: Final review and layout validation.
+
+- [x] T020 Run final review and add layout preview endpoint

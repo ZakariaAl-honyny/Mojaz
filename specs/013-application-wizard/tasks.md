@@ -3,23 +3,84 @@
 **Input**: Design documents from `/specs/013-application-wizard/`
 **Prerequisites**: plan.md ✅ spec.md ✅ research.md ✅ data-model.md ✅ contracts/api.md ✅ quickstart.md ✅
 **Feature Branch**: `013-application-wizard`
-**Date**: 2026-04-08
 
-**Organization**: Tasks grouped by user story for independent implementation and testing.
-**Tests**: Component + unit tests included per constitution §VI (Test Discipline).
+## Phase 1: Setup
+**Purpose**: Create all new files and directories needed by the wizard feature.
 
-## Format: `[ID] [P?] [Story] Description`
-
-- **[P]**: Can run in parallel (different files, no conflict)
-- **[Story]**: User story label (US1–US7) mapping to spec.md priorities
+- [X] T001 Create directory `frontend/src/components/domain/application/wizard/steps/` and `wizard/shared/`
+- [X] T002 [P] Create directory `frontend/src/hooks/`
+- [X] T003 [P] Create directory `frontend/src/lib/validations/`
+- [X] T004 [P] Create directory `frontend/src/types/`
+- [X] T005 [P] Create empty `frontend/public/locales/ar/wizard.json`
+- [X] T006 [P] Create empty `frontend/public/locales/en/wizard.json`
 
 ---
 
-## Phase 1: Setup (Shared Infrastructure)
+## Phase 2: Tests
+**Purpose**: TDD - write tests for schemas, store, and components
 
-**Purpose**: Create all new files and directories needed by the wizard feature. No existing files modified.
+- [ ] T007 [US1] Unit test `frontend/src/lib/validations/step1Schema.ts`
+- [ ] T008 [P] [US1] Unit test `frontend/src/lib/validations/step2Schema.ts`
+- [ ] T009 [P] [US1] Unit test `frontend/src/lib/validations/step3Schema.ts`
+- [ ] T010 [P] [US1] Unit test `frontend/src/lib/validations/step4Schema.ts`
+- [ ] T011 [P] [US1] Unit test `frontend/src/stores/wizard-store.ts`
+- [ ] T012 [US2] Component test for `CategoryCard.tsx`
+- [ ] T013 [P] [US2] Component test for `Step2LicenseCategory.tsx`
+- [ ] T014 [P] [US3] Unit test `useWizardAutoSave.ts`
+- [ ] T015 [P] [US4] Component test for `WizardProgressBar.tsx` RTL rendering
+- [ ] T016 [US6] Component test `Step3PersonalInfo.tsx` validation
+- [ ] T017 [P] [US6] Component test `Step5ReviewSubmit.tsx` submission logic
+- [ ] T018 [P] [US7] Component test `Step5ReviewSubmit.tsx` summary and edit links
 
-- [X] T001 Create directory `frontend/src/components/domain/application/wizard/steps/` and `wizard/shared/`
+---
+
+## Phase 3: Core
+**Purpose**: Implement Domain, Application, Infrastructure, API, and UI
+
+- [X] T019 Define TypeScript types and enums in `frontend/src/types/wizard.types.ts`
+- [X] T020 [P] Create Zustand store `frontend/src/stores/wizard-store.ts`
+- [X] T021 [P] Create Zod schema `frontend/src/lib/validations/step1Schema.ts`
+- [X] T022 [P] Create Zod schema `frontend/src/lib/validations/step2Schema.ts`
+- [X] T023 [P] Create Zod schema `frontend/src/lib/validations/step3Schema.ts`
+- [X] T024 [P] Create Zod schema `frontend/src/lib/validations/step4Schema.ts`
+- [X] T025 [P] Create Zod schema `frontend/src/lib/validations/step5Schema.ts`
+- [X] T026 [P] Add `calculateAge` utility to `frontend/src/lib/utils.ts`
+- [X] T027 Extend `frontend/src/services/application.service.ts` with wizard-specific functions
+- [X] T028 [P] Add lookup service functions to `frontend/src/services/application.service.ts`
+- [X] T029 [P] Define React Query key constants in `frontend/src/lib/constants.ts`
+- [X] T030 Populate `frontend/public/locales/en/wizard.json`
+- [X] T031 Populate `frontend/public/locales/ar/wizard.json`
+- [X] T032 [US1] Create `frontend/src/app/[locale]/(applicant)/applications/new/page.tsx`
+- [X] T033 [P] [US1] Create `frontend/src/components/domain/application/wizard/WizardShell.tsx`
+- [X] T034 [P] [US1] Create `frontend/src/components/domain/application/wizard/WizardProgressBar.tsx`
+- [X] T035 [P] [US1] Create `frontend/src/components/domain/application/wizard/WizardNavButtons.tsx`
+- [X] T036 [US1] Create `frontend/src/hooks/useApplicationWizard.ts`
+- [X] T037 [P] [US1] Create `frontend/src/components/domain/application/wizard/shared/ServiceCard.tsx`
+- [X] T038 [US1] Create `frontend/src/components/domain/application/wizard/steps/Step1ServiceSelection.tsx`
+- [X] T039 [P] [US1] Create `frontend/src/components/domain/application/wizard/shared/CategoryCard.tsx`
+- [X] T040 [US1] Create `frontend/src/components/domain/application/wizard/steps/Step2LicenseCategory.tsx`
+- [X] T041 [US1] Create `frontend/src/components/domain/application/wizard/steps/Step3PersonalInfo.tsx`
+- [X] T042 [US1] Create `frontend/src/components/domain/application/wizard/steps/Step4ApplicationDetails.tsx`
+- [X] T043 [P] [US1] Create `frontend/src/components/domain/application/wizard/shared/StepSection.tsx`
+- [X] T044 [US1] Create `frontend/src/components/domain/application/wizard/steps/Step5ReviewSubmit.tsx`
+
+---
+
+## Phase 4: Integration
+**Purpose**: Wire everything together, handle errors, and logging
+
+- [X] T045 [US2] Polish `frontend/src/components/domain/application/wizard/shared/CategoryCard.tsx` for disabled states
+- [X] T046 [US2] Update `frontend/src/components/domain/application/wizard/steps/Step2LicenseCategory.tsx` for disabled categories
+- [X] T047 [US3] Create `frontend/src/hooks/useWizardAutoSave.ts`
+- [X] T048 [US3] Wire `useWizardAutoSave` into `WizardShell.tsx`
+- [X] T049 [P] [US3] Create `frontend/src/components/domain/application/wizard/shared/AutoSaveIndicator.tsx`
+- [X] T050 [US3] Add `isSaving` state to `wizard-store.ts` and update `WizardShell.tsx`
+- [X] T051 [US3] Handle draft resume in `frontend/src/app/[locale]/(applicant)/applications/new/page.tsx`
+- [X] T052 [US3] Add browser-leave confirmation in `WizardShell.tsx`
+- [X] T053 [US6] In `useApplicationWizard.ts`, implement focus on first invalid field on `goNext`
+- [X] T054 [P] [US6] Verify `mode: 'onBlur'` is set on all `useForm` calls in Steps 3 and 4
+- [X] T055 [US7] In `useApplicationWizard.ts`, implement `submit()` mutation and redirect
+- [X] T056 [P] [US7] Create `frontend/src/components/domain/application/wizard/shared/ExistingApplicationBanner.tsx`
 - [X] T002 [P] Create directory `frontend/src/hooks/` (if it doesn't already exist from Feature 002)
 - [X] T003 [P] Create directory `frontend/src/lib/validations/` (if it doesn't already exist)
 - [X] T004 [P] Create directory `frontend/src/types/` (if it doesn't already exist)
@@ -215,121 +276,22 @@
 
 ---
 
-## Dependencies & Execution Order
+## Phase 5: Polish
+**Purpose**: i18n translations, RTL support, Dark Mode, and Final Validation
 
-### Phase Dependencies
-
-- **Setup (Phase 1)**: No dependencies — start immediately
-- **Foundational (Phase 2)**: Depends on Phase 1 — **BLOCKS all other phases**
-- **Phase 3 (US1 — Submission)**: Depends on Phase 2 — primary P1 story
-- **Phase 4 (US2 — Age Validation)**: Depends on T028 (Step2 component from Phase 3) — run after Phase 3
-- **Phase 5 (US3 — Auto-Save)**: Depends on Phase 3 (needs `applicationId` flow from POST) — run after Phase 3
-- **Phase 6 (US4 — Bilingual)**: Depends on all step components (T026–T032) from Phase 3 — run after Phase 3
-- **Phase 7 (US5 — Navigation)**: Depends on T021, T022 from Phase 3 — run after Phase 3
-- **Phase 8 (US6 — Validation)**: Depends on step components from Phase 3 — run after Phase 3
-- **Phase 9 (US7 — Review)**: Depends on T032 from Phase 3 — run after Phase 3
-- **Polish (Phase 10)**: Depends on Phases 3–9 complete
-
-### User Story Dependencies
-
-- **US1 (P1)** — After Phase 2 only. No US dependencies.
-- **US2 (P1)** — After US1 (Step2 component). Can overlap with US3 start.
-- **US6 (P1)** — After US1 (step components). Can run in parallel with US2.
-- **US7 (P1)** — After US1 (Step5 component). Can run alongside US2.
-- **US3 (P2)** — After US1 (`applicationId` flow established).
-- **US4 (P2)** — After US1 (all step components exist).
-- **US5 (P2)** — After US1 (WizardShell and ProgressBar exist).
-
-### Task-Level Dependencies (Critical Path)
-
-```
-T001–T006 (Setup)
-  → T007–T019 (Foundational)
-    → T020–T032 (US1 core components) + T033–T037 (US1 tests)
-      → T038–T041 (US2: age disabled states)
-      → T042–T048 (US3: auto-save)
-      → T049–T053 (US4: RTL audit)
-      → T054–T056 (US5: nav polish)
-      → T057–T060 (US6: validation UX)
-      → T061–T063 (US7: submit flow)
-        → T064–T072 (Polish)
-```
-
----
-
-## Parallel Opportunities
-
-### Within Phase 2 (Foundational)
-
-```
-Can run in parallel:
-  T008 (wizard-store)           ← independent file
-  T009 (step1Schema)            ← independent file
-  T010 (step2Schema)            ← independent file
-  T011 (step3Schema)            ← independent file
-  T012 (step4Schema)            ← independent file
-  T013 (step5Schema)            ← independent file
-  T014 (calculateAge utility)   ← independent function
-  T016 (lookup service)         ← independent functions
-  T017 (query key constants)    ← independent file
-  T018 (EN translations)        ← independent file
-  T019 (AR translations)        ← independent file
-Sequential: T007 before T008–T013 (types must be defined first)
-```
-
-### Within Phase 3 (US1)
-
-```
-Can run in parallel (all different files):
-  T021 (WizardShell)      T022 (WizardProgressBar)
-  T023 (WizardNavButtons)  T025 (ServiceCard)
-  T027 (CategoryCard)      T031 (StepSection)
-  T033–T037 (unit tests)
-
-Sequential:
-  T028 (Step2) → needs CategoryCard (T027)
-  T029 (Step3) → needs Step3Schema (T011)
-  T030 (Step4) → needs Step4Schema (T012)
-  T032 (Step5) → needs StepSection (T031) + T031
-  T024 (useApplicationWizard) → wire after T021
-```
-
----
-
-## Implementation Strategy
-
-### MVP Scope (P1 User Stories Only — Phases 1–3 + Phase 8 + Phase 9)
-
-1. Complete Phase 1 (Setup)
-2. Complete Phase 2 (Foundational) — all can run in parallel
-3. Complete Phase 3 (US1 — Full Submission) — core wizard
-4. Complete Phase 8 (US6 — Validation UX) — runs alongside Phase 3
-5. Complete Phase 9 (US7 — Review + Submit) — extends Phase 3
-6. **STOP and VALIDATE**: A user can now fully submit a wizard application end-to-end
-7. Demo/test before adding P2 stories
-
-### Incremental Delivery
-
-1. **MVP**: Phases 1–3 + 8 + 9 → working wizard, submittable
-2. **+Auto-Save**: Phase 5 → draft recovery works
-3. **+Age Validation Polish**: Phase 4 → ineligible categories visually blocked
-4. **+RTL polish**: Phase 6 → full bilingual QA pass
-5. **+Nav Polish + Animations**: Phase 7 → premium UX
-6. **+E2E + Final Polish**: Phase 10 → production-ready
-
-### Parallel Team Strategy (2 developers)
-
-**After Phase 2 completes:**
-- Developer A: T020, T021, T023, T024, T025, T026 (shell + Step 1)
-- Developer B: T027, T028, T029, T030, T031, T032 (steps 2–5)
-
----
-
-## Notes
-
-- All `[P]` tasks touch different files — no conflicts
-- Each step component follows the same pattern: `useForm` → Zustand init → Zod schema → field render → unmount write
-- On every PR: include screenshots of both `ar` (RTL Dark) and `en` (LTR Light) renders at minimum
-- Commit after each logical group (e.g., after all Foundational tasks, after each step component)
-- Never use `console.log` with form values — National ID and DOB are sensitive per constitution §II
-- Run `next build` (T072) before marking feature complete to catch bundle regressions
+- [X] T057 [US4] RTL audit of all wizard components
+- [X] T058 [P] [US4] RTL audit of icon directionality in `WizardProgressBar.tsx`
+- [X] T059 [P] [US4] RTL audit of `WizardNavButtons.tsx`
+- [X] T060 [US4] Verify all `next-intl` keys are wired
+- [X] T061 [US5] Verify data-preservation in `WizardShell.tsx` on back-navigation
+- [X] T062 [P] [US5] Verify future-step click is no-op in `WizardProgressBar.tsx`
+- [X] T063 [P] [US5] Add Framer Motion `AnimatePresence` step transitions to `WizardShell.tsx`
+- [ ] T064 Responsive audit across 320px to 1440px
+- [ ] T065 [P] Accessibility audit (WCAG 2.1 AA)
+- [ ] T066 [P] Dark mode audit
+- [ ] T067 [P] Loading skeleton audit
+- [ ] T068 [P] Retry button for lookup API failures
+- [ ] T069 Playwright E2E test — happy path
+- [ ] T070 [P] Playwright E2E test — age validation
+- [ ] T071 [P] Playwright E2E test — auto-save resume
+- [ ] T072 Bundle size check

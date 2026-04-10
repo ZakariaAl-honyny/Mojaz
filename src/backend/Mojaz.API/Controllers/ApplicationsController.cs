@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mojaz.Application.DTOs.Application;
 using Mojaz.Application.Applications.Dtos;
+using Mojaz.Application.DTOs.LicenseReplacement;
+using Mojaz.Application.Interfaces;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Enums;
 using Mojaz.Shared;
@@ -24,10 +26,12 @@ namespace Mojaz.API.Controllers;
 public class ApplicationsController : ControllerBase
 {
     private readonly IApplicationService _applicationService;
+    private readonly IReplaceLicenseService _replaceLicenseService;
 
-    public ApplicationsController(IApplicationService applicationService)
+    public ApplicationsController(IApplicationService applicationService, IReplaceLicenseService replaceLicenseService)
     {
         _applicationService = applicationService;
+        _replaceLicenseService = replaceLicenseService;
     }
 
     /// <summary>
@@ -210,6 +214,34 @@ public class ApplicationsController : ControllerBase
     }
 
     /// <summary>
+    /// Create a new license replacement application.
+    /// </summary>
+    [HttpPost("replacement")]
+    [Authorize(Roles = "Applicant")]
+    [ProducesResponseType(typeof(ApiResponse<Guid>), 201)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
+    public async Task<IActionResult> CreateReplacementAsync(
+        [FromBody] CreateReplacementRequest request)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _replaceLicenseService.CreateReplacementAsync(request, userId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Process payment confirmation for a license replacement application.
+    /// </summary>
+    [HttpPatch("{id}/process-payment")]
+    [Authorize(Roles = "Applicant")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
+    public async Task<IActionResult> ProcessPaymentAsync(Guid id, [FromBody] PaymentConfirmRequest request)
+    {
+        var result = await _replaceLicenseService.ProcessPaymentAsync(id, request.PaymentId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
     /// Record final decision (Approve, Reject, or Return) for an application.
     /// Manager role required. Enforces Gate 4 validation server-side.
     /// </summary>
@@ -228,7 +260,7 @@ public class ApplicationsController : ControllerBase
         {
             return StatusCode(500, ApiResponse<object>.Fail("Service not available", 500));
         }
-        
+         
         var result = await finalApprovalService.FinalizeAsync(id, request, userId);
         return StatusCode(result.StatusCode, result);
     }

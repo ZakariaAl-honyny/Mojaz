@@ -93,6 +93,17 @@ export interface StatusDistributionDto {
 }
 
 export interface DailyLoadDto {
-  date: string;
-  count: number;
+    date: string;
+    count: number;
+  }
+
+export interface VerifyStolenReportRequest {
+  isApproved: boolean;
+  comments: string;
 }
+
+export interface VerifyStolenReportResponse {
+  success: boolean;
+  message: string;
+}
+

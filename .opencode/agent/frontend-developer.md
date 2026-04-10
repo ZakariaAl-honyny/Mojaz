@@ -1,7 +1,6 @@
 ---
 name: "Frontend Developer"
-model: opencode/nemotron-3-super-free
-reasoningEeffect: "high"
+reasoningEeffect: "max"
 role: "Next.js 15 + React specialist with i18n and RTL expertise"
 activation: "When working on src/frontend/**"
 mode: subagent

@@ -16,6 +16,7 @@ public class License : SoftDeletableEntity
     public Guid? IssuedBy { get; set; }
     public LicenseStatus Status { get; set; } = LicenseStatus.Active;
     public string? QrCode { get; set; }
+    public string? BlobUrl { get; set; }
     public DateTime? PrintedAt { get; set; }
     public DateTime? DownloadedAt { get; set; }
 

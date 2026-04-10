@@ -1,64 +1,105 @@
-# Implementation Plan: Multi-Point Payment Simulation
+# Implementation Plan: [FEATURE]
 
-**Branch**: `023-payment-simulation` | **Date**: 2026-04-10 | **Spec**: [spec.md](./spec.md)
-**Input**: Feature specification from `/specs/023-payment-simulation/spec.md`
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
 ## Summary
 
-Implement a multi-point payment simulation supporting 6 distinct payment points in the workflow. The feature reads configurable fee amounts from the `FeeStructures` table, provides a simulated 2-second processing delay with customizable failure rates, generates branded PDF receipts using QuestPDF, and tracks payment history.
+[Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
 
-**Language/Version**: C# 12 / .NET 8, TypeScript 5 / Next.js 15
-**Primary Dependencies**: EF Core 8, QuestPDF, React Query 5, Tailwind CSS
-**Storage**: SQL Server 2022
-**Testing**: xUnit + Moq + FluentAssertions (Backend), Jest + RTL (Frontend)
-**Target Platform**: Web (ASP.NET Core backend, React frontend)
-**Project Type**: Full-Stack Web Application (Clean Architecture)
-**Constraints**: All configurations must reside in db (`FeeStructures`), no hardcoded values.
+<!--
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
+-->
+
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- **Clean Architecture Supremacy**: YES. Payment logic will be in `Mojaz.Application`, DB access via Repositories.
-- **Security First**: YES. Receipts and endpoints will enforce authorization based on application ownership.
-- **Configuration over Hardcoding**: YES. All fees fetched dynamically from `FeeStructures` table.
-- **Async-First Notifications**: YES. Receipts/Notification of success/failure can be dispatched asynchronously using Hangfire.
-- **API Contract Consistency**: YES. Wrapped in `ApiResponse<T>`.
-
-All gates pass.
+[Gates determined based on constitution file]
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/023-payment-simulation/
+specs/[###-feature]/
 ├── plan.md              # This file (/speckit.plan command output)
-├── research.md          # Phase 0 output
-├── data-model.md        # Phase 1 output
-├── quickstart.md        # Phase 1 output
-├── contracts/           # Phase 1 output
-└── tasks.md             # Phase 2 output (future)
+├── research.md          # Phase 0 output (/speckit.plan command)
+├── data-model.md        # Phase 1 output (/speckit.plan command)
+├── quickstart.md        # Phase 1 output (/speckit.plan command)
+├── contracts/           # Phase 1 output (/speckit.plan command)
+└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
 ```
 
 ### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
 
 ```text
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
 src/
-├── Mojaz.Domain/              # Enums (FeeType, PaymentStatus), Entities (PaymentTransaction, FeeStructure)
-├── Mojaz.Shared/              # Constants, Exceptions
-├── Mojaz.Application/         # PaymentService, PDF Generation Logic, DTOs
-├── Mojaz.Infrastructure/      # DB Context implementations, EF Core configs
-└── Mojaz.API/                 # PaymentsController
+├── models/
+├── services/
+├── cli/
+└── lib/
 
-frontend/
-├── src/
-│   ├── app/                   # Payment Pages, History Views
-│   ├── components/            # Payment simulation UI, loading spinners
-│   ├── services/              # API bindings (payment.service.ts)
-│   └── hooks/                 # usePayment.ts
+tests/
+├── contract/
+├── integration/
+└── unit/
+
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+src/
+| backend/
+  │   ├── models/
+  │   ├── services/
+  │   └── api/
+  └── tests/
+
+| frontend/
+  ├── src/
+  │   ├── app/
+  │   ├── components/
+  │   ├── pages/
+  │   └── services/
+  └── tests/
+
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
+
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
-**Structure Decision**: Utilizes the standard Mojaz Full-Stack Monorepo layout combining Clean Architecture in ASP.NET Core and App Router in Next.js.
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
+
+## Complexity Tracking
+
+> **Fill ONLY if Constitution Check has violations that must be justified**
+
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
