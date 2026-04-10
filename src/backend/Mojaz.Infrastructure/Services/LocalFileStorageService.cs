@@ -58,7 +58,7 @@ public class LocalFileStorageService : IFileStorageService
         }
     }
 
-    public async Task<(Stream content, string contentType)> ReadAsync(string storedFilePath)
+    public Task<(Stream content, string contentType)> ReadAsync(string storedFilePath)
     {
         try
         {
@@ -69,12 +69,12 @@ public class LocalFileStorageService : IFileStorageService
                 throw new FileNotFoundException($"File not found: {storedFilePath}");
             }
 
-            var fileStream = File.OpenRead(fullPath);
+            Stream fileStream = File.OpenRead(fullPath);
             
             // Determine content type from file extension if not provided
             string contentTypeToUse = GetContentTypeFromExtension(Path.GetExtension(fullPath));
 
-            return (fileStream, contentTypeToUse);
+            return Task.FromResult((content: fileStream, contentType: contentTypeToUse));
         }
         catch (Exception ex)
         {
@@ -82,7 +82,7 @@ public class LocalFileStorageService : IFileStorageService
         }
     }
 
-    public async Task DeleteAsync(string storedFilePath)
+    public Task DeleteAsync(string storedFilePath)
     {
         try
         {
@@ -93,6 +93,8 @@ public class LocalFileStorageService : IFileStorageService
                 File.Delete(fullPath);
             }
             // If file doesn't exist, consider it already deleted (idempotent operation)
+            
+            return Task.CompletedTask;
         }
         catch (Exception ex)
         {

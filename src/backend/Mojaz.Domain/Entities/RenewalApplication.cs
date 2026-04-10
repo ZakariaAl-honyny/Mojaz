@@ -1,4 +1,5 @@
 using Mojaz.Domain.Common;
+using Mojaz.Domain.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -14,4 +15,7 @@ public class RenewalApplication : Application
     public virtual License OldLicense { get; set; } = null!;
     public virtual License? NewLicense { get; set; }
     public virtual MedicalExamination? MedicalExamination { get; set; }
+
+    // Override ServiceType to always be Renewal
+    public new ServiceType ServiceType { get; set; } = ServiceType.Renewal;
 }
