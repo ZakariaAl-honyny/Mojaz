@@ -1,4 +1,29 @@
 {
+  "upgrade": {
+    "title": "Upgrade Your License",
+    "subtitle": "Select your current license and choose a target category to upgrade",
+    "steps": {
+      "selectLicense": "Select Current License",
+      "selectTarget": "Choose Target Category",
+      "review": "Review & Submit"
+    },
+    "noLicenses": "You don't have any active licenses to upgrade.",
+    "noUpgradesAvailable": "No upgrade options available for this license category.",
+    "upgradingFrom": "Upgrading from:",
+    "licenseNumber": "License Number",
+    "minAge": "Min Age",
+    "fieldTestRequired": "Field Test Required",
+    "currentLicense": "Current License",
+    "targetCategory": "Target Category",
+    "branch": "Preferred Branch",
+    "selectBranch": "Select a branch",
+    "riyadhBranch": "Riyadh Main Branch",
+    "jeddahBranch": "Jeddah North Branch",
+    "dammamBranch": "Dammam Branch",
+    "confirmAccuracy": "I confirm that all provided information is accurate and I agree to the terms.",
+    "submit": "Submit Upgrade Application",
+    "back": "Back"
+  },
   "details": {
     "title": "Application Details",
     "submittedOn": "Submitted on",

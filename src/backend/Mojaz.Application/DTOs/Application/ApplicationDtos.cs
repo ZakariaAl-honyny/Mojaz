@@ -5,6 +5,7 @@ namespace Mojaz.Application.DTOs.Application;
 public class EligibilityCheckRequest
 {
     public Guid LicenseCategoryId { get; set; }
+    public ServiceType? ServiceType { get; set; }
 }
 
 public class EligibilityCheckResult
@@ -147,4 +148,13 @@ public class ApplicationWorkflowTimelineDto
     public Guid ApplicationId { get; set; }
     public int CurrentStageNumber { get; set; }
     public List<TimelineStageDto> Stages { get; set; } = new();
+}
+
+public class UpgradeApplicationRequest
+{
+    public Guid CurrentLicenseId { get; set; }
+    public Guid TargetCategoryId { get; set; }
+    public Guid BranchId { get; set; }
+    public string PreferredLanguage { get; set; } = "ar";
+    public bool DataAccuracyConfirmed { get; set; }
 }
