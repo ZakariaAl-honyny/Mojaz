@@ -26,6 +26,7 @@ public class ApplicationUpgradeEligibilityTests
     private readonly Mock<INotificationService> _notificationMock;
     private readonly Mock<IEmailService> _emailMock;
     private readonly Mock<IBackgroundJobClient> _jobMock;
+    private readonly Mock<ICategoryUpgradeService> _categoryUpgradeServiceMock;
     private readonly ApplicationService _service;
 
     public ApplicationUpgradeEligibilityTests()
@@ -43,6 +44,7 @@ public class ApplicationUpgradeEligibilityTests
         _notificationMock = new Mock<INotificationService>();
         _emailMock = new Mock<IEmailService>();
         _jobMock = new Mock<IBackgroundJobClient>();
+        _categoryUpgradeServiceMock = new Mock<ICategoryUpgradeService>();
 
         _service = new ApplicationService(
             _appRepoMock.Object,
@@ -57,7 +59,8 @@ public class ApplicationUpgradeEligibilityTests
             _emailMock.Object,
             _jobMock.Object,
             _historyRepoMock.Object,
-            _replacementRepoMock.Object);
+            _replacementRepoMock.Object,
+            _categoryUpgradeServiceMock.Object);
     }
 
     [Fact]
@@ -72,7 +75,13 @@ public class ApplicationUpgradeEligibilityTests
         _userRepoMock.Setup(r => r.GetByIdAsync(userId, It.IsAny<CancellationToken>())).ReturnsAsync(new User { DateOfBirth = DateTime.UtcNow.AddYears(-25) });
         _catRepoMock.Setup(r => r.GetByIdAsync(categoryBId, It.IsAny<CancellationToken>())).ReturnsAsync(categoryB);
         _licenseRepoMock.Setup(r => r.FindAsync(It.IsAny<Expression<Func<License, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<License> { new License { Status = LicenseStatus.Active, LicenseCategory = categoryF } });
+            .ReturnsAsync(new List<License> { new License { Id = Guid.NewGuid(), Status = LicenseStatus.Active, LicenseCategory = categoryF } });
+        
+        _settingsRepoMock.Setup(r => r.FindAsync(It.IsAny<Expression<Func<SystemSetting, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<SystemSetting>()); // Empty age check for simplicity
+        
+        _categoryUpgradeServiceMock.Setup(s => s.ValidateUpgradePathAsync(LicenseCategoryCode.F, LicenseCategoryCode.B)).ReturnsAsync(true);
+        _categoryUpgradeServiceMock.Setup(s => s.CheckHoldingPeriodAsync(It.IsAny<Guid>(), userId)).ReturnsAsync(true);
 
         var request = new EligibilityCheckRequest { LicenseCategoryId = categoryBId, ServiceType = ServiceType.CategoryUpgrade };
 
@@ -95,7 +104,12 @@ public class ApplicationUpgradeEligibilityTests
         _userRepoMock.Setup(r => r.GetByIdAsync(userId, It.IsAny<CancellationToken>())).ReturnsAsync(new User { DateOfBirth = DateTime.UtcNow.AddYears(-25) });
         _catRepoMock.Setup(r => r.GetByIdAsync(categoryCId, It.IsAny<CancellationToken>())).ReturnsAsync(categoryC);
         _licenseRepoMock.Setup(r => r.FindAsync(It.IsAny<Expression<Func<License, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<License> { new License { Status = LicenseStatus.Active, LicenseCategory = categoryF } });
+            .ReturnsAsync(new List<License> { new License { Id = Guid.NewGuid(), Status = LicenseStatus.Active, LicenseCategory = categoryF } });
+
+        _settingsRepoMock.Setup(r => r.FindAsync(It.IsAny<Expression<Func<SystemSetting, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<SystemSetting>());
+
+        _categoryUpgradeServiceMock.Setup(s => s.ValidateUpgradePathAsync(LicenseCategoryCode.F, LicenseCategoryCode.C)).ReturnsAsync(false);
 
         var request = new EligibilityCheckRequest { LicenseCategoryId = categoryCId, ServiceType = ServiceType.CategoryUpgrade };
 
@@ -104,6 +118,6 @@ public class ApplicationUpgradeEligibilityTests
 
         // Assert
         Assert.False(result.Data.IsEligible);
-        Assert.Contains("Holders of Category F (Agricultural) licenses are only permitted to upgrade to Category B (Private).", result.Data.Reasons);
+        Assert.Contains($"None of your current licenses can be upgraded to category {categoryC.Code}.", result.Data.Reasons);
     }
 }

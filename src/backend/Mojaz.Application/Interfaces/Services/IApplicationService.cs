@@ -22,5 +22,6 @@ public interface IApplicationService
     Task<ApiResponse<List<Mojaz.Application.DTOs.Application.ApplicationTimelineDto>>> GetTimelineAsync(Guid id, Guid userId, string role);
     Task<ApiResponse<ApplicationWorkflowTimelineDto>> GetWorkflowTimelineAsync(Guid id, Guid userId, string role);
     Task<ApiResponse<EligibilityCheckResult>> CheckEligibilityAsync(Guid userId, EligibilityCheckRequest request);
+    Task<ApiResponse<ApplicationDto>> UpgradeAsync(UpgradeApplicationRequest request, Guid userId);
     Task<bool> IsOwnerAsync(Guid applicationId, Guid userId);
 }

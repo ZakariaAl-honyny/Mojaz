@@ -1,4 +1,41 @@
 {
+  "create": {
+    "title": "Create New Application",
+    "subtitle": "Please complete the following steps to submit your driving license application",
+    "steps": {
+      "service": "Select Service",
+      "category": "License Category",
+      "personal": "Personal Information",
+      "details": "Application Details",
+      "review": "Review & Submit"
+    },
+    "fields": {
+      "serviceType": "Service Type",
+      "category": "License Category",
+      "categoryUpgrade": "Category Upgrade",
+      "targetCategory": "Target Category",
+      "nationalId": "National ID",
+      "dateOfBirth": "Date of Birth",
+      "phone": "Phone Number",
+      "city": "City",
+      "preferredCenter": "Preferred Exam Center",
+      "testLanguage": "Test Language",
+      "arabic": "Arabic",
+      "english": "English",
+      "specialNeeds": "Special Needs / Remarks",
+      "confirmAccuracy": "I hereby certify that all information provided is accurate and complete.",
+      "minAge": "Minimum Age: {{age}} years",
+      "fieldTest": "Requires Field Test",
+      "upgradeEligibility": "Upgrade Eligibility"
+    },
+    "errors": {
+      "upgradeNotEligible": "You are not eligible for a category upgrade at this time. Minimum holding period not met."
+    },
+    "prev": "Previous",
+    "next": "Next",
+    "submit": "Submit Application",
+    "success": "Application submitted successfully!"
+  },
   "replacement": {
     "title": "License Replacement",
     "subtitle": "Request a replacement for your license",

@@ -34,6 +34,15 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
                     Currency = "SAR", 
                     EffectiveFrom = new DateTime(2026, 1, 1), 
                     IsActive = true 
+                },
+                new FeeStructure 
+                { 
+                    Id = Guid.Parse("00000000-0000-0000-0000-000000000101"), 
+                    FeeType = FeeType.CategoryUpgrade, 
+                    Amount = 250.00m, 
+                    Currency = "SAR", 
+                    EffectiveFrom = new DateTime(2026, 1, 1), 
+                    IsActive = true 
                 }
             );
         }
