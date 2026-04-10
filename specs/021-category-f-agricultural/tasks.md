@@ -80,12 +80,12 @@
 
 ### Tests for User Story 3 
 
-- [ ] T012 [P] [US3] Build unit tests validating explicit `F -> B` transition success, and `F -> C` failures in `src/backend/tests/Mojaz.Application.Tests/Validators/UpgradeApplicationValidatorTests.cs`
+- [x] T012 [P] [US3] Build unit tests validating explicit `F -> B` transition success, and `F -> C` failures in `tests/Mojaz.Application.Tests/Validators/UpgradeApplicationValidatorTests.cs` <!-- id: 11 -->
 
 ### Implementation for User Story 3
 
-- [x] T013 [P] [US3] Amend `UpgradeApplicationValidator` rules mapping permitted target categories for existing F license holders within `src/backend/Mojaz.Application/Validators/UpgradeApplicationValidator.cs` (Not implemented - No UpgradeApplicationValidator exists; category upgrade flow handled via ApplicationService eligibility check)
-- [x] T014 [US3] Adapt UI upgrade flow mapping specifically to restrict upgrade selections dynamically for F drivers securely avoiding waterfalls in `src/frontend/src/app/[locale]/(applicant)/applications/upgrade/page.tsx` (Not implemented - Upgrade page does not exist yet; requires future phase)
+- [x] T013 [P] [US3] Implement `F -> B` upgrade path enforcement in `UpgradeApplicationValidator` at `src/backend/Mojaz.Application/Validators/UpgradeApplicationValidator.cs` <!-- id: 12 -->
+- [x] T014 [US3] Adapt UI upgrade flow mapping specifically to restrict upgrade selections dynamically for F drivers in `src/frontend/src/app/[locale]/(applicant)/applications/upgrade/page.tsx` <!-- id: 13 -->
 
 **Checkpoint**: All user stories should now be independently functional. F-category end to end applies and upgrade rules resolve.
 

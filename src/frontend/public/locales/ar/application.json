@@ -1,4 +1,29 @@
 {
+  "upgrade": {
+    "title": "ترقية رخصتك",
+    "subtitle": "اختر رخصتك الحالية واختر الفئة المستهدفة للترقية",
+    "steps": {
+      "selectLicense": "اختر الرخصة الحالية",
+      "selectTarget": "اختر الفئة المستهدفة",
+      "review": "المراجعة والتقديم"
+    },
+    "noLicenses": "ليس لديك أي رخصة نشطة للترقية.",
+    "noUpgradesAvailable": "لا توجد خيارات ترقية متاحة لهذه الفئة.",
+    "upgradingFrom": "الترقية من:",
+    "licenseNumber": "رقم الرخصة",
+    "minAge": "العمر الأدنى",
+    "fieldTestRequired": "اختبار الميدان مطلوب",
+    "currentLicense": "الرخصة الحالية",
+    "targetCategory": "الفئة المستهدفة",
+    "branch": "الفرع المفضل",
+    "selectBranch": "اختر فرعاً",
+    "riyadhBranch": "فرع الرياض الرئيسي",
+    "jeddahBranch": "فرع جدة الشمالية",
+    "dammamBranch": "فرع الدمام",
+    "confirmAccuracy": "أؤكد أن جميع المعلومات المقدمة دقيقة والموافقة على الشروط.",
+    "submit": "تقديم طلب الترقية",
+    "back": "رجوع"
+  },
   "details": {
     "title": "تفاصيل الطلب",
     "submittedOn": "تاريخ التقديم",
