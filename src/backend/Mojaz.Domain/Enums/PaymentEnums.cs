@@ -1,4 +1,4 @@
-﻿namespace Mojaz.Domain.Enums;
+namespace Mojaz.Domain.Enums;
 
 public enum FeeType
 {
@@ -10,4 +10,12 @@ public enum FeeType
     RetakeFee,
     RenewalFee,
     ReplacementFee
+}
+
+public enum PaymentStatus
+{
+    Pending,
+    Paid,
+    Failed,
+    Refunded
 }

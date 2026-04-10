@@ -39,6 +39,7 @@ EVERY component supports Dark and Light mode.
 Use logical CSS: ms-/me-/ps-/pe- NOT ml-/mr-/pl-/pr-.
 Use shadcn/ui components with Mojaz green (#006C35) theme.
 Arabic font: IBM Plex Sans Arabic. English font: Inter.
+Use skills like frontend-design and vercel-react-best-practices
 
 ## Typical Tasks
 - Create 5-step application wizard

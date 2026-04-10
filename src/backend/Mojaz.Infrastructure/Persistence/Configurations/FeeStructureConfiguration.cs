@@ -15,7 +15,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasConversion<string>()
                 .HasMaxLength(32);
-            builder.Property(x => x.LicenseCategoryId).IsRequired();
+            builder.Property(x => x.LicenseCategoryId).IsRequired(false);
             builder.Property(x => x.Amount).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.Currency).IsRequired().HasMaxLength(8);
             builder.Property(x => x.EffectiveFrom).IsRequired();
