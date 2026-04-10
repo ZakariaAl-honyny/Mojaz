@@ -118,6 +118,15 @@ public class LicenseService : ILicenseService
         // 9. Persist License & Update Application
         await _licenseRepository.AddAsync(license);
         
+        if (application.ServiceType == ServiceType.CategoryUpgrade)
+        {
+            var activeLicense = (await _licenseRepository.FindAsync(x => x.HolderId == application.ApplicantId && x.Status == LicenseStatus.Active)).FirstOrDefault();
+            if (activeLicense != null)
+            {
+                await ArchiveLicenseAsync(activeLicense.Id);
+            }
+        }
+
         application.Status = ApplicationStatus.Issued;
         application.CurrentStage = "10-Active";
         _applicationRepository.Update(application);
@@ -179,6 +188,19 @@ public class LicenseService : ILicenseService
         
         var dto = _mapper.Map<LicenseDto>(license);
         return ApiResponse<LicenseDto>.Ok(dto);
+    }
+
+    public async Task ArchiveLicenseAsync(Guid licenseId)
+    {
+        var license = await _licenseRepository.GetByIdAsync(licenseId);
+        if (license != null)
+        {
+            license.Status = LicenseStatus.Superseded;
+            license.IsDeleted = true;
+            license.UpdatedAt = DateTime.UtcNow;
+            _licenseRepository.Update(license);
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 
     private string GenerateLicenseNumber()

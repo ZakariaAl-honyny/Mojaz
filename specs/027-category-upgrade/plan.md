@@ -1,68 +1,78 @@
-# Implementation Plan: 027-category-upgrade
+# Implementation Plan: License Category Upgrade
 
-**Feature Branch**: `027-category-upgrade`
-**Status**: Draft
+**Branch**: `027-category-upgrade` | **Date**: 2026-04-10 | **Spec**: [spec.md](file:///c:/Users/ALlahabi/Desktop/cmder/Mojaz/specs/027-category-upgrade/spec.md)
+**Input**: Feature specification from `/specs/027-category-upgrade/spec.md`
 
-## Architecture Overview
+## Summary
 
-Implementation of the license category upgrade system. This allows existing license holders (e.g., Category B) to apply for a higher category (e.g., Category D) after meeting holding period and training requirements.
+Implement the License Category Upgrade feature, enabling active license holders to transition to higher categories (B → C → D → E or F → B) after a 12-month holding period. The technical approach involves extending `ApplicationService.CheckEligibilityAsync` with a new `ICategoryUpgradeService` to enforce progression rules, integrating with `SystemSettings` for configurable durations/credits, and updating the Frontend Wizard to handle path-based stage skipping (e.g., Theory Test waiver for commercial upgrades).
 
-### Tech Stack
-- **Backend**: .NET 8, EF Core 8.
-- **Persistence**: `Licenses`, `Applications`, `LicenseCategories`.
+**Language/Version**: C# (.NET 8), TypeScript (Next.js 15)  
+**Primary Dependencies**: EF Core 8, FluentValidation, AutoMapper, shadcn/ui, next-intl, TanStack Query v5  
+**Storage**: SQL Server 2022 (Existing schema: Licenses, CategoryUpgrades, SystemSettings)  
+**Testing**: xUnit + Moq (Backend), Jest + RTL (Frontend), Playwright (E2E)  
+**Target Platform**: Web (Bilingual AR/EN, Responsive)  
+**Project Type**: Web Application (Clean Architecture)  
+**Performance Goals**: Eligibility response < 200ms; 100% path enforcement at API level.  
+**Constraints**: 12-month holding period (`MIN_HOLDING_PERIOD_UPGRADE`); Sequential progression for commercial categories.  
+**Scale/Scope**: ~100k active licenses; logic affects service selection wizard.
 
-## Functional Breakdown
+## Constitution Check
 
-### 1. Upgrade Path Validation (Backend)
-- **Logic**:
-    1. Verify current `User` has an `Issued` (Active) license.
-    2. Define `AllowedUpgradePaths` in `SystemSettings` (e.g., `B->C`, `B->D`, `C->D`, `F->B`).
-    3. **Holding Period**: Check `MIN_HOLDING_PERIOD_UPGRADE` (default 12 months) from `SystemSettings` using `OldLicense.IssueDate`.
-- **Initiation**: Create a new `Application` with `ServiceType = Upgrade`.
-- **Endpoint**: `POST /api/v1/applications/upgrade`
+*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-### 2. Upgrade Workflow Logic
-- **Full Stage Requirement**: Upgrades, unlike simple renewals, require the full lifecycle (Medical → Training → Theory → Practical).
-- **Reduced Training**: Apply `REDUCED_TRAINING_HOURS_UPGRADE` (if defined) in `SystemSettings` for the upgrade path.
-- **Payment Stage**: Charge `UPGRADE_FEE` (from `FeeStructures`).
+1. **Clean Architecture Compliance**: Logic MUST reside in `Mojaz.Application`; `Mojaz.Infrastructure` only handles persistence of `CategoryUpgrade` entities.
+2. **Dependency Direction**: Application layer must NOT reference Infrastructure directly. Use interfaces.
+3. **Configuration Supremacy**: `MIN_HOLDING_PERIOD_UPGRADE` and `UPGRADE_TRAINING_REDUCTION_PCNT` MUST be fetched from `SystemSettings`.
+4. **Security - Ownership**: Eligibility checks MUST validate that the `LicenseId` belongs to the `CurrentUserId`.
+5. **Internationalization**: All new strings for Category Upgrade (success, errors, paths) MUST be in `locales/*.json`.
+6. **API Consistency**: All upgrade endpoints MUST return `ApiResponse<T>`.
+7. **Soft Delete**: When superseding a license, it MUST be marked as `IsDeleted = true` (Archived) rather than deleted.
 
-### 3. Application Wizard Integration
-- **Component**: `ServiceSelectionStep` (from 013).
-- **Features**:
-    - "Upgrade My License" option shown only to active license holders.
-    - Dropdown of valid higher categories (Filtered by `AllowedUpgradePaths`).
-    - Warning if `MIN_HOLDING_PERIOD_UPGRADE` is not yet met.
+## Project Structure
 
-### 4. Issuance & Record Transition
-- **Logic**:
-    - Record the link `NewLicense.SourceApplicationId` and `OldLicenseId`.
-    - **Dual-holding Policy**: If `CATEGORY_SUPERSESSION` is true (e.g., D supersedes B), mark the old license as `Superseded/Inactive`.
-    - Else, allow both to remain `Issued`.
+### Documentation (this feature)
 
-## Phases of Implementation
+```text
+specs/[###-feature]/
+├── plan.md              # This file (/speckit.plan command output)
+├── research.md          # Phase 0 output (/speckit.plan command)
+├── data-model.md        # Phase 1 output (/speckit.plan command)
+├── quickstart.md        # Phase 1 output (/speckit.plan command)
+├── contracts/           # Phase 1 output (/speckit.plan command)
+└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
+```
 
-### Phase 1: Persistence & Settings
-1. Add `UPGRADE` value to `ServiceType` enum.
-2. Add `UPGRADE_FEE` to `FeeStructures` and `MIN_HOLDING_PERIOD_UPGRADE` (e.g., 1y) in `SystemSettings`.
-3. Seed `AllowedUpgradePaths` in `SystemSettings`.
+### Source Code (repository root)
 
-### Phase 2: Workflow Logic & Initiation API
-1. Implement `LicenseService.InitiateUpgradeAsync(appId)`.
-2. Build the path and holding period validation logic.
-3. Add `POST /applications/upgrade`.
+```text
+src/
+| backend/
+  │   ├── Mojaz.Domain/
+  │   │   ├── Enums/
+  │   │   └── Entities/
+  │   ├── Mojaz.Application/
+  │   │   ├── Interfaces/
+  │   │   ├── Services/
+  │   │   └── DTOs/
+  │   ├── Mojaz.Infrastructure/
+  │   │   └── Persistence/
+  │   └── Mojaz.API/
+  │       └── Controllers/
+  └── frontend/
+      ├── src/
+      │   ├── app/[locale]/
+      │   ├── components/domain/application/
+      │   └── services/
+```
 
-### Phase 3: Frontend Wizard Integration
-1. Update `ServiceSelectionStep` to show the "Upgrade" service.
-2. Filter the "Category Selection" step based on destination paths.
-3. Build the holding period countdown/warning message.
+**Structure Decision**: Clean Architecture (Web Application option) as mandated by the Constitution.
 
-### Phase 4: Verification
-1. Unit tests for upgrade path validation (Allowed vs Restricted).
-2. Integration tests for holding period enforcement (11mo 30d fail, 1y pass).
-3. Verify `UPGRADE_FEE` is charged.
-4. Verify source license status (Superseded/Inactive vs Remained Active).
+## Complexity Tracking
 
-## Risks & Mitigations
-- **Branch Skipping**: Ensure the full lifecycle is strictly enforced for upgrades unless specifically exempt.
-- **Data Mismatch**: Verify that the "Category Upgrade" doesn't inadvertently allow identity changes (National ID must match).
-- **Incompatible Licenses**: Explicitly define paths (e.g., cannot upgrade from B to A directly if separate testing is required).
+> **Fill ONLY if Constitution Check has violations that must be justified**
+
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |

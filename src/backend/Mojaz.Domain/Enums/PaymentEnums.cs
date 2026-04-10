@@ -9,7 +9,8 @@ public enum FeeType
     IssuanceFee,
     RetakeFee,
     RenewalFee,
-    ReplacementFee
+    ReplacementFee,
+    CategoryUpgrade
 }
 
 public enum PaymentStatus

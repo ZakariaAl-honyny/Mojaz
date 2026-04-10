@@ -31,6 +31,7 @@ public class ApplicationServiceTests
     private readonly Mock<INotificationService> _notificationService = new();
     private readonly Mock<IEmailService> _emailService = new();
     private readonly Mock<IRepository<ApplicationStatusHistory>> _historyRepo = new();
+    private readonly Mock<ICategoryUpgradeService> _categoryUpgradeService = new();
 
     private ApplicationService CreateService() => new(
         _applicationRepo.Object,
@@ -45,7 +46,8 @@ public class ApplicationServiceTests
         _emailService.Object,
         Mock.Of<IBackgroundJobClient>(),
         _historyRepo.Object,
-        _replacementRepo.Object
+        _replacementRepo.Object,
+        _categoryUpgradeService.Object
     );
 
     [Fact]

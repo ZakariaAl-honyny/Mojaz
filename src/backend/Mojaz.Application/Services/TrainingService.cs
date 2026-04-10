@@ -25,6 +25,7 @@ namespace Mojaz.Application.Services
         private readonly IAuditService _auditService;
         private readonly INotificationService _notificationService;
         private readonly ISystemSettingsService _settingsService;
+        private readonly ICategoryUpgradeService _categoryUpgradeService;
 
         public TrainingService(
             ITrainingRepository trainingRepository,
@@ -34,7 +35,8 @@ namespace Mojaz.Application.Services
             IMapper mapper,
             IAuditService auditService,
             INotificationService notificationService,
-            ISystemSettingsService settingsService)
+            ISystemSettingsService settingsService,
+            ICategoryUpgradeService categoryUpgradeService)
         {
             _trainingRepository = trainingRepository;
             _applicationRepository = applicationRepository;
@@ -44,6 +46,7 @@ namespace Mojaz.Application.Services
             _auditService = auditService;
             _notificationService = notificationService;
             _settingsService = settingsService;
+            _categoryUpgradeService = categoryUpgradeService;
         }
 
         public async Task<ApiResponse<TrainingRecordDto>> CreateAsync(CreateTrainingRecordRequest request)
@@ -54,10 +57,30 @@ namespace Mojaz.Application.Services
             if (await _trainingRepository.ExistsAsync(x => x.ApplicationId == request.ApplicationId))
                 return ApiResponse<TrainingRecordDto>.Fail(400, "Training record already exists for this application.");
 
-            var category = await _categoryRepository.GetByIdAsync(application.LicenseCategoryId);
-            var categoryCode = category?.Code.ToString() ?? "B";
-            var requiredHoursStr = await _settingsService.GetAsync($"MIN_TRAINING_HOURS_CATEGORY_{categoryCode}");
-            int requiredHours = int.TryParse(requiredHoursStr, out var h) ? h : 20;
+            int requiredHours;
+            if (application.ServiceType == ServiceType.CategoryUpgrade)
+            {
+                var licenseRepo = _unitOfWork.Repository<License>();
+                var activeLicense = (await licenseRepo.FindAsync(x => x.HolderId == application.ApplicantId && x.Status == LicenseStatus.Active)).FirstOrDefault();
+                
+                if (activeLicense == null)
+                    return ApiResponse<TrainingRecordDto>.Fail(400, "No active license found for category upgrade.");
+
+                var toCategoryEntity = await _categoryRepository.GetByIdAsync(application.LicenseCategoryId);
+                var fromCategoryEntity = await _categoryRepository.GetByIdAsync(activeLicense.LicenseCategoryId);
+
+                if (toCategoryEntity == null || fromCategoryEntity == null)
+                    return ApiResponse<TrainingRecordDto>.Fail(400, "License categories not found.");
+
+                requiredHours = await _categoryUpgradeService.GetReducedTrainingHoursAsync(fromCategoryEntity.Code, toCategoryEntity.Code);
+            }
+            else
+            {
+                var category = await _categoryRepository.GetByIdAsync(application.LicenseCategoryId);
+                var categoryCode = category?.Code.ToString() ?? "B";
+                var requiredHoursStr = await _settingsService.GetAsync($"MIN_TRAINING_HOURS_CATEGORY_{categoryCode}");
+                requiredHours = int.TryParse(requiredHoursStr, out var h) ? h : 20;
+            }
 
             var trainingRecord = new TrainingRecord
             {
