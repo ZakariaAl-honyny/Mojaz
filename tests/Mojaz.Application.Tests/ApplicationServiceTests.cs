@@ -23,6 +23,7 @@ public class ApplicationServiceTests
     private readonly Mock<IRepository<User>> _userRepo = new();
     private readonly Mock<IRepository<LicenseCategory>> _categoryRepo = new();
     private readonly Mock<IRepository<SystemSetting>> _settingsRepo = new();
+    private readonly Mock<IRepository<License>> _licenseRepo = new();
     private readonly Mock<IUnitOfWork> _unitOfWork = new();
     private readonly Mock<IMapper> _mapper = new();
     private readonly Mock<IAuditService> _auditService = new();
@@ -35,6 +36,7 @@ public class ApplicationServiceTests
         _userRepo.Object,
         _categoryRepo.Object,
         _settingsRepo.Object,
+        _licenseRepo.Object,
         _unitOfWork.Object,
         _mapper.Object,
         _auditService.Object,

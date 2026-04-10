@@ -25,5 +25,14 @@
         "@playwright/mcp@latest"
       ]
     },
+    "sql-server": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@mcp-collection/mssql-mcp",
+        "Server=localhost,1434;Database=MojazDb;User Id=sa;Password=as123456;TrustServerCertificate=true"
+      ]
+    }
   }
 }

@@ -13,6 +13,8 @@ using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Shared;
+using Mojaz.Shared.Constants;
+using Mojaz.Application.DTOs.Practical;
 using Xunit;
 
 using ApplicationEntity = Mojaz.Domain.Entities.Application;
@@ -26,6 +28,7 @@ public class AppointmentBookingValidatorTests
     private readonly Mock<ISystemSettingsService> _systemSettingsServiceMock;
     private readonly Mock<ITrainingService> _trainingServiceMock;
     private readonly Mock<ITheoryService> _theoryServiceMock;
+    private readonly Mock<IPracticalService> _practicalServiceMock;
     private readonly AppointmentBookingValidator _validator;
 
     public AppointmentBookingValidatorTests()
@@ -35,13 +38,15 @@ public class AppointmentBookingValidatorTests
         _systemSettingsServiceMock = new Mock<ISystemSettingsService>();
         _trainingServiceMock = new Mock<ITrainingService>();
         _theoryServiceMock = new Mock<ITheoryService>();
+        _practicalServiceMock = new Mock<IPracticalService>();
         
         _validator = new AppointmentBookingValidator(
             _appointmentRepositoryMock.Object,
             _applicationRepositoryMock.Object,
             _systemSettingsServiceMock.Object,
             _trainingServiceMock.Object,
-            _theoryServiceMock.Object);
+            _theoryServiceMock.Object,
+            _practicalServiceMock.Object);
     }
 
     #region ValidateBookingAsync Tests
@@ -586,6 +591,106 @@ public class AppointmentBookingValidatorTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.Contains("cooling period") && e.Contains(DateTime.UtcNow.AddDays(4).ToString("yyyy-MM-dd")));
+    }
+
+    #endregion
+
+    #region Gate 5 - Practical Test Limits Tests
+    
+    [Fact]
+    public async Task ValidateBookingAsync_PracticalTest_ReachedMaxAttempts_ReturnsError()
+    {
+        // Arrange
+        var applicationId = Guid.NewGuid();
+        var request = new CreateAppointmentRequest
+        {
+            ApplicationId = applicationId,
+            Type = AppointmentType.PracticalTest,
+            BranchId = Guid.NewGuid(),
+            ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
+            TimeSlot = "09:00"
+        };
+
+        var application = new ApplicationEntity { Id = applicationId, Status = ApplicationStatus.Submitted };
+        _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>())).ReturnsAsync(application);
+        _trainingServiceMock.Setup(x => x.IsTrainingCompleteAsync(applicationId)).ReturnsAsync(ApiResponse<bool>.Ok(true));
+
+        _practicalServiceMock.Setup(x => x.HasReachedMaxAttemptsAsync(applicationId)).ReturnsAsync(true);
+
+        // Act
+        var result = await _validator.ValidateBookingAsync(request);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.Contains("Maximum practical test attempts"));
+    }
+    
+    [Fact]
+    public async Task ValidateBookingAsync_PracticalTest_InCoolingPeriod_ReturnsError()
+    {
+        // Arrange
+        var applicationId = Guid.NewGuid();
+        var request = new CreateAppointmentRequest
+        {
+            ApplicationId = applicationId,
+            Type = AppointmentType.PracticalTest,
+            BranchId = Guid.NewGuid(),
+            ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
+            TimeSlot = "09:00"
+        };
+
+        var application = new ApplicationEntity { Id = applicationId, Status = ApplicationStatus.Submitted };
+        _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>())).ReturnsAsync(application);
+        _trainingServiceMock.Setup(x => x.IsTrainingCompleteAsync(applicationId)).ReturnsAsync(ApiResponse<bool>.Ok(true));
+
+        _practicalServiceMock.Setup(x => x.HasReachedMaxAttemptsAsync(applicationId)).ReturnsAsync(false);
+        _practicalServiceMock.Setup(x => x.HasAdditionalTrainingRequiredAsync(applicationId)).ReturnsAsync(false);
+        _practicalServiceMock.Setup(x => x.IsInCoolingPeriodAsync(applicationId)).ReturnsAsync(true);
+        
+        var history = ApiResponse<PagedResult<PracticalTestDto>>.Ok(new PagedResult<PracticalTestDto>
+        {
+            Items = new List<PracticalTestDto> 
+            { 
+                new PracticalTestDto { RetakeEligibleAfter = DateTime.UtcNow.AddDays(4) } 
+            }
+        });
+        _practicalServiceMock.Setup(x => x.GetHistoryAsync(applicationId, Guid.Empty, "Manager", 1, 1)).ReturnsAsync(history);
+
+        // Act
+        var result = await _validator.ValidateBookingAsync(request);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.Contains("cooling period") && e.Contains(DateTime.UtcNow.AddDays(4).ToString("yyyy-MM-dd")));
+    }
+    
+    [Fact]
+    public async Task ValidateBookingAsync_PracticalTest_AdditionalTrainingRequired_ReturnsError()
+    {
+        // Arrange
+        var applicationId = Guid.NewGuid();
+        var request = new CreateAppointmentRequest
+        {
+            ApplicationId = applicationId,
+            Type = AppointmentType.PracticalTest,
+            BranchId = Guid.NewGuid(),
+            ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
+            TimeSlot = "09:00"
+        };
+
+        var application = new ApplicationEntity { Id = applicationId, Status = ApplicationStatus.Submitted };
+        _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>())).ReturnsAsync(application);
+        _trainingServiceMock.Setup(x => x.IsTrainingCompleteAsync(applicationId)).ReturnsAsync(ApiResponse<bool>.Ok(true));
+
+        _practicalServiceMock.Setup(x => x.HasReachedMaxAttemptsAsync(applicationId)).ReturnsAsync(false);
+        _practicalServiceMock.Setup(x => x.HasAdditionalTrainingRequiredAsync(applicationId)).ReturnsAsync(true); // Flag Set
+
+        // Act
+        var result = await _validator.ValidateBookingAsync(request);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.Contains("Additional training is required"));
     }
 
     #endregion

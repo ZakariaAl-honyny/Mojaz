@@ -17,10 +17,10 @@ import TrainingService from "@/services/training.service";
 import ApplicationService from "@/services/application.service";
 
 interface TrainingPageProps {
-  params: {
+  params: Promise<{
     locale: string;
     applicationId: string;
-  };
+  }>;
 }
 
 /**
@@ -28,7 +28,7 @@ interface TrainingPageProps {
  * Uses Server Components for initial data fetch (async-parallel pattern).
  */
 export default async function TrainingPage({ params }: TrainingPageProps) {
-  const { applicationId, locale } = params;
+  const { locale, applicationId } = await params;
   const t = await getTranslations("training.page");
 
   // Parallel data fetching for performance (Waterfall elimination)
@@ -59,7 +59,7 @@ export default async function TrainingPage({ params }: TrainingPageProps) {
       completedHours: 5,
       totalHoursRequired: 15,
       progressPercentage: 33,
-      status: "InProgress",
+      trainingStatus: 1, // InProgress
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       isExempted: false
@@ -104,7 +104,7 @@ export default async function TrainingPage({ params }: TrainingPageProps) {
               totalHours={trainingRecord?.totalHoursRequired || 15} 
             />
             <div className="mt-6">
-              <TrainingStatusBadge status={trainingRecord?.status as any || "Required"} />
+              <TrainingStatusBadge status={trainingRecord?.trainingStatus as any || 0} />
             </div>
             
             {trainingRecord && (

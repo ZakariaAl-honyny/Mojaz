@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { FileText, CreditCard, Activity, CalendarClock } from "lucide-react";
 import Link from "next/link";
 import { GateLockIndicator } from "@/components/domain/training/GateLockIndicator";
+import { TheoryTestHistory } from "@/components/domain/theory/TheoryTestHistory";
+import { PaymentSection } from "@/components/domain/payment/PaymentSection";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { locale, id } = await params;
@@ -23,11 +25,13 @@ export default async function ApplicationDetailsPage({ params }: { params: Promi
   // Mock data for MVP Showcase
   const appData = {
     id,
-    number: "MOJ-2025-48291037",
-    category: "Private Car",
+    number: "MOJ-2025-AGRIC-01",
+    category: "Agricultural",
     status: "InReview" as ApplicationStatus,
     createdAt: "2025-01-10T08:30:00Z",
   };
+
+  const isAgricultural = appData.category === "Agricultural";
 
   const timelineStages: TimelineStage[] = [
     { id: "1", nameKey: "creation", status: "completed", timestamp: "2025-01-10T08:30:00Z" },
@@ -36,7 +40,7 @@ export default async function ApplicationDetailsPage({ params }: { params: Promi
     { id: "4", nameKey: "payment", status: "pending" },
     { id: "5", nameKey: "medical", status: "pending" },
     { id: "6", nameKey: "theory", status: "pending" },
-    { id: "7", nameKey: "practical", status: "pending" },
+    { id: "7", nameKey: isAgricultural ? "fieldTest" : "practical", status: "pending" },
     { id: "8", nameKey: "issuance", status: "pending" },
   ];
 
@@ -80,6 +84,8 @@ export default async function ApplicationDetailsPage({ params }: { params: Promi
               <ApplicationTimeline stages={timelineStages} />
             </CardContent>
           </Card>
+
+          <TheoryTestHistory applicationId={id} />
         </div>
 
         {/* Sidebar Info */}
@@ -109,20 +115,10 @@ export default async function ApplicationDetailsPage({ params }: { params: Promi
             </CardContent>
           </Card>
 
-          <Card className="shadow-sm border-neutral-200">
-            <CardHeader className="pb-3 border-b border-neutral-100">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-neutral-500" />
-                {t("application.details.paymentsTitle")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4 text-center py-8">
-              <p className="text-neutral-500 text-sm mb-4">{t("application.details.noPaymentsMsg")}</p>
-              <Button className="w-full bg-secondary-500 hover:bg-secondary-600 text-white border-0 shadow">
-                {t("application.details.payButton")} (100 SAR)
-              </Button>
-            </CardContent>
-          </Card>
+          <PaymentSection 
+            applicationId={id} 
+            amount={100} 
+          />
 
         </div>
       </div>

@@ -47,16 +47,30 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008008"), SettingKey = "MIN_BOOKING_DAYS_AHEAD", SettingValue = "1", Category = "Appointment", Description = "Minimum days in advance an appointment must be booked", IsEncrypted = false },
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000008009"), SettingKey = "MAX_BOOKING_DAYS_AHEAD", SettingValue = "30", Category = "Appointment", Description = "Maximum days in advance an appointment can be booked", IsEncrypted = false },
 
-                // Training SystemSettings seed data
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009001"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_A", SettingValue = "8", Category = "Training", Description = "Minimum training hours for Category A (Motorcycle)", IsEncrypted = false },
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009002"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_B", SettingValue = "20", Category = "Training", Description = "Minimum training hours for Category B (Private)", IsEncrypted = false },
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009003"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_C", SettingValue = "30", Category = "Training", Description = "Minimum training hours for Category C (Public Transport)", IsEncrypted = false },
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009004"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_D", SettingValue = "40", Category = "Training", Description = "Minimum training hours for Category D (Heavy Vehicles)", IsEncrypted = false },
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009005"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_E", SettingValue = "40", Category = "Training", Description = "Minimum training hours for Category E (Industrial)", IsEncrypted = false },
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009006"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_F", SettingValue = "20", Category = "Training", Description = "Minimum training hours for Category F (Special Needs)", IsEncrypted = false },
+                 // Training SystemSettings seed data
+                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009001"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_A", SettingValue = "8", Category = "Training", Description = "Minimum training hours for Category A (Motorcycle)", IsEncrypted = false },
+                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009002"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_B", SettingValue = "20", Category = "Training", Description = "Minimum training hours for Category B (Private)", IsEncrypted = false },
+                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009003"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_C", SettingValue = "30", Category = "Training", Description = "Minimum training hours for Category C (Public Transport)", IsEncrypted = false },
+                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009004"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_D", SettingValue = "40", Category = "Training", Description = "Minimum training hours for Category D (Heavy Vehicles)", IsEncrypted = false },
+                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009005"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_E", SettingValue = "40", Category = "Training", Description = "Minimum training hours for Category E (Industrial)", IsEncrypted = false },
+                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009006"), SettingKey = "MIN_TRAINING_HOURS_CATEGORY_F", SettingValue = "20", Category = "Training", Description = "Minimum training hours for Category F (Agricultural)", IsEncrypted = false },
 
-                // Theory Test SystemSettings seed data
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000010001"), SettingKey = "MIN_PASS_SCORE_THEORY", SettingValue = "80", Category = "Theory", Description = "Minimum passing score for theory test", IsEncrypted = false }
+                 // Age requirement SystemSettings seed data
+                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000009007"), SettingKey = "MIN_AGE_CATEGORY_F", SettingValue = "18", Category = "Training", Description = "Minimum age for Category F (Agricultural)", IsEncrypted = false },
+
+                 // Theory Test SystemSettings seed data
+                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000010002"), SettingKey = "THEORY_QUESTIONS_CATEGORY_F", SettingValue = "20", Category = "Theory", Description = "Number of theory test questions for Category F (Agricultural)", IsEncrypted = false },
+
+                 // Validity years SystemSettings seed data
+                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000011004"), SettingKey = "VALIDITY_YEARS_CATEGORY_F", SettingValue = "10", Category = "License", Description = "License validity in years for Category F (Agricultural)", IsEncrypted = false },
+
+                 // Theory Test SystemSettings seed data
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000010001"), SettingKey = "MIN_PASS_SCORE_THEORY", SettingValue = "80", Category = "Theory", Description = "Minimum passing score for theory test", IsEncrypted = false },
+
+                // Practical Test SystemSettings seed data
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000011001"), SettingKey = "MIN_PASS_SCORE_PRACTICAL", SettingValue = "80", Category = "Practical", Description = "Minimum passing score for practical test", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000011002"), SettingKey = "MAX_PRACTICAL_ATTEMPTS", SettingValue = "3", Category = "Practical", Description = "Maximum number of practical test attempts", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000011003"), SettingKey = "COOLING_PERIOD_DAYS_PRACTICAL", SettingValue = "7", Category = "Practical", Description = "Days applicant must wait before rebooking after practical test failure", IsEncrypted = false }
             );
         }
     }

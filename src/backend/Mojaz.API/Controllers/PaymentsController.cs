@@ -4,7 +4,7 @@ using Mojaz.Application.DTOs.Payment;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Shared;
 using System;
-using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Mojaz.API.Controllers;
@@ -13,7 +13,7 @@ namespace Mojaz.API.Controllers;
 /// Manage application payments for Stage 03: Fee Payment.
 /// </summary>
 [ApiController]
-[Route("api/v1/applications/{applicationId}/[controller]")]
+[Route("api/v1/[controller]")]
 [Produces("application/json")]
 public class PaymentsController : ControllerBase
 {
@@ -30,45 +30,79 @@ public class PaymentsController : ControllerBase
     [HttpPost("initiate")]
     [Authorize(Roles = "Applicant")]
     [ProducesResponseType(typeof(ApiResponse<PaymentDto>), 201)]
-    public async Task<IActionResult> InitiatePaymentAsync(Guid applicationId, [FromBody] InitiatePaymentRequest request)
+    public async Task<IActionResult> InitiatePaymentAsync([FromBody] PaymentInitiateRequest request)
     {
-        var result = await _paymentService.InitiatePaymentAsync(applicationId, request);
+        var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(nameIdentifier) || !Guid.TryParse(nameIdentifier, out var userId))
+        {
+            return Unauthorized(ApiResponse<object>.Fail(401, "Invalid user identification."));
+        }
+
+        var result = await _paymentService.InitiatePaymentAsync(request, userId);
         return StatusCode(result.StatusCode, result);
     }
 
     /// <summary>
     /// List all payment transactions for an application.
     /// </summary>
-    [HttpGet]
+    [HttpGet("application/{applicationId}")]
     [Authorize]
     [ProducesResponseType(typeof(ApiResponse<IEnumerable<PaymentDto>>), 200)]
     public async Task<IActionResult> GetByApplicationIdAsync(Guid applicationId)
     {
-        var result = await _paymentService.GetByApplicationIdAsync(applicationId);
+        var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(nameIdentifier) || !Guid.TryParse(nameIdentifier, out var userId))
+        {
+            return Unauthorized(ApiResponse<object>.Fail(401, "Invalid user identification."));
+        }
+
+        var role = User.FindFirstValue(ClaimTypes.Role) ?? "";
+        var result = await _paymentService.GetByApplicationIdAsync(applicationId, userId, role);
         return StatusCode(result.StatusCode, result);
     }
 
     /// <summary>
-    /// Public gateway callback simulation.
+    /// Confirm a payment (simulating gateway callback).
     /// </summary>
-    [HttpPost("callback")]
-    [AllowAnonymous]
-    [ProducesResponseType(typeof(ApiResponse<PaymentDto>), 200)]
-    public async Task<IActionResult> CallbackAsync([FromBody] PaymentCallback request)
-    {
-        var result = await _paymentService.ProcessCallbackAsync(request);
-        return StatusCode(result.StatusCode, result);
-    }
-
-    /// <summary>
-    /// Verify a specific payment status against the gateway manually.
-    /// </summary>
-    [HttpGet("{paymentId}/verify")]
+    [HttpPost("confirm")]
     [Authorize]
-    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
-    public async Task<IActionResult> VerifyAsync(Guid paymentId)
+    [ProducesResponseType(typeof(ApiResponse<PaymentDto>), 200)]
+    public async Task<IActionResult> ConfirmPaymentAsync([FromBody] PaymentConfirmRequest request)
     {
-        var result = await _paymentService.VerifyPaymentAsync(paymentId);
+        var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(nameIdentifier) || !Guid.TryParse(nameIdentifier, out var userId))
+        {
+            return Unauthorized(ApiResponse<object>.Fail(401, "Invalid user identification."));
+        }
+
+        var result = await _paymentService.ConfirmPaymentAsync(request, userId);
         return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Download payment receipt as PDF.
+    /// </summary>
+    [HttpGet("{paymentId}/receipt")]
+    [Authorize]
+    [ProducesResponseType(typeof(FileContentResult), 200)]
+    public async Task<IActionResult> DownloadReceiptAsync(Guid paymentId)
+    {
+        var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(nameIdentifier) || !Guid.TryParse(nameIdentifier, out var userId))
+        {
+            return Unauthorized(ApiResponse<object>.Fail(401, "Invalid user identification."));
+        }
+
+        var role = User.FindFirstValue(ClaimTypes.Role) ?? "";
+
+        try
+        {
+            var pdfBytes = await _paymentService.GenerateReceiptPdfAsync(paymentId, userId, role);
+            return File(pdfBytes, "application/pdf", $"receipt-{paymentId}.pdf");
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ApiResponse<object>.Fail(404, ex.Message));
+        }
     }
 }

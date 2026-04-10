@@ -115,10 +115,13 @@
         "renewal": "Renewal",
         "replacement": "Replacement",
         "category": "License Category",
+        "minAge": "Min Age: {age}",
+        "fieldTest": "Agricultural Field Test",
         "motorcycle": "Motorcycle",
         "privateCar": "Private Car",
         "publicTaxi": "Public Taxi",
         "heavyVehicle": "Heavy Vehicle",
+        "agricultural": "Agricultural Vehicle",
         "nationalId": "National ID / Iqama",
         "dateOfBirth": "Date of Birth",
         "nationality": "Nationality",
@@ -162,6 +165,7 @@
         "medical": "Medical Examination",
         "theory": "Theory Training & Test",
         "practical": "Practical Training & Test",
+        "fieldTest": "Agricultural Field Test",
         "issuance": "License Issuance"
       },
       "status": {

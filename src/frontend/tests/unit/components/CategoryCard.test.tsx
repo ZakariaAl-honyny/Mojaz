@@ -64,7 +64,7 @@ describe("CategoryCard", () => {
         selected={false}
         disabled={false}
         onClick={onClick}
-      );
+      />
     );
 
     expect(screen.getByText(/16\+/)).toBeInTheDocument();
@@ -78,7 +78,7 @@ describe("CategoryCard", () => {
         selected={false}
         disabled={false}
         onClick={onClick}
-      );
+      />
     );
 
     fireEvent.click(screen.getByText("Category A"));
@@ -93,7 +93,7 @@ describe("CategoryCard", () => {
         selected={false}
         disabled={true}
         onClick={onClick}
-      );
+      />
     );
 
     fireEvent.click(screen.getByText("Category A"));
@@ -108,7 +108,7 @@ describe("CategoryCard", () => {
         selected={true}
         disabled={false}
         onClick={onClick}
-      );
+      />
     );
 
     // Check for selected class (border-primary-500)

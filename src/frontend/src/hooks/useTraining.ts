@@ -109,3 +109,13 @@ export const useTrainingStatus = (applicationId: string) => {
     enabled: !!applicationId,
   });
 };
+
+/**
+ * Hook to fetch all pending exemptions (Manager only)
+ */
+export const usePendingExemptions = () => {
+  return useQuery({
+    queryKey: trainingKeys.pendingExemptions(),
+    queryFn: () => TrainingService.getPendingExemptions(),
+  });
+};
