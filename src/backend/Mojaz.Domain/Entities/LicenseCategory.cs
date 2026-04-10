@@ -11,4 +11,5 @@ public class LicenseCategory : AuditableEntity
     public int MinimumAge { get; set; }
     public bool RequiresTraining { get; set; }
     public bool IsActive { get; set; } = true;
+    public int ValidityYears { get; set; }
 }
