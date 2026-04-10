@@ -21,10 +21,10 @@ namespace Mojaz.Infrastructure.Persistence.Repositories
             return payment;
         }
 
-        public async Task<PaymentTransaction> UpdateAsync(PaymentTransaction payment)
+        public Task<PaymentTransaction> UpdateAsync(PaymentTransaction payment)
         {
             base.Update(payment);
-            return payment;
+            return Task.FromResult(payment);
         }
 
         public async Task<IReadOnlyList<PaymentTransaction>> GetByApplicationIdAsync(Guid applicationId)

@@ -34,6 +34,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.HasIndex(x => x.LicenseCategoryId).HasDatabaseName("IX_Licenses_LicenseCategoryId");
             builder.HasIndex(x => x.Status).HasDatabaseName("IX_Licenses_Status");
             builder.HasIndex(x => x.ExpiresAt).HasDatabaseName("IX_Licenses_ExpiresAt");
+            builder.HasIndex(x => new { x.HolderId, x.Status }).HasFilter("[IsDeleted] = 0").HasDatabaseName("IX_Licenses_HolderId_Status");
 
             builder.HasQueryFilter(x => !x.IsDeleted);
         }

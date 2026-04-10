@@ -1,5 +1,6 @@
 using Mojaz.Application.DTOs.Application;
 using Mojaz.Application.Applications.Dtos;
+using Mojaz.Application.DTOs.LicenseReplacement;
 using Mojaz.Domain.Enums;
 using Mojaz.Shared;
 using System;

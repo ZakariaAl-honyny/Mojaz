@@ -1,5 +1,6 @@
 ---
 name: "Documentation Writer"
+reasoningEeffect: "max"
 role: "Technical documentation and API documentation"
 activation: "When creating or updating documentation"
 mode: subagent

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
+using System;
 
 namespace Mojaz.Infrastructure.Persistence.Configurations
 {
@@ -22,6 +23,19 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(x => x.EffectiveTo);
             builder.Property(x => x.IsActive).IsRequired();
             builder.HasIndex(x => new { x.FeeType, x.LicenseCategoryId, x.IsActive });
+
+            // Seed data for license replacement fee
+            builder.HasData(
+                new FeeStructure 
+                { 
+                    Id = Guid.Parse("00000000-0000-0000-0000-000000000100"), 
+                    FeeType = FeeType.ReplacementFee, 
+                    Amount = 100.00m, 
+                    Currency = "SAR", 
+                    EffectiveFrom = new DateTime(2026, 1, 1), 
+                    IsActive = true 
+                }
+            );
         }
     }
 }
