@@ -4,7 +4,7 @@ using System;
 
 namespace Mojaz.Domain.Entities;
 
-public class Payment : SoftDeletableEntity
+public class PaymentTransaction : SoftDeletableEntity
 {
     public Guid ApplicationId { get; set; }
     public FeeType FeeType { get; set; }
@@ -17,6 +17,7 @@ public class Payment : SoftDeletableEntity
     public DateTime? FailedAt { get; set; }
     public string? FailureReason { get; set; }
     public string? ReceiptPath { get; set; }
+    public string? ReceiptNumber { get; set; }
 
     public virtual Application Application { get; set; } = null!;
 }

@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FluentValidation;
+using Mojaz.Application.Validators;
 
 namespace Mojaz.API.Controllers;
 
@@ -182,6 +184,52 @@ public class ApplicationsController : ControllerBase
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
         var result = await _applicationService.GetWorkflowTimelineAsync(id, userId, role);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Get Gate 4 validation status for an application (Manager/Admin only).
+    /// Returns the live checklist showing which conditions are met.
+    /// </summary>
+    [HttpGet("{id}/gate4")]
+    [Authorize(Roles = "Manager,Admin")]
+    [ProducesResponseType(typeof(ApiResponse<Gate4ValidationResultDto>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 403)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
+    public async Task<IActionResult> GetGate4StatusAsync(Guid id)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var finalApprovalService = HttpContext.RequestServices.GetService(typeof(IFinalApprovalService)) as IFinalApprovalService;
+        if (finalApprovalService == null)
+        {
+            return StatusCode(500, ApiResponse<object>.Fail("Service not available", 500));
+        }
+        
+        var result = await finalApprovalService.GetGate4StatusAsync(id, userId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Record final decision (Approve, Reject, or Return) for an application.
+    /// Manager role required. Enforces Gate 4 validation server-side.
+    /// </summary>
+    [HttpPost("{id}/finalize")]
+    [Authorize(Roles = "Manager")]
+    [ProducesResponseType(typeof(ApiResponse<ApplicationDecisionDto>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 403)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 409)]
+    public async Task<IActionResult> FinalizeAsync(Guid id, [FromBody] FinalizeApplicationRequest request)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var finalApprovalService = HttpContext.RequestServices.GetService(typeof(IFinalApprovalService)) as IFinalApprovalService;
+        if (finalApprovalService == null)
+        {
+            return StatusCode(500, ApiResponse<object>.Fail("Service not available", 500));
+        }
+        
+        var result = await finalApprovalService.FinalizeAsync(id, request, userId);
         return StatusCode(result.StatusCode, result);
     }
 }

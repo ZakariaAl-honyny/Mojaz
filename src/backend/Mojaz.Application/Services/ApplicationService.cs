@@ -27,19 +27,21 @@ public class ApplicationService : IApplicationService
     private readonly IRepository<User> _userRepository;
     private readonly IRepository<LicenseCategory> _categoryRepository;
     private readonly IRepository<SystemSetting> _settingsRepository;
+    private readonly IRepository<License> _licenseRepository;
+    private readonly IRepository<ApplicationStatusHistory> _historyRepository;
+    private readonly IBackgroundJobClient _backgroundJobClient;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IAuditService _auditService;
     private readonly INotificationService _notificationService;
     private readonly IEmailService _emailService;
-    private readonly IRepository<ApplicationStatusHistory> _historyRepository;
-    private readonly IBackgroundJobClient _backgroundJobClient;
 
     public ApplicationService(
         IRepository<ApplicationEntity> applicationRepository,
         IRepository<User> userRepository,
         IRepository<LicenseCategory> categoryRepository,
         IRepository<SystemSetting> settingsRepository,
+        IRepository<License> licenseRepository,
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IAuditService auditService,
@@ -52,6 +54,7 @@ public class ApplicationService : IApplicationService
         _userRepository = userRepository;
         _categoryRepository = categoryRepository;
         _settingsRepository = settingsRepository;
+        _licenseRepository = licenseRepository;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _auditService = auditService;
@@ -66,33 +69,55 @@ public class ApplicationService : IApplicationService
         var category = await _categoryRepository.GetByIdAsync(request.LicenseCategoryId);
         if (category == null) return ApiResponse<EligibilityCheckResult>.Fail(400, "Invalid license category.");
 
-        var ageLimitSetting = (await _settingsRepository.FindAsync(s => s.SettingKey == $"MIN_AGE_CATEGORY_{category.Code}")).FirstOrDefault();
-        if (ageLimitSetting == null) return ApiResponse<EligibilityCheckResult>.Fail(400, "System setting error: Age limit not found.");
-
-        if (!int.TryParse(ageLimitSetting.SettingValue, out int minAge))
-            minAge = 18; // Default fallback
-
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null) return ApiResponse<EligibilityCheckResult>.Fail(404, "User not found.");
 
         var reasons = new List<string>();
 
-        var today = DateTime.UtcNow;
-        var age = today.Year - user.DateOfBirth.Year;
-        if (user.DateOfBirth.Date > today.AddYears(-age)) age--;
-
-        if (age < minAge)
+        // 1. Age Check
+        var ageLimitSetting = (await _settingsRepository.FindAsync(s => s.SettingKey == $"MIN_AGE_CATEGORY_{category.Code}")).FirstOrDefault();
+        if (ageLimitSetting != null && int.TryParse(ageLimitSetting.SettingValue, out int minAge))
         {
-            reasons.Add($"Minimum age for category {category.Code} is {minAge}. Your age is {age}.");
+            var today = DateTime.UtcNow;
+            var age = today.Year - user.DateOfBirth.Year;
+            if (user.DateOfBirth.Date > today.AddYears(-age)) age--;
+
+            if (age < minAge)
+            {
+                reasons.Add($"Minimum age for category {category.Code} is {minAge}. Your age is {age}.");
+            }
         }
 
-        // Active Application Check
+        // 2. Active Application Check
         var activeApps = await _applicationRepository.FindAsync(a => a.ApplicantId == userId && 
             (a.Status != ApplicationStatus.Active && a.Status != ApplicationStatus.Cancelled && a.Status != ApplicationStatus.Rejected && a.Status != ApplicationStatus.Expired && a.Status != ApplicationStatus.Issued));
         
         if (activeApps.Any())
         {
             reasons.Add("You already have an active application in progress.");
+        }
+
+        // 3. Upgrade Path Enforcement (FR-003)
+        if (request.ServiceType == ServiceType.CategoryUpgrade)
+        {
+            var existingLicenses = await _licenseRepository.FindAsync(l => l.HolderId == userId && l.Status == LicenseStatus.Active);
+            if (!existingLicenses.Any())
+            {
+                reasons.Add("You do not have an active license to upgrade.");
+            }
+            else
+            {
+                var activeCategories = existingLicenses.Select(l => l.LicenseCategory.Code).ToList();
+                
+                // FR-003: Category F holders can ONLY upgrade to Category B
+                if (activeCategories.Contains(LicenseCategoryCode.F))
+                {
+                    if (category.Code != LicenseCategoryCode.B)
+                    {
+                        reasons.Add("Holders of Category F (Agricultural) licenses are only permitted to upgrade to Category B (Private).");
+                    }
+                }
+            }
         }
 
         return ApiResponse<EligibilityCheckResult>.Ok(new EligibilityCheckResult 

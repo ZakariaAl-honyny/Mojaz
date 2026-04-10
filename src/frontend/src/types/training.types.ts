@@ -5,7 +5,7 @@ export enum TrainingStatus {
   ExemptionPending = 3,
 }
 
-export type TrainingStatusString = 'Required' | 'InProgress' | 'Completed' | 'ExemptionPending';
+export type TrainingStatusString = 'Required' | 'InProgress' | 'Completed' | 'ExemptionPending' | 'Exempted';
 
 export interface TrainingRecordDto {
   id: string;

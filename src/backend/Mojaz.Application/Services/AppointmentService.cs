@@ -24,6 +24,7 @@ public class AppointmentService : IAppointmentService
     private readonly INotificationService _notificationService;
     private readonly IMapper _mapper;
     private readonly ITrainingService _trainingService;
+    private readonly AppointmentBookingValidator _bookingValidator;
 
     public AppointmentService(
         IAppointmentRepository appointmentRepository,
@@ -31,7 +32,8 @@ public class AppointmentService : IAppointmentService
         ISystemSettingsService systemSettingsService,
         INotificationService notificationService,
         IMapper mapper,
-        ITrainingService trainingService)
+        ITrainingService trainingService,
+        AppointmentBookingValidator bookingValidator)
     {
         _appointmentRepository = appointmentRepository;
         _applicationRepository = applicationRepository;
@@ -39,6 +41,7 @@ public class AppointmentService : IAppointmentService
         _notificationService = notificationService;
         _mapper = mapper;
         _trainingService = trainingService;
+        _bookingValidator = bookingValidator;
     }
 
     public async Task<List<DaySlotsDto>> GetAvailableSlotsAsync(AppointmentType type, Guid branchId, DateOnly date, CancellationToken ct = default)
@@ -93,13 +96,7 @@ public class AppointmentService : IAppointmentService
     public async Task<AppointmentDto> CreateAppointmentAsync(CreateAppointmentRequest request, CancellationToken ct = default)
     {
         // Validate booking first
-        var validator = new AppointmentBookingValidator(
-            _appointmentRepository, 
-            _applicationRepository, 
-            _systemSettingsService,
-            _trainingService);
-        
-        var validation = await validator.ValidateBookingAsync(request, ct);
+        var validation = await _bookingValidator.ValidateBookingAsync(request, ct);
         if (!validation.IsValid)
         {
             throw new InvalidOperationException(string.Join("; ", validation.Errors));
@@ -141,13 +138,7 @@ public class AppointmentService : IAppointmentService
     public async Task<AppointmentDto> RescheduleAppointmentAsync(Guid appointmentId, RescheduleAppointmentRequest request, CancellationToken ct = default)
     {
         // Validate reschedule first
-        var validator = new AppointmentBookingValidator(
-            _appointmentRepository, 
-            _applicationRepository, 
-            _systemSettingsService,
-            _trainingService);
-        
-        var validation = await validator.ValidateRescheduleAsync(appointmentId, request, ct);
+        var validation = await _bookingValidator.ValidateRescheduleAsync(appointmentId, request, ct);
         if (!validation.IsValid)
         {
             throw new InvalidOperationException(string.Join("; ", validation.Errors));
@@ -199,12 +190,6 @@ public class AppointmentService : IAppointmentService
 
     public async Task<AppointmentValidationResult> ValidateBookingAsync(CreateAppointmentRequest request, CancellationToken ct = default)
     {
-        var validator = new AppointmentBookingValidator(
-            _appointmentRepository, 
-            _applicationRepository, 
-            _systemSettingsService,
-            _trainingService);
-        
-        return await validator.ValidateBookingAsync(request, ct);
+        return await _bookingValidator.ValidateBookingAsync(request, ct);
     }
 }

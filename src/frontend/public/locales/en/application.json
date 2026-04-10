@@ -1,0 +1,59 @@
+{
+  "upgrade": {
+    "title": "Upgrade Your License",
+    "subtitle": "Select your current license and choose a target category to upgrade",
+    "steps": {
+      "selectLicense": "Select Current License",
+      "selectTarget": "Choose Target Category",
+      "review": "Review & Submit"
+    },
+    "noLicenses": "You don't have any active licenses to upgrade.",
+    "noUpgradesAvailable": "No upgrade options available for this license category.",
+    "upgradingFrom": "Upgrading from:",
+    "licenseNumber": "License Number",
+    "minAge": "Min Age",
+    "fieldTestRequired": "Field Test Required",
+    "currentLicense": "Current License",
+    "targetCategory": "Target Category",
+    "branch": "Preferred Branch",
+    "selectBranch": "Select a branch",
+    "riyadhBranch": "Riyadh Main Branch",
+    "jeddahBranch": "Jeddah North Branch",
+    "dammamBranch": "Dammam Branch",
+    "confirmAccuracy": "I confirm that all provided information is accurate and I agree to the terms.",
+    "submit": "Submit Upgrade Application",
+    "back": "Back"
+  },
+  "details": {
+    "title": "Application Details",
+    "submittedOn": "Submitted on",
+    "cancelButton": "Cancel Application",
+    "payButton": "Pay Now",
+    "timelineTitle": "Application Timeline",
+    "documentsTitle": "Required Documents",
+    "noPaymentsMsg": "No payments recorded for this application.",
+    "paymentsTitle": "Payments",
+    "manageDocsButton": "Manage Documents",
+    "docId": "National ID / Iqama",
+    "docMedical": "Medical Report"
+  },
+  "timeline": {
+    "stages": {
+      "creation": "Application Creation",
+      "documentReview": "Document Review",
+      "training": "Training Stage",
+      "payment": "Payment Stage",
+      "medical": "Medical Exam Stage",
+      "theory": "Theory Test Stage",
+      "practical": "Practical Test Stage",
+      "fieldTest": "Agricultural Field Test",
+      "issuance": "License Issuance"
+    },
+    "status": {
+      "completed": "Completed",
+      "current": "In Progress",
+      "pending": "Pending",
+      "failed": "Failed"
+    }
+  }
+}
