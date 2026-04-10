@@ -18,6 +18,7 @@ public class CategoryUpgradeServiceTests
     private readonly Mock<IFeeStructureRepository> _feeRepositoryMock;
     private readonly Mock<ILicenseRepository> _licenseRepositoryMock;
     private readonly Mock<IRepository<LicenseCategory>> _categoryRepoMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly CategoryUpgradeService _service;
 
     public CategoryUpgradeServiceTests()
@@ -26,12 +27,14 @@ public class CategoryUpgradeServiceTests
         _feeRepositoryMock = new Mock<IFeeStructureRepository>();
         _licenseRepositoryMock = new Mock<ILicenseRepository>();
         _categoryRepoMock = new Mock<IRepository<LicenseCategory>>();
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
 
         _service = new CategoryUpgradeService(
             _settingsServiceMock.Object,
             _feeRepositoryMock.Object,
             _licenseRepositoryMock.Object,
-            _categoryRepoMock.Object);
+            _categoryRepoMock.Object,
+            _unitOfWorkMock.Object);
     }
 
     [Theory]
@@ -83,7 +86,7 @@ public class CategoryUpgradeServiceTests
         var license = new License { HolderId = userId, IssuedAt = DateTime.UtcNow.AddMonths(-13) };
         
         _licenseRepositoryMock.Setup(r => r.GetByIdAsync(licenseId)).ReturnsAsync(license);
-        _settingsServiceMock.Setup(s => s.GetAsync("MIN_HOLDING_PERIOD_UPGRADE")).ReturnsAsync("12");
+        _settingsServiceMock.Setup(s => s.GetAsync("MIN_HOLDING_PERIOD_UPGRADE_MONTHS")).ReturnsAsync("12");
 
         // Act
         var result = await _service.CheckHoldingPeriodAsync(licenseId, userId);
@@ -99,9 +102,9 @@ public class CategoryUpgradeServiceTests
         var licenseId = Guid.NewGuid();
         var userId = Guid.NewGuid();
         var license = new License { HolderId = userId, IssuedAt = DateTime.UtcNow.AddMonths(-6) };
-
+        
         _licenseRepositoryMock.Setup(r => r.GetByIdAsync(licenseId)).ReturnsAsync(license);
-        _settingsServiceMock.Setup(s => s.GetAsync("MIN_HOLDING_PERIOD_UPGRADE")).ReturnsAsync("12");
+        _settingsServiceMock.Setup(s => s.GetAsync("MIN_HOLDING_PERIOD_UPGRADE_MONTHS")).ReturnsAsync("12");
 
         // Act
         var result = await _service.CheckHoldingPeriodAsync(licenseId, userId);

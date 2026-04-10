@@ -21,6 +21,12 @@ export enum ApplicationStatus {
   PracticalDone = 'PracticalDone'
 }
 
+export enum ReplacementReason {
+  Lost = 1,
+  Damaged = 2,
+  Stolen = 3
+}
+
 export interface ApplicationSummaryDto {
   id: number;
   applicationNumber: string;

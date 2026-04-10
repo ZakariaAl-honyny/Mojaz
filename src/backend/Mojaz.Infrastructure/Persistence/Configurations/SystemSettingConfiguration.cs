@@ -74,7 +74,8 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
                 
                 // Category Upgrade SystemSettings seed data
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012001"), SettingKey = "MIN_HOLDING_PERIOD_UPGRADE_MONTHS", SettingValue = "12", Category = "Upgrade", Description = "Minimum months a license must be held before upgrading", IsEncrypted = false },
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012002"), SettingKey = "ALLOWED_UPGRADE_PATHS", SettingValue = "B-C,C-D,D-E,F-B", Category = "Upgrade", Description = "Allowed category upgrade paths (Format: FROM-TO, separated by comma)", IsEncrypted = false }
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012002"), SettingKey = "ALLOWED_UPGRADE_PATHS", SettingValue = "B-C,C-D,D-E,F-B", Category = "Upgrade", Description = "Allowed category upgrade paths (Format: FROM-TO, separated by comma)", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012003"), SettingKey = "UPGRADE_TRAINING_REDUCTION_PCNT", SettingValue = "50", Category = "Upgrade", Description = "Percentage reduction in training hours for category upgrades", IsEncrypted = false }
             );
         }
     }

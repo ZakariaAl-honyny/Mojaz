@@ -36,6 +36,7 @@ public class LicenseServiceTests
     private readonly Mock<ApplicationEmailService> _emailServiceMock;
     private readonly Mock<IBackgroundJobClient> _backgroundJobClientMock;
     private readonly Mock<IMapper> _mapperMock;
+    private readonly Mock<ICategoryUpgradeService> _upgradeServiceMock;
     private readonly LicenseService _service;
 
     public LicenseServiceTests()
@@ -51,6 +52,7 @@ public class LicenseServiceTests
         _emailServiceMock = new Mock<ApplicationEmailService>();
         _backgroundJobClientMock = new Mock<IBackgroundJobClient>();
         _mapperMock = new Mock<IMapper>();
+        _upgradeServiceMock = new Mock<ICategoryUpgradeService>();
 
         _service = new LicenseService(
             _licenseRepositoryMock.Object,
@@ -63,7 +65,8 @@ public class LicenseServiceTests
             _backgroundJobClientMock.Object,
             _licensePdfGeneratorMock.Object,
             _fileStorageServiceMock.Object,
-            _mapperMock.Object);
+            _mapperMock.Object,
+            _upgradeServiceMock.Object);
     }
 
     [Fact]
