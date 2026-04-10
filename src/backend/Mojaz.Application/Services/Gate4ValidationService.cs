@@ -16,7 +16,7 @@ public class Gate4ValidationService : IGate4ValidationService
     private readonly IRepository<TheoryTest> _theoryTestRepository;
     private readonly IRepository<PracticalTest> _practicalTestRepository;
     private readonly IRepository<MedicalExamination> _medicalExamRepository;
-    private readonly IRepository<Payment> _paymentRepository;
+    private readonly IRepository<PaymentTransaction> _paymentRepository;
 
     public Gate4ValidationService(
         IRepository<Mojaz.Domain.Entities.Application> applicationRepository,
@@ -24,7 +24,7 @@ public class Gate4ValidationService : IGate4ValidationService
         IRepository<TheoryTest> theoryTestRepository,
         IRepository<PracticalTest> practicalTestRepository,
         IRepository<MedicalExamination> medicalExamRepository,
-        IRepository<Payment> paymentRepository)
+        IRepository<PaymentTransaction> paymentRepository)
     {
         _applicationRepository = applicationRepository;
         _userRepository = userRepository;

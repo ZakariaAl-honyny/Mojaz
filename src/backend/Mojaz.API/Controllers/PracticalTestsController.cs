@@ -32,7 +32,12 @@ public class PracticalTestsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> SubmitResult(Guid applicationId, [FromBody] SubmitPracticalResultRequest request)
     {
-        var examinerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(nameIdentifier) || !Guid.TryParse(nameIdentifier, out var examinerId))
+        {
+            return Unauthorized(ApiResponse<object>.Fail(401, "Invalid user identification."));
+        }
+
         var result = await _practicalService.SubmitResultAsync(applicationId, request, examinerId);
         return StatusCode(result.StatusCode, result);
     }
@@ -50,8 +55,13 @@ public class PracticalTestsController : ControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var role = User.FindFirstValue(ClaimTypes.Role)!;
+        var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(nameIdentifier) || !Guid.TryParse(nameIdentifier, out var userId))
+        {
+            return Unauthorized(ApiResponse<object>.Fail(401, "Invalid user identification."));
+        }
+
+        var role = User.FindFirstValue(ClaimTypes.Role) ?? "";
         var result = await _practicalService.GetHistoryAsync(applicationId, userId, role, page, pageSize);
         return StatusCode(result.StatusCode, result);
     }

@@ -5,32 +5,34 @@ using Mojaz.Domain.Enums;
 
 namespace Mojaz.Infrastructure.Persistence.Configurations
 {
-    public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
+    public class PaymentTransactionConfiguration : IEntityTypeConfiguration<PaymentTransaction>
     {
-        public void Configure(EntityTypeBuilder<Payment> builder)
+        public void Configure(EntityTypeBuilder<PaymentTransaction> builder)
         {
-            builder.ToTable("Payments");
+            builder.ToTable("PaymentTransactions");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.ApplicationId).IsRequired();
             builder.Property(x => x.FeeType)
                 .IsRequired()
                 .HasConversion<string>()
-                .HasMaxLength(32);
+                .HasMaxLength(50);
             builder.Property(x => x.Amount).IsRequired().HasColumnType("decimal(18,2)");
-            builder.Property(x => x.Currency).IsRequired().HasMaxLength(8);
+            builder.Property(x => x.Currency).IsRequired().HasMaxLength(10);
             builder.Property(x => x.Status)
                 .IsRequired()
                 .HasConversion<string>()
-                .HasMaxLength(16);
-            builder.Property(x => x.PaymentMethod).HasMaxLength(64);
-            builder.Property(x => x.TransactionReference).HasMaxLength(128);
+                .HasMaxLength(20);
+            builder.Property(x => x.PaymentMethod).HasMaxLength(100);
+            builder.Property(x => x.TransactionReference).HasMaxLength(100);
             builder.Property(x => x.PaidAt).IsRequired(false);
             builder.Property(x => x.FailedAt).IsRequired(false);
-            builder.Property(x => x.FailureReason).HasMaxLength(256);
-            builder.Property(x => x.ReceiptPath).HasMaxLength(256);
+            builder.Property(x => x.FailureReason).HasMaxLength(500);
+            builder.Property(x => x.ReceiptPath).HasMaxLength(500);
+
             builder.HasIndex(x => x.ApplicationId);
-            builder.HasIndex(x => x.FeeType);
+            builder.HasIndex(x => x.TransactionReference).IsUnique();
             builder.HasIndex(x => x.Status);
+
             builder.HasQueryFilter(x => !x.IsDeleted);
         }
     }

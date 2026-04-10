@@ -14,8 +14,13 @@ using Mojaz.Infrastructure.Extensions;
 using Serilog;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
+using QuestPDF.Infrastructure;
+using QuestPDF.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// ─── QuestPDF Configuration ───
+QuestPDF.Settings.License = LicenseType.Community;
 
 // Initialize Firebase Admin SDK
 var firebaseConfig = builder.Configuration.GetSection("Firebase");
@@ -121,7 +126,7 @@ app.UseMojazAuditLogging();
 
 app.UseRateLimiter();
 
-app.MapControllers().RequireRateLimiting("registration");
+app.MapControllers();
 app.MapHealthChecks("/health").AllowAnonymous();
 
 // ─── Hangfire Dashboard (Phase 6) ───

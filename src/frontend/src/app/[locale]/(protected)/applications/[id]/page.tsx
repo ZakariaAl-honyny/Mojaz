@@ -8,6 +8,7 @@ import { FileText, CreditCard, Activity, CalendarClock } from "lucide-react";
 import Link from "next/link";
 import { GateLockIndicator } from "@/components/domain/training/GateLockIndicator";
 import { TheoryTestHistory } from "@/components/domain/theory/TheoryTestHistory";
+import { PaymentSection } from "@/components/domain/payment/PaymentSection";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { locale, id } = await params;
@@ -114,20 +115,10 @@ export default async function ApplicationDetailsPage({ params }: { params: Promi
             </CardContent>
           </Card>
 
-          <Card className="shadow-sm border-neutral-200">
-            <CardHeader className="pb-3 border-b border-neutral-100">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-neutral-500" />
-                {t("application.details.paymentsTitle")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4 text-center py-8">
-              <p className="text-neutral-500 text-sm mb-4">{t("application.details.noPaymentsMsg")}</p>
-              <Button className="w-full bg-secondary-500 hover:bg-secondary-600 text-white border-0 shadow">
-                {t("application.details.payButton")} (100 SAR)
-              </Button>
-            </CardContent>
-          </Card>
+          <PaymentSection 
+            applicationId={id} 
+            amount={100} 
+          />
 
         </div>
       </div>

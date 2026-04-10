@@ -27,6 +27,7 @@ namespace Mojaz.Application.Tests.Services
         private readonly Mock<IAuditService> _auditServiceMock;
         private readonly Mock<INotificationService> _notificationServiceMock;
         private readonly Mock<ISystemSettingsService> _settingsServiceMock;
+        private readonly Mock<IRepository<User>> _userRepoMock;
         private readonly PracticalService _sut;
 
         public PracticalServiceTests()
@@ -38,6 +39,7 @@ namespace Mojaz.Application.Tests.Services
             _auditServiceMock = new Mock<IAuditService>();
             _notificationServiceMock = new Mock<INotificationService>();
             _settingsServiceMock = new Mock<ISystemSettingsService>();
+            _userRepoMock = new Mock<IRepository<User>>();
 
             _settingsServiceMock.Setup(s => s.GetAsync("MIN_PASS_SCORE_PRACTICAL")).ReturnsAsync("75");
             _settingsServiceMock.Setup(s => s.GetAsync("MAX_PRACTICAL_ATTEMPTS")).ReturnsAsync("3");
@@ -50,6 +52,7 @@ namespace Mojaz.Application.Tests.Services
                 _mapperMock.Object,
                 _auditServiceMock.Object,
                 _notificationServiceMock.Object,
+                _userRepoMock.Object,
                 _settingsServiceMock.Object);
         }
 

@@ -25,6 +25,7 @@ public class PracticalService : IPracticalService
     private readonly IMapper _mapper;
     private readonly IAuditService _auditService;
     private readonly INotificationService _notificationService;
+    private readonly IRepository<User> _userRepository;
     private readonly ISystemSettingsService _systemSettingsService;
 
     public PracticalService(
@@ -34,6 +35,7 @@ public class PracticalService : IPracticalService
         IMapper mapper,
         IAuditService auditService,
         INotificationService notificationService,
+        IRepository<User> userRepository,
         ISystemSettingsService systemSettingsService)
     {
         _practicalRepository = practicalRepository;
@@ -42,6 +44,7 @@ public class PracticalService : IPracticalService
         _mapper = mapper;
         _auditService = auditService;
         _notificationService = notificationService;
+        _userRepository = userRepository;
         _systemSettingsService = systemSettingsService;
     }
 
@@ -153,8 +156,9 @@ public class PracticalService : IPracticalService
         await _unitOfWork.SaveChangesAsync();
 
         // Map to DTO
+        var examiner = await _userRepository.GetByIdAsync(examinerId);
         var dto = _mapper.Map<PracticalTestDto>(practicalTest);
-        dto.ExaminerName = "Examiner";
+        dto.ExaminerName = examiner?.FullNameAr ?? examiner?.FullNameEn ?? "Examiner";
         dto.ApplicationStatus = application.Status.ToString();
 
         // Calculate retake eligible date for failed/absent

@@ -232,6 +232,10 @@ namespace Mojaz.Application.Services
                 .Take(pageSize)
                 .ToList();
 
+            // Load cooling period config once
+            var coolingDaysStr = await _settingsService.GetAsync("COOLING_PERIOD_DAYS");
+            int coolingDays = int.TryParse(coolingDaysStr, out var cd) ? cd : 7;
+
             // Map to DTOs
             var dtos = pagedItems.Select(t =>
             {
@@ -240,8 +244,6 @@ namespace Mojaz.Application.Services
                 // Calculate retake eligible after if last attempt failed
                 if (t.Result == TestResult.Fail || t.Result == TestResult.Absent)
                 {
-                    var coolingDaysStr = _settingsService.GetAsync("COOLING_PERIOD_DAYS").Result;
-                    int coolingDays = int.TryParse(coolingDaysStr, out var cd) ? cd : 7;
                     dto.RetakeEligibleAfter = t.ConductedAt.AddDays(coolingDays);
                 }
 

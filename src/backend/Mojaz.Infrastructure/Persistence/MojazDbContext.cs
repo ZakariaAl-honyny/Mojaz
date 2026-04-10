@@ -26,7 +26,7 @@ namespace Mojaz.Infrastructure.Persistence
         public DbSet<TrainingRecord> TrainingRecords { get; set; }
         public DbSet<TheoryTest> TheoryTests { get; set; }
         public DbSet<PracticalTest> PracticalTests { get; set; }
-        public DbSet<Payment> Payments { get; set; }
+        public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
         public DbSet<License> Licenses { get; set; }
         public DbSet<LicenseRenewal> LicenseRenewals { get; set; }
         public DbSet<LicenseReplacement> LicenseReplacements { get; set; }

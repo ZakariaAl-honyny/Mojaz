@@ -23,6 +23,9 @@ Auto-generated from all feature plans. Last updated: 2026-04-10
 - C# 12 / .NET 8 (backend); TypeScript 5 / Next.js 15 App Router (frontend) (020-practical-test)
 - SQL Server 2022 — `PracticalTests` table (already exists), `Applications` table (columns to add) (020-practical-test)
 - C# 8.0, TypeScript 5.0 + ASP.NET Core 8, Next.js (App Router) 15, Entity Framework Core 8, Tailwind CSS, shadcn/ui (021-category-f-agricultural)
+- C# 12 / .NET 8 (backend) · TypeScript 5 / Next.js 15 (frontend) + EF Core 8, FluentValidation 11, AutoMapper 13, Hangfire 1.8, next-intl 3, React Query 5, shadcn/ui (022-final-approval)
+- SQL Server 2022 — 1 additive migration (`AddFinalApprovalFields`) (022-final-approval)
+- C# 12 / .NET 8, TypeScript 5 / Next.js 15 + EF Core 8, QuestPDF, React Query 5, Tailwind CSS (023-payment-simulation)
 
 - C# 12 / .NET 8 LTS + AutoMapper 13, FluentValidation 11, EF Core 8 (SqlServer), (003-backend-scaffold)
 
@@ -43,9 +46,9 @@ tests/
 C# 12 / .NET 8 LTS: Follow standard conventions
 
 ## Recent Changes
+- 023-payment-simulation: Added C# 12 / .NET 8, TypeScript 5 / Next.js 15 + EF Core 8, QuestPDF, React Query 5, Tailwind CSS
+- 022-final-approval: Added C# 12 / .NET 8 (backend) · TypeScript 5 / Next.js 15 (frontend) + EF Core 8, FluentValidation 11, AutoMapper 13, Hangfire 1.8, next-intl 3, React Query 5, shadcn/ui
 - 021-category-f-agricultural: Added C# 8.0, TypeScript 5.0 + ASP.NET Core 8, Next.js (App Router) 15, Entity Framework Core 8, Tailwind CSS, shadcn/ui
-- 020-practical-test: Added C# 12 / .NET 8 (backend); TypeScript 5 / Next.js 15 App Router (frontend)
-- 018-training-records: Added [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
 
 
 <!-- MANUAL ADDITIONS START -->

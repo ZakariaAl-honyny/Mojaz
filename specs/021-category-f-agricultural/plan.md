@@ -1,70 +1,105 @@
-# Implementation Plan: 021-category-f-agricultural
+# Implementation Plan: [FEATURE]
 
-**Branch**: `021-category-f-agricultural` | **Date**: 2026-04-10 | **Spec**: [spec.md](./spec.md)
-**Input**: Feature specification from `/specs/021-category-f-agricultural/spec.md`
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
 ## Summary
 
-Complete support for the Agricultural Vehicle (Category F) license. This encompasses dynamic settings enforcement (min age 18, training 20 hours), the upgrade path from F->B, and tailored UI presentation utilizing modern best practices for layout stability and bespoke agricultural aesthetic design.
+[Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
 
-**Language/Version**: C# 8.0, TypeScript 5.0
-**Primary Dependencies**: ASP.NET Core 8, Next.js (App Router) 15, Entity Framework Core 8, Tailwind CSS, shadcn/ui
-**Storage**: SQL Server 2022
-**Testing**: xUnit, Moq, FluentAssertions, Jest, React Testing Library, Playwright
-**Target Platform**: Web (Arabic RTL + English LTR)
-**Project Type**: Full-Stack Web Application
-**Performance Goals**: < 2 seconds API response time (95th percentile), minimal FID and CLS on UI.
-**Constraints**: Clean Architecture layering, Security First (No hardcoded credentials), Configuration over Hardcoding.
-**Scale/Scope**: Category F (Agricultural) addition to New License Issuance Workflow.
+<!--
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
+-->
+
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- **Clean Architecture Conformity**: Yes. Logic handled in Application service layers. Validation handled via FluentValidation.
-- **Security Check**: Yes. Relies on standard RBAC. No password or token exposure.
-- **Configurability Rule**: Yes. Age threshold reads from `SystemSettings`.
-- **Test Integrity**: Yes. Will include logic tests for F->B upgrades and specialized visual logic.
+[Gates determined based on constitution file]
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/021-category-f-agricultural/
-├── plan.md              
-├── research.md          
-├── data-model.md        
-├── quickstart.md        
-└── tasks.md             
+specs/[###-feature]/
+├── plan.md              # This file (/speckit.plan command output)
+├── research.md          # Phase 0 output (/speckit.plan command)
+├── data-model.md        # Phase 1 output (/speckit.plan command)
+├── quickstart.md        # Phase 1 output (/speckit.plan command)
+├── contracts/           # Phase 1 output (/speckit.plan command)
+└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
 ```
 
 ### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
 
 ```text
-# Option 2: Web application
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
+src/
+├── models/
+├── services/
+├── cli/
+└── lib/
+
+tests/
+├── contract/
+├── integration/
+└── unit/
+
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
 src/
 | backend/
-  │   ├── Mojaz.Domain/
-  │   ├── Mojaz.Application/
-  │   └── Mojaz.Infrastructure/
+  │   ├── models/
+  │   ├── services/
+  │   └── api/
   └── tests/
-      └── Mojaz.Application.Tests/
 
 | frontend/
   ├── src/
   │   ├── app/
   │   ├── components/
-  │   └── styles/
+  │   ├── pages/
+  │   └── services/
   └── tests/
+
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
+
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
-**Structure Decision**: Standard Web Application full-stack structure mapped to Mojaz .NET Core backend and Next.js frontend spaces.
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
 
 ## Complexity Tracking
 
+> **Fill ONLY if Constitution Check has violations that must be justified**
+
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| None      | N/A        | N/A                                 |
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |

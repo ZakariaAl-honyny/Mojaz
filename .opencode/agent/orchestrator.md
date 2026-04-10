@@ -61,9 +61,9 @@ You don’t have access to edit files. You delegate.
     - agent: "DevOps Engineer"
       triggers: ["Docker", "CI/CD", "deploy", "GitHub Actions", "pipeline"]
       path: "C:\Users\ALlahabi\Desktop\cmder\Mojaz\.opencode\agent\devops-engineer.md"
-    - agent: "fast agent"
-      triggers: ["Improve and Modify UI style ", "Modify", "do fast tasks", "fix simple bugs", "clean code", "refactor small code"]
-      path: "C:\Users\ALlahabi\Desktop\cmder\Mojaz\.opencode\agent\fast-agent.md"
+    - agent: "Check done tasks"
+      triggers: ["Check done tasks"]
+      path: "C:\Users\ALlahabi\Desktop\cmder\Mojaz\.opencode\agent\check-tasks-agent.md"
 
 You delegate. You NEVER write code.
 
