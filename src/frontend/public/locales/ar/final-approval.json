@@ -1,0 +1,56 @@
+{
+  "title": "الموافقة النهائية",
+  "gate4": {
+    "title": "فحص البوابة الرابعة",
+    "subtitle": "التحقق من استيفاء جميع الشروط",
+    "isFullyPassed": "تم استيفاء جميع الشروط",
+    "hasFailures": "بعض الشروط لم تستوفَ",
+    "conditions": {
+      "TheoryTestPassed": "اختبار النظري",
+      "PracticalTestPassed": "الاختبار العملي",
+      "SecurityStatusClean": "الوضع الأمني",
+      "IdentityDocumentValid": "صلاحية وثيقة الهوية",
+      "MedicalCertificateValid": "صلاحية الشهادة الطبية",
+      "AllPaymentsCleared": "حالة السداد"
+    },
+    "passed": "مجتاز",
+    "failed": "لم يجتز"
+  },
+  "actions": {
+    "approve": "موافقة",
+    "reject": "رفض",
+    "return": "إعادة للمراجعة"
+  },
+  "confirm": {
+    "approve": "تأكيد الموافقة",
+    "approveMessage": "هل أنت متأكد من رغبتك في الموافقة على هذا الطلب؟",
+    "reject": "تأكيد الرفض",
+    "rejectMessage": "هل أنت متأكد من رغبتك في رفض هذا الطلب؟",
+    "return": "تأكيد الإعادة",
+    "returnMessage": "هل أنت متأكد من رغبتك في إعادة هذا الطلب للمراجعة؟"
+  },
+  "form": {
+    "reason": "السبب",
+    "reasonPlaceholder": "أدخل سبب الرفض أو الإعادة...",
+    "reasonRequired": "السبب مطلوب",
+    "returnToStage": "الإعادة إلى مرحلة",
+    "selectStage": "اختر المرحلة",
+    "managerNotes": "ملاحظات المدير",
+    "managerNotesPlaceholder": "ملاحظات إضافية (اختياري)..."
+  },
+  "stages": {
+    "02-Documents": "مرحلة الوثائق",
+    "04-Medical": "الفحص الطبي",
+    "06-Theory": "الاختبار النظري",
+    "07-Practical": "الاختبار العملي"
+  },
+  "messages": {
+    "success": "تمت معالجة القرار بنجاح",
+    "gate4Failed": "فشلت عملية التحقق من البوابة الرابعة. لا يمكن الموافقة على الطلب.",
+    "alreadyFinalized": "تم اتخاذ قرار نهائي بشأن هذا الطلب مسبقاً."
+  },
+  "errors": {
+    "loadFailed": "فشل تحميل حالة البوابة الرابعة",
+    "submitFailed": "فشل تقديم القرار"
+  }
+}

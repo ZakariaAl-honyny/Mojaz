@@ -13,6 +13,11 @@
   "cancel": "Cancel",
   "next": "Next",
   "back": "Back",
+  "backToQueue": "Back to Queue",
   "submit": "Submit",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "retry": "Retry",
+  "continue": "Continue",
+  "confirm": "Confirm",
+  "tryAgain": "Try Again"
 }

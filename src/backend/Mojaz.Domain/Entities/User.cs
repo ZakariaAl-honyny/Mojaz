@@ -38,4 +38,5 @@ public class User : SoftDeletableEntity
     public int FailedLoginAttempts { get; set; }
     public DateTime? LockoutEnd { get; set; }
     public DateTime? LastLoginAt { get; set; }
+    public bool IsSecurityBlocked { get; set; } = false;
 }

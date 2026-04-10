@@ -34,6 +34,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(u => u.EnableSms).HasDefaultValue(true);
             builder.Property(u => u.EnablePush).HasDefaultValue(true);
             builder.Property(u => u.RegistrationMethod).HasMaxLength(20);
+            builder.Property(u => u.IsSecurityBlocked).HasDefaultValue(false);
             builder.HasQueryFilter(u => !u.IsDeleted);
             // Contact constraint: at least one of Email or PhoneNumber must be present
         }
