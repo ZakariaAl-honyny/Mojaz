@@ -1,5 +1,6 @@
 ---
 name: "Documentation Writer"
+model: opencode/nemotron-3-super-free
 reasoningEeffect: "max"
 role: "Technical documentation and API documentation"
 activation: "When creating or updating documentation"

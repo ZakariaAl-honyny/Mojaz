@@ -10,7 +10,7 @@
 - [X] **T2701**: Add `Upgrade` to `ServiceType` enum (New, Renewal, Replacement, Upgrade).
 - [X] **T2702**: Add `UPGRADE_FEE` to `FeeStructures` and `MIN_HOLDING_PERIOD_UPGRADE` (e.g., 1y) in `SystemSettings`.
 - [X] **T2703**: Define `Superseded` status for `License.Status` enum.
-- [ ] **T2704**: Seed `AllowedUpgradePaths` (e.g., `B->C`, `B->D`, `C->D`, `F->B`) in `SystemSettings`.
+- [X] **T2704**: Seed `AllowedUpgradePaths` (e.g., `B->C`, `B->D`, `C->D`, `F->B`) in `SystemSettings`.
 
 ## Phase 2: Domain Logic & API (Priority: P1)
 

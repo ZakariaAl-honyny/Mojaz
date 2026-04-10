@@ -30,6 +30,7 @@ public static class ApplicationServiceRegistration
         
         // ─── Dashboards & Reporting ───
         services.AddScoped<IDashboardService, DashboardService>();
+        services.AddScoped<IReportService, ReportService>();
 
         // ─── Training ───
         services.AddScoped<ITrainingService, TrainingService>();

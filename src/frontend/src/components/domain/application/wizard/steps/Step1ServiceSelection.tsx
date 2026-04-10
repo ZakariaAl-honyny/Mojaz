@@ -9,9 +9,12 @@ import { useWizardStore } from '@/stores/wizard-store';
 import ServiceCard from '../shared/ServiceCard';
 import WizardNavigation from '../WizardNavigation';
 import WizardStepHeader from '../WizardStepHeader';
+import { useRouter } from '@/i18n/routing';
+import { ServiceType } from '@/types/wizard.types';
 
 export default function Step1ServiceSelection() {
   const { step1, setStep1, goTo, markCompleted } = useWizardStore();
+  const router = useRouter();
   
   const { 
     handleSubmit, 
@@ -39,6 +42,17 @@ export default function Step1ServiceSelection() {
   const onNext = (data: Step1FormValues) => {
     setStep1(data);
     markCompleted(1);
+    
+    if (data.serviceType === ServiceType.Replacement) {
+      router.push('/applications/replacement');
+      return;
+    }
+    
+    if (data.serviceType === ServiceType.CategoryUpgrade) {
+      router.push('/applications/upgrade');
+      return;
+    }
+
     goTo(2);
   };
 

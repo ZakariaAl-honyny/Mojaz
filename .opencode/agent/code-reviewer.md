@@ -1,5 +1,6 @@
 ---
 name: "Code Reviewer"
+model: opencode/nemotron-3-super-free
 reasoningEeffect: "max"
 role: "Code quality and convention enforcement"
 activation: "Before merging any feature branch"

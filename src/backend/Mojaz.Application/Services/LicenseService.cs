@@ -32,6 +32,7 @@ public class LicenseService : ILicenseService
     private readonly ILicensePdfGenerator _licensePdfGenerator;
     private readonly IFileStorageService _fileStorageService;
     private readonly IMapper _mapper;
+    private readonly ICategoryUpgradeService _upgradeService;
 
     public LicenseService(
         IRepository<License> licenseRepository,
@@ -44,7 +45,8 @@ public class LicenseService : ILicenseService
         IBackgroundJobClient backgroundJobClient,
         ILicensePdfGenerator licensePdfGenerator,
         IFileStorageService fileStorageService,
-        IMapper mapper)
+        IMapper mapper,
+        ICategoryUpgradeService upgradeService)
     {
         _licenseRepository = licenseRepository;
         _applicationRepository = applicationRepository;
@@ -57,6 +59,7 @@ public class LicenseService : ILicenseService
         _licensePdfGenerator = licensePdfGenerator;
         _fileStorageService = fileStorageService;
         _mapper = mapper;
+        _upgradeService = upgradeService;
     }
 
     public async Task<ApiResponse<LicenseDto>> IssueLicenseAsync(Guid applicationId, Guid issuerId)
@@ -120,10 +123,17 @@ public class LicenseService : ILicenseService
         
         if (application.ServiceType == ServiceType.CategoryUpgrade)
         {
-            var activeLicense = (await _licenseRepository.FindAsync(x => x.HolderId == application.ApplicantId && x.Status == LicenseStatus.Active)).FirstOrDefault();
-            if (activeLicense != null)
+            var activeLicenses = await _licenseRepository.FindAsync(x => x.HolderId == application.ApplicantId && x.Status == LicenseStatus.Active);
+            // In a real system, we might have an OriginalLicenseId on the application.
+            // For now, we archive any active license that could have been the source.
+            // Simplified: If there's only one active license, archive it.
+            // If multiple, we archive the one that belongs to a different category than the target.
+            foreach (var oldLicense in activeLicenses)
             {
-                await ArchiveLicenseAsync(activeLicense.Id);
+                if (oldLicense.LicenseCategoryId != application.LicenseCategoryId)
+                {
+                    await ArchiveLicenseAsync(oldLicense.Id);
+                }
             }
         }
 
@@ -201,6 +211,42 @@ public class LicenseService : ILicenseService
             _licenseRepository.Update(license);
             await _unitOfWork.SaveChangesAsync();
         }
+    }
+
+    public async Task<ApiResponse<List<LicenseDto>>> GetUserLicensesAsync(Guid userId)
+    {
+        var licenses = await _licenseRepository.FindAsync(x => x.HolderId == userId);
+        var dtos = _mapper.Map<List<LicenseDto>>(licenses);
+        return ApiResponse<List<LicenseDto>>.Ok(dtos);
+    }
+
+    public async Task<ApiResponse<List<UpgradeTargetCategoryDto>>> GetUpgradeTargetsAsync(Guid licenseId)
+    {
+        var license = await _licenseRepository.GetByIdAsync(licenseId);
+        if (license == null) return ApiResponse<List<UpgradeTargetCategoryDto>>.Fail(404, "License not found.");
+
+        var allCategories = await _licenseCategoryRepository.GetAllAsync();
+        var targets = new List<UpgradeTargetCategoryDto>();
+
+        foreach (var category in allCategories)
+        {
+            if (await _upgradeService.ValidateUpgradePathAsync(license.LicenseCategory.Code, category.Code))
+            {
+                targets.Add(new UpgradeTargetCategoryDto
+                {
+                    Id = category.Id,
+                    Code = category.Code.ToString(),
+                    NameAr = category.NameAr,
+                    NameEn = category.NameEn,
+                    DescriptionAr = "", // Missing in entity
+                    DescriptionEn = "", 
+                    MinAge = category.MinimumAge,
+                    RequiresFieldTest = false // Default or map from something else?
+                });
+            }
+        }
+
+        return ApiResponse<List<UpgradeTargetCategoryDto>>.Ok(targets);
     }
 
     private string GenerateLicenseNumber()

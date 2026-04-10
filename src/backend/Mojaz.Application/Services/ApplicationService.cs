@@ -106,10 +106,22 @@ public class ApplicationService : IApplicationService
         // 3. Upgrade Path Enforcement (FR-003)
         if (request.ServiceType == ServiceType.CategoryUpgrade)
         {
-            var existingLicenses = await _licenseRepository.FindAsync(l => l.HolderId == userId && l.Status == LicenseStatus.Active);
+            List<Mojaz.Domain.Entities.License> existingLicenses;
+            if (request.CurrentLicenseId.HasValue)
+            {
+                var specificLicense = await _licenseRepository.GetByIdAsync(request.CurrentLicenseId.Value);
+                existingLicenses = specificLicense != null && specificLicense.HolderId == userId && specificLicense.Status == LicenseStatus.Active 
+                    ? new List<Mojaz.Domain.Entities.License> { specificLicense } 
+                    : new List<Mojaz.Domain.Entities.License>();
+            }
+            else
+            {
+                existingLicenses = (await _licenseRepository.FindAsync(l => l.HolderId == userId && l.Status == LicenseStatus.Active)).ToList();
+            }
+
             if (existingLicenses == null || !existingLicenses.Any())
             {
-                reasons.Add("You do not have an active license to upgrade.");
+                reasons.Add("You do not have a valid active license to upgrade.");
             }
             else
             {
@@ -799,7 +811,8 @@ public class ApplicationService : IApplicationService
         var eligibilityRequest = new EligibilityCheckRequest
         {
             LicenseCategoryId = request.TargetCategoryId,
-            ServiceType = ServiceType.CategoryUpgrade
+            ServiceType = ServiceType.CategoryUpgrade,
+            CurrentLicenseId = request.CurrentLicenseId
         };
         var eligibility = await CheckEligibilityAsync(userId, eligibilityRequest);
         if (!eligibility.Data!.IsEligible)

@@ -11,17 +11,20 @@ public class CategoryUpgradeService : ICategoryUpgradeService
     private readonly IFeeStructureRepository _feeRepository;
     private readonly ILicenseRepository _licenseRepository;
     private readonly IRepository<Mojaz.Domain.Entities.LicenseCategory> _categoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public CategoryUpgradeService(
         ISystemSettingsService settingsService,
         IFeeStructureRepository feeRepository,
         ILicenseRepository licenseRepository,
-        IRepository<Mojaz.Domain.Entities.LicenseCategory> categoryRepository)
+        IRepository<Mojaz.Domain.Entities.LicenseCategory> categoryRepository,
+        IUnitOfWork unitOfWork)
     {
         _settingsService = settingsService;
         _feeRepository = feeRepository;
         _licenseRepository = licenseRepository;
         _categoryRepository = categoryRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<bool> ValidateUpgradePathAsync(LicenseCategoryCode from, LicenseCategoryCode to)
@@ -87,9 +90,18 @@ public class CategoryUpgradeService : ICategoryUpgradeService
         return (int)Math.Ceiling(reducedHours);
     }
 
-    public Task<bool> ArchiveExistingLicenseAsync(Guid licenseId)
-    {
-        // Skeleton implementation: Logic to soft-delete/archive the old license
-        throw new NotImplementedException();
-    }
+     public async Task<bool> ArchiveExistingLicenseAsync(Guid licenseId)
+     {
+         var license = await _licenseRepository.GetByIdAsync(licenseId);
+         if (license != null)
+         {
+             license.Status = LicenseStatus.Superseded;
+             license.IsDeleted = true;
+             license.UpdatedAt = DateTime.UtcNow;
+             await _licenseRepository.UpdateAsync(license);
+             await _unitOfWork.SaveChangesAsync();
+             return true;
+         }
+         return false;
+     }
 }

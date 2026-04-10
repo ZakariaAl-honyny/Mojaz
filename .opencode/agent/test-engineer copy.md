@@ -1,5 +1,6 @@
 ---
 name: "Test Engineer"
+model: opencode/nemotron-3-super-free
 reasoningEeffect: "max"
 role: "Quality assurance and test automation specialist"
 activation: "When creating or running tests"
