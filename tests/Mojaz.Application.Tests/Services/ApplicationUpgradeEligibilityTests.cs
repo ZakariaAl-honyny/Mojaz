@@ -18,6 +18,7 @@ public class ApplicationUpgradeEligibilityTests
     private readonly Mock<IRepository<LicenseCategory>> _catRepoMock;
     private readonly Mock<IRepository<SystemSetting>> _settingsRepoMock;
     private readonly Mock<IRepository<License>> _licenseRepoMock;
+    private readonly Mock<IRepository<LicenseReplacement>> _replacementRepoMock;
     private readonly Mock<IRepository<ApplicationStatusHistory>> _historyRepoMock;
     private readonly Mock<IUnitOfWork> _uowMock;
     private readonly Mock<IMapper> _mapperMock;
@@ -34,6 +35,7 @@ public class ApplicationUpgradeEligibilityTests
         _catRepoMock = new Mock<IRepository<LicenseCategory>>();
         _settingsRepoMock = new Mock<IRepository<SystemSetting>>();
         _licenseRepoMock = new Mock<IRepository<License>>();
+        _replacementRepoMock = new Mock<IRepository<LicenseReplacement>>();
         _historyRepoMock = new Mock<IRepository<ApplicationStatusHistory>>();
         _uowMock = new Mock<IUnitOfWork>();
         _mapperMock = new Mock<IMapper>();
@@ -54,13 +56,8 @@ public class ApplicationUpgradeEligibilityTests
             _notificationMock.Object,
             _emailMock.Object,
             _jobMock.Object,
-            _historyRepoMock.Object);
-
-        _settingsRepoMock.Setup(r => r.FindAsync(It.IsAny<Expression<Func<SystemSetting, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<SystemSetting>());
-        
-        _appRepoMock.Setup(r => r.FindAsync(It.IsAny<Expression<Func<Mojaz.Domain.Entities.Application, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<Mojaz.Domain.Entities.Application>());
+            _historyRepoMock.Object,
+            _replacementRepoMock.Object);
     }
 
     [Fact]

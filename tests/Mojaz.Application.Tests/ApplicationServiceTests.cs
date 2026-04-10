@@ -24,6 +24,7 @@ public class ApplicationServiceTests
     private readonly Mock<IRepository<LicenseCategory>> _categoryRepo = new();
     private readonly Mock<IRepository<SystemSetting>> _settingsRepo = new();
     private readonly Mock<IRepository<License>> _licenseRepo = new();
+    private readonly Mock<IRepository<LicenseReplacement>> _replacementRepo = new();
     private readonly Mock<IUnitOfWork> _unitOfWork = new();
     private readonly Mock<IMapper> _mapper = new();
     private readonly Mock<IAuditService> _auditService = new();
@@ -43,7 +44,8 @@ public class ApplicationServiceTests
         _notificationService.Object,
         _emailService.Object,
         Mock.Of<IBackgroundJobClient>(),
-        _historyRepo.Object
+        _historyRepo.Object,
+        _replacementRepo.Object
     );
 
     [Fact]

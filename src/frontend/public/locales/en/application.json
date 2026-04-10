@@ -1,4 +1,82 @@
 {
+  "replacement": {
+    "title": "License Replacement",
+    "subtitle": "Request a replacement for your license",
+    "steps": {
+      "reason": "Reason Selection",
+      "declaration": "Declaration",
+      "upload": "Document Upload",
+      "review": "Review & Submit",
+      "payment": "Payment"
+    },
+    "reasons": {
+      "lost": "Lost",
+      "damaged": "Damaged",
+      "stolen": "Stolen",
+      "required": "Please select a reason"
+    },
+    "declaration": {
+      "title": "Declaration",
+      "text": "I hereby declare that the information provided is true and correct, and I assume full legal responsibility for any incorrect information.",
+      "checkbox": "I agree to the terms and conditions",
+      "required": "You must agree to the declaration"
+    },
+    "upload": {
+      "title": "Upload Required Documents",
+      "policeReport": "Police Report",
+      "damagedPhoto": "Photo of Damaged License",
+      "uploadButton": "Upload File",
+      "removeButton": "Remove",
+      "noDocs": "No documents required for lost license replacement."
+    },
+    "review": {
+      "title": "Review Application",
+      "summaryTitle": "Application Summary",
+      "reasonLabel": "Replacement Reason",
+      "selectedReason": "Selected Reason",
+      "documentsLabel": "Uploaded Documents",
+      "submit": "Submit Replacement Request",
+      "back": "Back",
+      "submitted": "Application submitted. Please proceed to payment.",
+      "error": "Something went wrong while submitting your request.",
+      "noneRequired": "None required",
+      "submitting": "Submitting...",
+      "next": "Next"
+    },
+    "employeeReview": {
+      "title": "License Replacement Review",
+      "details": "Application Details",
+      "reason": "Replacement Reason",
+      "policeReport": "Police Report",
+      "policeReportLink": "View Police Report",
+      "verifyReport": "Verify Police Report",
+      "comments": "Review Comments",
+      "approve": "Approve Report",
+      "reject": "Reject Report",
+      "submit": "Save Decision",
+      "success": "Verification status updated successfully",
+      "error": "An error occurred while updating verification status",
+      "required": "Please select an option",
+      "commentsRequired": "Comments must be at least 5 characters long",
+      "description": "Review the applicant's request for license replacement",
+      "applicantName": "Applicant Name",
+      "verifyReportDesc": "The applicant reported the license as stolen. Please verify the police report.",
+      "uploadedOn": "Uploaded on",
+      "commentsPlaceholder": "Enter review notes here...",
+      "submitting": "Processing..."
+    },
+
+    "payment": {
+      "title": "Payment",
+      "amountLabel": "Replacement Fee",
+      "payButton": "Pay Now",
+      "success": "Payment successful! Your application is now processing.",
+      "error": "Failed to process final payment for application.",
+      "paymentDesc": "Please complete the payment to finalize your request",
+      "feeAmount": "100 SAR",
+      "total": "Total"
+    }
+  },
   "upgrade": {
     "title": "Upgrade Your License",
     "subtitle": "Select your current license and choose a target category to upgrade",

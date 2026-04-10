@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Mojaz.Application.DTOs;
 using Mojaz.Application.DTOs.License;
+using Mojaz.Application.DTOs.LicenseReplacement;
+using Mojaz.Application.Interfaces;
 using Mojaz.Application.Interfaces.Infrastructure;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Entities;
@@ -19,11 +22,13 @@ public class LicensesController : ControllerBase
 {
     private readonly ILicenseService _licenseService;
     private readonly IFileStorageService _fileStorageService;
+    private readonly IReplaceLicenseService _replaceLicenseService;
 
-    public LicensesController(ILicenseService licenseService, IFileStorageService fileStorageService)
+    public LicensesController(ILicenseService licenseService, IFileStorageService fileStorageService, IReplaceLicenseService replaceLicenseService)
     {
         _licenseService = licenseService;
         _fileStorageService = fileStorageService;
+        _replaceLicenseService = replaceLicenseService;
     }
 
     /// <summary>
@@ -39,6 +44,21 @@ public class LicensesController : ControllerBase
     {
         var issuerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _licenseService.IssueLicenseAsync(applicationId, issuerId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Issue a replacement driving license for a validated replacement application.
+    /// </summary>
+    [HttpPost("issue-replacement/{applicationId}")]
+    [Authorize(Roles = "Manager,Security,Admin")]
+    [ProducesResponseType(typeof(ApiResponse<Guid>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 409)]
+    public async Task<IActionResult> IssueReplacementAsync(Guid applicationId)
+    {
+        var issuerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _replaceLicenseService.IssueReplacementAsync(applicationId, issuerId);
         return StatusCode(result.StatusCode, result);
     }
 
@@ -121,5 +141,19 @@ public class LicensesController : ControllerBase
 
         var pdfBytes = await generator.GenerateLicensePdfAsync(license, holder, category);
         return File(pdfBytes, "application/pdf", "preview.pdf");
+    }
+
+    /// <summary>
+    /// Check if the current user is eligible for license replacement
+    /// </summary>
+    [HttpGet("mine/replacement-eligibility")]
+    [Authorize(Roles = "Applicant")]
+    [ProducesResponseType(typeof(ApiResponse<ReplacementEligibilityDto>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
+    public async Task<IActionResult> GetReplacementEligibilityAsync()
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _replaceLicenseService.CheckEligibilityAsync(userId);
+        return StatusCode(result.StatusCode, result);
     }
 }

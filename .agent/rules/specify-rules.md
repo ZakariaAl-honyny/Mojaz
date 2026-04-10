@@ -28,6 +28,7 @@ Auto-generated from all feature plans. Last updated: 2026-04-10
 - C# 12 / .NET 8, TypeScript 5 / Next.js 15 + EF Core 8, QuestPDF, React Query 5, Tailwind CSS (023-payment-simulation)
 - C# / .NET 8 (Backend), React / Next.js 15 (Frontend) + Entity Framework Core 8, QuestPDF, FluentValidation (024-license-issuance)
 - SQL Server 2022 (Licenses metadata), Blob Storage (NEEDS CLARIFICATION: exact blob storage provider AWS S3/Azure Blob/Local system) (024-license-issuance)
+- C# 12 (.NET 8) / TypeScript 5 (Next.js 15) + EF Core 8, FluentValidation, AutoMapper, shadcn/ui (026-license-replacement)
 
 - C# 12 / .NET 8 LTS + AutoMapper 13, FluentValidation 11, EF Core 8 (SqlServer), (003-backend-scaffold)
 
@@ -48,9 +49,9 @@ tests/
 C# 12 / .NET 8 LTS: Follow standard conventions
 
 ## Recent Changes
+- 026-license-replacement: Added C# 12 (.NET 8) / TypeScript 5 (Next.js 15) + EF Core 8, FluentValidation, AutoMapper, shadcn/ui
 - 024-license-issuance: Added C# / .NET 8 (Backend), React / Next.js 15 (Frontend) + Entity Framework Core 8, QuestPDF, FluentValidation
 - 023-payment-simulation: Added C# 12 / .NET 8, TypeScript 5 / Next.js 15 + EF Core 8, QuestPDF, React Query 5, Tailwind CSS
-- 022-final-approval: Added C# 12 / .NET 8 (backend) · TypeScript 5 / Next.js 15 (frontend) + EF Core 8, FluentValidation 11, AutoMapper 13, Hangfire 1.8, next-intl 3, React Query 5, shadcn/ui
 
 
 <!-- MANUAL ADDITIONS START -->
