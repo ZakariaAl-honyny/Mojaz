@@ -22,6 +22,11 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(a => a.SpecialNeeds).HasMaxLength(200);
             builder.Property(a => a.DataAccuracyConfirmed).IsRequired();
             builder.Property(a => a.TheoryAttemptCount).HasDefaultValue(0);
+            // Final Approval fields
+            builder.Property(a => a.FinalDecision).HasColumnType("int");
+            builder.Property(a => a.FinalDecisionReason).HasMaxLength(1000);
+            builder.Property(a => a.ReturnToStage).HasMaxLength(50);
+            builder.Property(a => a.ManagerNotes).HasMaxLength(1000);
             builder.HasOne<User>().WithMany().HasForeignKey(a => a.ApplicantId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne<LicenseCategory>().WithMany().HasForeignKey(a => a.LicenseCategoryId).OnDelete(DeleteBehavior.Restrict);
             builder.HasQueryFilter(a => !a.IsDeleted);

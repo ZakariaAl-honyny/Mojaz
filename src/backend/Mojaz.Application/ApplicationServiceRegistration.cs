@@ -47,6 +47,13 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IAppointmentService, AppointmentService>();
         services.AddScoped<AppointmentBookingValidator>();
 
+        // ─── Medical Examination ───
+        services.AddScoped<IMedicalService, MedicalService>();
+
+        // ─── Final Approval (Feature 022) ───
+        services.AddScoped<IGate4ValidationService, Gate4ValidationService>();
+        services.AddScoped<IFinalApprovalService, FinalApprovalService>();
+
         return services;
     }
 }
