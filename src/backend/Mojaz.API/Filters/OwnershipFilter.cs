@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Shared;
@@ -8,17 +9,19 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+using ApplicationEntity = Mojaz.Domain.Entities.Application;
+
 namespace Mojaz.API.Filters;
 
 public class OwnershipFilter : IAsyncAuthorizationFilter
 {
     private readonly IRepository<License> _licenseRepository;
-    private readonly IRepository<Application> _applicationRepository;
+    private readonly IRepository<ApplicationEntity> _applicationRepository;
     private static readonly string[] AllowedRoles = { "Admin", "Manager", "Security" };
 
     public OwnershipFilter(
         IRepository<License> licenseRepository,
-        IRepository<Application> applicationRepository)
+        IRepository<ApplicationEntity> applicationRepository)
     {
         _licenseRepository = licenseRepository;
         _applicationRepository = applicationRepository;

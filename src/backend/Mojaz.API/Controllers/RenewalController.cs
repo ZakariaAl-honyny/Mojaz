@@ -55,9 +55,7 @@ public class RenewalController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<object>), 409)]
     public async Task<IActionResult> CreateRenewal([FromBody] CreateRenewalRequest request)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        
-        var result = await _renewalService.CreateRenewalAsync(request, userId);
+        var result = await _renewalService.CreateRenewalAsync(request);
         return StatusCode(result.StatusCode, result);
     }
 

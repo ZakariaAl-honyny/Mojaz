@@ -103,6 +103,9 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<Application.Interfaces.Infrastructure.IPaymentReceiptGenerator, Documents.QuestPdfPaymentReceiptGenerator>();
         services.AddScoped<Application.Interfaces.Infrastructure.ILicensePdfGenerator, Documents.QuestPdfLicenseGenerator>();
 
+        // Renewal Service
+        services.AddScoped<Application.Interfaces.Services.IRenewalService, Application.Services.RenewalService>();
+
         // JWT Authentication & Authorization
         services.AddMojazAuthentication(configuration);
 

@@ -7,7 +7,7 @@
 
 ## Summary
 
-License generation and issuance system (Workflow Stage 10). Generates a unique license number (MOJ-YYYY-XXXXXXXX), calculates expiry based on category (5/10 years), generates a high-quality bilingual PDF using QuestPDF stored in Blob Storage, handles multiple issuance trigger collisions gracefully (409 Conflict), and provides a secure download endpoint.
+[Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
 
@@ -17,25 +17,21 @@ License generation and issuance system (Workflow Stage 10). Generates a unique l
   the iteration process.
 -->
 
-**Language/Version**: C# / .NET 8 (Backend), React / Next.js 15 (Frontend)
-**Primary Dependencies**: Entity Framework Core 8, QuestPDF, FluentValidation
-**Storage**: SQL Server 2022 (Licenses metadata), Blob Storage (NEEDS CLARIFICATION: exact blob storage provider AWS S3/Azure Blob/Local system)
-**Testing**: xUnit, Moq, FluentAssertions
-**Target Platform**: .NET Web API
-**Project Type**: Web API Endpoint & PDF Generator
-**Performance Goals**: PDF generation completes in under 2 seconds per request.
-**Constraints**: Must ensure idempotency (return 409 Conflict if already issued). Immutability of PDF.
-**Scale/Scope**: High-volume, synchronous API endpoint execution for all licenses.
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-1. **Clean Architecture Supremacy**: License generation logic MUST reside in the Application service. PDF generation utility can reside in Infrastructure. Controllers must remain thin. ZERO external dependencies in Domain.
-2. **Security First**: Download endpoint MUST authorize ownership or administrative access.
-3. **Configuration over Hardcoding**: Expiry years (10/5) MUST NOT be hardcoded in application logic; should be retrieved from `LicenseCategories` (SystemSettings or DB). 
-4. **Internationalization by Default**: PDF must support Arabic RTL (Cairo font or similar) and English LTR.
-5. **API Contract Consistency**: Endpoints must return `ApiResponse<T>`.
+[Gates determined based on constitution file]
 
 ## Project Structure
 
@@ -52,27 +48,52 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
 
 ```text
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
 src/
-├── Mojaz.Domain/
-│   └── Entities/License.cs
-├── Mojaz.Application/
-│   ├── Interfaces/ILicensePdfGenerator.cs
-│   ├── Interfaces/IBlobStorageService.cs
-│   └── Services/LicenseIssuanceService.cs
-├── Mojaz.Infrastructure/
-│   ├── Services/QuestPdfGenerator.cs
-│   └── Services/BlobStorageService.cs
-└── Mojaz.API/
-    └── Controllers/LicensesController.cs
+├── models/
+├── services/
+├── cli/
+└── lib/
 
 tests/
-└── Mojaz.Application.Tests/
-    └── Services/LicenseIssuanceServiceTests.cs
+├── contract/
+├── integration/
+└── unit/
+
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+src/
+| backend/
+  │   ├── models/
+  │   ├── services/
+  │   └── api/
+  └── tests/
+
+| frontend/
+  ├── src/
+  │   ├── app/
+  │   ├── components/
+  │   ├── pages/
+  │   └── services/
+  └── tests/
+
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
+
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
-**Structure Decision**: Standard Mojaz architecture adhering to Clean Architecture principles. Abstractions for PDF generation and Blob storage go into Application, concrete implementations (QuestPDF) in Infrastructure.
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
 
 ## Complexity Tracking
 

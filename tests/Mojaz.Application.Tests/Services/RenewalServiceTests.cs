@@ -1,9 +1,12 @@
 using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Mojaz.Application.DTOs.Renewal;
 using Mojaz.Application.Interfaces.Infrastructure;
+using Mojaz.Application.Interfaces.Services;
 using Mojaz.Application.Services;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
@@ -11,6 +14,8 @@ using Mojaz.Domain.Interfaces;
 using Mojaz.Shared;
 using Moq;
 using Xunit;
+
+using ApplicationEntity = Mojaz.Domain.Entities.Application;
 
 namespace Mojaz.Application.Tests.Services;
 
@@ -20,7 +25,7 @@ public class RenewalServiceTests
     private readonly Mock<IRepository<RenewalApplication>> _renewalApplicationRepositoryMock;
     private readonly Mock<IRepository<LicenseCategory>> _licenseCategoryRepositoryMock;
     private readonly Mock<IRepository<FeeStructure>> _feeStructureRepositoryMock;
-    private readonly Mock<IRepository<Application>> _applicationRepositoryMock;
+    private readonly Mock<IRepository<ApplicationEntity>> _applicationRepositoryMock;
     private readonly Mock<IRepository<User>> _userRepositoryMock;
     private readonly Mock<IRepository<MedicalExamination>> _medicalExaminationRepositoryMock;
     private readonly Mock<IRepository<PaymentTransaction>> _paymentRepositoryMock;
@@ -30,7 +35,7 @@ public class RenewalServiceTests
     private readonly Mock<INotificationService> _notificationServiceMock;
     private readonly Mock<ISystemSettingsService> _systemSettingsServiceMock;
     private readonly Mock<IMapper> _mapperMock;
-    private readonly Mock<Microsoft.Extensions.Logging.ILogger<RenewalService>> _loggerMock;
+    private readonly Mock<ILogger<RenewalService>> _loggerMock;
     private readonly RenewalService _service;
 
     public RenewalServiceTests()
@@ -39,7 +44,7 @@ public class RenewalServiceTests
         _renewalApplicationRepositoryMock = new Mock<IRepository<RenewalApplication>>();
         _licenseCategoryRepositoryMock = new Mock<IRepository<LicenseCategory>>();
         _feeStructureRepositoryMock = new Mock<IRepository<FeeStructure>>();
-        _applicationRepositoryMock = new Mock<IRepository<Application>>();
+        _applicationRepositoryMock = new Mock<IRepository<ApplicationEntity>>();
         _userRepositoryMock = new Mock<IRepository<User>>();
         _medicalExaminationRepositoryMock = new Mock<IRepository<MedicalExamination>>();
         _paymentRepositoryMock = new Mock<IRepository<PaymentTransaction>>();
@@ -49,7 +54,7 @@ public class RenewalServiceTests
         _notificationServiceMock = new Mock<INotificationService>();
         _systemSettingsServiceMock = new Mock<ISystemSettingsService>();
         _mapperMock = new Mock<IMapper>();
-        _loggerMock = new Mock<Microsoft.Extensions.Logging.ILogger<RenewalService>>();
+        _loggerMock = new Mock<ILogger<RenewalService>>();
 
         _service = new RenewalService(
             _licenseRepositoryMock.Object,
@@ -78,18 +83,18 @@ public class RenewalServiceTests
         var license = new License
         {
             Id = Guid.NewGuid(),
-            ApplicantId = applicantId,
+            HolderId = applicantId,
             LicenseCategoryId = categoryId,
             Status = LicenseStatus.Active,
-            ExpiryDate = DateTime.UtcNow.AddDays(30)
+            ExpiresAt = DateTime.UtcNow.AddDays(30)
         };
 
         _licenseRepositoryMock
-            .Setup(x => x.GetAsync(It.IsAny<Guid>(), It.IsAny<bool>()))
-            .ReturnsAsync(license);
+            .Setup(x => x.FindAsync(It.IsAny<Expression<Func<License, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new System.Collections.Generic.List<License> { license });
 
         _systemSettingsServiceMock
-            .Setup(x => x.GetAsync(It.IsAny<string>(), It.IsAny<bool>()))
+            .Setup(x => x.GetAsync(It.IsAny<string>()))
             .ReturnsAsync("90");
 
         // Act
@@ -108,18 +113,18 @@ public class RenewalServiceTests
         var license = new License
         {
             Id = Guid.NewGuid(),
-            ApplicantId = applicantId,
+            HolderId = applicantId,
             LicenseCategoryId = categoryId,
             Status = LicenseStatus.Expired,
-            ExpiryDate = DateTime.UtcNow.AddDays(-180)
+            ExpiresAt = DateTime.UtcNow.AddDays(-180)
         };
 
         _licenseRepositoryMock
-            .Setup(x => x.GetAsync(It.IsAny<Guid>(), It.IsAny<bool>()))
-            .ReturnsAsync(license);
+            .Setup(x => x.FindAsync(It.IsAny<Expression<Func<License, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new System.Collections.Generic.List<License> { license });
 
         _systemSettingsServiceMock
-            .Setup(x => x.GetAsync(It.IsAny<string>(), It.IsAny<bool>()))
+            .Setup(x => x.GetAsync(It.IsAny<string>()))
             .ReturnsAsync("90");
 
         // Act
@@ -143,27 +148,106 @@ public class RenewalServiceTests
         var license = new License
         {
             Id = request.OldLicenseId,
+            HolderId = applicantId,
             Status = LicenseStatus.Active,
-            ExpiryDate = DateTime.UtcNow.AddDays(30)
+            ExpiresAt = DateTime.UtcNow.AddDays(30)
         };
 
         _licenseRepositoryMock
-            .Setup(x => x.GetAsync(It.IsAny<Guid>(), It.IsAny<bool>()))
+            .Setup(x => x.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(license);
 
+        _licenseCategoryRepositoryMock
+            .Setup(x => x.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new LicenseCategory { Id = request.LicenseCategoryId });
+
         _renewalApplicationRepositoryMock
-            .Setup(x => x.AddAsync(It.IsAny<RenewalApplication>()))
-            .ReturnsAsync((RenewalApplication r) => r);
+            .Setup(x => x.FindAsync(It.IsAny<Expression<Func<RenewalApplication, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new System.Collections.Generic.List<RenewalApplication>());
+
+        _renewalApplicationRepositoryMock
+            .Setup(x => x.AddAsync(It.IsAny<RenewalApplication>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((RenewalApplication r, CancellationToken _) => r);
 
         _unitOfWorkMock
-            .Setup(x => x.SaveChangesAsync(It.IsAny<bool>()))
+            .Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
 
         // Act
-        var result = await _service.CreateRenewalAsync(request, applicantId);
+        var result = await _service.CreateRenewalAsync(request);
 
         // Assert
         result.Success.Should().BeTrue();
-        result.Data.Should().NotBeNull();
+        result.Data.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task IssueLicenseAsync_WithValidRenewal_DeactivatesOldLicense()
+    {
+        // Arrange
+        var holder = new User { Id = Guid.NewGuid(), FullNameAr = "Test User" };
+        var category = new LicenseCategory { Id = Guid.NewGuid(), NameAr = "B", NameEn = "B", Code = LicenseCategoryCode.B, ValidityYears = 10 };
+        var oldLicense = new License
+        {
+            Id = Guid.NewGuid(),
+            HolderId = holder.Id,
+            LicenseCategoryId = category.Id,
+            LicenseNumber = "MOJ-2025-12345678",
+            Status = LicenseStatus.Active,
+            IssuedAt = DateTime.UtcNow.AddYears(-5),
+            ExpiresAt = DateTime.UtcNow.AddYears(5)
+        };
+        
+        var renewalApplication = new RenewalApplication
+        {
+            Id = Guid.NewGuid(),
+            ApplicantId = holder.Id,
+            OldLicenseId = oldLicense.Id,
+            LicenseCategoryId = category.Id,
+            MedicalExaminationId = Guid.NewGuid(),
+            RenewalFeePaid = true,
+            Status = ApplicationStatus.Payment
+        };
+        
+        _renewalApplicationRepositoryMock
+            .Setup(x => x.GetByIdAsync(renewalApplication.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(renewalApplication);
+        
+        _licenseRepositoryMock
+            .Setup(x => x.GetByIdAsync(oldLicense.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(oldLicense);
+        
+        _licenseCategoryRepositoryMock
+            .Setup(x => x.GetByIdAsync(category.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(category);
+        
+        _userRepositoryMock
+            .Setup(x => x.GetByIdAsync(holder.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(holder);
+        
+        _licensePdfGeneratorMock
+            .Setup(x => x.GenerateLicensePdfAsync(It.IsAny<License>(), It.IsAny<User>(), It.IsAny<LicenseCategory>()))
+            .ReturnsAsync(new byte[] { 1, 2, 3 });
+        
+        _fileStorageServiceMock
+            .Setup(x => x.SaveAsync(It.IsAny<System.IO.Stream>(), It.IsAny<string>(), It.IsAny<string>()))
+            .ReturnsAsync("https://blob.com/license.pdf");
+        
+        _unitOfWorkMock
+            .Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(1);
+        
+        // Act
+        var result = await _service.IssueLicenseAsync(renewalApplication.Id);
+        
+        // Assert
+        result.Success.Should().BeTrue();
+        
+        // Verify old license was updated to Renewed status
+        _licenseRepositoryMock.Verify(
+            x => x.Update(It.Is<License>(l => 
+                l.Id == oldLicense.Id && 
+                l.Status == LicenseStatus.Renewed)),
+            Times.Once);
     }
 }
