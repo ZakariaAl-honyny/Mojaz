@@ -1,6 +1,6 @@
 using Mojaz.Application.DTOs.Application;
 using Mojaz.Domain.Enums;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using System;
 using System.Threading.Tasks;
 

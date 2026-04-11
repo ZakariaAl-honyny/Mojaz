@@ -13,6 +13,8 @@ public class User : SoftDeletableEntity
     public string PhoneNumber { get; set; } = string.Empty;
     public string PasswordHash { get; set; } = string.Empty;
     public UserRole Role { get; set; }
+    public AppRole AppRole { get; set; }
+    public bool RequiresPasswordReset { get; set; } = false;
     public DateTime DateOfBirth { get; set; }
     public string? Gender { get; set; }
     public string? Nationality { get; set; }
@@ -23,6 +25,9 @@ public class User : SoftDeletableEntity
     public string? ApplicantType { get; set; }
     public string PreferredLanguage { get; set; } = "ar";
     public string? NotificationPreferences { get; set; }
+    public bool EnableEmail { get; set; } = true;
+    public bool EnableSms { get; set; } = true;
+    public bool EnablePush { get; set; } = true;
     public RegistrationMethod RegistrationMethod { get; set; }
     public bool IsEmailVerified { get; set; }
     public bool IsPhoneVerified { get; set; }
@@ -33,4 +38,5 @@ public class User : SoftDeletableEntity
     public int FailedLoginAttempts { get; set; }
     public DateTime? LockoutEnd { get; set; }
     public DateTime? LastLoginAt { get; set; }
+    public bool IsSecurityBlocked { get; set; } = false;
 }

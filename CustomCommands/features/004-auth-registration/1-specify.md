@@ -1,7 +1,5 @@
 # Feature 004: User Registration via Email and Phone with Real OTP
 
-> **Status:** To be generated via `/speckit.clarify`
-
 ## WHAT WE'RE BUILDING:
 Complete user registration system supporting two methods (email and phone) with real OTP verification via SendGrid (email) and Twilio (SMS).
 

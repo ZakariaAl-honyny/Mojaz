@@ -17,19 +17,6 @@ public class LoginResponse
     public UserDto User { get; set; } = new UserDto();
 }
 
-public class VerifyOtpRequest
-{
-    public Guid UserId { get; set; }
-    public string Code { get; set; } = string.Empty;
-    public OtpPurpose Type { get; set; }
-}
-
-public class ResendOtpRequest
-{
-    public Guid UserId { get; set; }
-    public OtpPurpose Type { get; set; }
-}
-
 public class RefreshTokenRequest
 {
     public string RefreshToken { get; set; } = string.Empty;

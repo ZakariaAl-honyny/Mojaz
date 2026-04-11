@@ -2,10 +2,9 @@ namespace Mojaz.Domain.Enums;
 
 public enum DocumentStatus
 {
-    Pending,
-    Uploaded,
-    Approved,
-    Rejected
+    Pending = 0,
+    Approved = 1,
+    Rejected = 2
 }
 
 public enum AppointmentStatus
@@ -16,27 +15,15 @@ public enum AppointmentStatus
     NoShow
 }
 
-public enum TrainingStatus
-{
-    InProgress,
-    Completed,
-    Exempt
-}
-
 public enum LicenseStatus
 {
     Active,
     Expired,
     Suspended,
     Revoked,
-    Replaced
-}
-
-public enum OtpPurpose
-{
-    Registration,
-    Login,
-    PasswordReset
+    Replaced,
+    Renewed,
+    Superseded
 }
 
 public enum DestinationType

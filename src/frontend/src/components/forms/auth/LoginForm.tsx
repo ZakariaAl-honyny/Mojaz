@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -82,7 +82,9 @@ export default function LoginForm() {
         <div className="space-y-3">
           <div className="flex justify-between items-center px-1">
              <Label className="text-neutral-700 font-semibold">{t('login.password')}</Label>
-             <Link href="/forgot-password" className="text-xs font-bold text-primary-500 hover:text-primary-600 underline">هل نسيت كلمة المرور؟</Link>
+             <Link href="/forgot-password" className="text-xs font-bold text-primary-500 hover:text-primary-600 underline">
+               {t('login.forgotPassword')}
+             </Link>
           </div>
           <div className="relative group">
             <Lock className="absolute left-4 top-3.5 h-5 w-5 text-neutral-400 group-focus-within:text-primary-500 transition-colors rtl:left-auto rtl:right-4" />
@@ -90,6 +92,7 @@ export default function LoginForm() {
               {...register('password')} 
               type="password" 
               className="ps-12 h-12 rounded-xl border-neutral-200 focus:ring-2 focus:ring-primary-500 transition-shadow" 
+              placeholder={t('login.placeholderPassword')}
             />
           </div>
           {errors.password && <p className="text-xs text-error font-medium">{t('errors.passwordRequired')}</p>}

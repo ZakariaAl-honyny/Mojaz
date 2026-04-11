@@ -1,0 +1,1532 @@
+FAIL src/__tests__/components/Step1ServiceSelection.test.tsx
+  ● Step1ServiceSelection › renders all services from config
+
+    TestingLibraryElementError: Unable to find an element with the text: Select Service. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-8 animate-in fade-in duration-300"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"mb-8 border-b border-neutral-100 dark:border-neutral-800 pb-6"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-2"[39m
+            [36m>[39m
+              [0mundefined.title[0m
+            [36m</h2>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-neutral-500 dark:text-neutral-400"[39m
+            [36m>[39m
+              [0mundefined.description[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-1 md:grid-cols-2 gap-4"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"rounded-xl bg-white text-neutral-950 shadow-sm relative p-6 cursor-pointer transition-all duration-300 border-2 group border-neutral-100 dark:border-neutral-800 hover:border-primary-200 dark:hover:border-primary-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-start gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"w-12 h-12 rounded-lg flex items-center justify-center transition-colors duration-300 bg-neutral-100 dark:bg-neutral-800 text-neutral-500 group-hover:bg-primary-100 group-hover:text-primary-600"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33mclass[39m=[32m"lucide lucide-file-plus w-6 h-6"[39m
+                    [33mfill[39m=[32m"none"[39m
+                    [33mheight[39m=[32m"24"[39m
+                    [33mstroke[39m=[32m"currentColor"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                    [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [33mwidth[39m=[32m"24"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M9 15h6"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M12 18v-6"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex-1"[39m
+                [36m>[39m
+                  [36m<h3[39m
+                    [33mclass[39m=[32m"text-lg font-bold mb-1 transition-colors duration-300 text-neutral-900 dark:text-neutral-100"[39m
+                  [36m>[39m
+                    [0mwizard.step1.newLicense.title[0m
+                  [36m</h3>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2"[39m
+                  [36m>[39m
+                    [0mwizard.step1.newLicense.description[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"rounded-xl bg-white text-neutral-950 shadow-sm relative p-6 transition-all duration-300 border-2 group border-neutral-100 dark:border-neutral-800 hover:border-primary-200 dark:hover:border-primary-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 opacity-50 cursor-not-allowed grayscale"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-start gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"w-12 h-12 rounded-lg flex items-center justify-center transition-colors duration-300 bg-neutral-100 dark:bg-neutral-800 text-neutral-500 group-hover:bg-primary-100 group-hover:text-primary-600"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33mclass[39m=[32m"lucide lucide-refresh-cw w-6 h-6"[39m
+                    [33mfill[39m=[32m"none"[39m
+                    [33mheight[39m=[32m"24"[39m
+                    [33mstroke[39m=[32m"currentColor"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                    [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [33mwidth[39m=[32m"24"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M21 3v5h-5"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M8 16H3v5"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex-1"[39m
+                [36m>[39m
+                  [36m<h3[39m
+                    [33mclass[39m=[32m"text-lg font-bold mb-1 transition-colors duration-300 text-neutral-900 dark:text-neutral-100"[39m
+                  [36m>[39m
+                    [0mwizard.step1.renewal.title[0m
+                  [36m</h3>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2"[39m
+                  [36m>[39m
+                    [0mwizard.step1.renewal.description[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"absolute top-2 end-2"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"text-[10px] font-bold uppercase tracking-wider bg-neutral-200 dark:bg-neutral-700 text-neutral-500 px-2 py-0.5 rounded-full"[39m
+                  [36m>[39m
+                    [0mwizard.step1.notAvailable[0m
+                  [36m</span>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"rounded-xl bg-white text-neutral-950 shadow-sm relative p-6 transition-all duration-300 border-2 group border-neutral-100 dark:border-neutral-800 hover:border-primary-200 dark:hover:border-primary-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 opacity-50 cursor-not-allowed grayscale"[39m
+            [36m>[39m
+              [36m<div[39m
+                [3...
+
+    [0m [90m 62 |[39m     renderWithIntl([33m<[39m[33mStep1ServiceSelection[39m [33m/[39m[33m>[39m)[33m;[39m
+     [90m 63 |[39m     
+    [31m[1m>[22m[39m[90m 64 |[39m     expect(screen[33m.[39mgetByText([32m'Select Service'[39m))[33m.[39mtoBeInTheDocument()[33m;[39m
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 65 |[39m     [90m// We can't easily check for specific text without knowing the exact keys in SERVICES_CONFIG[39m
+     [90m 66 |[39m     [90m// but we know ServiceCard titles use the keys.[39m
+     [90m 67 |[39m     [90m// In our mock messages, we have 'New License' as a title.[39m[0m
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByText (src/__tests__/components/Step1ServiceSelection.test.tsx:64:19)
+
+  ● Step1ServiceSelection › calls setStep1 when a service is selected
+
+    TestingLibraryElementError: Unable to find an accessible element with the role "button"
+
+    Here are the accessible roles:
+
+      heading:
+
+      Name "undefined.title":
+      [36m<h2[39m
+        [33mclass[39m=[32m"text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-2"[39m
+      [36m/>[39m
+
+      Name "wizard.step1.newLicense.title":
+      [36m<h3[39m
+        [33mclass[39m=[32m"text-lg font-bold mb-1 transition-colors duration-300 text-neutral-900 dark:text-neutral-100"[39m
+      [36m/>[39m
+
+      Name "wizard.step1.renewal.title":
+      [36m<h3[39m
+        [33mclass[39m=[32m"text-lg font-bold mb-1 transition-colors duration-300 text-neutral-900 dark:text-neutral-100"[39m
+      [36m/>[39m
+
+      Name "wizard.step1.replacement.title":
+      [36m<h3[39m
+        [33mclass[39m=[32m"text-lg font-bold mb-1 transition-colors duration-300 text-neutral-900 dark:text-neutral-100"[39m
+      [36m/>[39m
+
+      Name "wizard.step1.upgrade.title":
+      [36m<h3[39m
+        [33mclass[39m=[32m"text-lg font-bold mb-1 transition-colors duration-300 text-neutral-900 dark:text-neutral-100"[39m
+      [36m/>[39m
+
+      Name "wizard.step1.retake.title":
+      [36m<h3[39m
+        [33mclass[39m=[32m"text-lg font-bold mb-1 transition-colors duration-300 text-neutral-900 dark:text-neutral-100"[39m
+      [36m/>[39m
+
+      Name "wizard.step1.appointment.title":
+      [36m<h3[39m
+        [33mclass[39m=[32m"text-lg font-bold mb-1 transition-colors duration-300 text-neutral-900 dark:text-neutral-100"[39m
+      [36m/>[39m
+
+      Name "wizard.step1.cancellation.title":
+      [36m<h3[39m
+        [33mclass[39m=[32m"text-lg font-bold mb-1 transition-colors duration-300 text-neutral-900 dark:text-neutral-100"[39m
+      [36m/>[39m
+
+      Name "wizard.step1.download.title":
+      [36m<h3[39m
+        [33mclass[39m=[32m"text-lg font-bold mb-1 transition-colors duration-300 text-neutral-900 dark:text-neutral-100"[39m
+      [36m/>[39m
+
+      --------------------------------------------------
+      paragraph:
+
+      Name "":
+      [36m<p[39m
+        [33mclass[39m=[32m"text-neutral-500 dark:text-neutral-400"[39m
+      [36m/>[39m
+
+      Name "":
+      [36m<p[39m
+        [33mclass[39m=[32m"text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2"[39m
+      [36m/>[39m
+
+      Name "":
+      [36m<p[39m
+        [33mclass[39m=[32m"text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2"[39m
+      [36m/>[39m
+
+      Name "":
+      [36m<p[39m
+        [33mclass[39m=[32m"text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2"[39m
+      [36m/>[39m
+
+      Name "":
+      [36m<p[39m
+        [33mclass[39m=[32m"text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2"[39m
+      [36m/>[39m
+
+      Name "":
+      [36m<p[39m
+        [33mclass[39m=[32m"text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2"[39m
+      [36m/>[39m
+
+      Name "":
+      [36m<p[39m
+        [33mclass[39m=[32m"text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2"[39m
+      [36m/>[39m
+
+      Name "":
+      [36m<p[39m
+        [33mclass[39m=[32m"text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2"[39m
+      [36m/>[39m
+
+      Name "":
+      [36m<p[39m
+        [33mclass[39m=[32m"text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2"[39m
+      [36m/>[39m
+
+      --------------------------------------------------
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-8 animate-in fade-in duration-300"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"mb-8 border-b border-neutral-100 dark:border-neutral-800 pb-6"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-2"[39m
+            [36m>[39m
+              [0mundefined.title[0m
+            [36m</h2>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-neutral-500 dark:text-neutral-400"[39m
+            [36m>[39m
+              [0mundefined.description[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-1 md:grid-cols-2 gap-4"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"rounded-xl bg-white text-neutral-950 shadow-sm relative p-6 cursor-pointer transition-all duration-300 border-2 group border-neutral-100 dark:border-neutral-800 hover:border-primary-200 dark:hover:border-primary-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-start gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"w-12 h-12 rounded-lg flex items-center justify-center transition-colors duration-300 bg-neutral-100 dark:bg-neutral-800 text-neutral-500 group-hover:bg-primary-100 group-hover:text-primary-600"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33mclass[39m=[32m"lucide lucide-file-plus w-6 h-6"[39m
+                    [33mfill[39m=[32m"none"[39m
+                    [33mheight[39m=[32m"24"[39m
+                    [33mstroke[39m=[32m"currentColor"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                    [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [33mwidth[39m=[32m"24"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M14 2v4a2 2 0 0 0 2 2h4"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M9 15h6"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M12 18v-6"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex-1"[39m
+                [36m>[39m
+                  [36m<h3[39m
+                    [33mclass[39m=[32m"text-lg font-bold mb-1 transition-colors duration-300 text-neutral-900 dark:text-neutral-100"[39m
+                  [36m>[39m
+                    [0mwizard.step1.newLicense.title[0m
+                  [36m</h3>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2"[39m
+                  [36m>[39m
+                    [0mwizard.step1.newLicense.description[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"rounded-xl bg-white text-neutral-950 shadow-sm relative p-6 transition-all duration-300 border-2 group border-neutral-100 dark:border-neutral-800 hover:border-primary-200 dark:hover:border-primary-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 opacity-50 cursor-not-allowed grayscale"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-start gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"w-12 h-12 rounded-lg flex items-center justify-center transition-colors duration-300 bg-neutral-100 dark:bg-neutral-800 text-neutral-500 group-hover:bg-primary-100 group-hover:text-primary-600"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33mclass[39m=[32m"lucide lucide-refresh-cw w-6 h-6"[39m
+                    [33mfill[39m=[32m"none"[39m
+                    [33mheight[39m=[32m"24"[39m
+                    [33mstroke[39m=[32m"currentColor"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                    [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [33mwidth[39m=[32m"24"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M21 3v5h-5"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M8 16H3v5"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex-1"[39m
+                [36m>[39m
+                  [36m<h3[39m
+                    [33mclass[39m=[32m"text-lg font-bold mb-1 transition-colors duration-300 text-neutral-900 dark:text-neutral-100"[39m
+                  [36m>[39m
+                    [0mwizard.step1.renewal.title[0m
+                  [36m</h3>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2"[39m
+                  [36m>[39m
+                    [0mwizard.step1.renewal.description[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"absolute top-2 end-2"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"text-[10px] font-bold uppercase tracking-wider bg-neutral-200 dark:bg-neutral-700 text-neutral-500 px-2 py-0.5 rounded-full"[39m
+                  [36m>[39m
+                    [0mwizard.step1.notAvailable[0m
+                  [36m</span>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"rounded-xl bg-white text-neutral-950 shadow-sm relative p-6 transition-all duration-300 border-2 group border-neutral-100 dark:border-neutral-800 hover:border-primary-200 dark:hover:border-primary-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 opacity-50 cursor-not-allowed grayscale"[39m
+            [36m>[39m
+              [36m<div[39m
+                [3...
+
+    [0m [90m 73 |[39m     [90m// Find the New License issuance card and click it[39m
+     [90m 74 |[39m     [90m// Based on SERVICES_CONFIG, NewLicense is the first one.[39m
+    [31m[1m>[22m[39m[90m 75 |[39m     [36mconst[39m cards [33m=[39m screen[33m.[39mgetAllByRole([32m'button'[39m)[33m;[39m
+     [90m    |[39m                          [31m[1m^[22m[39m
+     [90m 76 |[39m     [90m// Assuming the first card is NewLicense and it's available in MVP[39m
+     [90m 77 |[39m     fireEvent[33m.[39mclick(cards[[35m0[39m])[33m;[39m
+     [90m 78 |[39m[0m
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+      at Object.getAllByRole (src/__tests__/components/Step1ServiceSelection.test.tsx:75:26)
+
+FAIL src/__tests__/components/WizardShell.test.tsx
+  ● Test suite failed to run
+
+    Cannot find module './WizardProgressBar' from 'src/__tests__/components/WizardShell.test.tsx'
+
+    [0m [90m  8 |[39m
+     [90m  9 |[39m [90m// Mock child components to keep unit test focused[39m
+    [31m[1m>[22m[39m[90m 10 |[39m jest[33m.[39mmock([32m'./WizardProgressBar'[39m[33m,[39m () [33m=>[39m ({
+     [90m    |[39m      [31m[1m^[22m[39m
+     [90m 11 |[39m   [33mWizardProgressBar[39m[33m:[39m () [33m=>[39m [33m<[39m[33mdiv[39m data[33m-[39mtestid[33m=[39m[32m"progress-bar"[39m [33m/[39m[33m>[39m[33m,[39m
+     [90m 12 |[39m }))[33m;[39m
+     [90m 13 |[39m jest[33m.[39mmock([32m'./WizardNavButtons'[39m[33m,[39m () [33m=>[39m ({[0m
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/index.js:863:11)
+      at Object.mock (src/__tests__/components/WizardShell.test.tsx:10:6)
+
+FAIL src/__tests__/components/Step2LicenseCategory.test.tsx (5.074 s)
+  ● Console
+
+    console.error
+      Warning: Functions are not valid as a React child. This may happen if you return a Component instead of <Component /> from render. Or maybe you meant to call this function rather than return it.
+          at h2
+          at div
+          at WizardStepHeader
+          at div
+          at Step2LicenseCategory (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step2LicenseCategory.tsx:23:126)
+          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step2LicenseCategory.test.tsx:22:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+
+    [0m [90m 54 |[39m
+     [90m 55 |[39m [36mconst[39m renderWithProviders [33m=[39m (component[33m:[39m [33mReact[39m[33m.[39m[33mReactNode[39m) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 56 |[39m   [36mreturn[39m render(
+     [90m    |[39m                [31m[1m^[22m[39m
+     [90m 57 |[39m     [33m<[39m[33mQueryClientProvider[39m client[33m=[39m{queryClient}[33m>[39m
+     [90m 58 |[39m       [33m<[39m[33mNextIntlClientProvider[39m locale[33m=[39m[32m"en"[39m messages[33m=[39m{mockMessages}[33m>[39m
+     [90m 59 |[39m         {component}[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnOnFunctionType (node_modules/react-dom/cjs/react-dom.development.js:13136:5)
+      at reconcileChildFibers (node_modules/react-dom/cjs/react-dom.development.js:14073:9)
+      at reconcileChildren (node_modules/react-dom/cjs/react-dom.development.js:19186:28)
+      at updateHostComponent (node_modules/react-dom/cjs/react-dom.development.js:19953:3)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21657:14)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25777:74)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:189:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:291:10)
+      at renderWithProviders (src/__tests__/components/Step2LicenseCategory.test.tsx:56:16)
+      at Object.renderWithProviders (src/__tests__/components/Step2LicenseCategory.test.tsx:106:5)
+
+    console.error
+      Warning: Functions are not valid as a React child. This may happen if you return a Component instead of <Component /> from render. Or maybe you meant to call this function rather than return it.
+          at p
+          at div
+          at WizardStepHeader
+          at div
+          at Step2LicenseCategory (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step2LicenseCategory.tsx:23:126)
+          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step2LicenseCategory.test.tsx:22:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+
+    [0m [90m 54 |[39m
+     [90m 55 |[39m [36mconst[39m renderWithProviders [33m=[39m (component[33m:[39m [33mReact[39m[33m.[39m[33mReactNode[39m) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 56 |[39m   [36mreturn[39m render(
+     [90m    |[39m                [31m[1m^[22m[39m
+     [90m 57 |[39m     [33m<[39m[33mQueryClientProvider[39m client[33m=[39m{queryClient}[33m>[39m
+     [90m 58 |[39m       [33m<[39m[33mNextIntlClientProvider[39m locale[33m=[39m[32m"en"[39m messages[33m=[39m{mockMessages}[33m>[39m
+     [90m 59 |[39m         {component}[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnOnFunctionType (node_modules/react-dom/cjs/react-dom.development.js:13136:5)
+      at reconcileChildFibers (node_modules/react-dom/cjs/react-dom.development.js:14073:9)
+      at reconcileChildren (node_modules/react-dom/cjs/react-dom.development.js:19186:28)
+      at updateHostComponent (node_modules/react-dom/cjs/react-dom.development.js:19953:3)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21657:14)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25777:74)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:189:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:291:10)
+      at renderWithProviders (src/__tests__/components/Step2LicenseCategory.test.tsx:56:16)
+      at Object.renderWithProviders (src/__tests__/components/Step2LicenseCategory.test.tsx:106:5)
+
+    console.error
+      Warning: Functions are not valid as a React child. This may happen if you return a Component instead of <Component /> from render. Or maybe you meant to call this function rather than return it.
+          at div
+          at div
+          at Step2LicenseCategory (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step2LicenseCategory.tsx:23:126)
+          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step2LicenseCategory.test.tsx:22:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+
+    [0m [90m 54 |[39m
+     [90m 55 |[39m [36mconst[39m renderWithProviders [33m=[39m (component[33m:[39m [33mReact[39m[33m.[39m[33mReactNode[39m) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 56 |[39m   [36mreturn[39m render(
+     [90m    |[39m                [31m[1m^[22m[39m
+     [90m 57 |[39m     [33m<[39m[33mQueryClientProvider[39m client[33m=[39m{queryClient}[33m>[39m
+     [90m 58 |[39m       [33m<[39m[33mNextIntlClientProvider[39m locale[33m=[39m[32m"en"[39m messages[33m=[39m{mockMessages}[33m>[39m
+     [90m 59 |[39m         {component}[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnOnFunctionType (node_modules/react-dom/cjs/react-dom.development.js:13136:5)
+      at reconcileChildFibers (node_modules/react-dom/cjs/react-dom.development.js:14073:9)
+      at reconcileChildren (node_modules/react-dom/cjs/react-dom.development.js:19186:28)
+      at updateHostComponent (node_modules/react-dom/cjs/react-dom.development.js:19953:3)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21657:14)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25777:74)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:189:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:291:10)
+      at renderWithProviders (src/__tests__/components/Step2LicenseCategory.test.tsx:56:16)
+      at Object.renderWithProviders (src/__tests__/components/Step2LicenseCategory.test.tsx:144:5)
+
+  ● Step2LicenseCategory › renders loading state initially
+
+    TestingLibraryElementError: Unable to find an element with the text: Select License Category. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-6 animate-in fade-in"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"mb-8 border-b border-neutral-100 dark:border-neutral-800 pb-6"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-2"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-neutral-500 dark:text-neutral-400"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"p-5 rounded-gov border-2 border-neutral-100 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-center gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-800 animate-pulse"[39m
+                [36m/>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex-1 space-y-2"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"h-4 w-20 bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse"[39m
+                  [36m/>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"h-3 w-full bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"p-5 rounded-gov border-2 border-neutral-100 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-center gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-800 animate-pulse"[39m
+                [36m/>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex-1 space-y-2"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"h-4 w-20 bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse"[39m
+                  [36m/>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"h-3 w-full bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"p-5 rounded-gov border-2 border-neutral-100 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-center gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-800 animate-pulse"[39m
+                [36m/>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex-1 space-y-2"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"h-4 w-20 bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse"[39m
+                  [36m/>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"h-3 w-full bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"p-5 rounded-gov border-2 border-neutral-100 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-center gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-800 animate-pulse"[39m
+                [36m/>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex-1 space-y-2"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"h-4 w-20 bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse"[39m
+                  [36m/>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"h-3 w-full bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"p-5 rounded-gov border-2 border-neutral-100 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-center gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-800 animate-pulse"[39m
+                [36m/>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex-1 space-y-2"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"h-4 w-20 bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse"[39m
+                  [36m/>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"h-3 w-full bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"p-5 rounded-gov border-2 border-neutral-100 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-center gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-800 animate-pulse"[39m
+                [36m/>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex-1 space-y-2"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"h-4 w-20 bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse"[39m
+                  [36m/>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"h-3 w-full bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+    [0m [90m 106 |[39m     renderWithProviders([33m<[39m[33mStep2LicenseCategory[39m [33m/[39m[33m>[39m)[33m;[39m
+     [90m 107 |[39m     [90m// Our implementation shows skeletons, but we can check for the header at least[39m
+    [31m[1m>[22m[39m[90m 108 |[39m     expect(screen[33m.[39mgetByText([32m'Select License Category'[39m))[33m.[39mtoBeInTheDocument()[33m;[39m
+     [90m     |[39m                   [31m[1m^[22m[39m
+     [90m 109 |[39m   })[33m;[39m
+     [90m 110 |[39m
+     [90m 111 |[39m   it([32m'renders categories after loading'[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByText (src/__tests__/components/Step2LicenseCategory.test.tsx:108:19)
+
+  ● Step2LicenseCategory › shows error state and handles retry
+
+    Unable to find an element with the text: Failed to load categories. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-6 animate-in fade-in duration-300"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"mb-8 border-b border-neutral-100 dark:border-neutral-800 pb-6"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-2"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-neutral-500 dark:text-neutral-400"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"rounded-xl bg-white text-neutral-950 shadow-sm relative p-5 cursor-pointer transition-all duration-300 border-2 border-neutral-100 dark:border-neutral-800 hover:border-primary-200 dark:hover:border-primary-800"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-center gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"w-12 h-12 rounded-full flex items-center justify-center text-xl font-black transition-colors duration-300 shadow-sm bg-neutral-100 dark:bg-neutral-800 text-neutral-400"[39m
+                [36m>[39m
+                  [0mA[0m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex-1"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-center justify-between mb-1"[39m
+                  [36m>[39m
+                    [36m<h3[39m
+                      [33mclass[39m=[32m"font-bold transition-colors duration-300 text-neutral-900 dark:text-neutral-100"[39m
+                    [36m>[39m
+                      [0mMotorcycle[0m
+                    [36m</h3>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-[10px] font-bold px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-500"[39m
+                    [36m>[39m
+                      [0m16[0m
+                      [0m+[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"text-xs text-neutral-500 dark:text-neutral-400 line-clamp-1"[39m
+                  [36m>[39m
+                    [0mMotorcycle license[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"rounded-xl bg-white text-neutral-950 shadow-sm relative p-5 cursor-pointer transition-all duration-300 border-2 border-neutral-100 dark:border-neutral-800 hover:border-primary-200 dark:hover:border-primary-800"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-center gap-4"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"w-12 h-12 rounded-full flex items-center justify-center text-xl font-black transition-colors duration-300 shadow-sm bg-neutral-100 dark:bg-neutral-800 text-neutral-400"[39m
+                [36m>[39m
+                  [0mB[0m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex-1"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"flex items-center justify-between mb-1"[39m
+                  [36m>[39m
+                    [36m<h3[39m
+                      [33mclass[39m=[32m"font-bold transition-colors duration-300 text-neutral-900 dark:text-neutral-100"[39m
+                    [36m>[39m
+                      [0mPrivate[0m
+                    [36m</h3>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"text-[10px] font-bold px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-500"[39m
+                    [36m>[39m
+                      [0m18[0m
+                      [0m+[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"text-xs text-neutral-500 dark:text-neutral-400 line-clamp-1"[39m
+                  [36m>[39m
+                    [0mPrivate vehicle license[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-sm text-neutral-500 dark:text-neutral-400 text-center italic"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+    [0m [90m 172 |[39m     renderWithProviders([33m<[39m[33mStep2LicenseCategory[39m [33m/[39m[33m>[39m)[33m;[39m
+     [90m 173 |[39m     
+    [31m[1m>[22m[39m[90m 174 |[39m     [36mawait[39m waitFor(() [33m=>[39m {
+     [90m     |[39m                  [31m[1m^[22m[39m
+     [90m 175 |[39m       expect(screen[33m.[39mgetByText([32m'Failed to load categories'[39m))[33m.[39mtoBeInTheDocument()[33m;[39m
+     [90m 176 |[39m     })[33m;[39m
+     [90m 177 |[39m[0m
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (src/__tests__/components/Step2LicenseCategory.test.tsx:174:18)
+
+PASS src/__tests__/components/CategoryCard.test.tsx
+FAIL src/__tests__/components/Step4ApplicationDetails.test.tsx (6.259 s)
+  ● Console
+
+    console.error
+      Warning: Functions are not valid as a React child. This may happen if you return a Component instead of <Component /> from render. Or maybe you meant to call this function rather than return it.
+          at h2
+          at div
+          at WizardStepHeader
+          at div
+          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
+          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+
+    [0m [90m 66 |[39m
+     [90m 67 |[39m [36mconst[39m renderWithProviders [33m=[39m (component[33m:[39m [33mReact[39m[33m.[39m[33mReactNode[39m) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 68 |[39m   [36mreturn[39m render(
+     [90m    |[39m                [31m[1m^[22m[39m
+     [90m 69 |[39m     [33m<[39m[33mQueryClientProvider[39m client[33m=[39m{queryClient}[33m>[39m
+     [90m 70 |[39m       [33m<[39m[33mNextIntlClientProvider[39m locale[33m=[39m[32m"en"[39m messages[33m=[39m{mockMessages}[33m>[39m
+     [90m 71 |[39m         {component}[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnOnFunctionType (node_modules/react-dom/cjs/react-dom.development.js:13136:5)
+      at reconcileChildFibers (node_modules/react-dom/cjs/react-dom.development.js:14073:9)
+      at reconcileChildren (node_modules/react-dom/cjs/react-dom.development.js:19186:28)
+      at updateHostComponent (node_modules/react-dom/cjs/react-dom.development.js:19953:3)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21657:14)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25777:74)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:189:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:291:10)
+      at renderWithProviders (src/__tests__/components/Step4ApplicationDetails.test.tsx:68:16)
+      at Object.renderWithProviders (src/__tests__/components/Step4ApplicationDetails.test.tsx:107:5)
+
+    console.error
+      Warning: Functions are not valid as a React child. This may happen if you return a Component instead of <Component /> from render. Or maybe you meant to call this function rather than return it.
+          at p
+          at div
+          at WizardStepHeader
+          at div
+          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
+          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+
+    [0m [90m 66 |[39m
+     [90m 67 |[39m [36mconst[39m renderWithProviders [33m=[39m (component[33m:[39m [33mReact[39m[33m.[39m[33mReactNode[39m) [33m=>[39m {
+    [31m[1m>[22m[39m[90m 68 |[39m   [36mreturn[39m render(
+     [90m    |[39m                [31m[1m^[22m[39m
+     [90m 69 |[39m     [33m<[39m[33mQueryClientProvider[39m client[33m=[39m{queryClient}[33m>[39m
+     [90m 70 |[39m       [33m<[39m[33mNextIntlClientProvider[39m locale[33m=[39m[32m"en"[39m messages[33m=[39m{mockMessages}[33m>[39m
+     [90m 71 |[39m         {component}[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnOnFunctionType (node_modules/react-dom/cjs/react-dom.development.js:13136:5)
+      at reconcileChildFibers (node_modules/react-dom/cjs/react-dom.development.js:14073:9)
+      at reconcileChildren (node_modules/react-dom/cjs/react-dom.development.js:19186:28)
+      at updateHostComponent (node_modules/react-dom/cjs/react-dom.development.js:19953:3)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21657:14)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at performConcurrentWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:25777:74)
+      at flushActQueue (node_modules/react/cjs/react.development.js:2667:24)
+      at act (node_modules/react/cjs/react.development.js:2582:11)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:189:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:291:10)
+      at renderWithProviders (src/__tests__/components/Step4ApplicationDetails.test.tsx:68:16)
+      at Object.renderWithProviders (src/__tests__/components/Step4ApplicationDetails.test.tsx:107:5)
+
+    console.error
+      Warning: Functions are not valid as a React child. This may happen if you return a Component instead of <Component /> from render. Or maybe you meant to call this function rather than return it.
+          at label
+          at C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@radix-ui\react-primitive\src\primitive.tsx:40:13
+          at Label
+          at className (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\ui\label.tsx:17:6)
+          at div
+          at div
+          at div
+          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
+          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnOnFunctionType (node_modules/react-dom/cjs/react-dom.development.js:13136:5)
+      at reconcileChildFibers (node_modules/react-dom/cjs/react-dom.development.js:14073:9)
+      at reconcileChildren (node_modules/react-dom/cjs/react-dom.development.js:19186:28)
+      at updateHostComponent (node_modules/react-dom/cjs/react-dom.development.js:19953:3)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21657:14)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at performSyncWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:26124:20)
+      at flushSyncCallbacks (node_modules/react-dom/cjs/react-dom.development.js:12042:22)
+      at node_modules/react-dom/cjs/react-dom.development.js:25690:13
+      at invokeTheCallbackFunction (node_modules/jsdom/lib/jsdom/living/generated/Function.js:19:26)
+      at node_modules/jsdom/lib/jsdom/browser/Window.js:613:9
+
+    console.error
+      Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+      
+      Check the render method of `Step4ApplicationDetails`.
+          at label (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\shared\FormField.tsx:73:3)
+          at div
+          at div
+          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
+          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at validateFunctionComponentInDev (node_modules/react-dom/cjs/react-dom.development.js:20222:9)
+      at mountIndeterminateComponent (node_modules/react-dom/cjs/react-dom.development.js:20189:7)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21626:16)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at performSyncWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:26124:20)
+      at flushSyncCallbacks (node_modules/react-dom/cjs/react-dom.development.js:12042:22)
+      at node_modules/react-dom/cjs/react-dom.development.js:25690:13
+      at invokeTheCallbackFunction (node_modules/jsdom/lib/jsdom/living/generated/Function.js:19:26)
+      at node_modules/jsdom/lib/jsdom/browser/Window.js:613:9
+
+    console.error
+      Warning: Functions are not valid as a React child. This may happen if you return a Component instead of <Component /> from render. Or maybe you meant to call this function rather than return it.
+          at option
+          at select
+          at div
+          at div
+          at label (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\shared\FormField.tsx:17:3)
+          at label (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\shared\FormField.tsx:73:3)
+          at div
+          at div
+          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
+          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnOnFunctionType (node_modules/react-dom/cjs/react-dom.development.js:13136:5)
+      at reconcileChildFibers (node_modules/react-dom/cjs/react-dom.development.js:14073:9)
+      at reconcileChildren (node_modules/react-dom/cjs/react-dom.development.js:19186:28)
+      at updateHostComponent (node_modules/react-dom/cjs/react-dom.development.js:19953:3)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21657:14)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at performSyncWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:26124:20)
+      at flushSyncCallbacks (node_modules/react-dom/cjs/react-dom.development.js:12042:22)
+      at node_modules/react-dom/cjs/react-dom.development.js:25690:13
+      at invokeTheCallbackFunction (node_modules/jsdom/lib/jsdom/living/generated/Function.js:19:26)
+      at node_modules/jsdom/lib/jsdom/browser/Window.js:613:9
+
+    console.error
+      Warning: Functions are not valid as a React child. This may happen if you return a Component instead of <Component /> from render. Or maybe you meant to call this function rather than return it.
+          at span
+          at div
+          at div
+          at div
+          at div
+          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
+          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnOnFunctionType (node_modules/react-dom/cjs/react-dom.development.js:13136:5)
+      at reconcileChildFibers (node_modules/react-dom/cjs/react-dom.development.js:14073:9)
+      at reconcileChildren (node_modules/react-dom/cjs/react-dom.development.js:19186:28)
+      at updateHostComponent (node_modules/react-dom/cjs/react-dom.development.js:19953:3)
+      at beginWork (node_modules/react-dom/cjs/react-dom.development.js:21657:14)
+      at beginWork$1 (node_modules/react-dom/cjs/react-dom.development.js:27465:14)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom.development.js:26599:12)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom.development.js:26505:5)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom.development.js:26473:7)
+      at performSyncWorkOnRoot (node_modules/react-dom/cjs/react-dom.development.js:26124:20)
+      at flushSyncCallbacks (node_modules/react-dom/cjs/react-dom.development.js:12042:22)
+      at node_modules/react-dom/cjs/react-dom.development.js:25690:13
+      at invokeTheCallbackFunction (node_modules/jsdom/lib/jsdom/living/generated/Function.js:19:26)
+      at node_modules/jsdom/lib/jsdom/browser/Window.js:613:9
+
+  ● Step4ApplicationDetails › shows special needs note when checkbox is checked
+
+    Unable to find a label with the text of: Special Needs Declaration
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-8 animate-in fade-in duration-300"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"mb-8 border-b border-neutral-100 dark:border-neutral-800 pb-6"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-2"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-neutral-500 dark:text-neutral-400"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-2"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"space-y-2 flex gap-4 mt-2"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex items-center space-x-2"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"h-4 w-4 border border-neutral-300 dark:border-neutral-600 text-primary-500 focus:ring-2 focus:ring-primary-500"[39m
+                    [33mid[39m=[32m"type-citizen"[39m
+                    [33mtype[39m=[32m"radio"[39m
+                    [33mvalue[39m=[32m"Citizen"[39m
+                  [36m/>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer font-normal"[39m
+                    [33mfor[39m=[32m"type-citizen"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex items-center space-x-2"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"h-4 w-4 border border-neutral-300 dark:border-neutral-600 text-primary-500 focus:ring-2 focus:ring-primary-500"[39m
+                    [33mid[39m=[32m"type-resident"[39m
+                    [33mtype[39m=[32m"radio"[39m
+                    [33mvalue[39m=[32m"Resident"[39m
+                  [36m/>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer font-normal"[39m
+                    [33mfor[39m=[32m"type-resident"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-2"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors"[39m
+                [33mfor[39m=[32m"preferredCenterId"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"relative"[39m
+              [36m>[39m
+                [36m<select[39m
+                  [33maria-invalid[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors border-neutral-200 dark:border-neutral-700"[39m
+                  [33mid[39m=[32m"preferredCenterId"[39m
+                  [33mname[39m=[32m"preferredCenterId"[39m
+                  [33mrequired[39m=[32m""[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m/>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"1"[39m
+                  [36m>[39m
+                    [0mRiyadh Center[0m
+                    [0m - [0m
+                    [0mRiyadh[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"2"[39m
+                  [36m>[39m
+                    [0mJeddah Center[0m
+                    [0m - [0m
+                    [0mJeddah[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-2"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-center gap-3 mt-2"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-sm font-medium text-primary-600"[39m
+                [36m/>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"relative inline-flex items-center cursor-pointer"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"sr-only peer"[39m
+                    [33mtype[39m=[32m"checkbox"[39m
+                  [36m/>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"w-11 h-6 rounded-full transition-colors bg-neutral-200 peer-checked:bg-primary-500 dark:bg-neutral-700 dark:peer-checked:bg-primary-500 peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-primary-500 peer-focus-visible:ring-offset-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-50"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform translate-x-0 peer-checked:translate-x-5 dark:bg-white"[39m
+                    [36m/>[39m
+                  [36m</div>[39m
+                [36m</label>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-sm text-neutral-500"[39m
+                [36m/>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-2"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"space-y-2 flex flex-wrap gap-3 mt-2"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex items-center space-x-2"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"h-4 w-4 border border-neutral-300 dark:border-neutral-600 text-primary-500 focus:ring-2 focus:ring-primary-500"[39m
+                    [33mid[39m=[32m"pref-morning"[39m
+                    [33mtype[39m=[32m"radio"[39m
+                    [33mvalue[39m=[32m"Morning"[39m
+                  [36m/>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer font-normal text-sm"[39m
+                    [33mfor[39m=[32m"pref-morning"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex items-center space-x-2"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"h-4 w-4 border border-neutral-300 dark:border-neutral-600 text-primary-500 focus:ring-2 focus:ring-primary-500"[39m
+                    [33mid[39m=[32m"pref-afternoon"[39m
+                    [33mtype[39m=[32m"radio"[39m
+                    [33mvalue[39m=[32m"Afternoon"[39m
+                  [36m/>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer font-normal text-sm"[39m
+                    [33mfor[39m=[32m"pref-afternoon"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex items-center space-x-2"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"h-4 w-4 border border-neutral-300 dark:border-neutral-600 text-primary-500 focus:ring-2 focus:ring-primary-500"[39m
+                    [33mid[39m=[32m"pref-evening"[39m
+                    [33mtype[39m=[32m"radio"[39m
+                    [33mvalue[39m=[32m"Evening"[39m
+                  [36m/>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer font-normal text-sm"[39m
+                    [33mfor[39m=[32m"pref-evening"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex items-center space-x-2"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"h-4 w-4 border border-neutral-300 dark:border-neutral-600 text-primary-500 focus:ring-2 focus:ring-primary-500"[39m
+                    [33mid[39m=[32m"pref-nopreference"[39m
+                    [33mtype[39m=[32m"radio"[39m
+                    [33mvalue[39m=[32m"NoPreference"[39m
+                  [36m/>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer font-normal text-sm"[39m
+                    [33mfor[39m=[32m"pref-nopreference"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"md:col-span-2 space-y-4 pt-4 border-t border-neutral-100 dark:border-neutral-800"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-start space-x-3"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-checked[39m=[32m"false"[39m
+                  [33maria-labelledby[39m=[32m"specialNeedsDeclaration-label"[39m
+                  [33mclass[39m=[32m"peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input transition-colors outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary"[39m
+                  [33mdata-slot[39m=[32m"checkbox"[39m
+                  [33mdata-unchecked[39m=[32m""[39m
+                  [33mid[39m=[32m"base-ui-:r3:"[39m
+                  [33mrole[39m=[32m"checkbox"[39m
+                  [33mtabindex[39m=[32m"0"[39m
+                [36m/>[39m
+                [36m<input[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mid[39m=[32m"specialNeedsDeclaration"[39m
+                  [33mstyle[39m=[32m"clip-path: inset(50%); overflow: hidden; white-space: nowrap; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px; position: fixed; top: 0px; left: 0px;"[39m
+                  [33mtabindex[39m=[32m"-1"[39m
+                  [33mtype[39m=[32m"checkbox"[39m
+                [36m/>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"grid gap-1.5 leading-none"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium leading-none cursor-pointer"[39m
+                    [33mfor[39m=[32m"specialNeedsDeclaration"[39m
+                    [33mid[39m=[32m"specialNeedsDeclaration-label"[39m
+                  [36m/>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"text-xs text-neutral-500"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+    [0m [90m 116 |[39m     renderWithProviders([33m<[39m[33mStep4ApplicationDetails[39m [33m/[39m[33m>[39m)[33m;[39m
+     [90m 117 |[39m     
+    [31m[1m>[22m[39m[90m 118 |[39m     [36mawait[39m waitFor(() [33m=>[39m {
+     [90m     |[39m                  [31m[1m^[22m[39m
+     [90m 119 |[39m       [36mconst[39m checkbox [33m=[39m screen[33m.[39mgetByLabelText([32m'Special Needs Declaration'[39m)[33m;[39m
+     [90m 120 |[39m       fireEvent[33m.[39mclick(checkbox)[33m;[39m
+     [90m 121 |[39m       expect(screen[33m.[39mgetByText([32m'Special Needs Note'[39m))[33m.[39mtoBeInTheDocument()[33m;[39m[0m
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (src/__tests__/components/Step4ApplicationDetails.test.tsx:118:18)
+
+  ● Step4ApplicationDetails › calls setStep4 when values change
+
+    Found a label with the text of: Resident, however no form control was found associated to that label. Make sure you're using the "for" attribute or "aria-labelledby" attribute correctly.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-8 animate-in fade-in duration-300"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"mb-8 border-b border-neutral-100 dark:border-neutral-800 pb-6"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-2"[39m
+            [36m/>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-neutral-500 dark:text-neutral-400"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-2"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"space-y-2 flex gap-4 mt-2"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex items-center space-x-2"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"h-4 w-4 border border-neutral-300 dark:border-neutral-600 text-primary-500 focus:ring-2 focus:ring-primary-500"[39m
+                    [33mid[39m=[32m"type-citizen"[39m
+                    [33mtype[39m=[32m"radio"[39m
+                    [33mvalue[39m=[32m"Citizen"[39m
+                  [36m/>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer font-normal"[39m
+                    [33mfor[39m=[32m"type-citizen"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex items-center space-x-2"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"h-4 w-4 border border-neutral-300 dark:border-neutral-600 text-primary-500 focus:ring-2 focus:ring-primary-500"[39m
+                    [33mid[39m=[32m"type-resident"[39m
+                    [33mtype[39m=[32m"radio"[39m
+                    [33mvalue[39m=[32m"Resident"[39m
+                  [36m/>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer font-normal"[39m
+                    [33mfor[39m=[32m"type-resident"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-2"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors"[39m
+                [33mfor[39m=[32m"preferredCenterId"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"relative"[39m
+              [36m>[39m
+                [36m<select[39m
+                  [33maria-invalid[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors border-neutral-200 dark:border-neutral-700"[39m
+                  [33mid[39m=[32m"preferredCenterId"[39m
+                  [33mname[39m=[32m"preferredCenterId"[39m
+                  [33mrequired[39m=[32m""[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m/>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"1"[39m
+                  [36m>[39m
+                    [0mRiyadh Center[0m
+                    [0m - [0m
+                    [0mRiyadh[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"2"[39m
+                  [36m>[39m
+                    [0mJeddah Center[0m
+                    [0m - [0m
+                    [0mJeddah[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-2"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-center gap-3 mt-2"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-sm font-medium text-primary-600"[39m
+                [36m/>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"relative inline-flex items-center cursor-pointer"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"sr-only peer"[39m
+                    [33mtype[39m=[32m"checkbox"[39m
+                  [36m/>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"w-11 h-6 rounded-full transition-colors bg-neutral-200 peer-checked:bg-primary-500 dark:bg-neutral-700 dark:peer-checked:bg-primary-500 peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-primary-500 peer-focus-visible:ring-offset-2 peer-disabled:cursor-not-allowed peer-disabled:opacity-50"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform translate-x-0 peer-checked:translate-x-5 dark:bg-white"[39m
+                    [36m/>[39m
+                  [36m</div>[39m
+                [36m</label>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-sm text-neutral-500"[39m
+                [36m/>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"space-y-2"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"space-y-2 flex flex-wrap gap-3 mt-2"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex items-center space-x-2"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"h-4 w-4 border border-neutral-300 dark:border-neutral-600 text-primary-500 focus:ring-2 focus:ring-primary-500"[39m
+                    [33mid[39m=[32m"pref-morning"[39m
+                    [33mtype[39m=[32m"radio"[39m
+                    [33mvalue[39m=[32m"Morning"[39m
+                  [36m/>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer font-normal text-sm"[39m
+                    [33mfor[39m=[32m"pref-morning"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex items-center space-x-2"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"h-4 w-4 border border-neutral-300 dark:border-neutral-600 text-primary-500 focus:ring-2 focus:ring-primary-500"[39m
+                    [33mid[39m=[32m"pref-afternoon"[39m
+                    [33mtype[39m=[32m"radio"[39m
+                    [33mvalue[39m=[32m"Afternoon"[39m
+                  [36m/>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer font-normal text-sm"[39m
+                    [33mfor[39m=[32m"pref-afternoon"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex items-center space-x-2"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"h-4 w-4 border border-neutral-300 dark:border-neutral-600 text-primary-500 focus:ring-2 focus:ring-primary-500"[39m
+                    [33mid[39m=[32m"pref-evening"[39m
+                    [33mtype[39m=[32m"radio"[39m
+                    [33mvalue[39m=[32m"Evening"[39m
+                  [36m/>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer font-normal text-sm"[39m
+                    [33mfor[39m=[32m"pref-evening"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"flex items-center space-x-2"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"h-4 w-4 border border-neutral-300 dark:border-neutral-600 text-primary-500 focus:ring-2 focus:ring-primary-500"[39m
+                    [33mid[39m=[32m"pref-nopreference"[39m
+                    [33mtype[39m=[32m"radio"[39m
+                    [33mvalue[39m=[32m"NoPreference"[39m
+                  [36m/>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer font-normal text-sm"[39m
+                    [33mfor[39m=[32m"pref-nopreference"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"md:col-span-2 space-y-4 pt-4 border-t border-neutral-100 dark:border-neutral-800"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"flex items-start space-x-3"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-checked[39m=[32m"false"[39m
+                  [33maria-labelledby[39m=[32m"specialNeedsDeclaration-label"[39m
+                  [33mclass[39m=[32m"peer relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-input transition-colors outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary"[39m
+                  [33mdata-slot[39m=[32m"checkbox"[39m
+                  [33mdata-unchecked[39m=[32m""[39m
+                  [33mid[39m=[32m"base-ui-:r6:"[39m
+                  [33mrole[39m=[32m"checkbox"[39m
+                  [33mtabindex[39m=[32m"0"[39m
+                [36m/>[39m
+                [36m<input[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mid[39m=[32m"specialNeedsDeclaration"[39m
+                  [33mstyle[39m=[32m"clip-path: inset(50%); overflow: hidden; white-space: nowrap; border: 0px; padding: 0px; width: 1px; height: 1px; margin: -1px; position: fixed; top: 0px; left: 0px;"[39m
+                  [33mtabindex[39m=[32m"-1"[39m
+                  [33mtype[39m=[32m"checkbox"[39m
+                [36m/>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"grid gap-1.5 leading-none"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm font-medium leading-none cursor-pointer"[39m
+                    [33mfor[39m=[32m"specialNeedsDeclaration"[39m
+                    [33mid[39m=[32m"specialNeedsDeclaration-label"[39m
+                  [36m/>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"text-xs text-neutral-500"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+    [0m [90m 127 |[39m     renderWithProviders([33m<[39m[33mStep4ApplicationDetails[39m [33m/[39m[33m>[39m)[33m;[39m
+     [90m 128 |[39m     
+    [31m[1m>[22m[39m[90m 129 |[39m     [36mawait[39m waitFor(() [33m=>[39m {
+     [90m     |[39m                  [31m[1m^[22m[39m
+     [90m 130 |[39m       fireEvent[33m.[39mclick(screen[33m.[39mgetByLabelText([32m'Resident'[39m))[33m;[39m
+     [90m 131 |[39m     })[33m;[39m
+     [90m 132 |[39m[0m
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (src/__tests__/components/Step4ApplicationDetails.test.tsx:129:18)
+
+Test Suites: 4 failed, 1 passed, 5 total
+Tests:       6 failed, 10 passed, 16 total
+Snapshots:   0 total
+Time:        12.335 s
+Ran all test suites matching src/__tests__/components/CategoryCard.test.tsx|src/__tests__/components/Step1ServiceSelection.test.tsx|src/__tests__/components/Step2LicenseCategory.test.tsx|src/__tests__/components/Step4ApplicationDetails.test.tsx|src/__tests__/components/WizardShell.test.tsx.

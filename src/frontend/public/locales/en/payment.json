@@ -1,0 +1,33 @@
+{
+  "modal": {
+    "processingTitle": "Processing Payment",
+    "processingMessage": "We are simulating the payment process. This will take approximately 2 seconds.",
+    "successTitle": "Payment Successful",
+    "successMessage": "Your payment of {{amount}} {{currency}} has been processed successfully.",
+    "errorTitle": "Payment Failed",
+    "errorMessage": "The payment could not be processed. Please try again or contact support.",
+    "successFinish": "Done",
+    "retryButton": "Retry",
+    "cancelButton": "Close"
+  },
+  "errors": {
+    "confirmFailed": "Failed to confirm payment. Please try again."
+  },
+  "receipt": {
+    "downloadButton": "Download Receipt",
+    "downloading": "Downloading...",
+    "downloadSuccess": "Receipt downloaded successfully",
+    "downloadError": "Failed to download receipt"
+  },
+  "historyTitle": "Payment History",
+  "feeTypes": {
+    "0": "License Application Fee",
+    "1": "Medical Examination Fee",
+    "2": "Theory Test Fee",
+    "3": "Practical Test Fee",
+    "4": "License Issuance Fee",
+    "5": "Test Retake Fee",
+    "6": "License Renewal Fee",
+    "7": "License Replacement Fee"
+  }
+}

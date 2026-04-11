@@ -1,0 +1,53 @@
+{
+  "title": "Reports & Analytics",
+  "subtitle": "Real-time insights and operational performance tracking",
+  "dashboard": "Management Reports Dashboard",
+  "statusDistribution": "Applications by Status",
+  "serviceDistribution": "Applications by Service",
+  "delayedApplications": "Delayed Applications",
+  "testPerformance": "Test Performance",
+  "branchThroughput": "Branch Throughput",
+  "employeeActivity": "Employee Activity",
+  "issuanceTimeline": "Issuance Timeline",
+  "totalApplications": "Total Applications",
+  "activeApplications": "Active Applications",
+  "completedToday": "Completed Tasks",
+  "totalRevenue": "Total Revenue",
+  "noData": "No data available",
+  "count": "Count",
+  "export": "Export CSV",
+  "reset": "Reset Filters",
+  "filters": {
+    "dateRange": "Date Range",
+    "branch": "Branch",
+    "category": "License Category",
+    "apply": "Apply",
+    "reset": "Reset"
+  },
+  "status": {
+    "draft": "Draft",
+    "submitted": "Submitted",
+    "inreview": "In Review",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "active": "Active",
+    "cancelled": "Cancelled",
+    "expired": "Expired",
+    "issued": "Issued"
+  },
+  "service": {
+    "new": "New License",
+    "renewal": "Renewal",
+    "upgrade": "Upgrade",
+    "replacement": "Replacement"
+  },
+  "table": {
+    "applicationNumber": "App Number",
+    "applicant": "Applicant",
+    "daysInStage": "Days in Stage",
+    "branch": "Branch",
+    "currentStatus": "Status",
+    "actions": "Actions"
+  },
+  "export": "Export CSV"
+}

@@ -4,7 +4,7 @@ using System;
 
 namespace Mojaz.Domain.Entities;
 
-public class MedicalExamination : AuditableEntity
+public class MedicalExamination : SoftDeletableEntity
 {
     public Guid ApplicationId { get; set; }
     public Guid DoctorId { get; set; }
