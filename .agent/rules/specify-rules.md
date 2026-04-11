@@ -1,6 +1,6 @@
 ﻿# Mojaz Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-10
+Auto-generated from all feature plans. Last updated: 2026-04-11
 
 ## Active Technologies
 - TypeScript 5, Node.js 20+ + Next.js 15 (App Router), Tailwind CSS 4, shadcn/ui, next-intl 3, next-themes, Zustand 5, React Query 5, Axios 1.7 (004-frontend-foundation)
@@ -30,6 +30,8 @@ Auto-generated from all feature plans. Last updated: 2026-04-10
 - SQL Server 2022 (Licenses metadata), Blob Storage (NEEDS CLARIFICATION: exact blob storage provider AWS S3/Azure Blob/Local system) (024-license-issuance)
 - C# 12 (.NET 8) / TypeScript 5 (Next.js 15) + EF Core 8, FluentValidation, AutoMapper, shadcn/ui (026-license-replacement)
 - C# (.NET 8), TypeScript (Next.js 15) + Recharts (Frontend), TanStack Table (Frontend), QuestPDF (Backend), EF Core (Backend) (028-reports-system)
+- C# / ASP.NET Core 8; TypeScript / Next.js 15 + `Microsoft.AspNetCore.RateLimiting`, `SendGrid`, `Twilio`, `FluentValidation`, `Zod`, `MimeDetective` (or similar for Magic Numbers) [NEEDS CLARIFICATION] (030-security-hardening)
+- SQL Server 2022 (`AuditLog`, `OtpCodes`, `SystemSettings`, `RefreshTokens` tables) (030-security-hardening)
 
 - C# 12 / .NET 8 LTS + AutoMapper 13, FluentValidation 11, EF Core 8 (SqlServer), (003-backend-scaffold)
 
@@ -50,9 +52,9 @@ tests/
 C# 12 / .NET 8 LTS: Follow standard conventions
 
 ## Recent Changes
-- 028-reports-system: Added C# (.NET 8), TypeScript (Next.js 15) + Recharts (Frontend), TanStack Table (Frontend), QuestPDF (Backend), EF Core (Backend)
-- 026-license-replacement: Added C# 12 (.NET 8) / TypeScript 5 (Next.js 15) + EF Core 8, FluentValidation, AutoMapper, shadcn/ui
-- 024-license-issuance: Added C# / .NET 8 (Backend), React / Next.js 15 (Frontend) + Entity Framework Core 8, QuestPDF, FluentValidation
+- 031-comprehensive-testing: Added [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
+- 030-security-hardening: Added C# / ASP.NET Core 8; TypeScript / Next.js 15 + `Microsoft.AspNetCore.RateLimiting`, `SendGrid`, `Twilio`, `FluentValidation`, `Zod`, `MimeDetective` (or similar for Magic Numbers) [NEEDS CLARIFICATION]
+- 030-landing-page: Added [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
 
 
 <!-- MANUAL ADDITIONS START -->

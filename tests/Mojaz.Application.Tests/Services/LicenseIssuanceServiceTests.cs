@@ -149,7 +149,7 @@ public class LicenseServiceTests
         // Assert
         result.Success.Should().BeFalse();
         result.StatusCode.Should().Be(409);
-        result.Message.Should().Contain("already issued");
+        result.Message.Should().Be("A license has already been issued for this application.");
     }
 
     [Fact]
@@ -172,6 +172,6 @@ public class LicenseServiceTests
         // Assert
         result.Success.Should().BeFalse();
         result.StatusCode.Should().Be(400);
-        result.Message.Should().Contain("Approved");
+        result.Message.Should().Be("License can only be issued for approved applications.");
     }
 }

@@ -37,6 +37,9 @@ public static class InfrastructureServiceRegistration
         // Appointment Repository
         services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
+        // License Repository
+        services.AddScoped<ILicenseRepository, LicenseRepository>();
+
         // Training Repository
         services.AddScoped<ITrainingRepository, TrainingRepository>();
 

@@ -32,7 +32,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
-        var result = await _authService.RegisterAsync(request);
+        var result = await _authService.RegisterAsync(request); 
         return StatusCode(result.StatusCode, result);
     }
 

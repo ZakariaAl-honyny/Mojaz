@@ -118,7 +118,7 @@ public class AuthService : IAuthService
         await _auditService.LogAsync("USER_REGISTERED", "User", user.Id.ToString());
 
         await _notificationService.SendAsync(new NotificationRequest
-        {
+        { 
             UserId = user.Id,
             EventType = NotificationEventType.StatusChanged, // Using an appropriate existing type or just general
             TitleAr = "تفعيل الحساب - مُجاز",

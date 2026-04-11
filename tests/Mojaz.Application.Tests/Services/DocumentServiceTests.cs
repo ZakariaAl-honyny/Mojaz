@@ -81,6 +81,12 @@ public class DocumentServiceTests
 
         _fileStorageService.Setup(s => s.SaveAsync(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<string>()))
             .ReturnsAsync("uploads/2025/test.pdf");
+            
+        // Fix: Correctly mock the file validation service methods
+        _fileValidationService.Setup(v => v.ValidateSizeAsync(It.IsAny<long>()))
+            .ReturnsAsync(true);
+        _fileValidationService.Setup(v => v.ValidateSignatureAsync(It.IsAny<Stream>(), It.IsAny<string>()))
+            .ReturnsAsync(true);
 
         var request = new UploadDocumentRequest
         {

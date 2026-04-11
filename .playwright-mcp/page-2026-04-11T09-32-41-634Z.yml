@@ -1,0 +1,157 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - link "M مُجاز Mojaz Digital" [ref=e6] [cursor=pointer]:
+          - /url: /ar
+          - generic [ref=e7]: M
+          - generic [ref=e8]:
+            - text: مُجاز
+            - generic [ref=e9]:
+              - img [ref=e10]
+              - generic [ref=e12]: Mojaz Digital
+        - navigation [ref=e13]:
+          - link "الرئيسية" [ref=e14] [cursor=pointer]:
+            - /url: /ar
+          - link "عن المنصة" [ref=e15] [cursor=pointer]:
+            - /url: /ar/about
+          - link "الخدمات" [ref=e16] [cursor=pointer]:
+            - /url: /ar/services
+          - link "المراكز" [ref=e17] [cursor=pointer]:
+            - /url: /ar/centers
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - button "Switch to English" [ref=e20]:
+            - img
+            - generic [ref=e21]: English
+          - button "Toggle theme" [ref=e23]:
+            - img
+            - img
+            - generic [ref=e24]: Toggle theme
+        - link "دخول" [ref=e25] [cursor=pointer]:
+          - /url: /ar/login
+          - button "دخول" [ref=e26]
+  - main [ref=e27]:
+    - generic [ref=e28]:
+      - img "Auth Background" [ref=e30]
+      - generic [ref=e32]:
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e36]: M
+            - heading "تسجيل الدخول" [level=2] [ref=e37]
+            - paragraph [ref=e38]: الوصول إلى حسابك في منصة مُجاز
+          - generic [ref=e39]:
+            - generic [ref=e40]:
+              - text: رقم الهوية أو البريد الإلكتروني
+              - generic [ref=e41]:
+                - img [ref=e42]
+                - textbox "أدخل رقم الهوية أو البريد الإلكتروني" [ref=e45]
+            - generic [ref=e46]:
+              - generic [ref=e47]:
+                - generic [ref=e48]: كلمة المرور
+                - link "هل نسيت كلمة المرور؟" [ref=e49] [cursor=pointer]:
+                  - /url: /ar/forgot-password
+              - generic [ref=e50]:
+                - img [ref=e51]
+                - textbox "أدخل كلمة المرور" [ref=e54]
+            - button "دخول" [ref=e55]:
+              - text: دخول
+              - img
+        - paragraph [ref=e57]:
+          - text: ليس لديك حساب؟
+          - link "إنشاء حساب جديد" [ref=e58] [cursor=pointer]:
+            - /url: /ar/register
+  - contentinfo [ref=e59]:
+    - generic [ref=e61]:
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - generic [ref=e65]: M
+            - generic [ref=e66]:
+              - generic [ref=e67]: مُجاز
+              - text: Gov Digital Platform
+          - paragraph [ref=e68]: مُجاز هي المنصة الحكومية الموحدة لخدمات رخص القيادة في المملكة، تهدف إلى أتمتة كافة الإجراءات وتقديم تجربة مستخدم رقمية بمعايير عالمية.
+          - generic [ref=e69]:
+            - link [ref=e70] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e71]
+            - link [ref=e73] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e74]
+            - link [ref=e76] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e77]
+            - link [ref=e80] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e81]
+        - generic [ref=e85]:
+          - heading "الخدمات" [level=4] [ref=e86]
+          - list [ref=e87]:
+            - listitem [ref=e88]:
+              - link "إصدار رخصة جديدة" [ref=e89] [cursor=pointer]:
+                - /url: /ar/services/new
+                - text: إصدار رخصة جديدة
+                - img [ref=e90]
+            - listitem [ref=e94]:
+              - link "تجديد رخصة" [ref=e95] [cursor=pointer]:
+                - /url: /ar/services/renewal
+                - text: تجديد رخصة
+                - img [ref=e96]
+            - listitem [ref=e100]:
+              - link "بدل فاقد/تالف" [ref=e101] [cursor=pointer]:
+                - /url: /ar/services/replacement
+                - text: بدل فاقد/تالف
+                - img [ref=e102]
+            - listitem [ref=e106]:
+              - link "ترقية فئة الرخصة" [ref=e107] [cursor=pointer]:
+                - /url: /ar/services/upgrade
+                - text: ترقية فئة الرخصة
+                - img [ref=e108]
+        - generic [ref=e112]:
+          - heading "عن المنصة" [level=4] [ref=e113]
+          - list [ref=e114]:
+            - listitem [ref=e115]:
+              - link "عن مُجاز" [ref=e116] [cursor=pointer]:
+                - /url: /ar/about
+            - listitem [ref=e117]:
+              - link "دليل الاستخدام" [ref=e118] [cursor=pointer]:
+                - /url: /ar/manuals
+            - listitem [ref=e119]:
+              - link "مراكز الفحص" [ref=e120] [cursor=pointer]:
+                - /url: /ar/centers
+            - listitem [ref=e121]:
+              - link "الأسئلة الشائعة" [ref=e122] [cursor=pointer]:
+                - /url: /ar/faqs
+        - generic [ref=e123]:
+          - heading "الدعم والقانون" [level=4] [ref=e124]
+          - list [ref=e125]:
+            - listitem [ref=e126]:
+              - link "اتصل بنا" [ref=e127] [cursor=pointer]:
+                - /url: /ar/contact
+            - listitem [ref=e128]:
+              - link "سياسة الخصوصية" [ref=e129] [cursor=pointer]:
+                - /url: /ar/privacy
+            - listitem [ref=e130]:
+              - link "الشروط والأحكام" [ref=e131] [cursor=pointer]:
+                - /url: /ar/terms
+            - listitem [ref=e132]:
+              - link "إمكانية الوصول" [ref=e133] [cursor=pointer]:
+                - /url: /ar/accessibility
+      - generic [ref=e134]:
+        - generic [ref=e135]:
+          - img [ref=e136]
+          - generic [ref=e139]: Secure Framework
+        - generic [ref=e140]:
+          - img [ref=e141]
+          - generic [ref=e144]: Digital Excellence 2025
+        - generic [ref=e145]:
+          - img [ref=e146]
+          - generic [ref=e149]: Gov Award Winner
+        - generic [ref=e150]:
+          - img [ref=e151]
+          - generic [ref=e153]: Zero Paper Initiative
+      - generic [ref=e154]:
+        - paragraph [ref=e155]: © 2026 مُجاز. جميع الحقوق محفوظة لوزارة الداخلية.
+        - generic [ref=e156]:
+          - generic [ref=e157]: Vision 2030
+          - generic [ref=e158]: Powered by Gaea System
