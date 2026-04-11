@@ -28,6 +28,7 @@ public class TrainingServiceTests
     private readonly Mock<IAuditService> _auditServiceMock;
     private readonly Mock<INotificationService> _notificationServiceMock;
     private readonly Mock<ISystemSettingsService> _settingsServiceMock;
+    private readonly Mock<ICategoryUpgradeService> _categoryUpgradeServiceMock;
     private readonly IMapper _mapper;
     private readonly TrainingService _service;
 
@@ -40,6 +41,7 @@ public class TrainingServiceTests
         _auditServiceMock = new Mock<IAuditService>();
         _notificationServiceMock = new Mock<INotificationService>();
         _settingsServiceMock = new Mock<ISystemSettingsService>();
+        _categoryUpgradeServiceMock = new Mock<ICategoryUpgradeService>();
 
         var config = new MapperConfiguration(cfg =>
         {
@@ -55,7 +57,8 @@ public class TrainingServiceTests
             _mapper,
             _auditServiceMock.Object,
             _notificationServiceMock.Object,
-            _settingsServiceMock.Object);
+            _settingsServiceMock.Object,
+            _categoryUpgradeServiceMock.Object);
     }
 
     [Fact]

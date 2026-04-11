@@ -36,6 +36,7 @@ public class ApplicationService : IApplicationService
     private readonly IAuditService _auditService;
     private readonly INotificationService _notificationService;
     private readonly IEmailService _emailService;
+    private readonly ICategoryUpgradeService _categoryUpgradeService;
 
     public ApplicationService(
         IRepository<ApplicationEntity> applicationRepository,
@@ -50,7 +51,8 @@ public class ApplicationService : IApplicationService
         IEmailService emailService,
         IBackgroundJobClient backgroundJobClient,
         IRepository<ApplicationStatusHistory> historyRepository,
-        IRepository<LicenseReplacement> replacementRepository)
+        IRepository<LicenseReplacement> replacementRepository,
+        ICategoryUpgradeService categoryUpgradeService)
     {
         _applicationRepository = applicationRepository;
         _userRepository = userRepository;
@@ -65,6 +67,7 @@ public class ApplicationService : IApplicationService
         _backgroundJobClient = backgroundJobClient;
         _historyRepository = historyRepository;
         _replacementRepository = replacementRepository;
+        _categoryUpgradeService = categoryUpgradeService;
     }
 
     public async Task<ApiResponse<EligibilityCheckResult>> CheckEligibilityAsync(Guid userId, EligibilityCheckRequest request)
@@ -78,7 +81,8 @@ public class ApplicationService : IApplicationService
         var reasons = new List<string>();
 
         // 1. Age Check
-        var ageLimitSetting = (await _settingsRepository.FindAsync(s => s.SettingKey == $"MIN_AGE_CATEGORY_{category.Code}")).FirstOrDefault();
+        var ageLimitSettings = await _settingsRepository.FindAsync(s => s.SettingKey == $"MIN_AGE_CATEGORY_{category.Code}");
+        var ageLimitSetting = ageLimitSettings?.FirstOrDefault();
         if (ageLimitSetting != null && int.TryParse(ageLimitSetting.SettingValue, out int minAge))
         {
             var today = DateTime.UtcNow;
@@ -91,11 +95,10 @@ public class ApplicationService : IApplicationService
             }
         }
 
-        // 2. Active Application Check
         var activeApps = await _applicationRepository.FindAsync(a => a.ApplicantId == userId && 
             (a.Status != ApplicationStatus.Active && a.Status != ApplicationStatus.Cancelled && a.Status != ApplicationStatus.Rejected && a.Status != ApplicationStatus.Expired && a.Status != ApplicationStatus.Issued));
         
-        if (activeApps.Any())
+        if (activeApps != null && activeApps.Any())
         {
             reasons.Add("You already have an active application in progress.");
         }
@@ -103,21 +106,55 @@ public class ApplicationService : IApplicationService
         // 3. Upgrade Path Enforcement (FR-003)
         if (request.ServiceType == ServiceType.CategoryUpgrade)
         {
-            var existingLicenses = await _licenseRepository.FindAsync(l => l.HolderId == userId && l.Status == LicenseStatus.Active);
-            if (!existingLicenses.Any())
+            List<Mojaz.Domain.Entities.License> existingLicenses;
+            if (request.CurrentLicenseId.HasValue)
             {
-                reasons.Add("You do not have an active license to upgrade.");
+                var specificLicense = await _licenseRepository.GetByIdAsync(request.CurrentLicenseId.Value);
+                existingLicenses = specificLicense != null && specificLicense.HolderId == userId && specificLicense.Status == LicenseStatus.Active 
+                    ? new List<Mojaz.Domain.Entities.License> { specificLicense } 
+                    : new List<Mojaz.Domain.Entities.License>();
             }
             else
             {
-                var activeCategories = existingLicenses.Select(l => l.LicenseCategory.Code).ToList();
-                
-                // FR-003: Category F holders can ONLY upgrade to Category B
-                if (activeCategories.Contains(LicenseCategoryCode.F))
+                existingLicenses = (await _licenseRepository.FindAsync(l => l.HolderId == userId && l.Status == LicenseStatus.Active)).ToList();
+            }
+
+            if (existingLicenses == null || !existingLicenses.Any())
+            {
+                reasons.Add("You do not have a valid active license to upgrade.");
+            }
+            else
+            {
+                bool anyValidUpgrade = false;
+                var upgradeErrors = new List<string>();
+
+                foreach (var activeLicense in existingLicenses)
                 {
-                    if (category.Code != LicenseCategoryCode.B)
+                    // Check if path is valid
+                    if (await _categoryUpgradeService.ValidateUpgradePathAsync(activeLicense.LicenseCategory.Code, category.Code))
                     {
-                        reasons.Add("Holders of Category F (Agricultural) licenses are only permitted to upgrade to Category B (Private).");
+                        // Check holding period for this specific license
+                        if (await _categoryUpgradeService.CheckHoldingPeriodAsync(activeLicense.Id, userId))
+                        {
+                            anyValidUpgrade = true;
+                            break;
+                        }
+                        else
+                        {
+                            upgradeErrors.Add($"The current {activeLicense.LicenseCategory.Code} license has not been held for the minimum required period.");
+                        }
+                    }
+                }
+
+                if (!anyValidUpgrade)
+                {
+                    if (upgradeErrors.Any())
+                    {
+                        reasons.AddRange(upgradeErrors.Distinct());
+                    }
+                    else
+                    {
+                        reasons.Add($"None of your current licenses can be upgraded to category {category.Code}.");
                     }
                 }
             }
@@ -132,7 +169,11 @@ public class ApplicationService : IApplicationService
 
     public async Task<ApiResponse<ApplicationDto>> CreateAsync(CreateApplicationRequest request, Guid userId)
     {
-        var eligibilityResult = await CheckEligibilityAsync(userId, new EligibilityCheckRequest { LicenseCategoryId = request.LicenseCategoryId });
+        var eligibilityResult = await CheckEligibilityAsync(userId, new EligibilityCheckRequest 
+        { 
+            LicenseCategoryId = request.LicenseCategoryId,
+            ServiceType = request.ServiceType 
+        });
         if (!eligibilityResult.Success)
             return ApiResponse<ApplicationDto>.Fail(eligibilityResult.StatusCode, eligibilityResult.Message);
         if (!eligibilityResult.Data!.IsEligible)
@@ -190,6 +231,22 @@ public class ApplicationService : IApplicationService
 
         // 5. Audit Logging
         await _auditService.LogAsync("CREATE_DRAFT_APPLICATION", "Application", application.Id.ToString(), null, application.ApplicationNumber);
+
+        if (application.ServiceType == ServiceType.CategoryUpgrade)
+        {
+            await _auditService.LogAsync("UPGRADE_INITIATED", "Application", application.Id.ToString(), null, $"Upgrade to {application.LicenseCategoryId}");
+            await _notificationService.SendAsync(new NotificationRequest
+            {
+                UserId = userId,
+                ApplicationId = application.Id,
+                EventType = NotificationEventType.StatusChanged,
+                TitleAr = "بدء طلب ترقية الرخصة",
+                TitleEn = "License Upgrade Initiated",
+                MessageAr = $"لقد بدأت طلب ترقية رخصتك إلى فئة {application.LicenseCategoryId}",
+                MessageEn = $"You have initiated a license upgrade request to category {application.LicenseCategoryId}",
+                InApp = true
+            });
+        }
 
         return ApiResponse<ApplicationDto>.Ok(_mapper.Map<ApplicationDto>(application), "Application draft created successfully.");
     }
@@ -502,7 +559,11 @@ public class ApplicationService : IApplicationService
             return ApiResponse<ApplicationDto>.Fail(400, string.Join(" ", completenessResult.Reasons));
 
         // 3. Re-Verify Gate 1 Eligibility
-        var eligibilityResult = await CheckEligibilityAsync(userId, new EligibilityCheckRequest { LicenseCategoryId = application.LicenseCategoryId });
+        var eligibilityResult = await CheckEligibilityAsync(userId, new EligibilityCheckRequest 
+        { 
+            LicenseCategoryId = application.LicenseCategoryId,
+            ServiceType = application.ServiceType 
+        });
         if (!eligibilityResult.Data!.IsEligible)
             return ApiResponse<ApplicationDto>.Fail(400, "Eligibility check failed at submission: " + string.Join(" ", eligibilityResult.Data.Reasons));
 
@@ -742,6 +803,36 @@ public class ApplicationService : IApplicationService
         }
 
         return ApiResponse<bool>.Ok(true, "Appointment confirmed and email sent.");
+    }
+
+    public async Task<ApiResponse<ApplicationDto>> UpgradeAsync(UpgradeApplicationRequest request, Guid userId)
+    {
+        // 1. Eligibility Check
+        var eligibilityRequest = new EligibilityCheckRequest
+        {
+            LicenseCategoryId = request.TargetCategoryId,
+            ServiceType = ServiceType.CategoryUpgrade,
+            CurrentLicenseId = request.CurrentLicenseId
+        };
+        var eligibility = await CheckEligibilityAsync(userId, eligibilityRequest);
+        if (!eligibility.Data!.IsEligible)
+        {
+            return ApiResponse<ApplicationDto>.Fail(400, string.Join(" ", eligibility.Data.Reasons));
+        }
+
+        // 2. Map specialized request to CreateApplicationRequest (or handle directly)
+        // For simplicity and reuse:
+        var createRequest = new CreateApplicationRequest
+        {
+            ServiceType = ServiceType.CategoryUpgrade,
+            LicenseCategoryId = request.TargetCategoryId,
+            BranchId = request.BranchId,
+            PreferredLanguage = request.PreferredLanguage,
+            DataAccuracyConfirmed = request.DataAccuracyConfirmed
+            // Personal info will be loaded during CreateAsync from the User entity
+        };
+
+        return await CreateAsync(createRequest, userId);
     }
 
     private string GenerateApplicationNumber()

@@ -72,7 +72,7 @@ test.describe('Appointment Booking Flow', () => {
     await expect(page.locator('text=الاختبار العملي|Practical Test')).toBeVisible();
   });
 
-  test('should switch between appointment types', async ({ page }) {
+  test('should switch between appointment types', async ({ page }) => {
     // Click on Medical Exam
     await page.click('text=الفحص الطبي|Medical Exam');
     

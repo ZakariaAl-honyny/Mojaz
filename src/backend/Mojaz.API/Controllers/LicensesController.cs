@@ -156,4 +156,29 @@ public class LicensesController : ControllerBase
         var result = await _replaceLicenseService.CheckEligibilityAsync(userId);
         return StatusCode(result.StatusCode, result);
     }
+
+    /// <summary>
+    /// Get current user's licenses
+    /// </summary>
+    [HttpGet("my")]
+    [Authorize(Roles = "Applicant")]
+    [ProducesResponseType(typeof(ApiResponse<List<LicenseDto>>), 200)]
+    public async Task<IActionResult> GetMyLicensesAsync()
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _licenseService.GetUserLicensesAsync(userId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Get available upgrade targets for a specific license
+    /// </summary>
+    [HttpGet("{id}/upgrade-targets")]
+    [Authorize(Roles = "Applicant")]
+    [ProducesResponseType(typeof(ApiResponse<List<UpgradeTargetCategoryDto>>), 200)]
+    public async Task<IActionResult> GetUpgradeTargetsAsync(Guid id)
+    {
+        var result = await _licenseService.GetUpgradeTargetsAsync(id);
+        return StatusCode(result.StatusCode, result);
+    }
 }

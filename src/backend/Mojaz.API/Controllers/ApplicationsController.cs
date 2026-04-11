@@ -242,6 +242,22 @@ public class ApplicationsController : ControllerBase
     }
 
     /// <summary>
+    /// Create a new license upgrade application.
+    /// Applicants only.
+    /// </summary>
+    [HttpPost("upgrade")]
+    [Authorize(Roles = "Applicant")]
+    [ProducesResponseType(typeof(ApiResponse<ApplicationDto>), 201)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
+    public async Task<IActionResult> UpgradeAsync(
+        [FromBody] UpgradeApplicationRequest request)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _applicationService.UpgradeAsync(request, userId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
     /// Record final decision (Approve, Reject, or Return) for an application.
     /// Manager role required. Enforces Gate 4 validation server-side.
     /// </summary>

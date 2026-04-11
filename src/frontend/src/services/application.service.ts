@@ -92,6 +92,16 @@ const ApplicationService = {
   },
 
   /**
+   * Verify eligibility for license category upgrade
+   */
+  async checkUpgradeEligibility(nationalId: string): Promise<ApiResponse<LicenseCategoryOption[]>> {
+    const response = await apiClient.get('/applications/check-upgrade-eligibility', {
+      params: { nationalId }
+    });
+    return response.data;
+  },
+
+  /**
    * Lookup license categories with min age requirements
    */
   async getLicenseCategories(): Promise<ApiResponse<LicenseCategoryOption[]>> {

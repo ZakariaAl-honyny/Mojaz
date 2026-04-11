@@ -54,6 +54,32 @@ const LicenseService = {
     });
     return response.data;
   },
+
+  /**
+   * Check eligibility for license replacement
+   */
+  async checkReplacementEligibility(): Promise<ApiResponse<{
+    isEligible: boolean;
+    licenseId: string;
+    licenseNumber: string;
+    expiryDate: string;
+    message?: string;
+  }>> {
+    const response = await apiClient.get('/applications/replacement/eligibility');
+    return response.data;
+  },
+
+  /**
+   * Submit a replacement application
+   */
+  async submitReplacement(data: {
+    licenseId: string;
+    reason: any;
+    documentIds?: string[];
+  }): Promise<ApiResponse<{ id: string }>> {
+    const response = await apiClient.post('/applications/replacement', data);
+    return response.data;
+  },
 };
 
 export default LicenseService;

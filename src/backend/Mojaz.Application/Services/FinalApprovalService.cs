@@ -162,6 +162,34 @@ public class FinalApprovalService : IFinalApprovalService
         // 10. SaveChangesAsync
         await _unitOfWork.SaveChangesAsync();
 
+        // 10.1 Handle Category Upgrade Record
+        if (request.Decision == FinalDecisionType.Approved && application.ServiceType == ServiceType.CategoryUpgrade)
+        {
+            var licenseRepo = _unitOfWork.Repository<License>();
+            var activeLicense = (await licenseRepo.FindAsync(x => x.HolderId == application.ApplicantId && x.Status == LicenseStatus.Active)).FirstOrDefault();
+            
+            if (activeLicense != null)
+            {
+                var toCategoryEntity = await _unitOfWork.Repository<LicenseCategory>().GetByIdAsync(application.LicenseCategoryId);
+                var fromCategoryEntity = await _unitOfWork.Repository<LicenseCategory>().GetByIdAsync(activeLicense.LicenseCategoryId);
+
+                if (toCategoryEntity != null && fromCategoryEntity != null)
+                {
+                    var upgrade = new CategoryUpgrade
+                    {
+                        ApplicationId = application.Id,
+                        LicenseId = activeLicense.Id,
+                        FromCategory = fromCategoryEntity.Code,
+                        ToCategory = toCategoryEntity.Code,
+                        UpgradedAt = DateTime.UtcNow,
+                        ProcessedBy = managerId
+                    };
+                    await _unitOfWork.Repository<CategoryUpgrade>().AddAsync(upgrade);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+            }
+        }
+
         // 11. AuditLog: "FINAL_APPROVAL_{DECISION}"
         await _auditService.LogAsync(
             "FINAL_APPROVAL_" + request.Decision.ToString().ToUpper(),
