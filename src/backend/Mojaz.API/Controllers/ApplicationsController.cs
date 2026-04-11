@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 using Mojaz.Application.DTOs.Application;
 using Mojaz.Application.Applications.Dtos;
 using Mojaz.Application.DTOs.LicenseReplacement;
@@ -7,6 +8,7 @@ using Mojaz.Application.Interfaces;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Enums;
 using Mojaz.Shared;
+using Mojaz.Shared.Constants;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -23,6 +25,7 @@ namespace Mojaz.API.Controllers;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces("application/json")]
+[EnableRateLimiting(SecurityConstants.Policies.GlobalRateLimit)]
 public class ApplicationsController : ControllerBase
 {
     private readonly IApplicationService _applicationService;

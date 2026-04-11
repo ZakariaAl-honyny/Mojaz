@@ -12,8 +12,7 @@ using Mojaz.Application;
 using Mojaz.Infrastructure;
 using Mojaz.Infrastructure.Extensions;
 using Serilog;
-using Microsoft.AspNetCore.RateLimiting;
-using System.Threading.RateLimiting;
+using Mojaz.Infrastructure.Security.RateLimiting;
 using QuestPDF.Infrastructure;
 using QuestPDF.Helpers;
 
@@ -21,6 +20,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // ─── QuestPDF Configuration ───
 QuestPDF.Settings.License = LicenseType.Community;
+
+// ─── Configuration Validation (Zero Trust) ───
+var requiredSettings = new[] { "ConnectionStrings:DefaultConnection", "Jwt:Key", "Firebase:ProjectId" };
+foreach (var setting in requiredSettings)
+{
+    if (string.IsNullOrEmpty(builder.Configuration[setting]))
+    {
+        throw new InvalidOperationException($"CRITICAL: Required configuration '{setting}' is missing. Check Environment Variables.");
+    }
+}
+
 
 // Initialize Firebase Admin SDK
 var firebaseConfig = builder.Configuration.GetSection("Firebase");
@@ -44,6 +54,7 @@ builder.Host.UseSerilog((context, config) =>
     config
         .ReadFrom.Configuration(context.Configuration)
         .Enrich.FromLogContext()
+        .Enrich.With<Mojaz.Infrastructure.Logging.LogMaskingEnricher>()
         .WriteTo.Console()
         .WriteTo.File(
             "logs/mojaz_.log",
@@ -60,10 +71,25 @@ builder.Services.AddMemoryCache();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
+// ─── Global Error Handling ───
+builder.Services.AddExceptionHandler<Mojaz.Infrastructure.Security.Middleware.GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 // ─── Controllers & Filters ───
 builder.Services.AddControllers(options => 
 {
     // Note: ValidationFilter logic is typically wired via Application assembly scanning + FluentValidation
+});
+
+// ─── Request Size Limits (Global Security) ───
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 5 * 1024 * 1024; // 5MB
+});
+
+builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 5 * 1024 * 1024; // 5MB
 });
 
 builder.Services.AddHttpContextAccessor();
@@ -82,21 +108,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddHealthChecks();
 
 // ─── Rate Limiting ───
-builder.Services.AddRateLimiter(options =>
-{
-    options.AddPolicy("registration", context =>
-        RateLimitPartition.GetFixedWindowLimiter(
-            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
-            factory: _ => new FixedWindowRateLimiterOptions
-            {
-                PermitLimit = 5,
-                Window = TimeSpan.FromMinutes(1),
-                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                QueueLimit = 0
-            }
-        )
-    );
-});
+builder.Services.AddMojazRateLimiting();
 
 // ─── Email Services Registration ───
 builder.Services.AddMojazEmail(builder.Configuration);
@@ -106,10 +118,11 @@ var app = builder.Build();
 // ─── Middleware Pipeline (Modularized) ───
 
 app.UseMojazSecurityHeaders();
+app.UseExceptionHandler(); // Enable global exception handler
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
+    // app.UseDeveloperExceptionPage(); // Disabled in favor of our consistent error handler
     app.UseMojazSwagger();
 }
 
@@ -154,6 +167,11 @@ try
             "mojaz-expire-applications",
             job => job.ExecuteAsync(),
             Cron.Daily(2));
+
+        recurringJobManager.AddOrUpdate<Mojaz.Infrastructure.Security.Background.AuditLogCleanupJob>(
+            "mojaz-auditlog-cleanup",
+            job => job.ExecuteAsync(),
+            Cron.Daily(3));
     }
 }
 catch (Exception ex)

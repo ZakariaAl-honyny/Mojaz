@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Mojaz.Application.DTOs.User;
 using Mojaz.Application.Services;
 using Mojaz.Shared.Constants;
@@ -11,6 +12,7 @@ namespace Mojaz.API.Controllers;
 [Route("api/v1/[controller]")]
 [Produces("application/json")]
 [Authorize(Policy = RolePolicies.AdminOnly)]
+[EnableRateLimiting(SecurityConstants.Policies.GlobalRateLimit)]
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;

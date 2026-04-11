@@ -260,6 +260,7 @@
       "termsLink": "Terms and Conditions",
       "submit": "Create Account",
       "processing": "Processing...",
+      "hasAccount": "Already have an account?",
       "alreadyHaveAccount": "Already have an account?",
       "loginLink": "Login",
       "errors": {

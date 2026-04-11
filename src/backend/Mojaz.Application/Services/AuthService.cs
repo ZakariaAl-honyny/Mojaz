@@ -10,6 +10,7 @@ using Mojaz.Domain.Interfaces;
 using Mojaz.Shared.Constants;
 using Mojaz.Shared;
 using Mojaz.Shared.Extensions;
+using Mojaz.Application.Interfaces.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,8 @@ public class AuthService : IAuthService
     private readonly IEmailService _emailService;
     private readonly ISmsService _smsService;
     private readonly IBackgroundJobClient _backgroundJobClient;
+    private readonly ISecurityAlertService _securityAlertService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public AuthService(
         IRepository<User> userRepository,
@@ -48,7 +51,9 @@ public class AuthService : IAuthService
         IOtpService otpService,
         IEmailService emailService,
         ISmsService smsService,
-        IBackgroundJobClient backgroundJobClient)
+        IBackgroundJobClient backgroundJobClient,
+        ISecurityAlertService securityAlertService,
+        IHttpContextAccessor httpContextAccessor)
     {
         _userRepository = userRepository;
         _otpRepository = otpRepository;
@@ -62,6 +67,8 @@ public class AuthService : IAuthService
         _emailService = emailService;
         _smsService = smsService;
         _backgroundJobClient = backgroundJobClient;
+        _securityAlertService = securityAlertService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<ApiResponse<RegisterResponse>> RegisterAsync(RegisterRequest request)
@@ -152,7 +159,15 @@ public class AuthService : IAuthService
             {
                 user.FailedLoginAttempts++;
                 if (user.FailedLoginAttempts >= 5)
+                {
                     user.LockoutEnd = DateTime.UtcNow.AddMinutes(15);
+                    var ip = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+                    await _securityAlertService.ProcessSecurityEventAsync(
+                        "BRUTE_FORCE_POTENTIAL", 
+                        $"Account {user.Email} locked after 5 failed attempts.", 
+                        user.Id.ToString(), 
+                        ip);
+                }
                 
                 _userRepository.Update(user);
                 await _unitOfWork.SaveChangesAsync();

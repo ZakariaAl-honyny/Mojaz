@@ -1,10 +1,12 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Mojaz.Application.DTOs.Auth;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Enums;
 using Mojaz.Shared;
+using Mojaz.Shared.Constants;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -12,6 +14,7 @@ namespace Mojaz.API.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
+[EnableRateLimiting(SecurityConstants.Policies.AuthRateLimit)]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;

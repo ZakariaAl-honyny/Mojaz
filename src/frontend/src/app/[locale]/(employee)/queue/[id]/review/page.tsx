@@ -153,6 +153,7 @@ export default function ApplicationReviewPage() {
                         className="w-full bg-white/5 rounded-3xl border border-white/10 p-6 font-bold text-white placeholder:text-neutral-700 h-40 focus:outline-none focus:border-primary-500 transition-all text-sm"
                         placeholder={t("remarksPlaceholder")}
                         value={remarks}
+                        data-testid="input-remarks"
                         onChange={(e) => setRemarks(e.target.value)}
                     />
                  </div>

@@ -203,7 +203,7 @@ export function EmailRegistrationForm() {
         </CardContent>
         <CardFooter className="flex justify-center border-t py-4 mt-2">
           <p className="text-sm text-neutral-500">
-            {t('register.alreadyHaveAccount')}{' '}
+            {t('register.hasAccount')}{' '}
             <Link href="/login" className="text-primary-500 font-semibold hover:underline">
               {t('register.loginLink')}
             </Link>

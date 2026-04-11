@@ -72,6 +72,7 @@ export default function LoginForm() {
             <Mail className="absolute left-4 top-3.5 h-5 w-5 text-neutral-400 group-focus-within:text-primary-500 transition-colors rtl:left-auto rtl:right-4" />
             <Input 
               {...register('identifier')} 
+              data-testid="login-identifier"
               className="ps-12 h-12 rounded-xl border-neutral-200 focus:ring-2 focus:ring-primary-500 transition-shadow" 
               placeholder={t('login.placeholderIdentifier')} 
             />
@@ -91,6 +92,7 @@ export default function LoginForm() {
             <Input 
               {...register('password')} 
               type="password" 
+              data-testid="login-password"
               className="ps-12 h-12 rounded-xl border-neutral-200 focus:ring-2 focus:ring-primary-500 transition-shadow" 
               placeholder={t('login.placeholderPassword')}
             />
@@ -98,7 +100,7 @@ export default function LoginForm() {
           {errors.password && <p className="text-xs text-error font-medium">{t('errors.passwordRequired')}</p>}
         </div>
 
-        <Button type="submit" className="w-full h-14 text-lg font-bold bg-primary-500 hover:bg-primary-600 transition-all rounded-2xl shadow-lg hover:shadow-primary-500/20 active:scale-[0.98]" disabled={isLoading}>
+        <Button type="submit" data-testid="login-submit" className="w-full h-14 text-lg font-bold bg-primary-500 hover:bg-primary-600 transition-all rounded-2xl shadow-lg hover:shadow-primary-500/20 active:scale-[0.98]" disabled={isLoading}>
           {isLoading ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : t('login.submit')}
         </Button>
       </form>

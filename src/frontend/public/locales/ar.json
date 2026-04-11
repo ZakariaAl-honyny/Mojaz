@@ -273,6 +273,7 @@
       "submit": "إنشاء الحساب",
       "processing": "جاري المعالجة...",
       "hasAccount": "لديك حساب بالفعل؟",
+      "alreadyHaveAccount": "لديك حساب بالفعل؟",
       "loginLink": "تسجيل الدخول",
       "errors": {
         "registrationFailed": "فشلت عملية التسجيل. يرجى المحاولة مرة أخرى.",

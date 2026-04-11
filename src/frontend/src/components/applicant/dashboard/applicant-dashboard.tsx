@@ -44,7 +44,7 @@ export const ApplicantDashboard = ({ data, userName }: ApplicantDashboardProps) 
   const t = useTranslations('dashboard.applicant');
 
   return (
-    <div className="max-w-7xl mx-auto space-y-12">
+    <div className="max-w-7xl mx-auto space-y-12" data-testid="dashboard-summary">
       {/* Editorial Header */}
       <header className="relative py-10 px-4">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
@@ -66,9 +66,9 @@ export const ApplicantDashboard = ({ data, userName }: ApplicantDashboardProps) 
               تتبع حالة طلباتك واحصل على رخصتك بكل سهولة ويسر عبر منصة مُجاز الرقمية.
             </p>
           </motion.div>
-
+ 
           <Link href="/applications/new">
-            <Button className="bg-primary-600 hover:bg-primary-700 text-white h-16 px-10 rounded-[20px] shadow-2xl shadow-primary-900/40 transition-all hover:scale-105 active:scale-95 text-lg font-black">
+            <Button data-testid="new-application-btn" className="bg-primary-600 hover:bg-primary-700 text-white h-16 px-10 rounded-[20px] shadow-2xl shadow-primary-900/40 transition-all hover:scale-105 active:scale-95 text-lg font-black">
               <Plus className="me-3 w-6 h-6" />
               {t('startNew')}
             </Button>
