@@ -106,6 +106,9 @@ public static class InfrastructureServiceRegistration
         // Renewal Service
         services.AddScoped<Application.Interfaces.Services.IRenewalService, Application.Services.RenewalService>();
 
+        // Category Upgrade Service
+        services.AddScoped<Application.Interfaces.Services.ICategoryUpgradeService, Application.Services.CategoryUpgradeService>();
+
         // JWT Authentication & Authorization
         services.AddMojazAuthentication(configuration);
 

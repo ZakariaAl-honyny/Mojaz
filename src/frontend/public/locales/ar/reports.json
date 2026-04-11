@@ -1,0 +1,46 @@
+{
+  "title": "التقارير والتحليلات",
+  "dashboard": "لوحة تقارير الإدارة",
+  "statusDistribution": "توزيع الطلبات حسب الحالة",
+  "serviceDistribution": "توزيع الطلبات حسب نوع الخدمة",
+  "delayedApplications": "الطلبات المتأخرة",
+  "testPerformance": "أداء الاختبارات",
+  "branchThroughput": "إنتاجية الفروع",
+  "employeeActivity": "نشاط الموظفين",
+  "issuanceTimeline": "الجدول الزمني للإصدار",
+  "noData": "لا توجد بيانات للعرض",
+  "count": "العدد",
+  "filters": {
+    "dateRange": "الفترة الزمنية",
+    "branch": "الفرع",
+    "category": "فئة الرخصة",
+    "apply": "تطبيق",
+    "reset": "إعادة ضبط"
+  },
+  "status": {
+    "draft": "مسودة",
+    "submitted": "مقدم",
+    "inreview": "قيد المراجعة",
+    "approved": "مقبول",
+    "rejected": "مرفوض",
+    "active": "نشط",
+    "cancelled": "ملغى",
+    "expired": "منتهي",
+    "issued": "مصدر"
+  },
+  "service": {
+    "new": "رخصة جديدة",
+    "renewal": "تجديد رخصة",
+    "upgrade": "ترقية رخصة",
+    "replacement": "بدل تالف/فاقد"
+  },
+  "table": {
+    "applicationNumber": "رقم الطلب",
+    "applicant": "المتقدم",
+    "daysInStage": "أيام الانتظار",
+    "branch": "الفرع",
+    "currentStatus": "الحالة الحالية",
+    "actions": "الإجراءات"
+  },
+  "export": "تصدير CSV"
+}

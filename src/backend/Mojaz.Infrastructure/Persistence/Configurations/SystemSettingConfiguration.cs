@@ -70,7 +70,12 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
                 // Practical Test SystemSettings seed data
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000011001"), SettingKey = "MIN_PASS_SCORE_PRACTICAL", SettingValue = "80", Category = "Practical", Description = "Minimum passing score for practical test", IsEncrypted = false },
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000011002"), SettingKey = "MAX_PRACTICAL_ATTEMPTS", SettingValue = "3", Category = "Practical", Description = "Maximum number of practical test attempts", IsEncrypted = false },
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000011003"), SettingKey = "COOLING_PERIOD_DAYS_PRACTICAL", SettingValue = "7", Category = "Practical", Description = "Days applicant must wait before rebooking after practical test failure", IsEncrypted = false }
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000011003"), SettingKey = "COOLING_PERIOD_DAYS_PRACTICAL", SettingValue = "7", Category = "Practical", Description = "Days applicant must wait before rebooking after practical test failure", IsEncrypted = false },
+                
+                // Category Upgrade SystemSettings seed data
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012001"), SettingKey = "MIN_HOLDING_PERIOD_UPGRADE_MONTHS", SettingValue = "12", Category = "Upgrade", Description = "Minimum months a license must be held before upgrading", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012002"), SettingKey = "ALLOWED_UPGRADE_PATHS", SettingValue = "B-C,C-D,D-E,F-B", Category = "Upgrade", Description = "Allowed category upgrade paths (Format: FROM-TO, separated by comma)", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012003"), SettingKey = "UPGRADE_TRAINING_REDUCTION_PCNT", SettingValue = "50", Category = "Upgrade", Description = "Percentage reduction in training hours for category upgrades", IsEncrypted = false }
             );
         }
     }

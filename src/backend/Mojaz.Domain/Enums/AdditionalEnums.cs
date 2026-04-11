@@ -22,7 +22,8 @@ public enum LicenseStatus
     Suspended,
     Revoked,
     Replaced,
-    Renewed
+    Renewed,
+    Superseded
 }
 
 public enum DestinationType

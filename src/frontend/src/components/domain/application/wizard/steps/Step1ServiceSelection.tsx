@@ -8,9 +8,12 @@ import { SERVICES_CONFIG } from '@/lib/constants';
 import { useWizardStore } from '@/stores/wizard-store';
 import ServiceCard from '../shared/ServiceCard';
 import WizardStepHeader from '../WizardStepHeader';
+import { useRouter } from '@/i18n/routing';
+import { ServiceType } from '@/types/wizard.types';
 
 export default function Step1ServiceSelection() {
-  const { step1, setStep1 } = useWizardStore();
+  const { step1, setStep1, goTo, markCompleted } = useWizardStore();
+  const router = useRouter();
   
   const { 
     handleSubmit, 
@@ -37,12 +40,22 @@ export default function Step1ServiceSelection() {
 
   const selectedService = watch('serviceType');
 
-  // Sync with store on change
-  useEffect(() => {
-    if (selectedService) {
-      setStep1({ serviceType: selectedService });
+  const onNext = (data: Step1FormValues) => {
+    setStep1(data);
+    markCompleted(1);
+    
+    if (data.serviceType === ServiceType.Replacement) {
+      router.push('/applications/replacement');
+      return;
     }
-  }, [selectedService, setStep1]);
+    
+    if (data.serviceType === ServiceType.CategoryUpgrade) {
+      router.push('/applications/upgrade');
+      return;
+    }
+
+    goTo(2);
+  };
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">

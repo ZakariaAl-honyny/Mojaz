@@ -16,6 +16,7 @@ const SERVICE_TIPES = [
   { id: "new", key: "newLicense", icon: FileKey2 },
   { id: "renewal", key: "renewal", icon: RefreshCw },
   { id: "replacement", key: "replacement", icon: CopyPlus },
+  { id: "upgrade", key: "categoryUpgrade", icon: RefreshCw },
 ];
 
 const CATEGORIES = [
@@ -192,7 +193,19 @@ export function ApplicationWizard() {
               {/* Step 2: Category */}
               {currentStep === 2 && (
                 <div className="grid md:grid-cols-2 gap-6">
-                  {CATEGORIES.map((cat) => (
+                  {(formData.serviceType === "upgrade" 
+                    ? CATEGORIES.filter(cat => {
+                        const currentLicense = 'private';
+                        const upgradeMapping: Record<string, string> = {
+                          'private': 'heavy',
+                          'heavy': 'agricultural',
+                          'agricultural': 'taxi',
+                          'motorcycle': 'private',
+                        };
+                        return cat.id === upgradeMapping[currentLicense];
+                      })
+                    : CATEGORIES
+                  ).map((cat) => (
                     <button
                       key={cat.id}
                       onClick={() => updateForm("categoryId", cat.id)}
@@ -231,41 +244,49 @@ export function ApplicationWizard() {
 
               {/* Step 3: Personal Data */}
               {currentStep === 3 && (
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label>{t("fields.nationalId")}</Label>
-                    <Input 
-                      value={formData.nationalId} 
-                      onChange={(e) => updateForm("nationalId", e.target.value)} 
-                      placeholder="1XXXXXXXXX" 
-                      className="bg-neutral-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>{t("fields.dateOfBirth")}</Label>
-                    <Input 
-                      type="date" 
-                      value={formData.dateOfBirth} 
-                      onChange={(e) => updateForm("dateOfBirth", e.target.value)} 
-                      className="bg-neutral-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>{t("fields.phone")}</Label>
-                    <Input 
-                      value={formData.phone} 
-                      onChange={(e) => updateForm("phone", e.target.value)} 
-                      placeholder="05XXXXXXXX" 
-                      className="bg-neutral-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>{t("fields.city")}</Label>
-                    <Input 
-                      value={formData.city} 
-                      onChange={(e) => updateForm("city", e.target.value)} 
-                      className="bg-neutral-50"
-                    />
+                <div className="space-y-6">
+                  {formData.serviceType === "upgrade" && (
+                    <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl flex gap-3 items-start text-amber-800 text-sm">
+                      <Activity className="w-5 h-5 shrink-0" />
+                      <p>{t("errors.upgradeNotEligible")}</p>
+                    </div>
+                  )}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label>{t("fields.nationalId")}</Label>
+                      <Input 
+                        value={formData.nationalId} 
+                        onChange={(e) => updateForm("nationalId", e.target.value)} 
+                        placeholder="1XXXXXXXXX" 
+                        className="bg-neutral-50"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>{t("fields.dateOfBirth")}</Label>
+                      <Input 
+                        type="date" 
+                        value={formData.dateOfBirth} 
+                        onChange={(e) => updateForm("dateOfBirth", e.target.value)} 
+                        className="bg-neutral-50"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>{t("fields.phone")}</Label>
+                      <Input 
+                        value={formData.phone} 
+                        onChange={(e) => updateForm("phone", e.target.value)} 
+                        placeholder="05XXXXXXXX" 
+                        className="bg-neutral-50"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>{t("fields.city")}</Label>
+                      <Input 
+                        value={formData.city} 
+                        onChange={(e) => updateForm("city", e.target.value)} 
+                        className="bg-neutral-50"
+                      />
+                    </div>
                   </div>
                 </div>
               )}

@@ -6,6 +6,7 @@ public class EligibilityCheckRequest
 {
     public Guid LicenseCategoryId { get; set; }
     public ServiceType? ServiceType { get; set; }
+    public Guid? CurrentLicenseId { get; set; }
 }
 
 public class EligibilityCheckResult

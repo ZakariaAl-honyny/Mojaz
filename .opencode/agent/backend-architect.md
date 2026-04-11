@@ -1,5 +1,6 @@
 ---
 name: "Backend Architect"
+model: opencode/nemotron-3-super-free
 reasoningEeffect: "max"
 role: "ASP.NET Core 8 Clean Architecture specialist"
 activation: "When working on src/backend/**"

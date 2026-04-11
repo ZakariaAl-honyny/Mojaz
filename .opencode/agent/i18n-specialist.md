@@ -1,5 +1,6 @@
 ---
 name: "i18n Specialist"
+model: opencode/nemotron-3-super-free
 reasoningEeffect: "max"
 role: "Internationalization and bidirectional layout specialist"
 activation: "When creating UI components or translation files"
