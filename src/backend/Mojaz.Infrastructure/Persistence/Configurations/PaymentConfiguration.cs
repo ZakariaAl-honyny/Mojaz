@@ -31,7 +31,6 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.HasIndex(x => x.ApplicationId);
             builder.HasIndex(x => x.FeeType);
             builder.HasIndex(x => x.Status);
-            builder.HasQueryFilter(x => !x.IsDeleted);
         }
     }
 }

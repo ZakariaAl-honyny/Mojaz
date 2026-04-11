@@ -26,7 +26,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.HasIndex(x => x.ApplicationId);
             builder.HasIndex(x => x.DoctorId);
             builder.HasIndex(x => x.FitnessResult);
-            builder.HasQueryFilter(x => !x.IsDeleted);
-        }
+        
+    }
     }
 }
