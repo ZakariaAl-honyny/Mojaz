@@ -16,15 +16,40 @@ public class ApplicationsControllerTests : IClassFixture<WebApplicationFactory<P
         _factory = factory;
     }
 
+    //[Fact]
+    //public async Task Post_CreateApplication_ReturnsBadRequest_WhenInvalid()
+    //{
+    //    var client = _factory.CreateClient();
+    //    var request = new CreateApplicationRequest
+    //    {
+    //        // Missing required fields
+    //    };
+    //    var response = await client.PostAsJsonAsync("/api/v1/applications", request);
+    //    response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    //}
+
     [Fact]
     public async Task Post_CreateApplication_ReturnsBadRequest_WhenInvalid()
     {
+        // 1. ÅäÔÇÁ ÇáÚãíá
         var client = _factory.CreateClient();
-        var request = new CreateApplicationRequest
-        {
-            // Missing required fields
-        };
+
+        // 2. ÇáÊÚÏíá ÇáÌæåÑí: ÅÚØÇÁ ÇáÚãíá "ÈØÇÞÉ ÏÎæá" (Token æåãí)
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("TestScheme");
+
+        // 3. ÊÌåíÒ ØáÈ ÝÇÑÛ (áÊÍÝíÒ ÇáÜ Validation)
+        var request = new CreateApplicationRequest();
+
+        // 4. ÅÑÓÇá ÇáØáÈ
         var response = await client.PostAsJsonAsync("/api/v1/applications", request);
+
+        // 5. ÇáÊÍÞÞ (ÇáÂä ÓíÕá ááÜ 400 áÃä ÇáÃãä ÓãÍ áå ÈÇáãÑæÑ)
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
+
+
+
+
+
 }
