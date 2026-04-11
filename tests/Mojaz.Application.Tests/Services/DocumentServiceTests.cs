@@ -1,3 +1,4 @@
+using Mojaz.Application.Interfaces.Security;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -34,6 +35,7 @@ public class DocumentServiceTests
     private readonly Mock<IBackgroundJobClient> _backgroundJobClient = new();
     private readonly Mock<IFileStorageService> _fileStorageService = new();
     private readonly Mock<ISystemSettingsService> _systemSettingsService = new();
+    private readonly Mock<IFileValidationService> _fileValidationService = new();
 
     private DocumentService CreateService() => new(
         _documentRepo.Object,
@@ -44,7 +46,8 @@ public class DocumentServiceTests
         _emailService.Object,
         _backgroundJobClient.Object,
         _fileStorageService.Object,
-        _systemSettingsService.Object
+        _systemSettingsService.Object,
+        _fileValidationService.Object
     );
 
     #region Upload Tests

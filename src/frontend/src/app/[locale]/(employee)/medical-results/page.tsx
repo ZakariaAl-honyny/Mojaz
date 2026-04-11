@@ -50,12 +50,14 @@ export default function MedicalResultsPage() {
                           className="h-12 ps-12 rounded-xl text-lg font-bold" 
                           placeholder="e.g. 1092837482" 
                           value={searchId}
+                          data-testid="input-medical-search"
                           onChange={(e) => setSearchId(e.target.value)}
                         />
                      </div>
                      <Button 
                        size="lg" 
                        onClick={handleSearch}
+                       data-testid="btn-medical-search"
                        className="h-12 px-8 rounded-xl bg-primary-500 hover:bg-primary-600 font-bold shadow-lg shadow-primary-500/20"
                      >
                        Find Applicant
@@ -98,13 +100,13 @@ export default function MedicalResultsPage() {
                      <div className="space-y-4">
                         <Label className="text-sm font-black uppercase tracking-wider text-neutral-400">Vision Check (L/R)</Label>
                         <div className="grid grid-cols-2 gap-4">
-                           <Input className="h-14 text-center text-2xl font-black rounded-2xl" placeholder="6/6" />
-                           <Input className="h-14 text-center text-2xl font-black rounded-2xl" placeholder="6/9" />
+                           <Input className="h-14 text-center text-2xl font-black rounded-2xl" data-testid="input-vision-left" placeholder="6/6" />
+                           <Input className="h-14 text-center text-2xl font-black rounded-2xl" data-testid="input-vision-right" placeholder="6/9" />
                         </div>
                      </div>
                      <div className="space-y-4">
                         <Label className="text-sm font-black uppercase tracking-wider text-neutral-400">Blood Group</Label>
-                        <select className="flex h-14 w-full rounded-2xl border border-neutral-100 bg-neutral-50 px-4 py-2 text-lg font-bold">
+                        <select data-testid="select-blood-group" className="flex h-14 w-full rounded-2xl border border-neutral-100 bg-neutral-50 px-4 py-2 text-lg font-bold">
                            <option>Select Group</option>
                            <option>A+</option>
                            <option>O+</option>
@@ -118,7 +120,8 @@ export default function MedicalResultsPage() {
                      <textarea 
                         className="w-full h-40 rounded-2xl border border-neutral-100 bg-neutral-50 p-6 text-sm font-medium focus:ring-2 focus:ring-primary-500 outline-none transition-all"
                         placeholder="Enter any medical conditions, allergies, or physical considerations..."
-                     />
+                        data-testid="textarea-medical-remarks"
+                      />
                   </div>
 
                   <div className="flex items-center gap-4 p-6 bg-primary-50 rounded-2xl border border-primary-100/20">
@@ -127,7 +130,7 @@ export default function MedicalResultsPage() {
                   </div>
 
                   <div className="flex justify-end pt-6">
-                     <Button className="h-16 px-12 text-xl font-black bg-primary-900 hover:bg-black rounded-2xl shadow-2xl transition-all hover:translate-y-[-4px]">
+                     <Button data-testid="btn-save-medical" className="h-16 px-12 text-xl font-black bg-primary-900 hover:bg-black rounded-2xl shadow-2xl transition-all hover:translate-y-[-4px]">
                         Save & Certify Results
                      </Button>
                   </div>

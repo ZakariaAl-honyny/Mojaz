@@ -174,6 +174,7 @@ export function ApplicationWizard() {
                     <button
                       key={srv.id}
                       onClick={() => updateForm("serviceType", srv.id)}
+                      data-testid={`service-type-${srv.id}`}
                       className={cn(
                          "p-6 rounded-2xl flex flex-col items-center gap-4 border-2 transition-all duration-300",
                          formData.serviceType === srv.id
@@ -209,6 +210,7 @@ export function ApplicationWizard() {
                     <button
                       key={cat.id}
                       onClick={() => updateForm("categoryId", cat.id)}
+                      data-testid={`category-${cat.id}`}
                       className={cn(
                          "p-6 rounded-2xl flex justify-between items-center border-2 transition-all duration-300",
                          formData.categoryId === cat.id
@@ -257,6 +259,7 @@ export function ApplicationWizard() {
                       <Input 
                         value={formData.nationalId} 
                         onChange={(e) => updateForm("nationalId", e.target.value)} 
+                        data-testid="input-national-id"
                         placeholder="1XXXXXXXXX" 
                         className="bg-neutral-50"
                       />
@@ -267,6 +270,7 @@ export function ApplicationWizard() {
                         type="date" 
                         value={formData.dateOfBirth} 
                         onChange={(e) => updateForm("dateOfBirth", e.target.value)} 
+                        data-testid="input-dob"
                         className="bg-neutral-50"
                       />
                     </div>
@@ -275,6 +279,7 @@ export function ApplicationWizard() {
                       <Input 
                         value={formData.phone} 
                         onChange={(e) => updateForm("phone", e.target.value)} 
+                        data-testid="input-phone"
                         placeholder="05XXXXXXXX" 
                         className="bg-neutral-50"
                       />
@@ -284,6 +289,7 @@ export function ApplicationWizard() {
                       <Input 
                         value={formData.city} 
                         onChange={(e) => updateForm("city", e.target.value)} 
+                        data-testid="input-city"
                         className="bg-neutral-50"
                       />
                     </div>
@@ -300,6 +306,7 @@ export function ApplicationWizard() {
                       className="flex h-10 w-full rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
                       value={formData.preferredCenter} 
                       onChange={(e) => updateForm("preferredCenter", e.target.value)}
+                      data-testid="select-center"
                     >
                       <option value="">Select Branch</option>
                       <option value="riyadh-1">Riyadh Main Branch</option>
@@ -313,6 +320,7 @@ export function ApplicationWizard() {
                       className="flex h-10 w-full rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
                       value={formData.testLanguage} 
                       onChange={(e) => updateForm("testLanguage", e.target.value)}
+                      data-testid="select-language"
                     >
                       <option value="ar">{t("fields.arabic")}</option>
                       <option value="en">{t("fields.english")}</option>
@@ -324,6 +332,7 @@ export function ApplicationWizard() {
                       className="flex min-h-[100px] w-full rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
                       value={formData.specialNeeds} 
                       onChange={(e) => updateForm("specialNeeds", e.target.value)} 
+                      data-testid="textarea-special-needs"
                     />
                   </div>
                 </div>
@@ -355,7 +364,7 @@ export function ApplicationWizard() {
                   </div>
 
                   <div className="flex items-start gap-3 p-4 bg-secondary-50 border border-secondary-200 rounded-xl">
-                    <Checkbox id="accuracy" checked={formData.confirmAccuracy} onCheckedChange={(checked) => updateForm("confirmAccuracy", checked)} />
+                    <Checkbox id="accuracy" data-testid="checkbox-accuracy" checked={formData.confirmAccuracy} onCheckedChange={(checked) => updateForm("confirmAccuracy", checked)} />
                     <Label htmlFor="accuracy" className="text-sm cursor-pointer leading-tight text-neutral-700">
                       {t("fields.confirmAccuracy")}
                     </Label>
@@ -373,6 +382,7 @@ export function ApplicationWizard() {
           variant="outline" 
           onClick={prevStep} 
           disabled={currentStep === 1}
+          data-testid="wizard-prev"
           className="border-neutral-200 hover:bg-neutral-100 text-neutral-700"
         >
           {t("prev")}
@@ -381,6 +391,7 @@ export function ApplicationWizard() {
         {currentStep < 5 ? (
           <Button 
             onClick={nextStep}
+            data-testid="wizard-next"
             className="bg-primary-500 hover:bg-primary-600 shadow-lg shadow-primary-500/20 px-8"
           >
             {t("next")}
@@ -389,6 +400,7 @@ export function ApplicationWizard() {
           <Button 
             disabled={!formData.confirmAccuracy}
             className="bg-primary-500 hover:bg-primary-600 shadow-lg shadow-primary-500/20 px-8 disabled:opacity-50"
+            data-testid="wizard-submit"
             onClick={() => {
               // Stub: submit logic
               console.log("Submitting:", formData);

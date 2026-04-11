@@ -75,7 +75,17 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
                 // Category Upgrade SystemSettings seed data
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012001"), SettingKey = "MIN_HOLDING_PERIOD_UPGRADE_MONTHS", SettingValue = "12", Category = "Upgrade", Description = "Minimum months a license must be held before upgrading", IsEncrypted = false },
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012002"), SettingKey = "ALLOWED_UPGRADE_PATHS", SettingValue = "B-C,C-D,D-E,F-B", Category = "Upgrade", Description = "Allowed category upgrade paths (Format: FROM-TO, separated by comma)", IsEncrypted = false },
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012003"), SettingKey = "UPGRADE_TRAINING_REDUCTION_PCNT", SettingValue = "50", Category = "Upgrade", Description = "Percentage reduction in training hours for category upgrades", IsEncrypted = false }
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012003"), SettingKey = "UPGRADE_TRAINING_REDUCTION_PCNT", SettingValue = "50", Category = "Upgrade", Description = "Percentage reduction in training hours for category upgrades", IsEncrypted = false },
+
+                // Security Hardening seed data
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000013001"), SettingKey = "SECURITY_LOG_RETENTION_DAYS", SettingValue = "90", Category = "Security", Description = "Retention period for Audit Logs in days", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000013002"), SettingKey = "RATE_LIMIT_AUTH_PERMIT", SettingValue = "10", Category = "Security", Description = "Number of permits for authentication endpoints per window", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000013003"), SettingKey = "RATE_LIMIT_AUTH_WINDOW", SettingValue = "60", Category = "Security", Description = "Time window in seconds for authentication rate limiting", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000013004"), SettingKey = "RATE_LIMIT_GLOBAL_PERMIT", SettingValue = "100", Category = "Security", Description = "Number of permits for global API endpoints per window", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000013005"), SettingKey = "RATE_LIMIT_GLOBAL_WINDOW", SettingValue = "60", Category = "Security", Description = "Time window in seconds for global rate limiting", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000013006"), SettingKey = "MAX_FILE_SIZE_BYTES", SettingValue = "5242880", Category = "Security", Description = "Maximum allowed file size for uploads in bytes (Default 5MB)", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000013007"), SettingKey = "SECURITY_ALERT_THRESHOLD", SettingValue = "5", Category = "Security", Description = "Number of failed login attempts before sending security alert", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000013008"), SettingKey = "SECURITY_ALERT_WINDOW_MINS", SettingValue = "10", Category = "Security", Description = "Time window in minutes for security alert threshold", IsEncrypted = false }
             );
         }
     }
