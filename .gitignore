@@ -252,3 +252,10 @@ site/
 # ─── Test results ──────────────────────────────
 TestResults/
 *.trx
+
+# ─── Playwright ────────────────────────────────
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+playwright/.auth/
