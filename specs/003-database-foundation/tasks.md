@@ -1,39 +1,50 @@
----
-description: "Task list for Database Foundation & Seed Data implementation"
----
-
 # Tasks: Database Foundation & Seed Data
 
 **Input**: Design documents from `/specs/003-database-foundation/`
-**Prerequisites**: plan.md, spec.md, research.md, data-model.md, quickstart.md
+**Prerequisites**: plan.md ✅ | spec.md ✅ | research.md ✅ | data-model.md ✅
+**Branch**: `003-database-foundation`
 
-**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
+## Format: `[ID] [P?] [Story] Description`
+
+- **[P]**: Can run in parallel (independent files, no dependency on incomplete task)
+- **[US#]**: Which user story this task belongs to
+- All paths are relative to repository root
+
+---
 
 ## Phase 1: Setup
+**Purpose**: Project initialization and basic structure.
 
-**Purpose**: Project initialization and basic structure
-
-- [x] T001 Create `src/Mojaz.Infrastructure/Data/Configurations` and `src/Mojaz.Infrastructure/Data/Seeders` directories
-
----
-
-## Phase 2: Foundational (Blocking Prerequisites)
-
-**Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
-
-- [x] T002 Implement `BaseEntity`, `IAuditable`, and `ISoftDeletable` interfaces in `src/Mojaz.Domain/Entities/Base/`
-- [x] T003 Set up `ApplicationDbContext.cs` skeleton in `src/Mojaz.Infrastructure/Data/` with DbSets for the 21 tables
-- [x] T003.5 Configure default collation `Arabic_CI_AS` in `ApplicationDbContext.cs`
-
-**Checkpoint**: Foundation ready - user story implementation can now begin in parallel
+- [x] T001 Create `src/backend/src/Mojaz.Infrastructure/Persistence/Configurations` and `src/backend/src/Mojaz.Infrastructure/Persistence/Seeders` directories
 
 ---
 
-## Phase 3: User Story 1 - Apply DB Schema and Constraints (Priority: P1) 🎯 MVP
+## Phase 2: Tests
+**Purpose**: TDD and schema verification.
 
-**Goal**: Complete SQL Server database schema with all 21 core tables, foreign keys, constraints, and indexes.
+- [ ] T002 Implement a schema verification script to programmatically verify that all 21 tables, FKs, and constraints are created.
+- [x] T018 Run `quickstart.md` validation to ensure database creation and data seeding works end-to-end.
 
-**Independent Test**: Can be fully tested by applying migrations to an empty SQL Server database and verifying the resulting schema programmatically.
+---
+
+## Phase 3: Core
+**Purpose**: Implement Domain entities, EF Core configurations, and seeding logic.
+
+### Foundational
+- [x] T003 Implement `BaseEntity`, `IAuditable`, and `ISoftDeletable` interfaces in `src/backend/src/Mojaz.Domain/Common/`
+- [x] T004 Set up `MojazDbContext.cs` skeleton in `src/backend/src/Mojaz.Infrastructure/Persistence/` with DbSets for the 21 tables
+- [x] T005 Configure default collation `Arabic_CI_AS` in `MojazDbContext.cs`
+
+### User Story 1 — DB Schema and Constraints
+- [x] T006 [P] [US1] Create Identity & Auth Models (`User`, `OtpCode`, `RefreshToken`) and Comm Logs (`EmailLog`, `SmsLog`, `PushToken`) in `src/backend/src/Mojaz.Domain/Entities/`
+- [x] T007 [P] [US1] Create Configuration Models (`LicenseCategory`, `FeeStructure`, `SystemSettings`) in `src/backend/src/Mojaz.Domain/Entities/`
+- [x] T008 [P] [US1] Create Core Workflow Models (`Applicant`, `Application`, `Document`, `Appointment`, `Payment`, `License`) in `src/backend/src/Mojaz.Domain/Entities/`
+- [x] T009 [P] [US1] Create Tracking & Exam Models (`MedicalExam`, `TrainingRecord`, `TheoryTest`, `PracticalTest`, `Notification`, `AuditLog`) in `src/backend/src/Mojaz.Domain/Entities/`
+- [x] T010 [P] [US1] Implement EF Core Configuration for Identity/Comm entities in `src/backend/src/Mojaz.Infrastructure/Persistence/Configurations/`
+- [x] T011 [P] [US1] Implement EF Core Configuration for Config entities in `src/backend/src/Mojaz.Infrastructure/Persistence/Configurations/`
+- [x] T012 [P] [US1] Implement EF Core Configuration for Core Workflow entities in `src/backend/src/Mojaz.Infrastructure/Persistence/Configurations/`
+- [x] T013 [P] [US1] Implement EF Core Configuration for Tracking/Exam entities in `src/backend/src/Mojaz.Infrastructure/Persistence/Configurations/`
+- [x] T014 [US1] Apply all configurations to `MojazDbContext.OnModelCreating`
 
 ### Implementation for User Story 1
 
@@ -52,7 +63,8 @@ description: "Task list for Database Foundation & Seed Data implementation"
 
 ---
 
-## Phase 4: User Story 2 - Automated Seed Data (Priority: P2)
+## Phase 4: Integration
+**Purpose**: Wire the schema to the actual database and execute seeding.
 
 **Goal**: Seeding essential lookup data and test data.
 
@@ -69,7 +81,8 @@ description: "Task list for Database Foundation & Seed Data implementation"
 
 ---
 
-## Phase 5: Polish & Cross-Cutting Concerns
+## Phase 5: Polish
+**Purpose**: Final cleanup and validation.
 
 **Purpose**: Improvements that affect multiple user stories
 

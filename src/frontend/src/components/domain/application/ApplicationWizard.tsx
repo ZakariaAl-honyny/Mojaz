@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { CopyPlus, FileKey2, RefreshCw, CarFront, Bike, Truck, Activity } from "lucide-react";
+import { CopyPlus, FileKey2, RefreshCw, CarFront, Bike, Truck, Activity, Tractor } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Mock data for wizard options
@@ -16,6 +16,7 @@ const SERVICE_TIPES = [
   { id: "new", key: "newLicense", icon: FileKey2 },
   { id: "renewal", key: "renewal", icon: RefreshCw },
   { id: "replacement", key: "replacement", icon: CopyPlus },
+  { id: "upgrade", key: "categoryUpgrade", icon: RefreshCw },
 ];
 
 const CATEGORIES = [
@@ -23,11 +24,25 @@ const CATEGORIES = [
   { id: "private", key: "privateCar", icon: CarFront, minAge: 18 },
   { id: "taxi", key: "publicTaxi", icon: CarFront, minAge: 21 },
   { id: "heavy", key: "heavyVehicle", icon: Truck, minAge: 21 },
+  { id: "agricultural", key: "agricultural", icon: Tractor, minAge: 18 },
 ];
 
 export function ApplicationWizard() {
   const t = useTranslations("application.create");
+  const [currentStep, setCurrentStep] = useState(1);
   const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    serviceType: "",
+    categoryId: "",
+    nationalId: "",
+    dateOfBirth: "",
+    phone: "",
+    city: "",
+    preferredCenter: "",
+    testLanguage: "ar",
+    specialNeeds: "",
+    confirmAccuracy: false,
+  });
 
   const calculateAge = (dob: string) => {
     if (!dob) return 0;
@@ -178,7 +193,19 @@ export function ApplicationWizard() {
               {/* Step 2: Category */}
               {currentStep === 2 && (
                 <div className="grid md:grid-cols-2 gap-6">
-                  {CATEGORIES.map((cat) => (
+                  {(formData.serviceType === "upgrade" 
+                    ? CATEGORIES.filter(cat => {
+                        const currentLicense = 'private';
+                        const upgradeMapping: Record<string, string> = {
+                          'private': 'heavy',
+                          'heavy': 'agricultural',
+                          'agricultural': 'taxi',
+                          'motorcycle': 'private',
+                        };
+                        return cat.id === upgradeMapping[currentLicense];
+                      })
+                    : CATEGORIES
+                  ).map((cat) => (
                     <button
                       key={cat.id}
                       onClick={() => updateForm("categoryId", cat.id)}
@@ -195,9 +222,16 @@ export function ApplicationWizard() {
                          </div>
                          <div className="text-start">
                            <h3 className="font-semibold text-lg">{t(`fields.${cat.key}` as any)}</h3>
-                           <p className="text-sm text-neutral-500 flex items-center gap-1 mt-1">
-                             <Activity className="w-4 h-4"/> Min Age: {cat.minAge}
-                           </p>
+                           <div className="flex flex-col gap-1 mt-1">
+                             <p className="text-xs text-neutral-500 flex items-center gap-1">
+                               <Activity className="w-3 h-3"/> {t("fields.minAge", { age: cat.minAge })}
+                             </p>
+                             {cat.id === "agricultural" && (
+                               <p className="text-[10px] text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full w-fit font-medium">
+                                 {t("fields.fieldTest")}
+                               </p>
+                             )}
+                           </div>
                          </div>
                       </div>
                       <div className={cn("w-6 h-6 rounded-full border-2 flex items-center justify-center", formData.categoryId === cat.id ? "border-primary-500" : "border-neutral-300")}>
@@ -210,41 +244,49 @@ export function ApplicationWizard() {
 
               {/* Step 3: Personal Data */}
               {currentStep === 3 && (
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label>{t("fields.nationalId")}</Label>
-                    <Input 
-                      value={formData.nationalId} 
-                      onChange={(e) => updateForm("nationalId", e.target.value)} 
-                      placeholder="1XXXXXXXXX" 
-                      className="bg-neutral-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>{t("fields.dateOfBirth")}</Label>
-                    <Input 
-                      type="date" 
-                      value={formData.dateOfBirth} 
-                      onChange={(e) => updateForm("dateOfBirth", e.target.value)} 
-                      className="bg-neutral-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>{t("fields.phone")}</Label>
-                    <Input 
-                      value={formData.phone} 
-                      onChange={(e) => updateForm("phone", e.target.value)} 
-                      placeholder="05XXXXXXXX" 
-                      className="bg-neutral-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>{t("fields.city")}</Label>
-                    <Input 
-                      value={formData.city} 
-                      onChange={(e) => updateForm("city", e.target.value)} 
-                      className="bg-neutral-50"
-                    />
+                <div className="space-y-6">
+                  {formData.serviceType === "upgrade" && (
+                    <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl flex gap-3 items-start text-amber-800 text-sm">
+                      <Activity className="w-5 h-5 shrink-0" />
+                      <p>{t("errors.upgradeNotEligible")}</p>
+                    </div>
+                  )}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label>{t("fields.nationalId")}</Label>
+                      <Input 
+                        value={formData.nationalId} 
+                        onChange={(e) => updateForm("nationalId", e.target.value)} 
+                        placeholder="1XXXXXXXXX" 
+                        className="bg-neutral-50"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>{t("fields.dateOfBirth")}</Label>
+                      <Input 
+                        type="date" 
+                        value={formData.dateOfBirth} 
+                        onChange={(e) => updateForm("dateOfBirth", e.target.value)} 
+                        className="bg-neutral-50"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>{t("fields.phone")}</Label>
+                      <Input 
+                        value={formData.phone} 
+                        onChange={(e) => updateForm("phone", e.target.value)} 
+                        placeholder="05XXXXXXXX" 
+                        className="bg-neutral-50"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>{t("fields.city")}</Label>
+                      <Input 
+                        value={formData.city} 
+                        onChange={(e) => updateForm("city", e.target.value)} 
+                        className="bg-neutral-50"
+                      />
+                    </div>
                   </div>
                 </div>
               )}

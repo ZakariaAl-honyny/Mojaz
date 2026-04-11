@@ -4,8 +4,10 @@ public enum ApplicationStatus
 {
     Draft,
     Submitted,
+    DocumentReview,
     InReview,
     MedicalExam,
+    Training,
     TheoryTest,
     PracticalTest,
     Approved,
@@ -13,5 +15,6 @@ public enum ApplicationStatus
     Issued,
     Active,
     Rejected,
-    Cancelled
+    Cancelled,
+    Expired
 }

@@ -14,6 +14,7 @@ public class OtpCode : BaseEntity
     public DateTime ExpiresAt { get; set; }
     public bool IsUsed { get; set; }
     public DateTime? UsedAt { get; set; }
+    public bool IsInvalidated { get; set; }
     public int AttemptCount { get; set; }
     public int MaxAttempts { get; set; }
     public string? IpAddress { get; set; }

@@ -36,13 +36,10 @@ public class AuditService : IAuditService
         {
             Id = Guid.NewGuid(),
             UserId = userId,
-            Action = action,
-            EntityType = entityType,
-            EntityId = entityIdGuid,
-            OldValues = oldValues ?? "{}",
-            NewValues = newValues ?? "{}",
-            IpAddress = context?.Connection?.RemoteIpAddress?.ToString() ?? "unknown",
-            UserAgent = context?.Request?.Headers["User-Agent"].ToString() ?? "unknown",
+            ActionType = action,
+            EntityName = entityType ?? "Unknown",
+            EntityId = entityIdGuid.ToString(),
+            Payload = $"{{ \"OldValues\": {oldValues ?? "{}"}, \"NewValues\": {newValues ?? "{}"} }}",
             Timestamp = DateTime.UtcNow
         };
 
@@ -61,7 +58,7 @@ public class AuditService : IAuditService
 
         // Basic implementation, usually filtered in a repository method
         return await _unitOfWork.Repository<AuditLog>().FindAsync(x => 
-            (string.IsNullOrEmpty(entityType) || x.EntityType == entityType) && 
-            (!entityIdGuid.HasValue || x.EntityId == entityIdGuid));
+            (string.IsNullOrEmpty(entityType) || x.EntityName == entityType) && 
+            (!entityIdGuid.HasValue || x.EntityId == entityIdGuid.ToString()));
     }
 }

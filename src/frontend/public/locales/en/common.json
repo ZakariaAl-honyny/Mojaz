@@ -1,0 +1,23 @@
+{
+  "welcome": "Welcome to Mojaz Platform",
+  "description": "An integrated government platform for driving license services in Saudi Arabia. Ease of application, speed of procedures, and high reliability.",
+  "auth": {
+    "login": "Login",
+    "register": "Create Account"
+  },
+  "register": {
+    "alreadyHaveAccount": "Already have an account?"
+  },
+  "toggleLanguage": "العربية",
+  "save": "Save",
+  "cancel": "Cancel",
+  "next": "Next",
+  "back": "Back",
+  "backToQueue": "Back to Queue",
+  "submit": "Submit",
+  "loading": "Loading...",
+  "retry": "Retry",
+  "continue": "Continue",
+  "confirm": "Confirm",
+  "tryAgain": "Try Again"
+}

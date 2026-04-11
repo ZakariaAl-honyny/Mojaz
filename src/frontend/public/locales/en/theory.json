@@ -1,0 +1,36 @@
+{
+  "submit": {
+    "title": "Record Theory Test Result",
+    "subtitle": "Recording result for {name}",
+    "button": "Save Result",
+    "processing": "Saving...",
+    "success": "Test result recorded successfully",
+    "error": "An error occurred while saving the result"
+  },
+  "fields": {
+    "score": "Score (0-100)",
+    "scoreDescription": "Enter the score obtained by the applicant",
+    "isAbsent": "Absent",
+    "isAbsentDescription": "Check this if the applicant did not attend the test",
+    "notes": "Additional Notes",
+    "notesPlaceholder": "Any additional notes about the applicant's performance..."
+  },
+  "history": {
+    "title": "Theory Test History",
+    "empty": "No test history found for this application",
+    "attempt": "Attempt #{number}",
+    "attemptBadge": "attempt",
+    "status": {
+      "Pass": "Pass",
+      "Fail": "Fail",
+      "Absent": "Absent"
+    },
+    "score": "Score: {score}",
+    "date": "Test Date: {date}",
+    "absent": "Absent from test",
+    "eligibleDate": "Retake eligible after: {date}"
+  },
+  "common": {
+    "error": "Error"
+  }
+}

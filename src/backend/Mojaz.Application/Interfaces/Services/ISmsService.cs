@@ -4,5 +4,5 @@ namespace Mojaz.Application.Interfaces.Services;
 
 public interface ISmsService
 {
-    Task SendSmsAsync(string phoneNumber, string message);
+    Task SendAsync(string phoneNumber, string message);
 }

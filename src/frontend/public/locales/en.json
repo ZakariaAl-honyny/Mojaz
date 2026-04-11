@@ -12,7 +12,77 @@
     "medicalResults": "Medical Results",
     "testResults": "Test Results",
     "users": "Users",
-    "reports": "Reports"
+    "reports": "Reports",
+    "auditLogs": "Audit Logs"
+  },
+  "admin": {
+    "users": {
+      "title": "User Management",
+      "search": "Search...",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role",
+      "status": "Status",
+      "actions": "Actions",
+      "active": "Active",
+      "inactive": "Inactive",
+      "add": "Add User",
+      "noUsers": "No users found"
+    },
+    "settings": {
+      "title": "System Settings",
+      "key": "Key",
+      "value": "Value",
+      "description": "Description",
+      "actions": "Actions",
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "noSettings": "No settings found"
+    },
+    "audit": {
+      "title": "Audit Logs",
+      "entity": "Entity",
+      "action": "Action",
+      "user": "User",
+      "date": "Date",
+      "details": "Details",
+      "noLogs": "No logs found",
+      "search": "Search by entity...",
+      "previous": "Previous",
+      "next": "Next"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your preferences and account settings",
+    "notifications": {
+      "title": "Notification Settings",
+      "description": "Choose your preferred notification channels",
+      "email": "Email",
+      "emailDesc": "Receive notifications via email",
+      "sms": "SMS",
+      "smsDesc": "Receive notifications via text message",
+      "push": "Push Notifications",
+      "pushDesc": "Receive notifications on your device",
+      "inApp": "In-App Notifications",
+      "inAppDesc": "In-app notifications are always enabled",
+      "success": "Settings saved successfully",
+      "error": "Failed to save settings"
+    },
+    "account": {
+      "title": "Account Settings",
+      "language": "Preferred Language",
+      "languageDesc": "Choose your interface language"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications at this time",
+    "markAsRead": "Mark as read",
+    "viewAll": "View all notifications"
   },
   "dashboard": {
     "greeting": "Welcome back",
@@ -45,10 +115,13 @@
         "renewal": "Renewal",
         "replacement": "Replacement",
         "category": "License Category",
+        "minAge": "Min Age: {age}",
+        "fieldTest": "Agricultural Field Test",
         "motorcycle": "Motorcycle",
         "privateCar": "Private Car",
         "publicTaxi": "Public Taxi",
         "heavyVehicle": "Heavy Vehicle",
+        "agricultural": "Agricultural Vehicle",
         "nationalId": "National ID / Iqama",
         "dateOfBirth": "Date of Birth",
         "nationality": "Nationality",
@@ -92,6 +165,7 @@
         "medical": "Medical Examination",
         "theory": "Theory Training & Test",
         "practical": "Practical Training & Test",
+        "fieldTest": "Agricultural Field Test",
         "issuance": "License Issuance"
       },
       "status": {
@@ -156,25 +230,42 @@
     "login": {
       "title": "Login",
       "subtitle": "Access your Mojaz account",
-      "email": "Email Address",
-      "phone": "Phone Number",
+      "identifier": "National ID or Email Address",
+      "placeholderIdentifier": "Enter National ID or Email",
       "password": "Password",
+      "placeholderPassword": "Enter your password",
       "submit": "Login",
       "forgotPassword": "Forgot Password?",
       "noAccount": "Don't have an account?",
-      "register": "Register Now"
+      "registerNow": "Register Now"
+    },
+    "errors": {
+      "identifierRequired": "National ID or Email is required",
+      "passwordRequired": "Password is required",
+      "invalidCredentials": "Invalid credentials"
     },
     "register": {
       "title": "Create Account",
-      "subtitle": "Join Mojaz for driving license services",
+      "subtitle": "Join Mojaz platform to access driving license services",
+      "emailTitle": "Email Registration",
+      "phoneTitle": "Phone Registration",
+      "phoneSubtitle": "Enter your details to create an account via phone",
       "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter your full name as shown in ID",
       "email": "Email Address",
       "phone": "Phone Number",
       "password": "Password",
       "confirmPassword": "Confirm Password",
+      "acceptTerms": "I agree to",
+      "termsLink": "Terms and Conditions",
       "submit": "Create Account",
-      "hasAccount": "Already have an account?",
-      "login": "Login here"
+      "processing": "Processing...",
+      "alreadyHaveAccount": "Already have an account?",
+      "loginLink": "Login",
+      "errors": {
+        "registrationFailed": "Registration failed. Please try again.",
+        "genericError": "An unexpected error occurred. Please try again later."
+      }
     },
     "forgotPassword": {
       "title": "Reset Password",
@@ -194,11 +285,232 @@
       "success": "Password changed successfully"
   },
     "otp": {
-      "title": "Verify Identity",
-      "subtitle": "Enter the code sent to your device",
-      "submit": "Verify",
-      "resend": "Resend Code",
-      "resendIn": "Resend in {seconds}s"
+      "title": "Identity Verification",
+      "subtitle": "Verify Code",
+      "description": "Verification code has been sent to",
+      "confirm": "Verify Now",
+      "invalidCode": "Please enter a valid 6-digit code",
+      "success": "Verification successful! Redirecting...",
+      "otpResent": "Verification code resent successfully",
+      "invalidSession": "Invalid verification session",
+      "backToRegister": "Back to Registration",
+      "resendAction": "Resend Code",
+      "resendIn": "Resend in",
+      "seconds": "s",
+      "didntReceive": "Didn't receive the code?",
+      "changeRegistrationInfo": "Change registration info",
+      "errors": {
+        "verificationFailed": "Invalid or expired verification code",
+        "resendFailed": "Failed to resend code. Please try again later."
+      }
+    }
+  },
+  "common": {
+    "title": "Mojaz",
+    "welcome": "Welcome to Mojaz Platform",
+    "description": "The official electronic driving license issuance system. Your integrated gateway for license services with ease and security.",
+    "auth": {
+      "login": "Login",
+      "register": "Create New Account"
+    },
+    "toggleLanguage": "العربية",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "noData": "No data available",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "notfound": {
+      "title": "Page Not Found",
+      "description": "Sorry, the page you are looking for does not exist or has been moved.",
+      "backToHome": "Return to Home"
+    }
+  },
+  "wizard": {
+    "autoSave": {
+      "saving": "Saving...",
+      "saved": "Saved",
+      "notSaved": "Not saved yet",
+      "saveFailed": "Save failed - check your connection",
+      "justNow": "Just now",
+      "oneMinuteAgo": "1 minute ago",
+      "minutesAgo": "{{count}} minutes ago",
+      "connectionIssues": "Connection issues. Data is saved locally in your browser.",
+      "lastSaved": "Last saved:"
+    },
+    "steps": {
+      "service": {
+        "label": "Service Selection",
+        "title": "Select Service Type",
+        "description": "Please choose the service you wish to apply for from the options below"
+      },
+      "category": {
+        "label": "License Category",
+        "title": "Choose License Category",
+        "description": "Select the category of driving license you wish to obtain"
+      },
+      "personal": {
+        "label": "Personal Info",
+        "title": "Personal Information",
+        "description": "Please complete your personal details to verify eligibility"
+      },
+      "details": {
+        "label": "Application Details",
+        "title": "Application Details",
+        "description": "Enter additional application details and preferred center"
+      },
+      "review": {
+        "label": "Review & Submit",
+        "title": "Review & Submit",
+        "description": "Review your application data and accept declaration before final submission"
+      }
+    },
+    "navigation": {
+      "back": "Previous",
+      "next": "Next",
+      "submit": "Submit Application",
+      "processing": "Processing..."
+    },
+    "step1": {
+      "newLicense": {
+        "title": "New Driving License",
+        "description": "Apply for a driving license for the first time"
+      },
+      "renewal": {
+        "title": "License Renewal",
+        "description": "Renew your existing driving license before expiry"
+      },
+      "replacement": {
+        "title": "Replacement (Damaged/Lost)",
+        "description": "Issue a replacement for a damaged or lost license"
+      },
+      "categoryUpgrade": {
+        "title": "Category Upgrade",
+        "description": "Add a new category to your current driving license"
+      },
+      "testRetake": {
+        "title": "Test Retake",
+        "description": "Book a new appointment for a driving test retake"
+      },
+      "appointmentBooking": {
+        "title": "Book Appointment",
+        "description": "Schedule a visit to Traffic Dept or Exam Centers"
+      },
+      "notAvailable": "This service is currently not available in the MVP version"
+    },
+    "step2": {
+      "title": "Choose License Category",
+      "minAge": "Min Age: {{age}} years",
+      "years": "years",
+      "ageError": "Sorry, you must be {{minAge}} years or older for this category",
+      "disabledMessage": "{{count}} category not available for your age",
+      "errorLoading": "Failed to load categories",
+      "errorLoadingMessage": "We encountered a problem while fetching the license categories. Please try again.",
+      "retry": "Retry",
+      "categoryA": { "title": "Category A - Motorcycle" },
+      "categoryB": { "title": "Category B - Private Car" },
+      "categoryC": { "title": "Category C - Commercial Vehicle" },
+      "categoryD": { "title": "Category D - Bus" },
+      "categoryE": { "title": "Category E - Heavy Vehicle" },
+      "categoryF": { "title": "Category F - Agricultural Vehicle" }
+    },
+    "step3": {
+      "title": "Personal Information",
+      "nationalId": "National ID",
+      "dateOfBirth": "Date of Birth",
+      "nationality": "Nationality",
+      "gender": "Gender",
+      "male": "Male",
+      "female": "Female",
+      "mobileNumber": "Mobile Number",
+      "email": "Email",
+      "region": "Region",
+      "city": "City",
+      "address": "Address",
+      "addressPlaceholder": "Enter detailed address"
+    },
+    "step4": {
+      "title": "Application Details",
+      "applicantType": "Applicant Type",
+      "citizen": "Citizen",
+      "resident": "Resident",
+      "visitor": "Visitor",
+      "preferredCenter": "Preferred Driving Center",
+      "selectCenter": "Select Driving Center",
+      "loadingCenters": "Loading centers...",
+      "testLanguage": "Test Language",
+      "arabic": "Arabic",
+      "english": "English",
+      "appointmentPreference": "Appointment Preference",
+      "noPreference": "No Preference",
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "evening": "Evening",
+      "specialNeedsDeclaration": "Do you have special needs?",
+      "specialNeedsInfo": "Please disclose any special needs to enable us to provide necessary support during tests",
+      "specialNeedsNote": "Details",
+      "specialNeedsNotePlaceholder": "Describe your special needs..."
+    },
+    "step5": {
+      "title": "Review & Submit",
+      "description": "Please review your application before final submission",
+      "serviceType": "Service Type",
+      "category": "License Category",
+      "personalInfo": "Personal Information",
+      "center": "Driving Center",
+      "ar": "Arabic",
+      "en": "English",
+      "declaration": "I declare that all entered information is correct and I accept the terms and conditions for issuing a driving license.",
+      "edit": "Edit",
+      "submit": "Submit Application",
+      "submitting": "Submitting...",
+      "successMessage": "Your application has been submitted successfully!"
+    },
+    "validation": {
+      "step1": {
+        "serviceRequired": "Please select a service to continue"
+      },
+      "step2": {
+        "categoryRequired": "Please select a license category to continue",
+        "ageError": "Sorry, you must be {{age}} years or older for this category"
+      },
+      "step3": {
+        "nationalIdFormat": "National ID must be 10 digits",
+        "dobInvalid": "Invalid Date of Birth",
+        "nationalityRequired": "Nationality is required",
+        "genderRequired": "Gender is required",
+        "mobileFormat": "Invalid mobile number (example: +9665XXXXXXXX)",
+        "emailFormat": "Invalid email address",
+        "addressMin": "Address must be at least 5 characters",
+        "cityRequired": "City is required",
+        "regionRequired": "Region is required"
+      },
+      "step4": {
+        "centerRequired": "Please select a driving center",
+        "specialNeedsNoteRequired": "Please describe your special needs"
+      },
+      "step5": {
+        "declarationRequired": "You must accept the declaration to continue"
+      }
+    },
+    "loading": "Loading...",
+    "existingApp": {
+      "title": "You Have an Active Application",
+      "message": "You have an existing application with number",
+      "applicationNumber": "Application Number: {{number}}",
+      "status": "Status: {{status}}",
+      "viewApplication": "View Application"
+    },
+    "common": {
+      "select": "Select",
+      "currentLocale": "en",
+      "yes": "Yes",
+      "no": "No"
     }
   }
 }

@@ -6,12 +6,9 @@ public class AuditLog
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid? UserId { get; set; }
-    public string Action { get; set; } = string.Empty;
-    public string EntityType { get; set; } = string.Empty;
-    public Guid EntityId { get; set; } = Guid.Empty;
-    public string? OldValues { get; set; } // JSON string
-    public string? NewValues { get; set; } // JSON string
-    public string? IpAddress { get; set; }
-    public string? UserAgent { get; set; }
+    public string ActionType { get; set; } = string.Empty;
+    public string EntityName { get; set; } = string.Empty;
+    public string EntityId { get; set; } = string.Empty;
+    public string Payload { get; set; } = string.Empty; // Stores serialized JSON of old/new values
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 }

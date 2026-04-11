@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Mojaz.Domain.Entities;
+using Mojaz.Infrastructure.Persistence.Interceptors;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,15 +26,18 @@ namespace Mojaz.Infrastructure.Persistence
         public DbSet<TrainingRecord> TrainingRecords { get; set; }
         public DbSet<TheoryTest> TheoryTests { get; set; }
         public DbSet<PracticalTest> PracticalTests { get; set; }
-        public DbSet<Payment> Payments { get; set; }
+        public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
         public DbSet<License> Licenses { get; set; }
         public DbSet<LicenseRenewal> LicenseRenewals { get; set; }
         public DbSet<LicenseReplacement> LicenseReplacements { get; set; }
         public DbSet<CategoryUpgrade> CategoryUpgrades { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<PushToken> PushTokens { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<SystemSetting> SystemSettings { get; set; }
         public DbSet<FeeStructure> FeeStructures { get; set; }
+        public DbSet<EmailLog> EmailLogs { get; set; }
+        public DbSet<SmsLog> SmsLogs { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -48,6 +53,12 @@ namespace Mojaz.Infrastructure.Persistence
                 }
             }
             return base.SaveChangesAsync(cancellationToken);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.AddInterceptors(new AuditInterceptor());
+            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
