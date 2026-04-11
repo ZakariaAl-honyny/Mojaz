@@ -1,4 +1,5 @@
 using Mojaz.Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -10,10 +11,12 @@ namespace Mojaz.Infrastructure.Persistence.UnitOfWork
     {
         private readonly MojazDbContext _context;
         private readonly Dictionary<Type, object> _repositories = new();
+        private readonly ILogger<UnitOfWork>? _logger;
 
-        public UnitOfWork(MojazDbContext context)
+        public UnitOfWork(MojazDbContext context, ILogger<UnitOfWork>? logger = null)
         {
             _context = context;
+            _logger = logger;
         }
 
         public IRepository<T> Repository<T>() where T : class
@@ -29,7 +32,15 @@ namespace Mojaz.Infrastructure.Persistence.UnitOfWork
 
         public async Task<int> SaveChangesAsync(CancellationToken ct = default)
         {
-            return await _context.SaveChangesAsync(ct);
+            try
+            {
+                return await _context.SaveChangesAsync(ct);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error saving entity changes. InnerException: {InnerMessage}", ex.InnerException?.Message ?? ex.Message);
+                throw;
+            }
         }
 
         public async Task BeginTransactionAsync(CancellationToken ct = default)
