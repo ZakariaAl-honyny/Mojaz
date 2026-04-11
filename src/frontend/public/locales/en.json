@@ -226,6 +226,85 @@
         }
      }
   },
+  "landing": {
+    "hero": {
+      "badge": "Official Mojaz Platform",
+      "title": "The Future of Driving License Management",
+      "subtitle": "The smart, unified platform for issuing and renewing driving licenses with ease and security, in accordance with the highest international standards and an ambitious Saudi vision.",
+      "cta": "Get Started",
+      "howItWorks": "How it Works"
+    },
+    "services": {
+      "title": "Our Premium Services",
+      "subtitle": "We provide integrated digital solutions for all your driving license needs",
+      "items": {
+        "new": {
+          "title": "New License Issuance",
+          "desc": "Start your journey to obtain your driving license for the first time with ease."
+        },
+        "renewal": {
+          "title": "License Renewal",
+          "desc": "Renew your current license in minutes through a fully automated process."
+        },
+        "replacement": {
+          "title": "Replacement (Lost/Damaged)",
+          "desc": "Obtain a replacement for your lost or damaged license at the click of a button."
+        },
+        "upgrade": {
+          "title": "Category Upgrade",
+          "desc": "Upgrade your current license category to include additional vehicle types."
+        }
+      }
+    },
+    "timeline": {
+      "title": "The Licensing Journey",
+      "subtitle": "Clear and simplified steps from application to collection",
+      "stages": [
+        "Application Submission",
+        "Review & Audit",
+        "Medical Examination",
+        "Driving School",
+        "Theory Test",
+        "Practical Test",
+        "Final Approval",
+        "Fee Payment",
+        "License Printing",
+        "Digital/Physical Collection"
+      ]
+    },
+    "categories": {
+      "title": "License Categories",
+      "subtitle": "Learn about the requirements for each available license category",
+      "types": {
+        "A": "Motorcycle",
+        "B": "Private Car",
+        "C": "Public Transport",
+        "D": "Bus",
+        "E": "Heavy Vehicles",
+        "F": "Agricultural Vehicles"
+      }
+    },
+    "stats": {
+      "title": "Mojaz in Numbers",
+      "activeUsers": "Active Users",
+      "issuedLicenses": "Issued Licenses",
+      "satisfactionRate": "Satisfaction Rate",
+      "centers": "Exam Centers"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "items": [
+        {
+          "q": "What are the requirements for a new driving license?",
+          "a": "The applicant must meet the legal age, pass the medical examination, and complete the required training hours."
+        },
+        {
+          "q": "How long does the renewal process take?",
+          "a": "Renewal is processed instantly via the platform once fees are paid and a valid medical report is available."
+        }
+      ]
+    }
+  },
   "auth": {
     "login": {
       "title": "Login",

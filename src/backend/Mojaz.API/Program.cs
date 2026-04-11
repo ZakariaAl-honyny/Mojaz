@@ -1,4 +1,5 @@
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Hangfire;
@@ -10,11 +11,15 @@ using Mojaz.API.Filters;
 using Mojaz.API.Middleware;
 using Mojaz.Application;
 using Mojaz.Infrastructure;
+using Mojaz.Infrastructure.Persistence;
+using Mojaz.Infrastructure.Data.Seeding;
 using Mojaz.Infrastructure.Extensions;
 using Serilog;
 using Mojaz.Infrastructure.Security.RateLimiting;
 using QuestPDF.Infrastructure;
 using QuestPDF.Helpers;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +27,7 @@ var builder = WebApplication.CreateBuilder(args);
 QuestPDF.Settings.License = LicenseType.Community;
 
 // ─── Configuration Validation (Zero Trust) ───
-var requiredSettings = new[] { "ConnectionStrings:DefaultConnection", "Jwt:Key", "Firebase:ProjectId" };
+var requiredSettings = new[] { "ConnectionStrings:DefaultConnection", "JwtSettings:SecretKey", "Firebase:ProjectId" };
 foreach (var setting in requiredSettings)
 {
     if (string.IsNullOrEmpty(builder.Configuration[setting]))
@@ -105,7 +110,16 @@ builder.Services.AddAuthorization(options =>
 });
 
 // ─── Health Checks ───
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddCheck("Self", () => HealthCheckResult.Healthy())
+    .AddSqlServer(
+        connectionString: builder.Configuration.GetConnectionString("DefaultConnection")!,
+        name: "SQLServer",
+        tags: new[] { "db", "sql", "sqlserver" })
+    .AddDiskStorageHealthCheck(options =>
+    {
+        options.AddDrive("C", 1024); // Check drive C for at least 1GB free space (placeholder for production path)
+    }, name: "DiskStorage", tags: new[] { "storage" });
 
 // ─── Rate Limiting ───
 builder.Services.AddMojazRateLimiting();
@@ -132,6 +146,9 @@ app.UseMojazRequestLogging();
 app.UseHttpsRedirection();
 app.UseMojazCors();
 
+// ─── Monitoring Middleware ───
+app.UseHttpMetrics();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -141,6 +158,33 @@ app.UseRateLimiter();
 
 app.MapControllers();
 app.MapHealthChecks("/health").AllowAnonymous();
+app.MapMetrics().AllowAnonymous();
+
+// ─── Auto-Migration (Production Safe) ───
+if (app.Environment.IsProduction() || app.Configuration.GetValue<bool>("AutoMigrate"))
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        try
+        {
+            var context = services.GetRequiredService<MojazDbContext>();
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                Log.Information("Applying pending migrations...");
+                context.Database.Migrate();
+                Log.Information("Migrations applied successfully.");
+            }
+
+            // Always run seeding to ensure mandatory data (settings, roles) exists
+            await DbInitializer.SeedAsync(context, app.Environment.IsProduction());
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "An error occurred while migrating the database.");
+        }
+    }
+}
 
 // ─── Hangfire Dashboard (Phase 6) ───
 // Dashboard accessible at /hangfire (requires authorization in production)

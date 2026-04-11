@@ -22,9 +22,16 @@ public class SecurityHeadersMiddleware
         context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
         context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
         
-        // Basic Content Security Policy (Should be tightened in production based on needs)
-        context.Response.Headers[SecurityConstants.Headers.ContentSecurityPolicy] = 
-            "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none';";
+        // Content Security Policy
+        var csp = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none';";
+        
+        // Relax CSP for Swagger UI to work
+        if (context.Request.Path.StartsWithSegments("/swagger"))
+        {
+            csp = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self';";
+        }
+        
+        context.Response.Headers[SecurityConstants.Headers.ContentSecurityPolicy] = csp;
 
         await _next(context);
     }

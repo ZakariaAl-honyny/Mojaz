@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,12 +17,12 @@ namespace Mojaz.Infrastructure.Security.Middleware;
 public class GlobalExceptionHandler : IExceptionHandler
 {
     private readonly ILogger<GlobalExceptionHandler> _logger;
-    private readonly ISecurityAlertService _securityAlertService;
+    private readonly IServiceProvider _serviceProvider;
 
-    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, ISecurityAlertService securityAlertService)
+    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, IServiceProvider serviceProvider)
     {
         _logger = logger;
-        _securityAlertService = securityAlertService;
+        _serviceProvider = serviceProvider;
     }
 
     public async ValueTask<bool> TryHandleAsync(
@@ -44,7 +45,9 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         if (statusCode == HttpStatusCode.Unauthorized || statusCode == HttpStatusCode.Forbidden)
         {
-            await _securityAlertService.ProcessSecurityEventAsync(
+            var securityAlertService = httpContext.RequestServices.GetRequiredService<ISecurityAlertService>();
+            
+            await securityAlertService.ProcessSecurityEventAsync(
                 "UNAUTHORIZED_ACCESS_ATTEMPT", 
                 $"Unauthorized access at {httpContext.Request.Path}", 
                 null, 

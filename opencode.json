@@ -31,7 +31,7 @@
         "npx",
         "-y",
         "@mcp-collection/mssql-mcp",
-        "Server=localhost,1434;Database=MojazDb;User Id=sa;Password=as123456;TrustServerCertificate=true"
+        "Server=localhost,1434;Database=MojazDB;User Id=sa;Password=as123456;TrustServerCertificate=true"
       ]
     }
   }
