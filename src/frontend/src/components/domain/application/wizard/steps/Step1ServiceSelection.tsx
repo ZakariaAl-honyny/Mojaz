@@ -7,7 +7,6 @@ import { step1Schema, Step1FormValues } from '@/lib/validations/wizard.schema';
 import { SERVICES_CONFIG } from '@/lib/constants';
 import { useWizardStore } from '@/stores/wizard-store';
 import ServiceCard from '../shared/ServiceCard';
-import WizardNavigation from '../WizardNavigation';
 import WizardStepHeader from '../WizardStepHeader';
 import { useRouter } from '@/i18n/routing';
 import { ServiceType } from '@/types/wizard.types';
@@ -21,21 +20,23 @@ export default function Step1ServiceSelection() {
     setValue, 
     watch,
     formState: { errors },
-    trigger
+    trigger,
+    setFocus
   } = useForm<Step1FormValues>({
     resolver: zodResolver(step1Schema),
     defaultValues: {
       serviceType: step1.serviceType as any,
     },
+    mode: 'onChange',
   });
 
   // Register form on window for WizardNavButtons to access
   useEffect(() => {
-    (window as any).__step1Form = { trigger, setFocus: undefined };
+    (window as any).__step1Form = { trigger, setFocus };
     return () => {
       delete (window as any).__step1Form;
     };
-  }, [trigger]);
+  }, [trigger, setFocus]);
 
   const selectedService = watch('serviceType');
 
@@ -57,7 +58,7 @@ export default function Step1ServiceSelection() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onNext)}>
+    <div className="space-y-8 animate-in fade-in duration-300">
       <WizardStepHeader />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -75,13 +76,10 @@ export default function Step1ServiceSelection() {
       </div>
 
       {errors.serviceType && (
-        <p className="mt-4 text-sm text-status-error font-medium">
-          {/* Typically handled by useTranslations if the error message is a key */}
+        <p role="alert" className="mt-4 text-sm text-status-error font-medium animate-in fade-in slide-in-from-top-1 text-center">
           {errors.serviceType.message}
         </p>
       )}
-
-      <WizardNavigation onNext={handleSubmit(onNext)} />
-    </form>
+    </div>
   );
 }
