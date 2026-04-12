@@ -190,6 +190,7 @@ export default function OTPForm() {
                 onChange={(e) => handleChange(idx, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(idx, e)}
                 onFocus={() => setActiveInput(idx)}
+                data-testid={`otp-input-${idx}`}
                 className={cn(
                   "w-12 h-14 text-center text-2xl font-bold rounded-lg border-2 bg-neutral-50 transition-all focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none dark:bg-neutral-800",
                   activeInput === idx ? "border-primary-500 shadow-sm" : "border-neutral-200 dark:border-neutral-700",
@@ -201,6 +202,7 @@ export default function OTPForm() {
 
           <Button 
             onClick={handleVerify}
+            data-testid="otp-confirm"
             className="w-full h-12 bg-primary-500 hover:bg-primary-600 text-white font-bold text-lg rounded-gov shadow-lg"
             disabled={isLoading || otp.join('').length < 6}
           >

@@ -1,0 +1,47 @@
+@using Mojaz.Application.DTOs.Email.Templates
+@model SecurityAlertEmailData
+@{
+    Layout = "_BaseLayout.cshtml";
+}
+
+@section Ar {
+    <h2 style="color: #ef4444; font-family: 'Cairo', sans-serif;">تنبيه أمني هام</h2>
+    <p>عزيزي <strong>@Model.UserFullName</strong>،</p>
+    <p>لقد رصد نظامنا نشاطاً أمنياً يستدعي انتباهك:</p>
+    <div style="background: #fef2f2; border-right: 4px solid #ef4444; padding: 15px; margin: 20px 0; border-radius: 8px;">
+        <p style="margin: 0; font-weight: bold; color: #991b1b;">@Model.EventType</p>
+        <p style="margin: 5px 0 0 0; color: #7f1d1d;">@Model.EventDetails</p>
+    </div>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px;">
+        <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">عنوان IP:</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee;">@Model.IpAddress</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">الوقت:</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee;">@Model.Timestamp</td>
+        </tr>
+    </table>
+    <p style="margin-top: 25px;">إذا كنت أنت من قام بهذا النشاط، يمكنك تجاهل هذا التنبيه. أما إذا كنت لا تعرف عنه شيئاً، يرجى تغيير كلمة المرور فوراً والتواصل مع الدعم الفني.</p>
+}
+
+@section En {
+    <h2 style="color: #ef4444;">Important Security Alert</h2>
+    <p>Dear <strong>@Model.UserFullName</strong>,</p>
+    <p>Our system has detected security activity that requires your attention:</p>
+    <div style="background: #fef2f2; border-left: 4px solid #ef4444; padding: 15px; margin: 20px 0; border-radius: 8px;">
+        <p style="margin: 0; font-weight: bold; color: #991b1b;">@Model.EventType</p>
+        <p style="margin: 5px 0 0 0; color: #7f1d1d;">@Model.EventDetails</p>
+    </div>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px;">
+        <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">IP Address:</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee;">@Model.IpAddress</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Time:</td>
+            <td style="padding: 8px; border-bottom: 1px solid #eee;">@Model.Timestamp</td>
+        </tr>
+    </table>
+    <p style="margin-top: 25px;">If this was you, you can ignore this alert. If you do not recognize this activity, please change your password immediately and contact support.</p>
+}

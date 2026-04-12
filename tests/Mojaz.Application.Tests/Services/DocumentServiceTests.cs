@@ -1,3 +1,4 @@
+using Mojaz.Application.Interfaces.Security;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -34,6 +35,7 @@ public class DocumentServiceTests
     private readonly Mock<IBackgroundJobClient> _backgroundJobClient = new();
     private readonly Mock<IFileStorageService> _fileStorageService = new();
     private readonly Mock<ISystemSettingsService> _systemSettingsService = new();
+    private readonly Mock<IFileValidationService> _fileValidationService = new();
 
     private DocumentService CreateService() => new(
         _documentRepo.Object,
@@ -44,7 +46,8 @@ public class DocumentServiceTests
         _emailService.Object,
         _backgroundJobClient.Object,
         _fileStorageService.Object,
-        _systemSettingsService.Object
+        _systemSettingsService.Object,
+        _fileValidationService.Object
     );
 
     #region Upload Tests
@@ -78,6 +81,12 @@ public class DocumentServiceTests
 
         _fileStorageService.Setup(s => s.SaveAsync(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<string>()))
             .ReturnsAsync("uploads/2025/test.pdf");
+            
+        // Fix: Correctly mock the file validation service methods
+        _fileValidationService.Setup(v => v.ValidateSizeAsync(It.IsAny<long>()))
+            .ReturnsAsync(true);
+        _fileValidationService.Setup(v => v.ValidateSignatureAsync(It.IsAny<Stream>(), It.IsAny<string>()))
+            .ReturnsAsync(true);
 
         var request = new UploadDocumentRequest
         {
