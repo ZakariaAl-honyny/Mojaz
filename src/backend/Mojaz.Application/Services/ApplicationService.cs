@@ -169,24 +169,17 @@ public class ApplicationService : IApplicationService
 
     public async Task<ApiResponse<ApplicationDto>> CreateAsync(CreateApplicationRequest request, Guid userId)
     {
-<<<<<<< HEAD
-        // 1. Eligibility Check (Gate 1)
         var category = await _categoryRepository.GetByIdAsync(request.LicenseCategoryId);
         if (category == null) return ApiResponse<ApplicationDto>.Fail(400, "Invalid license category.");
 
-        // Error Null values 
-        //var ageLimitSetting = (await _settingsRepository.FindAsync(s => s.SettingKey == $"MIN_AGE_CATEGORY_{category.Code}")).FirstOrDefault();
-        //if (ageLimitSetting == null) return ApiResponse<ApplicationDto>.Fail(400, "System setting error: Age limit not found.");
-
-        // أضفنا علامة الاستقهام بعد القوسين لضمان عدم الانهيار إذا لم تجد القاعدة شيئاً
         var settingsResult = await _settingsRepository.FindAsync(s => s.SettingKey == $"MIN_AGE_CATEGORY_{category.Code}");
         var ageLimitSetting = settingsResult?.FirstOrDefault();
         if (ageLimitSetting == null)
             return ApiResponse<ApplicationDto>.Fail(400, "System setting error: Age limit not found.");
 
         if (!int.TryParse(ageLimitSetting.SettingValue, out int minAge))
-            minAge = 18; // Default fallback
-=======
+            minAge = 18; 
+
         var eligibilityResult = await CheckEligibilityAsync(userId, new EligibilityCheckRequest 
         { 
             LicenseCategoryId = request.LicenseCategoryId,
@@ -196,12 +189,10 @@ public class ApplicationService : IApplicationService
             return ApiResponse<ApplicationDto>.Fail(eligibilityResult.StatusCode, eligibilityResult.Message);
         if (!eligibilityResult.Data!.IsEligible)
             return ApiResponse<ApplicationDto>.Fail(400, string.Join(" ", eligibilityResult.Data.Reasons));
->>>>>>> 234a7487401d56f449914900014426462f21be23
 
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null) return ApiResponse<ApplicationDto>.Fail(404, "User not found.");
 
-<<<<<<< HEAD
         var today = DateTime.UtcNow;
         var age = today.Year - user.DateOfBirth.Year;
         if (user.DateOfBirth.Date > today.AddYears(-age)) age--;
@@ -209,15 +200,11 @@ public class ApplicationService : IApplicationService
         if (age < minAge)
             return ApiResponse<ApplicationDto>.Fail(400, $"Minimum age for category {category.Code} is {minAge}. Your age is {age}.");
 
-        // 2. Active Application Check
         var activeApps = await _applicationRepository.FindAsync(a => a.ApplicantId == userId && 
             (a.Status != ApplicationStatus.Active && a.Status != ApplicationStatus.Cancelled && a.Status != ApplicationStatus.Rejected));
         
         if (activeApps.Any())
             return ApiResponse<ApplicationDto>.Fail(400, "You already have an active application in progress.");
-         
-=======
->>>>>>> 234a7487401d56f449914900014426462f21be23
         // 3. Update User Profile (Applicant Data)
         user.NationalId = request.NationalId;
         user.DateOfBirth = request.DateOfBirth;
