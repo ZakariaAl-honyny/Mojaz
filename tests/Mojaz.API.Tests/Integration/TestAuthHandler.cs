@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
@@ -12,9 +11,8 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
     public TestAuthHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
-        UrlEncoder encoder,
-        ISystemClock clock)
-        : base(options, logger, encoder, clock)
+        UrlEncoder encoder)
+        : base(options, logger, encoder)
     {
     }
 
@@ -32,7 +30,6 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
             return Task.FromResult(AuthenticateResult.Fail("Invalid Test Token"));
         }
 
-        // Token format: test-token-{userId}-{role}
         var parts = token.Split('-');
         if (parts.Length < 4)
         {
@@ -46,7 +43,6 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
         {
             new Claim(ClaimTypes.NameIdentifier, userId),
             new Claim(ClaimTypes.Role, role),
-            new Claim(ClaimTypes.Role, role), // Add duplicate for role checking
             new Claim("UserId", userId)
         };
 
