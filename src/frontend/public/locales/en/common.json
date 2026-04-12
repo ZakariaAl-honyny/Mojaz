@@ -1,0 +1,45 @@
+{
+  "welcome": "Welcome to Mojaz Platform",
+  "description": "An integrated government platform for driving license services in Saudi Arabia. Ease of application, speed of procedures, and high reliability.",
+  "auth": {
+    "login": "Login",
+    "register": "Create Account"
+  },
+  "register": {
+    "alreadyHaveAccount": "Already have an account?"
+  },
+  "toggleLanguage": "العربية",
+  "save": "Save",
+  "cancel": "Cancel",
+  "next": "Next",
+  "back": "Back",
+  "backToQueue": "Back to Queue",
+  "submit": "Submit",
+  "loading": "Loading...",
+  "retry": "Retry",
+  "continue": "Continue",
+  "confirm": "Confirm",
+  "tryAgain": "Try Again",
+  "renewal": {
+    "title": "License Renewal",
+    "subtitle": "Renew your driving license",
+    "eligible": "Eligible for simplified renewal",
+    "notEligible": "Not eligible for simplified renewal",
+    "checkEligibility": "Check Eligibility",
+    "currentLicense": "Current License",
+    "expiresAt": "Expires on",
+    "gracePeriod": "Grace Period",
+    "withinGracePeriod": "Within grace period",
+    "outsideGracePeriod": "Outside grace period",
+    "existingRenewal": "Renewal in progress",
+    "medicalRequired": "Medical examination required",
+    "feePaid": "Fee paid",
+    "issueNew": "Issue new license",
+    "licenseIssued": "License issued successfully",
+    "oldLicenseDeactivated": "Old license deactivated",
+    "simplifiedFlow": "Simplified flow",
+    "skipTraining": "Skip Training",
+    "skipTheory": "Skip Theory Test",
+    "skipPractical": "Skip Practical Test"
+  }
+}

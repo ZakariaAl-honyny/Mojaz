@@ -1,0 +1,174 @@
+{
+  "create": {
+    "title": "Create New Application",
+    "subtitle": "Please complete the following steps to submit your driving license application",
+    "steps": {
+      "service": "Select Service",
+      "category": "License Category",
+      "personal": "Personal Information",
+      "details": "Application Details",
+      "review": "Review & Submit"
+    },
+    "fields": {
+      "serviceType": "Service Type",
+      "category": "License Category",
+      "categoryUpgrade": "Category Upgrade",
+      "targetCategory": "Target Category",
+      "nationalId": "National ID",
+      "dateOfBirth": "Date of Birth",
+      "phone": "Phone Number",
+      "city": "City",
+      "preferredCenter": "Preferred Exam Center",
+      "testLanguage": "Test Language",
+      "arabic": "Arabic",
+      "english": "English",
+      "specialNeeds": "Special Needs / Remarks",
+      "confirmAccuracy": "I hereby certify that all information provided is accurate and complete.",
+      "minAge": "Minimum Age: {{age}} years",
+      "fieldTest": "Requires Field Test",
+      "upgradeEligibility": "Upgrade Eligibility"
+    },
+    "errors": {
+      "upgradeNotEligible": "You are not eligible for a category upgrade at this time. Minimum holding period not met."
+    },
+    "prev": "Previous",
+    "next": "Next",
+    "submit": "Submit Application",
+    "success": "Application submitted successfully!"
+  },
+  "replacement": {
+    "title": "License Replacement",
+    "subtitle": "Request a replacement for your license",
+    "steps": {
+      "reason": "Reason Selection",
+      "declaration": "Declaration",
+      "upload": "Document Upload",
+      "review": "Review & Submit",
+      "payment": "Payment"
+    },
+    "reasons": {
+      "lost": "Lost",
+      "damaged": "Damaged",
+      "stolen": "Stolen",
+      "required": "Please select a reason"
+    },
+    "declaration": {
+      "title": "Declaration",
+      "text": "I hereby declare that the information provided is true and correct, and I assume full legal responsibility for any incorrect information.",
+      "checkbox": "I agree to the terms and conditions",
+      "required": "You must agree to the declaration"
+    },
+    "upload": {
+      "title": "Upload Required Documents",
+      "policeReport": "Police Report",
+      "damagedPhoto": "Photo of Damaged License",
+      "uploadButton": "Upload File",
+      "removeButton": "Remove",
+      "noDocs": "No documents required for lost license replacement."
+    },
+    "review": {
+      "title": "Review Application",
+      "summaryTitle": "Application Summary",
+      "reasonLabel": "Replacement Reason",
+      "selectedReason": "Selected Reason",
+      "documentsLabel": "Uploaded Documents",
+      "submit": "Submit Replacement Request",
+      "back": "Back",
+      "submitted": "Application submitted. Please proceed to payment.",
+      "error": "Something went wrong while submitting your request.",
+      "noneRequired": "None required",
+      "submitting": "Submitting...",
+      "next": "Next"
+    },
+    "employeeReview": {
+      "title": "License Replacement Review",
+      "details": "Application Details",
+      "reason": "Replacement Reason",
+      "policeReport": "Police Report",
+      "policeReportLink": "View Police Report",
+      "verifyReport": "Verify Police Report",
+      "comments": "Review Comments",
+      "approve": "Approve Report",
+      "reject": "Reject Report",
+      "submit": "Save Decision",
+      "success": "Verification status updated successfully",
+      "error": "An error occurred while updating verification status",
+      "required": "Please select an option",
+      "commentsRequired": "Comments must be at least 5 characters long",
+      "description": "Review the applicant's request for license replacement",
+      "applicantName": "Applicant Name",
+      "verifyReportDesc": "The applicant reported the license as stolen. Please verify the police report.",
+      "uploadedOn": "Uploaded on",
+      "commentsPlaceholder": "Enter review notes here...",
+      "submitting": "Processing..."
+    },
+
+    "payment": {
+      "title": "Payment",
+      "amountLabel": "Replacement Fee",
+      "payButton": "Pay Now",
+      "success": "Payment successful! Your application is now processing.",
+      "error": "Failed to process final payment for application.",
+      "paymentDesc": "Please complete the payment to finalize your request",
+      "feeAmount": "100 SAR",
+      "total": "Total"
+    }
+  },
+  "upgrade": {
+    "title": "Upgrade Your License",
+    "subtitle": "Select your current license and choose a target category to upgrade",
+    "steps": {
+      "selectLicense": "Select Current License",
+      "selectTarget": "Choose Target Category",
+      "review": "Review & Submit"
+    },
+    "noLicenses": "You don't have any active licenses to upgrade.",
+    "noUpgradesAvailable": "No upgrade options available for this license category.",
+    "upgradingFrom": "Upgrading from:",
+    "licenseNumber": "License Number",
+    "minAge": "Min Age",
+    "fieldTestRequired": "Field Test Required",
+    "currentLicense": "Current License",
+    "targetCategory": "Target Category",
+    "branch": "Preferred Branch",
+    "selectBranch": "Select a branch",
+    "riyadhBranch": "Riyadh Main Branch",
+    "jeddahBranch": "Jeddah North Branch",
+    "dammamBranch": "Dammam Branch",
+    "confirmAccuracy": "I confirm that all provided information is accurate and I agree to the terms.",
+    "submit": "Submit Upgrade Application",
+    "back": "Back"
+  },
+  "details": {
+    "title": "Application Details",
+    "submittedOn": "Submitted on",
+    "cancelButton": "Cancel Application",
+    "payButton": "Pay Now",
+    "timelineTitle": "Application Timeline",
+    "documentsTitle": "Required Documents",
+    "noPaymentsMsg": "No payments recorded for this application.",
+    "paymentsTitle": "Payments",
+    "manageDocsButton": "Manage Documents",
+    "docId": "National ID / Iqama",
+    "docMedical": "Medical Report"
+  },
+  "timeline": {
+    "stages": {
+      "creation": "Application Creation",
+      "documentReview": "Document Review",
+      "training": "Training Stage",
+      "payment": "Payment Stage",
+      "medical": "Medical Exam Stage",
+      "theory": "Theory Test Stage",
+      "practical": "Practical Test Stage",
+      "fieldTest": "Agricultural Field Test",
+      "issuance": "License Issuance"
+    },
+    "status": {
+      "completed": "Completed",
+      "current": "In Progress",
+      "pending": "Pending",
+      "failed": "Failed"
+    }
+  }
+}

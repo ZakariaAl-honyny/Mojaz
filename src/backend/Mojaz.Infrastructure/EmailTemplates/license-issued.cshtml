@@ -1,0 +1,37 @@
+﻿@using Mojaz.Application.DTOs.Email.Templates
+@model LicenseIssuedEmailData
+@{
+    Layout = "_BaseLayout.cshtml";
+}
+
+@section Ar {
+    <h2 style="color: #006C35; font-family: 'Cairo', sans-serif;">تهانينا! تم إصدار رخصتك</h2>
+    <p>يسعدنا إبلاغك بأنه قد تم إصدار رخصة القيادة الخاصة بك بنجاح. يمكنك الآن الاطلاع على التفاصيل وتحميل النسخة الرقمية:</p>
+    <div style="background: #f0fdf4; padding: 25px; border-radius: 12px; border: 2px solid #86efac; text-align: center; margin: 25px 0;">
+        <p style="margin: 0; font-size: 14px; color: #166534;">رقم الرخصة:</p>
+        <p style="margin: 10px 0; font-size: 28px; font-weight: bold; color: #006C35; letter-spacing: 2px;">@Model.LicenseNumber</p>
+        <a href="@Model.DownloadUrl" style="display: inline-block; background-color: #006C35; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 15px;">تحميل الرخصة الرقمية</a>
+    </div>
+    <p>تفاصيل إضافية:</p>
+    <ul style="padding-right: 20px;">
+        <li>تاريخ الانتهاء: @Model.ExpiryDateAr</li>
+        <li>فئة الرخصة: @Model.CategoryAr</li>
+    </ul>
+    <p style="margin-top: 25px;">نتمنى لك قيادة آمنة!</p>
+}
+
+@section En {
+    <h2 style="color: #006C35;">Congratulations! Your License is Issued</h2>
+    <p>We are pleased to inform you that your driving license has been issued successfully. You can now view the details and download your digital copy:</p>
+    <div style="background: #f0fdf4; padding: 25px; border-radius: 12px; border: 2px solid #86efac; text-align: center; margin: 25px 0;">
+        <p style="margin: 0; font-size: 14px; color: #166534;">License Number:</p>
+        <p style="margin: 10px 0; font-size: 28px; font-weight: bold; color: #006C35; letter-spacing: 2px;">@Model.LicenseNumber</p>
+        <a href="@Model.DownloadUrl" style="display: inline-block; background-color: #006C35; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 15px;">Download Digital License</a>
+    </div>
+    <p>Additional Details:</p>
+    <ul style="padding-left: 20px;">
+        <li>Expiry Date: @Model.ExpiryDateEn</li>
+        <li>Category: @Model.CategoryEn</li>
+    </ul>
+    <p style="margin-top: 25px;">Drive safely!</p>
+}

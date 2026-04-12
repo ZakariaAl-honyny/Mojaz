@@ -1,0 +1,130 @@
+{
+  "hero": {
+    "title": "Your Gateway to Safe and Legal Driving",
+    "subtitle": "Mojaz provides integrated digital services for the entire driving license lifecycle in the Kingdom. Fast, secure, and professional.",
+    "cta": {
+      "start": "Start Now",
+      "login": "Login"
+    }
+  },
+  "services": {
+    "title": "Integrated Driving Services",
+    "description": "Access all your driving license needs in one place with a streamlined digital experience.",
+    "items": {
+      "new_license": {
+        "title": "New License",
+        "description": "Start your journey to become a licensed driver."
+      },
+      "renewal": {
+        "title": "License Renewal",
+        "description": "Renew your existing license quickly and easily."
+      },
+      "replacement": {
+        "title": "Replacement",
+        "description": "Request a replacement for lost or damaged licenses."
+      },
+      "upgrade": {
+        "title": "Category Upgrade",
+        "description": "Upgrade your license to a new vehicle category."
+      },
+      "international": {
+        "title": "International License",
+        "description": "Apply for an international driving permit."
+      },
+      "agricultural": {
+        "title": "Agricultural Vehicles",
+        "description": "Special licenses for agricultural and heavy machinery."
+      },
+      "probationary": {
+        "title": "Probationary License",
+        "description": "Manage paths for new and young drivers."
+      },
+      "learner": {
+        "title": "Learner Permit",
+        "description": "Apply for a permit to begin driving practice."
+      }
+    }
+  },
+  "workflow": {
+    "title": "Your Journey to a License",
+    "steps": {
+      "registration": {
+        "title": "Digital Registration",
+        "description": "Submit your application through the portal."
+      },
+      "medical": {
+        "title": "Medical Examination",
+        "description": "Complete fitness tests at approved centers."
+      },
+      "training": {
+        "title": "Driving School",
+        "description": "Join professional training programs."
+      },
+      "theory": {
+        "title": "Theory Test",
+        "description": "Pass the electronic knowledge assessment."
+      },
+      "practical": {
+        "title": "Practical Test",
+        "description": "Demonstrate your skills on the road."
+      },
+      "issuance": {
+        "title": "License Issuance",
+        "description": "Receive your digital and physical license."
+      }
+    }
+  },
+  "categories": {
+    "title": "License Categories",
+    "a": "Motorcycles",
+    "b": "Private Vehicles",
+    "c": "Public Transport",
+    "d": "Heavy Vehicles",
+    "e": "Construction Equipment",
+    "f": "Agricultural Machinery",
+    "age_requirement": "Min Age {age}"
+  },
+  "stats": {
+    "active_licenses": "Active Licenses",
+    "approved_centers": "Approved Centers",
+    "processing_time": "Avg Processing Time",
+    "verified_citizens": "Verified Citizens",
+    "minutes": "Minutes"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "q1": {
+      "q": "How can I apply for a new driving license?",
+      "a": "You can start by clicking 'Start Now' on the hero section and following the registration wizard."
+    },
+    "q2": {
+      "q": "What documents are required for renewal?",
+      "a": "Usually, only a valid national ID and a recent medical report from an approved center are required."
+    }
+  },
+  "features": {
+    "title": "Advanced Technologies",
+    "subtitle": "A service that meets your aspirations",
+    "cloud": {
+      "title": "Cloud Sync",
+      "description": "Your data is always synced across all your devices and government servers."
+    },
+    "wallet": {
+      "title": "Digital Wallet",
+      "description": "Carry your license on your phone with full legal validity through the app."
+    },
+    "notifications": {
+      "title": "Smart Notifications",
+      "description": "Stay informed about expiry, renewals, and upcoming tests in real-time."
+    },
+    "security": {
+      "title": "Nafath Integration",
+      "description": "Secure login using the national single sign-on for maximum data protection."
+    }
+  },
+  "cta": {
+    "title": "Ready to Start Your Journey?",
+    "subtitle": "Join more than 4 million citizens and residents getting their licenses through Mojaz.",
+    "button": "Create Account"
+  }
+}

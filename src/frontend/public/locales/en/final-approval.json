@@ -1,0 +1,56 @@
+{
+  "title": "Final Approval",
+  "gate4": {
+    "title": "Gate 4 Check",
+    "subtitle": "Verify all conditions are met",
+    "isFullyPassed": "All conditions met",
+    "hasFailures": "Some conditions not met",
+    "conditions": {
+      "TheoryTestPassed": "Theory Test",
+      "PracticalTestPassed": "Practical Test",
+      "SecurityStatusClean": "Security Status",
+      "IdentityDocumentValid": "Identity Document",
+      "MedicalCertificateValid": "Medical Certificate",
+      "AllPaymentsCleared": "Payment Status"
+    },
+    "passed": "Passed",
+    "failed": "Failed"
+  },
+  "actions": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "return": "Return"
+  },
+  "confirm": {
+    "approve": "Confirm Approval",
+    "approveMessage": "Are you sure you want to approve this application?",
+    "reject": "Confirm Rejection",
+    "rejectMessage": "Are you sure you want to reject this application?",
+    "return": "Confirm Return",
+    "returnMessage": "Are you sure you want to return this application for review?"
+  },
+  "form": {
+    "reason": "Reason",
+    "reasonPlaceholder": "Enter reason for rejection or return...",
+    "reasonRequired": "Reason is required",
+    "returnToStage": "Return to Stage",
+    "selectStage": "Select Stage",
+    "managerNotes": "Manager Notes",
+    "managerNotesPlaceholder": "Additional notes (optional)..."
+  },
+  "stages": {
+    "02-Documents": "Documents Stage",
+    "04-Medical": "Medical Exam",
+    "06-Theory": "Theory Test",
+    "07-Practical": "Practical Test"
+  },
+  "messages": {
+    "success": "Decision processed successfully",
+    "gate4Failed": "Gate 4 validation failed. Application cannot be approved.",
+    "alreadyFinalized": "This application has already been finalized."
+  },
+  "errors": {
+    "loadFailed": "Failed to load Gate 4 status",
+    "submitFailed": "Failed to submit decision"
+  }
+}

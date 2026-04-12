@@ -11,8 +11,25 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
         {
             builder.ToTable("Applications");
             builder.HasKey(a => a.Id);
+            
+            // Relationships with proper navigation
+            builder.HasOne(a => a.Applicant)
+                .WithMany()
+                .HasForeignKey(a => a.ApplicantId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasPrincipalKey(u => u.Id);
+                
+            builder.HasOne(a => a.LicenseCategory)
+                .WithMany()
+                .HasForeignKey(a => a.LicenseCategoryId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasPrincipalKey(c => c.Id);
+            
+            // Indexes
             builder.HasIndex(a => a.ApplicantId).HasDatabaseName("IX_Applications_ApplicantId");
             builder.HasIndex(a => a.ApplicationNumber).IsUnique().HasDatabaseName("IX_Applications_ApplicationNumber");
+            
+            // Properties
             builder.Property(a => a.ApplicationNumber).HasMaxLength(20);
             builder.Property(a => a.Notes).HasMaxLength(500);
             builder.Property(a => a.RejectionReason).HasMaxLength(200);
@@ -21,8 +38,15 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(a => a.PreferredLanguage).HasMaxLength(10);
             builder.Property(a => a.SpecialNeeds).HasMaxLength(200);
             builder.Property(a => a.DataAccuracyConfirmed).IsRequired();
-            builder.HasOne<User>().WithMany().HasForeignKey(a => a.ApplicantId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasOne<LicenseCategory>().WithMany().HasForeignKey(a => a.LicenseCategoryId).OnDelete(DeleteBehavior.Restrict);
+            builder.Property(a => a.TheoryAttemptCount).HasDefaultValue(0);
+            
+            // Final Approval fields
+            builder.Property(a => a.FinalDecision).HasColumnType("int");
+            builder.Property(a => a.FinalDecisionReason).HasMaxLength(1000);
+            builder.Property(a => a.ReturnToStage).HasMaxLength(50);
+            builder.Property(a => a.ManagerNotes).HasMaxLength(1000);
+            
+            // Query filter for soft delete
             builder.HasQueryFilter(a => !a.IsDeleted);
         }
     }

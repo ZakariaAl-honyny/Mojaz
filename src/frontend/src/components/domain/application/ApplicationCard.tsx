@@ -31,7 +31,7 @@ export function ApplicationCard({
 
   return (
     <Link href={`/${locale}/applications/${id}`}>
-      <Card className="border-0 shadow-sm hover:shadow-md transition-shadow group bg-white cursor-pointer relative overflow-hidden">
+      <Card data-testid="application-card" className="border-0 shadow-sm hover:shadow-md transition-shadow group bg-white cursor-pointer relative overflow-hidden">
         {/* Subtle decorative edge */}
         <div className={cn(
           "absolute rtl:right-0 ltr:left-0 top-0 bottom-0 w-1 rounded-s-xl",

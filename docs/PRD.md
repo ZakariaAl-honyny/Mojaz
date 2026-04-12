@@ -8,8 +8,8 @@
 **Release Type:** MVP - Version 1.0  
 
 ---
-
-## Table of Contents
+ 
+## Table of Contents 
 
 1. [Executive Summary](#1-executive-summary)
 2. [Vision & Goals](#2-vision--goals)
@@ -1253,7 +1253,7 @@ User can control notification channels from account settings:
 ### 21.1 Users — المستخدمون
 
 ```sql
-Id                  UNIQUEIDENTIFIER PK DEFAULT NEWID()
+Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 FullName            NVARCHAR(200) NOT NULL
 Email               NVARCHAR(200) UNIQUE NULL
 Phone               NVARCHAR(20) UNIQUE NULL
@@ -1278,7 +1278,7 @@ CONSTRAINT CK_Users_Contact CHECK (Email IS NOT NULL OR Phone IS NOT NULL)
 ### 21.2 Applicants — المتقدمون
 
 ```sql
-Id              UNIQUEIDENTIFIER PK
+Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 UserId          UNIQUEIDENTIFIER FK → Users(Id)
 NationalId      NVARCHAR(20) NOT NULL UNIQUE
 DateOfBirth     DATE NOT NULL
@@ -1295,12 +1295,12 @@ CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 ### 21.3 Applications — الطلبات
 
 ```sql
-Id                      UNIQUEIDENTIFIER PK
+Id                      UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 ApplicationNumber       NVARCHAR(20) NOT NULL UNIQUE    -- MOJ-2025-XXXXXXXX
 ApplicantId             UNIQUEIDENTIFIER FK → Applicants
 ServiceType             NVARCHAR(50) NOT NULL
-LicenseCategoryId       UNIQUEIDENTIFIER FK → LicenseCategories
-BranchId                UNIQUEIDENTIFIER NULL
+LicenseCategoryId       INT FK → LicenseCategories
+BranchId                INT NULL
 Status                  NVARCHAR(50) NOT NULL DEFAULT 'Draft'
 CurrentStage            NVARCHAR(50) NULL
 PreferredLanguage       NVARCHAR(5) NULL
@@ -1317,7 +1317,7 @@ IsDeleted               BIT DEFAULT 0
 ### 21.4 LicenseCategories — فئات الرخص
 
 ```sql
-Id               UNIQUEIDENTIFIER PK
+Id               UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 Code             NVARCHAR(5) NOT NULL UNIQUE    -- A|B|C|D|E|F
 NameAr           NVARCHAR(100) NOT NULL
 NameEn           NVARCHAR(100) NOT NULL
@@ -1329,7 +1329,7 @@ IsActive         BIT DEFAULT 1
 ### 21.5 Documents — المستندات
 
 ```sql
-Id              UNIQUEIDENTIFIER PK
+Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 ApplicationId   UNIQUEIDENTIFIER FK → Applications
 DocumentType    NVARCHAR(50) NOT NULL
 FileName        NVARCHAR(255) NOT NULL
@@ -1347,12 +1347,12 @@ UploadedAt      DATETIME2 DEFAULT GETUTCDATE()
 ### 21.6 Appointments — المواعيد
 
 ```sql
-Id                  UNIQUEIDENTIFIER PK
+Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 ApplicationId       UNIQUEIDENTIFIER FK → Applications
 AppointmentType     NVARCHAR(50) NOT NULL    -- Medical|Theory|Practical
 ScheduledDate       DATE NOT NULL
 TimeSlot            NVARCHAR(20) NOT NULL
-BranchId            UNIQUEIDENTIFIER NULL
+BranchId            INT NULL
 Status              NVARCHAR(30) DEFAULT 'Scheduled'
 CancelledAt         DATETIME2 NULL
 CancellationReason  NVARCHAR(500) NULL
@@ -1363,8 +1363,8 @@ UpdatedAt           DATETIME2 NULL
 ### 21.7 MedicalExams — الفحص الطبي
 
 ```sql
-Id              UNIQUEIDENTIFIER PK
-ApplicationId   UNIQUEIDENTIFIER FK → Applications
+Id              INT PK
+ApplicationId   INT FK → Applications
 ExamDate        DATETIME2 NULL
 DoctorId        UNIQUEIDENTIFIER FK → Users NULL
 FitnessResult   NVARCHAR(30) NULL    -- Fit|Unfit|ConditionalFit|RequiresReexam
@@ -1378,7 +1378,7 @@ CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 ### 21.8 TrainingRecords — سجلات التدريب
 
 ```sql
-Id                      UNIQUEIDENTIFIER PK
+Id                      UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 ApplicationId           UNIQUEIDENTIFIER FK → Applications
 SchoolName              NVARCHAR(200) NULL
 CertificateNumber       NVARCHAR(100) NULL
@@ -1386,7 +1386,7 @@ CompletedHours          INT NULL
 RequiredHours           INT NULL
 IsExempt                BIT DEFAULT 0
 ExemptionReason         NVARCHAR(500) NULL
-ExemptionApprovedBy     UNIQUEIDENTIFIER FK → Users NULL
+ExemptionApprovedBy     INT FK → Users NULL
 Status                  NVARCHAR(30) NULL
 CompletedAt             DATETIME2 NULL
 CreatedAt               DATETIME2 DEFAULT GETUTCDATE()
@@ -1395,11 +1395,11 @@ CreatedAt               DATETIME2 DEFAULT GETUTCDATE()
 ### 21.9 TheoryTests — الاختبار النظري
 
 ```sql
-Id              UNIQUEIDENTIFIER PK
-ApplicationId   UNIQUEIDENTIFIER FK → Applications
+Id              INT PK
+ApplicationId   INT FK → Applications
 AttemptNumber   INT NOT NULL
 TestDate        DATETIME2 NULL
-ExaminerId      UNIQUEIDENTIFIER FK → Users NULL
+ExaminerId      INT FK → Users NULL
 Score           DECIMAL(5,2) NULL
 PassingScore    DECIMAL(5,2) NULL
 Result          NVARCHAR(20) NULL    -- Pass|Fail|Absent
@@ -1410,11 +1410,11 @@ CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 ### 21.10 PracticalTests — الاختبار العملي
 
 ```sql
-Id                          UNIQUEIDENTIFIER PK
-ApplicationId               UNIQUEIDENTIFIER FK → Applications
+Id                          INT PK
+ApplicationId               INT FK → Applications
 AttemptNumber               INT NOT NULL
 TestDate                    DATETIME2 NULL
-ExaminerId                  UNIQUEIDENTIFIER FK → Users NULL
+ExaminerId                  INT FK → Users NULL
 Result                      NVARCHAR(20) NULL    -- Pass|Fail|Absent
 Notes                       NVARCHAR(1000) NULL
 RequiresAdditionalTraining  BIT DEFAULT 0
@@ -1425,7 +1425,7 @@ CreatedAt                   DATETIME2 DEFAULT GETUTCDATE()
 ### 21.11 Payments — المدفوعات
 
 ```sql
-Id                      UNIQUEIDENTIFIER PK
+Id                      UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 ApplicationId           UNIQUEIDENTIFIER FK → Applications
 FeeType                 NVARCHAR(50) NOT NULL
 Amount                  DECIMAL(10,2) NOT NULL
@@ -1442,7 +1442,7 @@ CreatedAt               DATETIME2 DEFAULT GETUTCDATE()
 ### 21.12 FeeStructures — هيكل الرسوم
 
 ```sql
-Id                  UNIQUEIDENTIFIER PK
+Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 FeeType             NVARCHAR(50) NOT NULL
 LicenseCategoryId   UNIQUEIDENTIFIER FK → LicenseCategories NULL
 Amount              DECIMAL(10,2) NOT NULL
@@ -1450,14 +1450,14 @@ Currency            NVARCHAR(5) DEFAULT 'SAR'
 IsActive            BIT DEFAULT 1
 EffectiveFrom       DATE NOT NULL
 EffectiveTo         DATE NULL
-UpdatedBy           UNIQUEIDENTIFIER FK → Users NULL
+UpdatedBy           INT FK → Users NULL
 UpdatedAt           DATETIME2 NULL
 ```
 
 ### 21.13 Licenses — الرخص المصدرة
 
 ```sql
-Id              UNIQUEIDENTIFIER PK
+Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 LicenseNumber   NVARCHAR(20) NOT NULL UNIQUE    -- MOJ-2025-XXXXXXXX
 ApplicationId   UNIQUEIDENTIFIER FK → Applications
 ApplicantId     UNIQUEIDENTIFIER FK → Applicants
@@ -1474,7 +1474,7 @@ CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 ### 21.14 Notifications — الإشعارات الداخلية
 
 ```sql
-Id              UNIQUEIDENTIFIER PK
+Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 UserId          UNIQUEIDENTIFIER FK → Users
 ApplicationId   UNIQUEIDENTIFIER FK → Applications NULL
 TitleAr         NVARCHAR(200) NULL
@@ -1490,7 +1490,7 @@ CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 ### 21.15 PushTokens — توكنات Push
 
 ```sql
-Id          UNIQUEIDENTIFIER PK
+Id          UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 UserId      UNIQUEIDENTIFIER FK → Users
 Token       NVARCHAR(500) NOT NULL
 DeviceType  NVARCHAR(30) NULL    -- WebChrome|WebFirefox|WebSafari
@@ -1502,7 +1502,7 @@ LastUsedAt  DATETIME2 NULL
 ### 21.16 AuditLogs — سجلات التدقيق
 
 ```sql
-Id          UNIQUEIDENTIFIER PK
+Id          UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 UserId      UNIQUEIDENTIFIER NULL
 Action      NVARCHAR(100) NOT NULL
 EntityType  NVARCHAR(100) NULL
@@ -1517,7 +1517,7 @@ Timestamp   DATETIME2 DEFAULT GETUTCDATE()
 ### 21.17 SystemSettings — إعدادات النظام
 
 ```sql
-Id              UNIQUEIDENTIFIER PK
+Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 SettingKey      NVARCHAR(100) NOT NULL UNIQUE
 SettingValue    NVARCHAR(1000) NULL
 Category        NVARCHAR(50) NULL
@@ -1529,7 +1529,7 @@ UpdatedAt       DATETIME2 NULL
 ### 21.18 OtpCodes — رموز التحقق
 
 ```sql
-Id                  UNIQUEIDENTIFIER PK
+Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 UserId              UNIQUEIDENTIFIER FK → Users NULL
 Destination         NVARCHAR(200) NOT NULL
 DestinationType     NVARCHAR(10) NOT NULL    -- Email|Phone
@@ -1547,7 +1547,7 @@ IpAddress           NVARCHAR(50) NULL
 ### 21.19 RefreshTokens — توكنات التحديث
 
 ```sql
-Id                  UNIQUEIDENTIFIER PK
+Id                   UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 UserId              UNIQUEIDENTIFIER FK → Users
 Token               NVARCHAR(500) NOT NULL UNIQUE
 ExpiresAt           DATETIME2 NOT NULL
@@ -1561,7 +1561,7 @@ CreatedByIp         NVARCHAR(50) NULL
 ### 21.20 EmailLogs — سجل رسائل البريد
 
 ```sql
-Id                  UNIQUEIDENTIFIER PK
+Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 UserId              UNIQUEIDENTIFIER FK → Users NULL
 ToEmail             NVARCHAR(200) NOT NULL
 Subject             NVARCHAR(500) NULL
@@ -1576,7 +1576,7 @@ CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
 ### 21.21 SmsLogs — سجل الرسائل النصية
 
 ```sql
-Id                  UNIQUEIDENTIFIER PK
+Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 UserId              UNIQUEIDENTIFIER FK → Users NULL
 ToPhone             NVARCHAR(20) NOT NULL
 MessageType         NVARCHAR(50) NOT NULL    -- OTP|Notification|Reminder

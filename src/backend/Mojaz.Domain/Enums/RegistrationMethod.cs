@@ -4,5 +4,6 @@ public enum RegistrationMethod
 {
     NationalId,
     Email,
-    Phone
+    Phone,
+    AdminCreated
 }

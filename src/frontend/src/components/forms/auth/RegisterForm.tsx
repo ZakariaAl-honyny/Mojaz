@@ -84,7 +84,7 @@ export default function RegisterForm() {
           <Label>{t('register.fullName')}</Label>
           <div className="relative">
             <User className="absolute left-3 top-2.5 h-5 w-5 text-neutral-400 rtl:left-auto rtl:right-3" />
-            <Input {...register('fullName')} className="ps-10 rtl:pe-10" placeholder="محمد أحمد" />
+            <Input {...register('fullName')} data-testid="register-fullname" className="ps-10 rtl:pe-10" placeholder="محمد أحمد" />
           </div>
           {errors.fullName && <p className="text-xs text-error">{t('errors.fullNameMin')}</p>}
         </div>
@@ -116,7 +116,7 @@ export default function RegisterForm() {
             ) : (
               <Phone className="absolute left-3 top-2.5 h-5 w-5 text-neutral-400 rtl:left-auto rtl:right-3" />
             )}
-            <Input {...register('identifier')} className="ps-10 rtl:pe-10" placeholder={method === 'Email' ? 'user@example.com' : '+9665...'} />
+            <Input {...register('identifier')} data-testid="register-identifier" className="ps-10 rtl:pe-10" placeholder={method === 'Email' ? 'user@example.com' : '+9665...'} />
           </div>
         </div>
 
@@ -125,19 +125,19 @@ export default function RegisterForm() {
             <Label>{t('register.password')}</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-2.5 h-5 w-5 text-neutral-400 rtl:left-auto rtl:right-3" />
-              <Input {...register('password')} type="password" className="ps-10 rtl:pe-10" />
+              <Input {...register('password')} data-testid="register-password" type="password" className="ps-10 rtl:pe-10" />
             </div>
           </div>
           <div className="space-y-2">
             <Label>{t('register.confirmPassword')}</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-2.5 h-5 w-5 text-neutral-400 rtl:left-auto rtl:right-3" />
-              <Input {...register('confirmPassword')} type="password" className="ps-10 rtl:pe-10" />
+              <Input {...register('confirmPassword')} data-testid="register-confirm-password" type="password" className="ps-10 rtl:pe-10" />
             </div>
           </div>
         </div>
 
-        <Button type="submit" className="w-full h-12 text-lg font-semibold bg-primary-500 hover:bg-primary-600 transition-all rounded-xl" disabled={isLoading}>
+        <Button type="submit" data-testid="register-submit" className="w-full h-12 text-lg font-semibold bg-primary-500 hover:bg-primary-600 transition-all rounded-xl" disabled={isLoading}>
           {isLoading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : t('register.submit')}
         </Button>
       </form>

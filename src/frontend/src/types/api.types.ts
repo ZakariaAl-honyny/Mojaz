@@ -1,4 +1,4 @@
-export type ApplicationStatus = 
+export type ApplicationStatus =
   | "Draft"
   | "Submitted"
   | "InReview"

@@ -1,0 +1,5 @@
+Check,Status,Details
+1. Infrastructure Service Interfaces (IEmailService, ISmsService, IPushNotificationService),PASS,Found in src/backend/Mojaz.Application/Interfaces/Infrastructure/
+2. MappingProfile.cs,PASS,Found at src/backend/Mojaz.Application/Mappings/MappingProfile.cs
+3. ServiceCollectionExtensions.cs (AutoMapper & FluentValidation registration),PASS,Found at src/backend/Mojaz.Application/Extensions/ServiceCollectionExtensions.cs - registers both AutoMapper and FluentValidation
+4. Mojaz.Application.csproj Infrastructure Reference Check,PASS,Project references ONLY Mojaz.Domain and Mojaz.Shared - NO Infrastructure reference (correct Clean Architecture)

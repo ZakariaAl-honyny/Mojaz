@@ -1,0 +1,47 @@
+{
+  "history": {
+    "title": "Practical Test History",
+    "description": "Previous practical test attempts for this application.",
+    "attempt": "Attempt #{number}",
+    "noHistory": "No practical test history found for this application.",
+    "isAbsent": "Applicant Absent",
+    "absentDescription": "The applicant did not attend the scheduled test.",
+    "conductedAt": "Conducted Date",
+    "score": "Score",
+    "passingScore": "Passing Score",
+    "vehicleUsed": "Vehicle Used",
+    "examiner": "Examiner",
+    "notes": "Notes",
+    "examinerNotes": "Examiner Notes (Internal)",
+    "requirements": "Additional Requirements",
+    "requiresTraining": "Requires additional training",
+    "hours": "hours",
+    "manualEndorsement": "Requires manual transmission endorsement",
+    "retakeEligible": "Eligible for retake after: {date}"
+  },
+  "result": {
+    "pass": "Pass",
+    "fail": "Fail",
+    "absent": "Absent"
+  },
+  "form": {
+    "title": "Submit Practical Test Result",
+    "description": "Record the outcome of the applicant's practical driving test.",
+    "isAbsent": "Applicant was absent (Did not attend)",
+    "score": "Test Score",
+    "vehicleUsed": "Vehicle Used (Make/Model/Plate)",
+    "vehicleUsedPlaceholder": "e.g., Toyota Camry 2022",
+    "needsManualTransmission": "Applicant requires Manual Transmission endorsement",
+    "notes": "General Notes",
+    "notesPlaceholder": "Any notes visible to the applicant...",
+    "examinerNotes": "Examiner Remarks",
+    "internalOnly": "Internal only",
+    "examinerNotesPlaceholder": "Notes hidden from the applicant...",
+    "requiresAdditionalTraining": "Applicant failed and requires mandatory additional training",
+    "additionalHours": "Required Training Hours",
+    "submitting": "Submitting...",
+    "submit": "Submit Result",
+    "success": "Test result submitted successfully",
+    "error": "Failed to submit practical test result"
+  }
+}
