@@ -1,0 +1,57 @@
+﻿@using Mojaz.Application.DTOs.Email.Templates
+@model PaymentConfirmedEmailData
+@{
+    Layout = "_BaseLayout.cshtml";
+}
+
+@section Ar {
+    <h2 style="color: #006C35; font-family: 'Cairo', sans-serif;">تأكيد استلام الدفعة</h2>
+    <p>شكراً لك. تم استلام دفعتك بنجاح. بيانات الإيصال كالتالي:</p>
+    <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; margin: 20px 0; font-family: monospace;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px dashed #e5e7eb;"><strong>المبلغ:</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px dashed #e5e7eb; text-align: left;">@Model.Amount @Model.Currency</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px dashed #e5e7eb;"><strong>الخدمة:</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px dashed #e5e7eb; text-align: left;">@Model.FeeTypeAr</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px dashed #e5e7eb;"><strong>رقم المرجع:</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px dashed #e5e7eb; text-align: left;">@Model.TransactionReference</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0;"><strong>التاريخ:</strong></td>
+                <td style="padding: 8px 0; text-align: left;">@Model.PaymentDateAr</td>
+            </tr>
+        </table>
+    </div>
+    <p>يرجى الاحتفاظ بهذا البريد كإيصال لدفعتك.</p>
+}
+
+@section En {
+    <h2 style="color: #006C35;">Payment Confirmation</h2>
+    <p>Thank you. Your payment has been received successfully. Receipt details:</p>
+    <div style="background: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; margin: 20px 0; font-family: monospace;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px dashed #e5e7eb;"><strong>Amount:</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px dashed #e5e7eb; text-align: right;">@Model.Amount @Model.Currency</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px dashed #e5e7eb;"><strong>Service:</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px dashed #e5e7eb; text-align: right;">@Model.FeeTypeEn</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0; border-bottom: 1px dashed #e5e7eb;"><strong>Reference:</strong></td>
+                <td style="padding: 8px 0; border-bottom: 1px dashed #e5e7eb; text-align: right;">@Model.TransactionReference</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px 0;"><strong>Date:</strong></td>
+                <td style="padding: 8px 0; text-align: right;">@Model.PaymentDateEn</td>
+            </tr>
+        </table>
+    </div>
+    <p>Please keep this email as a receipt for your payment.</p>
+}

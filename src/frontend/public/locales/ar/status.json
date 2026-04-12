@@ -1,0 +1,11 @@
+{
+  "Draft": "مسودة",
+  "Submitted": "مُقدّم",
+  "InReview": "قيد المراجعة",
+  "PendingPayment": "بانتظار الدفع",
+  "DocumentsIncomplete": "نواقص مستندات",
+  "Approved": "مقبول",
+  "Rejected": "مرفوض",
+  "Cancelled": "ملغي",
+  "Expired": "منتهي"
+}

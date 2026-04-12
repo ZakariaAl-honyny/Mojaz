@@ -11,6 +11,7 @@ export interface TimelineStage {
   status: "completed" | "current" | "pending" | "failed";
   timestamp?: string;
   reason?: string;
+  extraContent?: React.ReactNode;
 }
 
 interface ApplicationTimelineProps {
@@ -78,6 +79,12 @@ export function ApplicationTimeline({ stages }: ApplicationTimelineProps) {
                    </p>
                  )}
               </div>
+
+              {stage.extraContent && (
+                <div className="mt-4 animate-in slide-in-from-top-2 duration-500">
+                  {stage.extraContent}
+                </div>
+              )}
             </motion.div>
           </div>
         );

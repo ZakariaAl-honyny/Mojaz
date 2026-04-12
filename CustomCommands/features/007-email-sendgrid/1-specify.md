@@ -1,5 +1,7 @@
 # Feature 007: Real Email Delivery via SendGrid with 10 HTML Templates
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Production email service using SendGrid API with professional bilingual HTML email templates.
 

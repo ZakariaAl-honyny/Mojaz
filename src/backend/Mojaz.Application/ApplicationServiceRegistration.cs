@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Mojaz.Application.Interfaces;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Application.Services;
 using FluentValidation;
@@ -17,6 +18,8 @@ public static class ApplicationServiceRegistration
         
         // ─── Auth & Security ───
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAuditLogService, AuditLogService>();
         
         // ─── Workflow & Business ───
         services.AddScoped<IApplicationWorkflowService, ApplicationWorkflowService>();
@@ -25,8 +28,35 @@ public static class ApplicationServiceRegistration
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<ILicenseService, LicenseService>();
         
+        // ─── Dashboards & Reporting ───
+        services.AddScoped<IDashboardService, DashboardService>();
+        services.AddScoped<IReportService, ReportService>();
+
+        // ─── Training ───
+        services.AddScoped<ITrainingService, TrainingService>();
+
+        // ─── Theory Test ───
+        services.AddScoped<ITheoryService, TheoryService>();
+
+        // ─── Practical Test ───
+        services.AddScoped<IPracticalService, PracticalService>();
+
         // ─── Notifications ───
         services.AddScoped<INotificationService, NotificationService>();
+
+        // ─── Appointments ───
+        services.AddScoped<IAppointmentService, AppointmentService>();
+        services.AddScoped<AppointmentBookingValidator>();
+
+        // ─── Medical Examination ───
+        services.AddScoped<IMedicalService, MedicalService>();
+
+        // ─── Final Approval (Feature 022) ───
+        services.AddScoped<IGate4ValidationService, Gate4ValidationService>();
+        services.AddScoped<IFinalApprovalService, FinalApprovalService>();
+
+        // ─── License Renewal (Feature 025) ───
+        services.AddScoped<IRenewalService, RenewalService>();
 
         return services;
     }

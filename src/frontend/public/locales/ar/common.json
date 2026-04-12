@@ -1,0 +1,45 @@
+{
+  "welcome": "مرحباً بكم في منصة مُجاز",
+  "description": "منصة حكومية متكاملة لخدمات رخص القيادة في المملكة العربية السعودية. سهولة في التقديم، سرعة في الإجراءات، وموثوقية عالية.",
+  "auth": {
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب جديد"
+  },
+  "register": {
+    "alreadyHaveAccount": "لديك حساب بالفعل؟"
+  },
+  "toggleLanguage": "English",
+  "save": "حفظ",
+  "cancel": "إلغاء",
+  "next": "التالي",
+  "back": "السابق",
+  "backToQueue": "العودة للطوابير",
+  "submit": "تقديم",
+  "loading": "جاري التحميل...",
+  "retry": "إعادة المحاولة",
+  "continue": "متابعة",
+  "confirm": "تأكيد",
+  "tryAgain": "حاول مرة أخرى",
+  "renewal": {
+    "title": "تجديد الرخصة",
+    "subtitle": "تجديد رخصة القيادة الخاصة بك",
+    "eligible": "لائق للتجديد المبسط",
+    "notEligible": "غير لائق للتجديد المبسط",
+    "checkEligibility": "التحقق من الأهلية",
+    "currentLicense": "الرخصة الحالية",
+    "expiresAt": "تنتهي في",
+    "gracePeriod": "فترة السماح",
+    "withinGracePeriod": "داخل فترة السماح",
+    "outsideGracePeriod": "خارج فترة السماح",
+    "existingRenewal": "تجديد قيد التنفيذ",
+    "medicalRequired": "الفحص الطبي مطلوب",
+    "feePaid": "تم دفع الرسوم",
+    "issueNew": "إصدار رخصة جديدة",
+    "licenseIssued": "تم إصدار الرخصة بنجاح",
+    "oldLicenseDeactivated": "تم إلغاء الرخصة القديمة",
+    "simplifiedFlow": "مسار مبسط",
+    "skipTraining": "ب.skip TRAINING",
+    "skipTheory": "ب.skip Theory Test",
+    "skipPractical": "ب.skip Practical Test"
+  }
+}

@@ -3,7 +3,7 @@ using FirebaseAdmin.Messaging;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.Extensions.Configuration;
 using Mojaz.Application.Interfaces.Services;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

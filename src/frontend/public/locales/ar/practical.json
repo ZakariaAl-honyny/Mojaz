@@ -1,0 +1,47 @@
+{
+  "history": {
+    "title": "سجل الاختبار العملي",
+    "description": "محاولات الاختبار العملي السابقة لهذا الطلب.",
+    "attempt": "المحاولة رقم {number}",
+    "noHistory": "لم يتم العثور على سجل للاختبار العملي لهذا الطلب.",
+    "isAbsent": "المتقدم غائب",
+    "absentDescription": "لم يحضر المتقدم للاختبار المجدول.",
+    "conductedAt": "تاريخ الاختبار",
+    "score": "النتيجة",
+    "passingScore": "درجة النجاح",
+    "vehicleUsed": "المركبة المستخدمة",
+    "examiner": "الفاحص",
+    "notes": "الملاحظات",
+    "examinerNotes": "ملاحظات الفاحص (داخلي)",
+    "requirements": "متطلبات إضافية",
+    "requiresTraining": "يتطلب تدريب إضافي",
+    "hours": "ساعة",
+    "manualEndorsement": "يتطلب رخصة لناقل حركة عادي",
+    "retakeEligible": "مؤهل لإعادة الاختبار بعد: {date}"
+  },
+  "result": {
+    "pass": "ناجح",
+    "fail": "راسب",
+    "absent": "غائب"
+  },
+  "form": {
+    "title": "تسجيل نتيجة الاختبار العملي",
+    "description": "قم بتسجيل نتيجة الاختبار العملي للمتقدم.",
+    "isAbsent": "المتقدم غائب (لم يحضر)",
+    "score": "درجة الاختبار",
+    "vehicleUsed": "المركبة المستخدمة (النوع/الموديل/اللوحة)",
+    "vehicleUsedPlaceholder": "مثال: تويوتا كامري 2022",
+    "needsManualTransmission": "المتقدم يتطلب رخصة لناقل حركة عادي",
+    "notes": "ملاحظات عامة",
+    "notesPlaceholder": "أي ملاحظات مرئية للمتقدم...",
+    "examinerNotes": "ملاحظات الفاحص",
+    "internalOnly": "للاستخدام الداخلي فقط",
+    "examinerNotesPlaceholder": "ملاحظات مخفية عن المتقدم...",
+    "requiresAdditionalTraining": "رسب المتقدم ويتطلب تدريبًا إضافيًا إلزاميًا",
+    "additionalHours": "ساعات التدريب المطلوبة",
+    "submitting": "جاري الإرسال...",
+    "submit": "إرسال النتيجة",
+    "success": "تم تسجيل نتيجة الاختبار بنجاح",
+    "error": "فشل في تسجيل نتيجة الاختبار"
+  }
+}

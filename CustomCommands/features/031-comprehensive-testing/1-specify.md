@@ -1,5 +1,7 @@
 # Feature 031: E2E Testing Suite and Cross-Browser Verification
 
+> **Status:** To be generated via `/speckit.clarify`
+
 ## WHAT WE'RE BUILDING:
 Comprehensive E2E testing with Playwright, cross-browser, and performance benchmarks.
 

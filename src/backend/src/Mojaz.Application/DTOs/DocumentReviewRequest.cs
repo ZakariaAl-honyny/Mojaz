@@ -1,0 +1,8 @@
+namespace Mojaz.Application.DTOs
+{
+    public class DocumentReviewRequest
+    {
+        public string Status { get; set; } = string.Empty; // Approved or Rejected
+        public string? Reason { get; set; }
+    }
+}

@@ -1,14 +1,14 @@
-import {useTranslations} from 'next-intl';
-import {setRequestLocale} from 'next-intl/server';
+import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {Link} from '@/i18n/routing';
 
-export default function HomePage({
-  params: {locale}
+export default async function HomePage({
+  params
 }: {
-  params: {locale: string}
+  params: Promise<{locale: string}>
 }) {
+  const { locale } = await params;
   setRequestLocale(locale);
-  const t = useTranslations('common');
+  const t = await getTranslations('common');
 
   return (
     <main className="flex-1 flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-700">
@@ -19,7 +19,7 @@ export default function HomePage({
         <p className="mt-6 text-xl leading-8 text-neutral-600 mb-10">
           {t('description')}
         </p>
-        
+         
         <div className="flex flex-wrap items-center justify-center gap-4">
           <Link
             href="/register"
@@ -48,3 +48,4 @@ export default function HomePage({
     </main>
   );
 }
+

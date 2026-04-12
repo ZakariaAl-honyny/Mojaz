@@ -1,0 +1,16 @@
+@model Mojaz.Application.DTOs.Email.Templates.TestResultEmailData
+@{
+    ViewBag.Title = "Test Result";
+}
+@section Ar {
+    <h2 style="color:#006C35;">‰ ÌÃ… «·«Œ »«—</h2>
+    <p>‰Ê⁄ «·«Œ »«—: @Model.TestTypeAr</p>
+    <p>«·‰ ÌÃ…: @Model.ResultAr</p>
+    <p>«·œ—Ã…: @Model.Score</p>
+}
+@section En {
+    <h2 style="color:#006C35;">Test Result</h2>
+    <p>Test Type: @Model.TestTypeEn</p>
+    <p>Result: @Model.ResultEn</p>
+    <p>Score: @Model.Score</p>
+}
