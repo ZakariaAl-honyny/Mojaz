@@ -26,8 +26,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.HasIndex(x => x.ApplicationId);
             builder.HasIndex(x => x.ExaminerId);
             builder.HasIndex(x => x.Result);
-<<<<<<< HEAD
-=======
+
             builder.HasQueryFilter(x => !x.IsDeleted);
 
             // Relationships
@@ -40,7 +39,6 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
                 .WithMany(a => a.TheoryTests)
                 .HasForeignKey(t => t.ApplicationId)
                 .OnDelete(DeleteBehavior.Cascade);
->>>>>>> 234a7487401d56f449914900014426462f21be23
         }
     }
 }

@@ -32,11 +32,8 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.HasIndex(x => x.ApplicationId);
             builder.HasIndex(x => x.TransactionReference).IsUnique();
             builder.HasIndex(x => x.Status);
-<<<<<<< HEAD:src/backend/Mojaz.Infrastructure/Persistence/Configurations/PaymentConfiguration.cs
-=======
 
             builder.HasQueryFilter(x => !x.IsDeleted);
->>>>>>> 234a7487401d56f449914900014426462f21be23:src/backend/Mojaz.Infrastructure/Persistence/Configurations/PaymentTransactionConfiguration.cs
         }
     }
 }
