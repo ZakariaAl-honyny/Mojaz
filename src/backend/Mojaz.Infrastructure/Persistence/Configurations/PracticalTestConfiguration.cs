@@ -28,9 +28,8 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(x => x.AdditionalHoursRequired).IsRequired(false);
             builder.HasIndex(x => x.ApplicationId);
             builder.HasIndex(x => x.ExaminerId);
-<<<<<<< HEAD
             builder.HasIndex(x => x.Result);
-=======
+
             builder.HasQueryFilter(x => !x.IsDeleted);
 
             builder.HasOne(pt => pt.Application)
@@ -42,7 +41,6 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
                 .WithMany()
                 .HasForeignKey(pt => pt.ExaminerId)
                 .OnDelete(DeleteBehavior.Restrict);
->>>>>>> 234a7487401d56f449914900014426462f21be23
         }
     }
 }

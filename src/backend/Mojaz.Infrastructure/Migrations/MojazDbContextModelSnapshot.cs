@@ -27,13 +27,10 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-<<<<<<< HEAD
+                        
                     b.Property<Guid>("ApplicantId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ApplicantId")
-=======
                     b.Property<bool>("AdditionalTrainingRequired")
                         .HasColumnType("bit");
 
@@ -41,7 +38,6 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ApplicantId1")
->>>>>>> 234a7487401d56f449914900014426462f21be23
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ApplicationNumber")
@@ -66,10 +62,7 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CurrentStage")
-<<<<<<< HEAD
-=======
                         .IsRequired()
->>>>>>> 234a7487401d56f449914900014426462f21be23
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -85,8 +78,6 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("ExpiresAt")
                         .HasColumnType("datetime2");
 
-<<<<<<< HEAD
-=======
                     b.Property<int?>("FinalDecision")
                         .HasColumnType("int");
 
@@ -100,36 +91,23 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
->>>>>>> 234a7487401d56f449914900014426462f21be23
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("LicenseCategoryId")
                         .HasColumnType("uniqueidentifier");
-
-<<<<<<< HEAD
-                    b.Property<Guid>("LicenseCategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-=======
-                    b.Property<Guid>("LicenseCategoryId1")
-                        .HasColumnType("uniqueidentifier");
-
+                        
                     b.Property<string>("ManagerNotes")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
->>>>>>> 234a7487401d56f449914900014426462f21be23
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-<<<<<<< HEAD
-=======
                     b.Property<int>("PracticalAttemptCount")
                         .HasColumnType("int");
 
->>>>>>> 234a7487401d56f449914900014426462f21be23
                     b.Property<string>("PreferredLanguage")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -139,13 +117,10 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-<<<<<<< HEAD
-=======
                     b.Property<string>("ReturnToStage")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
->>>>>>> 234a7487401d56f449914900014426462f21be23
                     b.Property<DateTime?>("ReviewedAt")
                         .HasColumnType("datetime2");
 
@@ -165,14 +140,11 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("SubmittedAt")
                         .HasColumnType("datetime2");
 
-<<<<<<< HEAD
-=======
                     b.Property<int>("TheoryAttemptCount")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
->>>>>>> 234a7487401d56f449914900014426462f21be23
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -184,23 +156,14 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasIndex("ApplicantId")
                         .HasDatabaseName("IX_Applications_ApplicantId");
 
-<<<<<<< HEAD
                     b.HasIndex("ApplicantId");
-=======
-                    b.HasIndex("ApplicantId1");
->>>>>>> 234a7487401d56f449914900014426462f21be23
+                    b.HasIndex("ApplicantId");
 
                     b.HasIndex("ApplicationNumber")
                         .IsUnique()
                         .HasDatabaseName("IX_Applications_ApplicationNumber");
 
                     b.HasIndex("LicenseCategoryId");
-
-<<<<<<< HEAD
-                    b.HasIndex("LicenseCategoryId");
-=======
-                    b.HasIndex("LicenseCategoryId1");
->>>>>>> 234a7487401d56f449914900014426462f21be23
 
                     b.ToTable("Applications", (string)null);
                 });
@@ -216,13 +179,9 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.Property<string>("ContentType")
                         .IsRequired()
-<<<<<<< HEAD
+                        
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
-=======
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
->>>>>>> 234a7487401d56f449914900014426462f21be23
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -230,21 +189,17 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-<<<<<<< HEAD
-=======
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 
->>>>>>> 234a7487401d56f449914900014426462f21be23
                     b.Property<string>("DocumentType")
                         .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
 
-<<<<<<< HEAD
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasMaxLength(128)
@@ -264,30 +219,6 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<string>("RejectionReason")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
-=======
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<long>("FileSizeBytes")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRequired")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("OriginalFileName")
-                        .IsRequired()
-                        .HasMaxLength(260)
-                        .HasColumnType("nvarchar(260)");
-
-                    b.Property<string>("RejectionReason")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
->>>>>>> 234a7487401d56f449914900014426462f21be23
 
                     b.Property<DateTime?>("ReviewedAt")
                         .HasColumnType("datetime2");
@@ -297,36 +228,19 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-<<<<<<< HEAD
+                        
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
 
                     b.Property<DateTime?>("UpdatedAt")
-=======
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)")
-                        .HasDefaultValue("Pending");
-
-                    b.Property<string>("StoredFileName")
-                        .IsRequired()
-                        .HasMaxLength(260)
-                        .HasColumnType("nvarchar(260)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .IsRequired()
->>>>>>> 234a7487401d56f449914900014426462f21be23
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
-<<<<<<< HEAD
                     b.Property<DateTime>("UploadedAt")
                         .HasColumnType("datetime2");
 
-=======
->>>>>>> 234a7487401d56f449914900014426462f21be23
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationId");
@@ -335,13 +249,13 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.HasIndex("Status");
 
-<<<<<<< HEAD
-=======
                     b.HasIndex("ApplicationId", "DocumentType")
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.ToTable("ApplicationDocuments", (string)null);
                 });
 
@@ -408,9 +322,13 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.Property<Guid?>("BranchId")
 <<<<<<< HEAD
+<<<<<<< HEAD
                         .IsRequired()
 =======
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                        .IsRequired()
+>>>>>>> 003-database-foundation
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CancellationReason")
@@ -440,6 +358,7 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("nvarchar(256)");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.Property<bool>("ReminderSent")
                         .ValueGeneratedOnAdd()
@@ -457,6 +376,8 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("rowversion");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<DateOnly>("ScheduledDate")
                         .HasColumnType("date");
 
@@ -483,12 +404,15 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasIndex("AppointmentType");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.HasIndex("BranchId");
 
                     b.HasIndex("RescheduleCount");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.HasIndex("ScheduledDate");
 
                     b.HasIndex("Status");
@@ -503,28 +427,41 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                     b.Property<string>("Action")
 =======
                     b.Property<string>("ActionType")
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                    b.Property<string>("Action")
+>>>>>>> 003-database-foundation
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 003-database-foundation
                     b.Property<Guid>("EntityId")
                         .HasMaxLength(64)
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("EntityType")
+<<<<<<< HEAD
 =======
                     b.Property<string>("EntityId")
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 003-database-foundation
                     b.Property<string>("IpAddress")
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
@@ -533,6 +470,7 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OldValues")
+<<<<<<< HEAD
 =======
                     b.Property<string>("EntityName")
                         .IsRequired()
@@ -542,18 +480,26 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<string>("Payload")
                         .IsRequired()
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime2");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 003-database-foundation
                     b.Property<string>("UserAgent")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+<<<<<<< HEAD
 =======
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -562,10 +508,14 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasIndex("EntityId");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                     b.HasIndex("EntityType");
 =======
                     b.HasIndex("EntityName");
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                    b.HasIndex("EntityType");
+>>>>>>> 003-database-foundation
 
                     b.HasIndex("Timestamp");
 
@@ -626,6 +576,7 @@ namespace Mojaz.Infrastructure.Migrations
                 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             modelBuilder.Entity("Mojaz.Domain.Entities.EmailLog", b =>
                 {
@@ -685,6 +636,8 @@ namespace Mojaz.Infrastructure.Migrations
                 });
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
             modelBuilder.Entity("Mojaz.Domain.Entities.FeeStructure", b =>
                 {
                     b.Property<Guid>("Id")
@@ -721,9 +674,13 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.Property<Guid?>("LicenseCategoryId")
 <<<<<<< HEAD
+<<<<<<< HEAD
                         .IsRequired()
 =======
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                        .IsRequired()
+>>>>>>> 003-database-foundation
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -740,6 +697,7 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.ToTable("FeeStructures", (string)null);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
                     b.HasData(
@@ -754,6 +712,8 @@ namespace Mojaz.Infrastructure.Migrations
                             IsActive = true
                         });
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                 });
 
             modelBuilder.Entity("Mojaz.Domain.Entities.License", b =>
@@ -766,11 +726,14 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.Property<string>("BlobUrl")
                         .HasColumnType("nvarchar(max)");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<Guid?>("BranchId")
                         .HasColumnType("uniqueidentifier");
 
@@ -852,12 +815,15 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasDatabaseName("IX_Licenses_Status");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.HasIndex("HolderId", "Status")
                         .HasDatabaseName("IX_Licenses_HolderId_Status")
                         .HasFilter("[IsDeleted] = 0");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.ToTable("Licenses", (string)null);
                 });
 
@@ -904,11 +870,14 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.Property<int>("ValidityYears")
                         .HasColumnType("int");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.HasKey("Id");
 
                     b.HasIndex("Code")
@@ -917,6 +886,7 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasIndex("IsActive");
 
                     b.ToTable("LicenseCategories", (string)null);
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 
@@ -994,6 +964,8 @@ namespace Mojaz.Infrastructure.Migrations
                             ValidityYears = 0
                         });
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                 });
 
             modelBuilder.Entity("Mojaz.Domain.Entities.LicenseRenewal", b =>
@@ -1056,11 +1028,14 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.Property<bool>("IsReportVerified")
                         .HasColumnType("bit");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<Guid>("LicenseId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1070,6 +1045,7 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid?>("ProcessedBy")
                         .HasColumnType("uniqueidentifier");
 
+<<<<<<< HEAD
 <<<<<<< HEAD
                     b.Property<string>("Reason")
                         .HasMaxLength(256)
@@ -1082,6 +1058,11 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<string>("ReviewComments")
                         .HasColumnType("nvarchar(max)");
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                    b.Property<string>("Reason")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+>>>>>>> 003-database-foundation
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -1124,6 +1105,7 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
@@ -1132,6 +1114,8 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<Guid>("DoctorId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1144,11 +1128,14 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("nvarchar(32)");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<string>("Notes")
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
@@ -1288,11 +1275,14 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("nvarchar(64)");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.Property<bool>("IsInvalidated")
                         .HasColumnType("bit");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<bool>("IsUsed")
                         .HasColumnType("bit");
 
@@ -1327,10 +1317,14 @@ namespace Mojaz.Infrastructure.Migrations
                 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             modelBuilder.Entity("Mojaz.Domain.Entities.Payment", b =>
 =======
             modelBuilder.Entity("Mojaz.Domain.Entities.PaymentTransaction", b =>
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+            modelBuilder.Entity("Mojaz.Domain.Entities.Payment", b =>
+>>>>>>> 003-database-foundation
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1351,6 +1345,7 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<string>("Currency")
                         .IsRequired()
 <<<<<<< HEAD
+<<<<<<< HEAD
                         .HasMaxLength(8)
                         .HasColumnType("nvarchar(8)");
 =======
@@ -1363,12 +1358,19 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid?>("DeletedBy")
                         .HasColumnType("uniqueidentifier");
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+>>>>>>> 003-database-foundation
 
                     b.Property<DateTime?>("FailedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FailureReason")
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 003-database-foundation
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -1376,6 +1378,7 @@ namespace Mojaz.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
+<<<<<<< HEAD
 =======
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -1388,12 +1391,17 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
 
                     b.Property<DateTime?>("PaidAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentMethod")
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 003-database-foundation
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
@@ -1409,6 +1417,7 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<string>("TransactionReference")
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
+<<<<<<< HEAD
 =======
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -1429,6 +1438,8 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -1441,11 +1452,15 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasIndex("ApplicationId");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 003-database-foundation
                     b.HasIndex("FeeType");
 
                     b.HasIndex("Status");
 
                     b.ToTable("Payments", (string)null);
+<<<<<<< HEAD
 =======
                     b.HasIndex("Status");
 
@@ -1455,6 +1470,8 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.ToTable("PaymentTransactions", (string)null);
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                 });
 
             modelBuilder.Entity("Mojaz.Domain.Entities.PracticalTest", b =>
@@ -1473,11 +1490,14 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("int");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.Property<DateTime>("ConductedAt")
                         .HasColumnType("datetime2");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -1485,12 +1505,16 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 003-database-foundation
                     b.Property<Guid>("ExaminerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
+<<<<<<< HEAD
 =======
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
@@ -1514,6 +1538,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<int>("PassingScore")
                         .HasColumnType("int");
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
 
                     b.Property<bool>("RequiresAdditionalTraining")
                         .HasColumnType("bit");
@@ -1524,12 +1550,17 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("nvarchar(16)");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                     b.Property<DateTime>("TestDate")
                         .HasColumnType("datetime2");
 =======
                     b.Property<int?>("Score")
                         .HasColumnType("int");
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                    b.Property<DateTime>("TestDate")
+                        .HasColumnType("datetime2");
+>>>>>>> 003-database-foundation
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -1539,12 +1570,17 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.Property<string>("VehicleUsed")
 <<<<<<< HEAD
+<<<<<<< HEAD
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 =======
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+>>>>>>> 003-database-foundation
 
                     b.HasKey("Id");
 
@@ -1553,11 +1589,15 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasIndex("ExaminerId");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 003-database-foundation
                     b.HasIndex("Result");
 
                     b.ToTable("PracticalTests", (string)null);
                 });
 
+<<<<<<< HEAD
 =======
                     b.ToTable("PracticalTests", (string)null);
                 });
@@ -1621,6 +1661,8 @@ namespace Mojaz.Infrastructure.Migrations
                 });
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
             modelBuilder.Entity("Mojaz.Domain.Entities.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1670,6 +1712,7 @@ namespace Mojaz.Infrastructure.Migrations
                     b.ToTable("RefreshTokens", (string)null);
                 });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
             modelBuilder.Entity("Mojaz.Domain.Entities.SmsLog", b =>
@@ -1740,6 +1783,8 @@ namespace Mojaz.Infrastructure.Migrations
                 });
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
             modelBuilder.Entity("Mojaz.Domain.Entities.SystemSetting", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1787,6 +1832,7 @@ namespace Mojaz.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("SystemSettings", (string)null);
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 
@@ -2092,6 +2138,8 @@ namespace Mojaz.Infrastructure.Migrations
                             SettingValue = "7"
                         });
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                 });
 
             modelBuilder.Entity("Mojaz.Domain.Entities.TheoryTest", b =>
@@ -2107,11 +2155,14 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("int");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.Property<DateTime>("ConductedAt")
                         .HasColumnType("datetime2");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -2119,12 +2170,16 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 003-database-foundation
                     b.Property<Guid>("ExaminerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
+<<<<<<< HEAD
 =======
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
@@ -2145,6 +2200,8 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
 
                     b.Property<int>("PassingScore")
                         .HasColumnType("int");
@@ -2155,17 +2212,23 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("nvarchar(16)");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 003-database-foundation
                     b.Property<int>("Score")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TestDate")
                         .HasColumnType("datetime2");
 
+<<<<<<< HEAD
 =======
                     b.Property<int?>("Score")
                         .HasColumnType("int");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -2193,12 +2256,15 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.Property<string>("CenterName")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<string>("CertificateNumber")
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
@@ -2216,6 +2282,9 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 003-database-foundation
                     b.Property<Guid?>("ExemptionApprovedBy")
                         .HasColumnType("uniqueidentifier");
 
@@ -2238,6 +2307,7 @@ namespace Mojaz.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
+<<<<<<< HEAD
 =======
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
@@ -2290,6 +2360,8 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -2301,6 +2373,7 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationId");
 
+<<<<<<< HEAD
 <<<<<<< HEAD
                     b.HasIndex("SchoolName");
 
@@ -2316,6 +2389,11 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.HasIndex("TrainingStatus");
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                    b.HasIndex("SchoolName");
+
+                    b.HasIndex("Status");
+>>>>>>> 003-database-foundation
 
                     b.ToTable("TrainingRecords", (string)null);
                 });
@@ -2331,11 +2409,14 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("nvarchar(200)");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.Property<int>("AppRole")
                         .HasColumnType("int");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<string>("ApplicantType")
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
@@ -2372,6 +2453,7 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.Property<bool>("EnableEmail")
                         .ValueGeneratedOnAdd()
@@ -2389,6 +2471,8 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasDefaultValue(true);
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<int>("FailedLoginAttempts")
                         .HasColumnType("int");
 
@@ -2421,6 +2505,7 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("bit");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.Property<bool>("IsSecurityBlocked")
                         .ValueGeneratedOnAdd()
@@ -2428,6 +2513,8 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<DateTime?>("LastLoginAt")
                         .HasColumnType("datetime2");
 
@@ -2474,11 +2561,14 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("int");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     b.Property<bool>("RequiresPasswordReset")
                         .HasColumnType("bit");
 
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
@@ -2519,10 +2609,14 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasOne("Mojaz.Domain.Entities.User", "Applicant")
                         .WithMany()
 <<<<<<< HEAD
+<<<<<<< HEAD
                         .HasForeignKey("ApplicantId")
 =======
                         .HasForeignKey("ApplicantId1")
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                        .HasForeignKey("ApplicantId")
+>>>>>>> 003-database-foundation
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2535,10 +2629,14 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasOne("Mojaz.Domain.Entities.LicenseCategory", "LicenseCategory")
                         .WithMany()
 <<<<<<< HEAD
+<<<<<<< HEAD
                         .HasForeignKey("LicenseCategoryId")
 =======
                         .HasForeignKey("LicenseCategoryId1")
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                        .HasForeignKey("LicenseCategoryId")
+>>>>>>> 003-database-foundation
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2562,10 +2660,14 @@ namespace Mojaz.Infrastructure.Migrations
                 {
                     b.HasOne("Mojaz.Domain.Entities.Application", "Application")
 <<<<<<< HEAD
+<<<<<<< HEAD
                         .WithMany()
 =======
                         .WithMany("StatusHistory")
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                        .WithMany()
+>>>>>>> 003-database-foundation
                         .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2579,10 +2681,14 @@ namespace Mojaz.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("ApplicationId")
 <<<<<<< HEAD
+<<<<<<< HEAD
                         .OnDelete(DeleteBehavior.Cascade)
 =======
                         .OnDelete(DeleteBehavior.Restrict)
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                        .OnDelete(DeleteBehavior.Cascade)
+>>>>>>> 003-database-foundation
                         .IsRequired();
 
                     b.Navigation("Application");
@@ -2612,12 +2718,18 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasOne("Mojaz.Domain.Entities.LicenseCategory", "LicenseCategory")
                         .WithMany()
 <<<<<<< HEAD
+<<<<<<< HEAD
                         .HasForeignKey("LicenseCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 =======
                         .HasForeignKey("LicenseCategoryId");
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                        .HasForeignKey("LicenseCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+>>>>>>> 003-database-foundation
 
                     b.Navigation("LicenseCategory");
                 });
@@ -2702,10 +2814,14 @@ namespace Mojaz.Infrastructure.Migrations
                 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             modelBuilder.Entity("Mojaz.Domain.Entities.Payment", b =>
 =======
             modelBuilder.Entity("Mojaz.Domain.Entities.PaymentTransaction", b =>
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+            modelBuilder.Entity("Mojaz.Domain.Entities.Payment", b =>
+>>>>>>> 003-database-foundation
                 {
                     b.HasOne("Mojaz.Domain.Entities.Application", "Application")
                         .WithMany()
@@ -2720,12 +2836,16 @@ namespace Mojaz.Infrastructure.Migrations
                 {
                     b.HasOne("Mojaz.Domain.Entities.Application", "Application")
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 003-database-foundation
                         .WithMany()
                         .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Application");
+<<<<<<< HEAD
 =======
                         .WithMany("PracticalTests")
                         .HasForeignKey("ApplicationId")
@@ -2771,20 +2891,27 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.Navigation("User");
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                 });
 
             modelBuilder.Entity("Mojaz.Domain.Entities.TheoryTest", b =>
                 {
                     b.HasOne("Mojaz.Domain.Entities.Application", "Application")
 <<<<<<< HEAD
+<<<<<<< HEAD
                         .WithMany()
 =======
                         .WithMany("TheoryTests")
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                        .WithMany()
+>>>>>>> 003-database-foundation
                         .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+<<<<<<< HEAD
 <<<<<<< HEAD
                     b.Navigation("Application");
 =======
@@ -2798,6 +2925,9 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.Navigation("Examiner");
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+                    b.Navigation("Application");
+>>>>>>> 003-database-foundation
                 });
 
             modelBuilder.Entity("Mojaz.Domain.Entities.TrainingRecord", b =>
@@ -2806,10 +2936,14 @@ namespace Mojaz.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("ApplicationId")
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 003-database-foundation
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Application");
+<<<<<<< HEAD
 =======
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -2846,6 +2980,8 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.Navigation("TheoryTests");
 >>>>>>> 234a7487401d56f449914900014426462f21be23
+=======
+>>>>>>> 003-database-foundation
                 });
 #pragma warning restore 612, 618
         }
