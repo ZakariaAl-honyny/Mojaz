@@ -54,8 +54,15 @@ public class ApplicationService : IApplicationService
         var category = await _categoryRepository.GetByIdAsync(request.LicenseCategoryId);
         if (category == null) return ApiResponse<ApplicationDto>.Fail(400, "Invalid license category.");
 
-        var ageLimitSetting = (await _settingsRepository.FindAsync(s => s.SettingKey == $"MIN_AGE_CATEGORY_{category.Code}")).FirstOrDefault();
-        if (ageLimitSetting == null) return ApiResponse<ApplicationDto>.Fail(400, "System setting error: Age limit not found.");
+        // Error Null values 
+        //var ageLimitSetting = (await _settingsRepository.FindAsync(s => s.SettingKey == $"MIN_AGE_CATEGORY_{category.Code}")).FirstOrDefault();
+        //if (ageLimitSetting == null) return ApiResponse<ApplicationDto>.Fail(400, "System setting error: Age limit not found.");
+
+        // أضفنا علامة الاستقهام بعد القوسين لضمان عدم الانهيار إذا لم تجد القاعدة شيئاً
+        var settingsResult = await _settingsRepository.FindAsync(s => s.SettingKey == $"MIN_AGE_CATEGORY_{category.Code}");
+        var ageLimitSetting = settingsResult?.FirstOrDefault();
+        if (ageLimitSetting == null)
+            return ApiResponse<ApplicationDto>.Fail(400, "System setting error: Age limit not found.");
 
         if (!int.TryParse(ageLimitSetting.SettingValue, out int minAge))
             minAge = 18; // Default fallback
@@ -76,7 +83,7 @@ public class ApplicationService : IApplicationService
         
         if (activeApps.Any())
             return ApiResponse<ApplicationDto>.Fail(400, "You already have an active application in progress.");
-
+         
         // 3. Update User Profile (Applicant Data)
         user.NationalId = request.NationalId;
         user.DateOfBirth = request.DateOfBirth;

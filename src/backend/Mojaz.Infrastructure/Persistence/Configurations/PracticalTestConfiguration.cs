@@ -26,7 +26,6 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.HasIndex(x => x.ApplicationId);
             builder.HasIndex(x => x.ExaminerId);
             builder.HasIndex(x => x.Result);
-            builder.HasQueryFilter(x => !x.IsDeleted);
         }
     }
 }
