@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Mojaz.Application.Interfaces.Security;
 using ApplicationEntity = Mojaz.Domain.Entities.Application;
 using IEmailService = Mojaz.Application.Interfaces.Services.IEmailService;
 
@@ -28,6 +29,7 @@ public class DocumentService : IDocumentService
     private readonly IBackgroundJobClient _backgroundJobClient;
     private readonly IFileStorageService _fileStorageService;
     private readonly ISystemSettingsService _systemSettingsService;
+    private readonly IFileValidationService _fileValidationService;
     private readonly INotificationService? _notificationService;
 
 public DocumentService(
@@ -40,6 +42,7 @@ public DocumentService(
     IBackgroundJobClient backgroundJobClient,
     IFileStorageService fileStorageService,
     ISystemSettingsService systemSettingsService,
+    IFileValidationService fileValidationService,
     INotificationService? notificationService = null)
 {
     _documentRepository = documentRepository;
@@ -51,6 +54,7 @@ public DocumentService(
     _backgroundJobClient = backgroundJobClient;
     _fileStorageService = fileStorageService;
     _systemSettingsService = systemSettingsService;
+    _fileValidationService = fileValidationService;
     _notificationService = notificationService;
 }
 
@@ -64,18 +68,19 @@ public DocumentService(
         // Validate file
         if (request.File == null) return ApiResponse<DocumentDto>.Fail(400, "File is required.");
         
-        // Validate file size (max 5MB from SystemSettings)
-        var maxSizeMbSetting = await _systemSettingsService.GetAsync("MAX_FILE_SIZE_MB");
-        var maxSizeMb = maxSizeMbSetting != null && int.TryParse(maxSizeMbSetting, out var parsed) ? parsed : 5;
-        if (request.File.Length > maxSizeMb * 1048576)
-            return ApiResponse<DocumentDto>.Fail(400, $"File size exceeds the {maxSizeMb}MB limit.");
+        // Validate file size using the dedicated security service
+        if (!await _fileValidationService.ValidateSizeAsync(request.File.Length))
+        {
+            return ApiResponse<DocumentDto>.Fail(400, "File size exceeds the allowed limit.");
+        }
         
         // Validate file extension
         var extension = Path.GetExtension(request.File.FileName).ToLowerInvariant();
-        if (extension != ".pdf" && extension != ".jpg" && extension != ".jpeg" && extension != ".png")
-            return ApiResponse<DocumentDto>.Fail(400, "Invalid file type. Only PDF, JPG, PNG allowed.");
         
-        // TODO: Implement MIME magic bytes validation
+        if (!await _fileValidationService.ValidateSignatureAsync(request.File.OpenReadStream(), request.File.FileName))
+        {
+            return ApiResponse<DocumentDto>.Fail(400, "Security Check Failed: The file content does not match its extension or the file type is not allowed.");
+        }
 
         // Use file storage service
         var storedFileName = $"{Guid.NewGuid()}{extension}";

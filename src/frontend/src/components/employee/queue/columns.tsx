@@ -76,7 +76,7 @@ export const columns: ColumnDef<ApplicationSummaryDto>[] = [
       return (
         <div className="flex justify-end gap-2">
           <Link href={`/employee/applications/${app.id}`}>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-primary-600 hover:text-primary-700 hover:bg-primary-50">
+            <Button data-testid="view-application-btn" variant="ghost" size="icon" className="h-8 w-8 text-primary-600 hover:text-primary-700 hover:bg-primary-50">
               <Eye className="w-4 h-4" />
             </Button>
           </Link>

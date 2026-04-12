@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
@@ -8,6 +9,7 @@ using Xunit;
 
 namespace Mojaz.API.Tests.Auth;
 
+[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public class Registration_RateLimit_Tests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
@@ -44,5 +46,10 @@ public class Registration_RateLimit_Tests : IClassFixture<WebApplicationFactory<
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.TooManyRequests);
+    }
+
+    private string GetDebuggerDisplay()
+    {
+        return ToString();
     }
 }

@@ -10,7 +10,7 @@ public class ApplicationProfile : Profile
 {
     public ApplicationProfile()
     {
-        CreateMap<DomainApplication, ApplicationDto>()
+        CreateMap<DomainApplication, ApplicationDto>() 
             .ForMember(dest => dest.LicenseCategoryNameEn, opt => opt.MapFrom(src => src.LicenseCategory != null ? src.LicenseCategory.NameEn : string.Empty))
             .ForMember(dest => dest.LicenseCategoryNameAr, opt => opt.MapFrom(src => src.LicenseCategory != null ? src.LicenseCategory.NameAr : string.Empty))
             .ForMember(dest => dest.LicenseCategoryCode, opt => opt.MapFrom(src => src.LicenseCategory != null ? src.LicenseCategory.Code.ToString() : string.Empty))

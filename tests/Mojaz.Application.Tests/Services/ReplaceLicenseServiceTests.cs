@@ -134,8 +134,10 @@ public class ReplaceLicenseServiceTests
         };
 
         _licenseRepositoryMock
-            .Setup(x => x.FindAsync(It.IsAny<Expression<Func<License, bool>>>(), It.IsAny<System.Threading.CancellationToken>()))
-            .ReturnsAsync(new System.Collections.Generic.List<License> { license });
+            .Setup(x => x.FindAsync(
+                It.IsAny<Expression<Func<License, bool>>>(),
+                It.IsAny<System.Threading.CancellationToken>()))
+            .ReturnsAsync(new System.Collections.Generic.List<License>());
 
         // Act
         var result = await _service.CheckEligibilityAsync(applicantId);
@@ -187,11 +189,19 @@ public class ReplaceLicenseServiceTests
 
         _applicationRepositoryMock
             .Setup(x => x.AddAsync(It.IsAny<ApplicationEntity>(), It.IsAny<System.Threading.CancellationToken>()))
-            .ReturnsAsync((ApplicationEntity a, System.Threading.CancellationToken _) => a);
+            .ReturnsAsync((ApplicationEntity a, System.Threading.CancellationToken _) => 
+            {
+                a.Id = Guid.NewGuid(); // Simulate database generating ID
+                return a;
+            });
 
         _replacementRepositoryMock
             .Setup(x => x.AddAsync(It.IsAny<LicenseReplacement>(), It.IsAny<System.Threading.CancellationToken>()))
-            .ReturnsAsync((LicenseReplacement r, System.Threading.CancellationToken _) => r);
+            .ReturnsAsync((LicenseReplacement r, System.Threading.CancellationToken _) => 
+            {
+                r.Id = Guid.NewGuid(); // Simulate database generating ID
+                return r;
+            });
 
         _unitOfWorkMock
             .Setup(x => x.SaveChangesAsync(It.IsAny<System.Threading.CancellationToken>()))
@@ -202,7 +212,7 @@ public class ReplaceLicenseServiceTests
 
         // Assert
         result.Success.Should().BeTrue();
-        result.Data.Should().NotBeEmpty();
+        result.Data.Should().NotBe(Guid.Empty);
         result.Message.Should().Contain("created successfully");
 
         // Verify Application was created with ServiceType = Replacement

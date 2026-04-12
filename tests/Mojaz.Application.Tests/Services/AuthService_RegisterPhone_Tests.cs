@@ -1,3 +1,5 @@
+using Mojaz.Application.Interfaces.Security;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -30,6 +32,8 @@ public class AuthService_RegisterPhone_Tests
     private readonly Mock<IOtpService> _otpService = new();
     private readonly Mock<IEmailService> _emailService = new();
     private readonly Mock<ISmsService> _smsService = new();
+    private readonly Mock<ISecurityAlertService> _securityAlertService = new();
+    private readonly Mock<IHttpContextAccessor> _httpContextAccessor = new();
 
     private AuthService CreateService() => new(
         _userRepo.Object,
@@ -43,7 +47,9 @@ public class AuthService_RegisterPhone_Tests
         _otpService.Object,
         _emailService.Object,
         _smsService.Object,
-        Mock.Of<IBackgroundJobClient>()
+        Mock.Of<IBackgroundJobClient>(),
+        _securityAlertService.Object,
+        _httpContextAccessor.Object
     );
 
     [Fact]

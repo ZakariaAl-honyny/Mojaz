@@ -40,26 +40,14 @@ public class IntegrationTestBase : IDisposable
                 // Also remove any other authentication-related registrations if they exist
                 // This is a blunt approach, but for integration tests, we want total control.
 
-            builder.ConfigureServices(services =>
-            {
-                // ... (DbContext setup)
-
-                // Remove existing authentication services
-                var authDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(Microsoft.AspNetCore.Authentication.IAuthenticationSchemeProvider));
-                if (authDescriptor != null) services.Remove(authDescriptor);
-
-                // Replace Authentication with TestAuthHandler
-                services.AddAuthentication("TestScheme")
-                    .AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions, TestAuthHandler>("TestScheme", options => { });
-
-                services.PostConfigure<Microsoft.AspNetCore.Authentication.AuthenticationOptions>(options =>
+                // Add TestAuthHandler as the authentication scheme provider
+                services.AddAuthentication(options =>
                 {
+                    options.DefaultScheme = "TestScheme";
                     options.DefaultAuthenticateScheme = "TestScheme";
                     options.DefaultChallengeScheme = "TestScheme";
-                });
-
-                // ... (Authorization and Hangfire)
-            });
+                })
+                .AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions, TestAuthHandler>("TestScheme", options => { });
 
                 // Update Authorization to use the TestScheme
                 services.AddAuthorization(options =>
