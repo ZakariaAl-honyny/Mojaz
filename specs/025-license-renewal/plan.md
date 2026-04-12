@@ -1,92 +1,82 @@
-# Implementation Plan: License Renewal (Feature 025)
+# Implementation Plan: License Renewal Simplified Workflow
 
-## 1. Overview
-The License Renewal feature provides a streamlined workflow for applicants with an active or recently expired license. It skips unnecessary Training and Testing stages, enforces Medical Exam, calculates new validity dates, charges the Renewal Fee, and deactivates the old license.
+**Branch**: `025-license-renewal` | **Date**: 2026-04-10 | **Spec**: [spec.md](file:///c:/Users/ALlahabi/Desktop/cmder/Mojaz/specs/025-license-renewal/spec.md)
+**Input**: Feature specification from `/specs/025-license-renewal/spec.md`
 
-## 2. Technical Context
-- **Backend**: ASP.NET Core 8, Clean Architecture.
-- **Database**: SQL Server 2022, EF Core 8.
-- **PDF Generation**: QuestPDF.
-- **Blob Storage**: Azure Blob (or local for dev) for PDF storage.
-- **Fees**: `FeeStructures` table contains `RenewalFee_{Category}` entries.
-- **SystemSettings**: `RENEWAL_GRACE_PERIOD_DAYS` defines the allowed window before/after expiry for simplified renewal.
+## Summary
 
-## 3. Data Model Changes
-### Entities
-- **License** (existing): Add `Status` enum values `Active`, `Renewed`, `Inactive`.
-- **RenewalApplication** (new): Extends `Application` with a reference to the old `License`.
-  - `Id` (PK)
-  - `ApplicantId` (FK to Users)
-  - `OldLicenseId` (FK to License)
-  - `NewLicenseId` (FK to License, nullable until issuance)
-  - `RenewalFeePaid` (bool)
-  - `MedicalExamResultId` (FK to MedicalExam)
-  - `CreatedAt`, `UpdatedAt`
+Implement a simplified renewal workflow for driving licenses that allows applicants with active or recently expired licenses to skip Training and Testing stages. The process focuses on Medical Fitness verification, fee payment (using `RENEWAL_FEE`), and atomic deactivation of the old license in favor of a newly issued record.
 
-### Migrations
-Create new table `RenewalApplications` and add `Status` column to `Licenses`.
+## Technical Context
 
-## 4. Service Layer
-- **IRenewalService** (Application layer)
-  - `ValidateEligibilityAsync(applicantId, category)` – checks existing license, grace period, no blocking violations.
-  - `CreateRenewalAsync(request)` – creates `RenewalApplication`, links old license.
-  - `ProcessMedicalResultAsync(applicationId, result)` – stores result, validates fitness.
-  - `PayRenewalFeeAsync(applicationId, paymentInfo)` – records payment, marks `RenewalFeePaid`.
-  - `IssueLicenseAsync(applicationId)` – generates new `License` record, updates dates, deactivates old license, generates PDF via `QuestPdfLicenseGenerator`, stores in blob, returns download URL.
+**Language/Version**: C# (ASP.NET Core 8), TypeScript (Next.js 15)  
+**Primary Dependencies**: EF Core 8, shadcn/ui, next-intl, Hangfire, FluentValidation  
+**Storage**: SQL Server 2022  
+**Testing**: xUnit (Backend), Jest (Frontend), Playwright (E2E)  
+**Target Platform**: Web Browser (Responsive, RTL/LTR)
+**Project Type**: Government Web Service / Portal  
+**Performance Goals**: < 2s API Response, < 24h operational processing  
+**Constraints**: Zero hardcoding of fees/ages, Soft Delete only, Atomic license transition  
+**Scale/Scope**: Core driving license lifecycle service (Service 02 in PRD)
 
-## 5. API Endpoints (Mojaz.API)
-| Method | Route | Description |
-|--------|-------|-------------|
-| GET | `/api/v1/licenses/renewal/eligibility?category={cat}` | Returns eligibility status for current user.
-| POST | `/api/v1/licenses/renewal` | Body: `CreateRenewalRequest` (oldLicenseId, category). Creates renewal application.
-| POST | `/api/v1/licenses/renewal/{id}/medical-result` | Submit medical exam result.
-| POST | `/api/v1/licenses/renewal/{id}/pay` | Pay renewal fee.
-| POST | `/api/v1/licenses/renewal/{id}/issue` | Final issuance, returns PDF download URL.
+## Constitution Check
 
-All endpoints are protected with `[Authorize(Roles = "Applicant")]` and validate ownership.
+| Principle | Check Status | Rationale |
+|-----------|--------------|-----------|
+| I. Clean Architecture | 🟢 PASS | Logic will reside in `Application` layer services; controllers remain thin. |
+| II. Security First | 🟢 PASS | Endpoints will use `[Authorize(Roles = "Applicant")]`; ownership validated. |
+| III. Configuration | 🟢 PASS | Fees fetched from `FeeStructures`; Grace period from `SystemSettings`. |
+| IV. Internationalization | 🟢 PASS | Full RTL/LTR support via `next-intl` and logical CSS properties. |
+| V. API Contract | 🟢 PASS | Response wrapped in `ApiResponse<T>`; consistent pagination. |
+| VI. Test Discipline | 🟢 PASS | 80%+ coverage for renewal service; E2E for full renewal flow. |
+| VII. Async Notifications | 🟢 PASS | SMS/Email confirmations dispatched via Hangfire. |
 
-## 6. Controllers
-- **RenewalController** (thin, delegates to `IRenewalService`).
-- Returns `ApiResponse<T>` wrappers as per project conventions.
+## Project Structure
 
-## 7. PDF Generation
-- Extend existing `QuestPdfLicenseGenerator` to accept a `License` object and produce a renewal PDF.
-- Store PDF in Blob storage under `licenses/{licenseNumber}.pdf`.
-- Provide signed URL via service.
+### Documentation (this feature)
 
-## 8. Notifications
-- On successful issuance, trigger Notification events:
-  - In‑app, Push, Email, SMS (template "License Ready").
-- Use existing `NotificationService`.
+```text
+specs/025-license-renewal/
+├── plan.md              # This file
+├── research.md          # Phase 0: Policy & Logic details
+├── data-model.md        # Phase 1: Entity & Transitions
+├── quickstart.md        # Phase 1: Dev guide
+├── contracts/           # Phase 1: API schemas
+└── tasks.md             # Phase 2: Action items
+```
 
-## 9. Validation
-- Use FluentValidation for request DTOs.
-- Ensure `RenewalApplication` cannot be created if:
-  - No active/valid old license.
-  - Outside grace period.
-  - Outstanding violations.
-  - Medical exam not yet completed.
+### Source Code
 
-## 10. Tasks & Milestones
-1. **Data Model** – Add `Status` to `License`, create `RenewalApplication` entity, migrations. (2 days)
-2. **Service Layer** – Implement `RenewalService` with all methods. (3 days)
-3. **API** – Add `RenewalController` and DTOs. (2 days)
-4. **PDF** – Extend generator, integrate blob storage. (2 days)
-5. **Notifications** – Hook into issuance flow. (1 day)
-6. **Tests** – Unit tests for service, integration tests for API, end‑to‑end scenario. (3 days)
-7. **Documentation** – Update OpenAPI spec, Swagger, README. (1 day)
+```text
+src/
+├── backend/
+│   ├── Mojaz.Domain/           # LicenseStatus enum, License entity
+│   ├── Mojaz.Application/      # ILicenseService, RenewalCommand
+│   ├── Mojaz.Infrastructure/   # LicenseRepository, Migrations
+│   └── Mojaz.API/              # LicensesController (Renewal action)
+├── frontend/
+│   ├── src/app/[locale]/(applicant)/license/renew/page.tsx
+│   ├── src/components/domain/license/LicenseRenewalWizard.tsx
+│   └── src/services/license.service.ts
+└── tests/
+    ├── Mojaz.Application.Tests/ # Renewal logic tests
+    └── Mojaz.API.Tests/         # Controller validation tests
+```
 
-## 11. Open Questions / Needs Clarification (NEEDS CLARIFICATION)
-- Exact name and schema of `FeeStructures` entry for renewal fees.
-- Whether renewal fee differs per category (assumed yes).
-- Blob storage provider configuration for dev vs prod.
-- Notification template content for renewal issuance.
+**Structure Decision**: Standard Mojaz Clean Architecture. Backend splits into Domain/Application/Infrastructure/API. Frontend uses Next.js App Router with locale-based routes.
 
-## 12. References
-- `Mojaz.API/Controllers/LicensesController.cs` – existing issuance flow.
-- `Mojaz.Application/Services/LicenseService.cs` – similar logic for new issuance.
-- `QuestPDF` documentation for PDF generation.
-- SystemSettings key: `RENEWAL_GRACE_PERIOD_DAYS`.
+## Complexity Tracking
+
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| Atomic Transaction | Ensure old license deactivated *only* if new one is successfully issued. | Simple flag updates independently could lead to inconsistent states (no license or two licenses). |
 
 ---
-*Generated by speckit‑plan workflow.*
+
+## Phase 0: Research (Outline)
+
+1. **Policy Resolution**: Confirm `RENEWAL_GRACE_PERIOD_DAYS` default (Assume 365) and "Beyond Grace" behavior (Assume Full Reset to Stage 01).
+2. **Fee Mapping**: Identify `FeeType.Renewal` or similar in existing enum; verify values in `FeeStructures` simulation.
+3. **Transition Logic**: Research EF Core transaction patterns for atomic status update + new record creation.
+
+**Next Steps**: Generate `research.md`.
