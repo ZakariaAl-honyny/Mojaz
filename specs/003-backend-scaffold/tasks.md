@@ -3,7 +3,7 @@
 **Input**: Design documents from `/specs/003-backend-scaffold/`
 **Prerequisites**: plan.md ✅ | spec.md ✅ | research.md ✅
 **Branch**: `003-backend-scaffold`
-**Generated**: 2026-04-04 | **Remediated**: 2026-04-04
+**Generated**: 2026-04-04 | **Remediated**: 2026-04-12
 
 ## Format: `[ID] [P?] [Story] Description`
 
@@ -79,9 +79,9 @@ Must be complete before Application, Infrastructure, or API implementation begin
 - [X] T033 [P] Create `src/backend/src/Mojaz.Domain/Enums/MedicalFitnessResult.cs`: Fit, Unfit, ConditionallyFit
 - [X] T034 [P] Create `src/backend/src/Mojaz.Domain/Enums/UserRole.cs`: Applicant, Receptionist, Doctor, Examiner, Manager, Security, Admin
 - [X] T035 [P] Create `src/backend/src/Mojaz.Domain/Enums/RegistrationMethod.cs`: NationalId, Email, Phone
- 
+  
 ### Domain — Entities (21 total — see PRD Deviations note above)
- 
+  
 - [X] T036 [P] Create `src/backend/src/Mojaz.Domain/Entities/User.cs` (extends `SoftDeletableEntity`): FullNameAr, FullNameEn, NationalId, Email, PhoneNumber, PasswordHash, Role (UserRole enum), DateOfBirth, Gender, Nationality, BloodType, Address, City, Region, ApplicantType, PreferredLanguage, NotificationPreferences, RegistrationMethod, IsEmailVerified, IsPhoneVerified, EmailVerifiedAt, PhoneVerifiedAt, IsActive, IsLocked, FailedLoginAttempts, LockoutEnd, LastLoginAt — *merges PRD Users §21.1 + Applicants §21.2*
 - [X] T037 [P] Create `src/backend/src/Mojaz.Domain/Entities/OtpCode.cs` (extends `BaseEntity`): UserId, Destination, DestinationType (Email|Phone), CodeHash, Purpose (Registration|Login|PasswordReset), ExpiresAt, IsUsed, UsedAt, AttemptCount, MaxAttempts, IpAddress — *aligned with PRD §21.18*
 - [X] T038 [P] Create `src/backend/src/Mojaz.Domain/Entities/RefreshToken.cs` (extends `BaseEntity`): UserId, Token, ExpiresAt, IsRevoked, RevokedAt, ReplacedByToken, CreatedByIp — *aligned with PRD §21.19*
@@ -357,3 +357,25 @@ With 2–3 developers after Phase 2 completes:
 - Verify `dotnet build` passes with 0 warnings after EVERY phase before moving to the next
 - **Future features will add**: PushToken.cs, EmailLog.cs, SmsLog.cs entities (PRD §21.15, §21.20, §21.21)
 - **Scaffold test tasks are placeholders only** — real 80% coverage target applies when Application services are implemented in feature 004+
+
+---
+
+## Remediation Notes (2026-04-12)
+
+### Issues Fixed During Review
+
+| Date | Issue | Fix |
+|------|-------|-----|
+| 2026-04-12 | ValidationFilter not registered in Program.cs | Added `options.Filters.Add<ValidationFilter>()` to AddControllers configuration |
+| 2026-04-12 | Entity configurations incorrectly using soft-delete | Removed `HasQueryFilter(x => !x.IsDeleted)` from: PaymentConfiguration, TheoryTestConfiguration, PracticalTestConfiguration, MedicalExaminationConfiguration (these entities inherit from AuditableEntity, not SoftDeletableEntity) |
+
+### Build Verification
+
+```
+dotnet build Mojaz.sln --no-restore
+
+Build succeeded.
+    2 Warning(s)
+    0 Error(s)
+Time Elapsed 00:00:21.92
+```

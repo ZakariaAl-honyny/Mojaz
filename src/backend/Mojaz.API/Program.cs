@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Mojaz.API.Extensions;
+using Mojaz.API.Filters;
 using Mojaz.API.Middleware;
 using Mojaz.Application.Extensions;
 using Mojaz.Infrastructure;
@@ -29,7 +30,7 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 // ─── Controllers & Filters ───
 builder.Services.AddControllers(options => 
 {
-    // Note: ValidationFilter logic is typically wired via Application assembly scanning + FluentValidation
+    options.Filters.Add<ValidationFilter>();
 });
 
 builder.Services.AddHttpContextAccessor();
