@@ -11,8 +11,23 @@ import {
   Settings,
   Shield,
   Target,
+<<<<<<< Updated upstream
   Sparkles,
   LayoutDashboard
+=======
+  Mail,
+  Send,
+  TrendingUp,
+  GraduationCap,
+  Award,
+  ClipboardList,
+  Stethoscope,
+  FileKey2,
+  Search,
+  BarChart3,
+  DollarSign,
+  Users
+>>>>>>> Stashed changes
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Link } from '@/i18n/routing';
@@ -64,13 +79,45 @@ export default function Sidebar({ collapsed = false }: { collapsed?: boolean }) 
   const menuItems = [
     { href: '/dashboard', icon: LayoutDashboard, label: t('dashboard'), roles: ['Applicant'] },
     { href: '/applications', icon: FileText, label: t('applications'), roles: ['Applicant'] },
+    { href: '/licenses', icon: FileKey2, label: t('licenses'), roles: ['Applicant'] },
+    { href: '/progress', icon: TrendingUp, label: t('progress'), roles: ['Applicant'] },
+    { href: '/training', icon: GraduationCap, label: t('training'), roles: ['Applicant'] },
+    { href: '/my-results', icon: Award, label: t('myResults'), roles: ['Applicant'] },
     { href: '/appointments', icon: Calendar, label: t('appointments'), roles: ['Applicant'] },
+<<<<<<< Updated upstream
     { href: '/queue', icon: FileText, label: t('applications'), roles: ['Receptionist', 'Manager', 'Security', 'Admin'] },
+=======
+    { href: '/notifications', icon: Bell, label: t('notifications'), roles: ['Applicant'] },
+    
+    // Employee Items
+    { href: '/queue', icon: FileText, label: t('applications'), roles: ['Receptionist', 'Manager', 'Security', 'Admin'] },
+    { href: '/employee-appointments', icon: Calendar, label: t('appointments'), roles: ['Receptionist', 'Manager'] },
+    { href: '/schedule', icon: Clock, label: t('schedule'), roles: ['Manager'] },
+    { href: '/attendance', icon: CheckCircle2, label: t('attendance'), roles: ['Receptionist', 'Manager'] },
+    { href: '/licenses/issue', icon: FileKey2, label: t('issueLicense'), roles: ['Receptionist', 'Manager'] },
+    { href: '/licenses/manage', icon: Search, label: t('employee.manage.title'), roles: ['Receptionist', 'Manager'] },
+    { href: '/licenses/verify', icon: Search, label: t('verifyLicense'), roles: ['Receptionist', 'Manager', 'Security'] },
+    { href: '/management/notifications', icon: Send, label: t('employee.sendNotification'), roles: ['Admin', 'Manager', 'Receptionist'] },
+    { href: '/training', icon: GraduationCap, label: t('employee.training.title'), roles: ['Receptionist', 'Manager'] },
+    { href: '/tests', icon: ClipboardList, label: t('employee.testing.title'), roles: ['Examiner', 'Manager'] },
+
+    
+    // Doctor Items
+>>>>>>> Stashed changes
     { href: '/medical-results', icon: Shield, label: t('medicalResults'), roles: ['Doctor'] },
     { href: '/test-results', icon: Target, label: t('testResults'), roles: ['Examiner'] },
     { href: '/users', icon: User, label: t('users'), roles: ['Admin', 'Manager'] },
     { href: '/reports', icon: FileText, label: t('reports'), roles: ['Admin', 'Manager'] },
+<<<<<<< Updated upstream
     { href: '/system-settings', icon: Settings, label: t('settings'), roles: ['Admin', 'Manager'] },
+=======
+    { href: '/reports/applications', icon: BarChart3, label: t('applicationReports') || 'Applications Report', roles: ['Admin', 'Manager'] },
+    { href: '/reports/financial', icon: DollarSign, label: t('financialReports') || 'Financial Report', roles: ['Admin', 'Manager'] },
+    { href: '/reports/users', icon: Users, label: t('userReports') || 'Users Report', roles: ['Admin', 'Manager'] },
+    { href: '/reports/performance', icon: TrendingUp, label: t('performanceReports') || 'Performance Report', roles: ['Admin', 'Manager'] },
+    { href: '/reports/audits', icon: Shield, label: t('auditReports') || 'Audit Logs', roles: ['Admin', 'Manager'] },
+    { href: '/reports/licenses', icon: BarChart3, label: t('licenseReports'), roles: ['Admin', 'Manager'] },
+>>>>>>> Stashed changes
   ];
 
   const filteredItems = menuItems.filter(item => 
@@ -129,7 +176,13 @@ export default function Sidebar({ collapsed = false }: { collapsed?: boolean }) 
          )}
          
          <SidebarItem href="/profile" icon={User} label={t('profile')} collapsed={collapsed} />
+<<<<<<< Updated upstream
          
+=======
+         <SidebarItem href="/settings/notifications" icon={Bell} label={t('notificationSettings')} collapsed={collapsed} />
+         <SidebarItem href="/settings/email-preferences" icon={Mail} label={t('emailPreferences')} collapsed={collapsed} />
+         <SidebarItem href="/settings" icon={Settings} label={t('settings')} collapsed={collapsed} />
+>>>>>>> Stashed changes
          <button 
            onClick={logout}
            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-red-400 hover:bg-red-500/10 transition-all duration-300 group"

@@ -2,18 +2,25 @@
 
 import { useTranslations } from 'next-intl';
 import { 
-  Bell, 
   Search, 
   Menu,
   Globe,
   Moon,
+<<<<<<< Updated upstream
   HandHelping,
   User
+=======
+  Sun
+>>>>>>> Stashed changes
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/stores/auth-store';
 import { useRouter } from '@/i18n/routing';
+<<<<<<< Updated upstream
 import { motion } from 'framer-motion';
+=======
+import NotificationBell from '@/components/domain/notification/NotificationBell';
+>>>>>>> Stashed changes
 
 export default function TopNav({ onMenuClick, showSidebar = true }: { onMenuClick?: () => void, showSidebar?: boolean }) {
   const t = useTranslations('navigation');
@@ -45,6 +52,7 @@ export default function TopNav({ onMenuClick, showSidebar = true }: { onMenuClic
         </div>
       </div>
 
+<<<<<<< Updated upstream
       <div className="flex items-center gap-6">
         {/* Controls */}
         <div className="flex items-center gap-2 p-1.5 bg-neutral-50 dark:bg-white/5 rounded-2xl border border-neutral-100 dark:border-white/5">
@@ -74,6 +82,17 @@ export default function TopNav({ onMenuClick, showSidebar = true }: { onMenuClic
           >
             <Moon className="w-5 h-5" />
           </motion.button>
+=======
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1 p-1 bg-neutral-100 rounded-xl">
+          <NotificationBell />
+          <button className="p-2 text-neutral-500 hover:text-neutral-900 transition-all scale-95 hover:scale-100">
+            <Globe className="w-4 h-4" />
+          </button>
+          <button className="p-2 text-neutral-500 hover:text-neutral-900 transition-all scale-95 hover:scale-100">
+            <Moon className="w-4 h-4" />
+          </button>
+>>>>>>> Stashed changes
         </div>
 
         <div className="hidden lg:flex items-center gap-2">

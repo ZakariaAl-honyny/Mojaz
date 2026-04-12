@@ -7,6 +7,7 @@ import * as z from 'zod';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -125,6 +126,7 @@ export function EmailRegistrationForm() {
         {errors.email && <p className="text-xs text-red-400 font-medium ml-1">{errors.email.message}</p>}
       </div>
 
+<<<<<<< Updated upstream
       {/* Passwords */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
@@ -199,5 +201,96 @@ export function EmailRegistrationForm() {
         )}
       </Button>
     </form>
+=======
+            <div className="space-y-2">
+              <Label htmlFor="email">{t('register.email')}</Label>
+              <div className="relative">
+                <Mail className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="name@mojaz.gov.sa"
+                  className={cn("ps-10 h-11", errors.email && "border-destructive")}
+                  {...register('email')}
+                />
+              </div>
+              {errors.email && <p className="text-xs text-destructive mt-1">{errors.email.message}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password">{t('register.password')}</Label>
+              <div className="relative">
+                <Lock className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  className={cn("ps-10 h-11", errors.password && "border-destructive")}
+                  {...register('password')}
+                />
+              </div>
+              {errors.password && <p className="text-xs text-destructive mt-1">{errors.password.message}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">{t('register.confirmPassword')}</Label>
+              <div className="relative">
+                <Lock className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="••••••••"
+                  className={cn("ps-10 h-11", errors.confirmPassword && "border-destructive")}
+                  {...register('confirmPassword')}
+                />
+              </div>
+              {errors.confirmPassword && <p className="text-xs text-destructive mt-1">{errors.confirmPassword.message}</p>}
+            </div>
+
+            <div className="flex items-start space-x-2 space-x-reverse py-2">
+              <Checkbox 
+                id="terms" 
+                checked={termsAccepted}
+                onCheckedChange={(checked) => setValue('termsAccepted', checked === true)}
+              />
+              <div className="grid gap-1.5 leading-none">
+                <label
+                  htmlFor="terms"
+                  className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                >
+                  {t('register.acceptTerms')}{' '}
+                  <Link href="/terms" className="text-primary-500 hover:underline">{t('register.termsLink')}</Link>
+                </label>
+                {errors.termsAccepted && <p className="text-[10px] text-destructive">{errors.termsAccepted.message}</p>}
+              </div>
+            </div>
+
+            <Button 
+              type="submit" 
+              className="w-full h-12 bg-primary-500 hover:bg-primary-600 transition-all text-white font-semibold rounded-gov shadow-lg active:scale-[0.98]"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t('register.processing')}
+                </>
+              ) : (
+                t('register.submit')
+              )}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex justify-center border-t py-4 mt-2">
+          <p className="text-sm text-neutral-500">
+            {t('register.alreadyHaveAccount')}{' '}
+            <Link href="/login" className="text-primary-500 font-semibold hover:underline">
+              {t('register.loginLink')}
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
+    </motion.div>
+>>>>>>> Stashed changes
   );
 }

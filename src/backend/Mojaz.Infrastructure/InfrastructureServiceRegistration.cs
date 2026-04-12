@@ -58,6 +58,7 @@ public static class InfrastructureServiceRegistration
         // Identity & Infrastructure Services
         services.AddScoped<Application.Interfaces.Services.IJwtService, Identity.JwtService>();
         services.AddScoped<Application.Interfaces.Services.IAuditService, Services.AuditService>();
+        services.AddScoped<Application.Interfaces.Services.ISystemSettingsService, Services.SystemSettingsService>();
 
         // Hangfire (Phase 3 Fix)
         services.AddHangfire(config => config

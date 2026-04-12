@@ -70,8 +70,12 @@ export interface LoginResponse {
 }
 
 export interface LoginRequest {
+<<<<<<< Updated upstream
   email?: string;
   phone?: string;
   nationalId?: string;
+=======
+  email: string;
+>>>>>>> Stashed changes
   password: string;
 }

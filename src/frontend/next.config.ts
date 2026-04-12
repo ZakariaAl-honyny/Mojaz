@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
-import nextIntl from "next-intl/plugin";
+import createNextIntlPlugin from 'next-intl/plugin';
 
-const withNextIntl = nextIntl();
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: __dirname,

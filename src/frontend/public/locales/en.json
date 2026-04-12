@@ -1,4 +1,67 @@
 {
+  "common": {
+    "title": "Mojaz - Driving License Platform",
+    "description": "Your trusted platform for driving license services in Saudi Arabia",
+    "loading": "Loading...",
+    "toggleLanguage": "Switch to Arabic",
+    "auth": {
+      "login": "Login",
+      "register": "Register"
+    },
+    "notfound": {
+      "title": "Page Not Found",
+      "description": "Sorry, the page you are looking for does not exist.",
+      "backToHome": "Back to Home"
+    },
+    "all": "All",
+    "yes": "Yes",
+    "no": "No",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "download": "Download",
+    "upload": "Upload",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Info",
+    "noData": "No Data",
+    "refresh": "Refresh",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "close": "Close",
+    "confirm": "Confirm",
+    "actions": "Actions",
+    "status": "Status",
+    "date": "Date",
+    "time": "Time",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "notes": "Notes",
+    "description": "Description",
+    "details": "Details",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "createdBy": "Created By",
+    "updatedBy": "Updated By",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "tax": "Tax",
+    "discount": "Discount",
+    "amount": "Amount",
+    "quantity": "Quantity",
+    "unit": "Unit"
+  },
   "navigation": {
     "dashboard": "Dashboard",
     "applications": "My Applications",
@@ -13,76 +76,190 @@
     "testResults": "Test Results",
     "users": "Users",
     "reports": "Reports",
-    "auditLogs": "Audit Logs"
+    "queue": "Queue",
+    "schedule": "Schedule Management",
+    "attendance": "Attendance Tracking",
+    "bookAppointment": "Book Appointment",
+    "appointmentsList": "My Appointments",
+    "notificationSettings": "Notification Settings",
+    "emailPreferences": "Email Preferences",
+    "progress": "My Progress",
+    "training": "Training",
+    "myResults": "My Results",
+    "licenses": "My Licenses",
+    "issueLicense": "Issue License",
+    "verifyLicense": "Verify License",
+    "licenseReports": "License Reports",
+    "analytics": "Analytics",
+    "applicationReports": "Applications Report",
+    "financialReports": "Financial Report",
+    "userReports": "Users Report",
+    "performanceReports": "Performance Report",
+    "auditReports": "Audit Logs"
   },
-  "admin": {
-    "users": {
-      "title": "User Management",
-      "search": "Search...",
-      "name": "Name",
-      "email": "Email",
-      "phone": "Phone",
-      "role": "Role",
+  "notification": {
+    "title": "Notifications",
+    "subtitle": "Manage your notifications",
+    "search": "Search...",
+    "all": "All",
+    "unread": "Unread",
+    "markAllRead": "Mark All as Read",
+    "deleteOld": "Delete Old",
+    "noNotifications": "No Notifications",
+    "noNotificationsDesc": "Notifications will appear here when received",
+    "types": {
+      "payment": "Payment",
+      "appointment": "Appointment",
       "status": "Status",
-      "actions": "Actions",
-      "active": "Active",
-      "inactive": "Inactive",
-      "add": "Add User",
-      "noUsers": "No users found"
+      "system": "System",
+      "test": "Test"
     },
     "settings": {
-      "title": "System Settings",
-      "key": "Key",
-      "value": "Value",
-      "description": "Description",
-      "actions": "Actions",
-      "save": "Save",
-      "cancel": "Cancel",
-      "edit": "Edit",
-      "noSettings": "No settings found"
-    },
-    "audit": {
-      "title": "Audit Logs",
-      "entity": "Entity",
-      "action": "Action",
-      "user": "User",
-      "date": "Date",
-      "details": "Details",
-      "noLogs": "No logs found",
-      "search": "Search by entity...",
-      "previous": "Previous",
-      "next": "Next"
-    }
-  },
-  "settings": {
-    "title": "Settings",
-    "subtitle": "Manage your preferences and account settings",
-    "notifications": {
       "title": "Notification Settings",
-      "description": "Choose your preferred notification channels",
-      "email": "Email",
-      "emailDesc": "Receive notifications via email",
-      "sms": "SMS",
-      "smsDesc": "Receive notifications via text message",
-      "push": "Push Notifications",
-      "pushDesc": "Receive notifications on your device",
-      "inApp": "In-App Notifications",
-      "inAppDesc": "In-app notifications are always enabled",
-      "success": "Settings saved successfully",
-      "error": "Failed to save settings"
+      "emailPreferences": "Email Preferences",
+      "pushNotifications": "Push Notifications",
+      "pushEnabled": "Enable Push Notifications",
+      "emailNotifications": "Email Notifications",
+      "emailEnabled": "Enable Email Notifications",
+      "paymentReminders": "Payment Reminders",
+      "appointmentAlerts": "Appointment Alerts",
+      "statusUpdates": "Status Updates",
+      "systemAnnouncements": "System Announcements",
+      "applicationStatus": "Application Status Changes",
+      "testResults": "Test Results",
+      "licenseIssuance": "License Issuance",
+      "promotions": "Offers & Promotions",
+      "testNotification": "Send Test",
+      "savePreferences": "Save Preferences",
+      "deviceManagement": "Device Management",
+      "devices": "Registered Devices",
+      "removeDevice": "Remove",
+      "noDevices": "No registered devices"
     },
-    "account": {
-      "title": "Account Settings",
-      "language": "Preferred Language",
-      "languageDesc": "Choose your interface language"
+    "employee": {
+      "sendTo": "Send To",
+      "sendToSingle": "Single User",
+      "sendToAll": "All Users",
+      "sendToRole": "By Role",
+      "sendToFilter": "By Filter",
+      "template": "Template",
+      "schedule": "Schedule",
+      "preview": "Preview",
+      "send": "Send",
+      "scheduledFor": "Scheduled For",
+      "message": "Message",
+      "subject": "Subject",
+      "selectUser": "Select User",
+      "selectRole": "Select Role",
+      "sendNotification": "Send Notification",
+      "notificationSent": "Notification sent successfully",
+      "scheduleNotification": "Schedule Notification",
+      "scheduleSuccess": "Notification scheduled successfully"
+    },
+    "bell": {
+      "notifications": "Notifications",
+      "unread": "Unread",
+      "viewAll": "View All",
+      "noNew": "No new notifications"
     }
   },
-  "notifications": {
-    "title": "Notifications",
-    "markAllRead": "Mark all as read",
-    "empty": "No notifications at this time",
-    "markAsRead": "Mark as read",
-    "viewAll": "View all notifications"
+  "appointment": {
+    "title": "My Appointments",
+    "subtitle": "Manage your driving license appointments",
+    "upcoming": "Upcoming Appointments",
+    "history": "Appointment History",
+    "pastAppointments": "Past Appointments",
+    "noAppointments": "No appointments scheduled",
+    "bookNew": "Book New Appointment",
+    "upcomingAppointment": "Upcoming Appointment",
+    "noUpcoming": "No upcoming appointments",
+    "book": {
+      "title": "Book Appointment",
+      "subtitle": "Schedule your next appointment",
+      "selectType": "Select Appointment Type",
+      "selectDate": "Select Date",
+      "selectTime": "Select Time",
+      "selectCenter": "Select Center",
+      "confirm": "Confirmation",
+      "step": "Step",
+      "of": "of",
+      "back": "Back",
+      "next": "Next",
+      "confirmBooking": "Confirm Booking",
+      "processing": "Processing...",
+      "success": "Appointment booked successfully!",
+      "selectTypeDesc": "Choose the type of appointment you need",
+      "types": {
+        "medical": "Medical Examination",
+        "theory": "Theory Test",
+        "practical": "Practical Test"
+      }
+    },
+    "types": {
+      "medical": "Medical Examination",
+      "theory": "Theory Test",
+      "practical": "Practical Test"
+    },
+    "status": {
+      "confirmed": "Confirmed",
+      "pending": "Pending",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "noShow": "No Show",
+      "rescheduled": "Rescheduled"
+    },
+    "details": {
+      "title": "Appointment Details",
+      "date": "Date",
+      "time": "Time",
+      "location": "Location",
+      "center": "Center",
+      "reschedule": "Reschedule",
+      "cancel": "Cancel Appointment",
+      "addToCalendar": "Add to Calendar",
+      "status": "Status"
+    },
+    "calendar": {
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "noSlots": "No available slots"
+    },
+    "employee": {
+      "title": "Appointments Management",
+      "subtitle": "Manage all scheduled appointments",
+      "schedule": "Schedule Slots",
+      "attendance": "Attendance Tracking",
+      "createSlots": "Create Schedule Slots",
+      "weeklyTemplate": "Weekly Template",
+      "workingHours": "Working Hours",
+      "breaks": "Break Times",
+      "holidays": "Holidays",
+      "slotDuration": "Slot Duration",
+      "minutes": "minutes",
+      "hour": "hour",
+      "checkIn": "Check In",
+      "checkOut": "Check Out",
+      "present": "Present",
+      "absent": "Absent",
+      "late": "Late Arrival"
+    },
+    "slots": {
+      "create": "Create Schedule Slots",
+      "weekly": "Weekly Template",
+      "workingHours": "Working Hours",
+      "breaks": "Break Times",
+      "holidays": "Manage Holidays",
+      "save": "Save Schedule",
+      "cancel": "Cancel"
+    },
+"actions": {
+      "confirm": "Confirm",
+      "reschedule": "Reschedule",
+      "cancel": "Cancel",
+      "viewDetails": "View Details",
+"checkIn": "Check In",
+      "checkOut": "Check Out"
+    }
   },
   "dashboard": {
     "greeting": "Welcome back",
@@ -92,7 +269,38 @@
     "profileStatus": "Profile Status",
     "createNewApplication": "New License Request",
     "applicationTimeline": "Application Timeline",
-    "timelineSubtitle": "Track your driving license progress"
+    "timelineSubtitle": "Track your driving license progress",
+    "complete": "Complete",
+    "notifications": "Notifications",
+    "employeeGreeting": "Employee Dashboard",
+    "employeeSubtitle": "Queue and daily tasks",
+    "auditLogs": "Audit Logs",
+    "settings": "Settings",
+    "queue": {
+      "total": "Total Queue",
+      "pending": "Pending Review",
+      "todayAppointments": "Today's Appointments",
+      "completedToday": "Completed Today"
+    },
+    "recentActivity": "Recent Activity",
+    "todaySchedule": "Today's Schedule",
+    "medicalExams": "Medical Exams",
+    "theoryTests": "Theory Tests",
+    "practicalTests": "Practical Tests",
+    "systemHealth": "System Health",
+    "operational": "Operational",
+    "adminGreeting": "Admin Dashboard",
+    "adminSubtitle": "Mojaz system overview",
+    "backup": "Backup",
+    "totalUsers": "Total Users",
+    "issuedLicensesThisMonth": "Issued This Month",
+    "systemAnalytics": "System Analytics",
+    "analyticsSubtitle": "Performance statistics",
+    "chartPlaceholder": "Configure chart widget",
+    "systemHealthStatus": "System Health Status",
+    "overallStatus": "Overall Status",
+    "uptime": "Uptime",
+    "recentAlerts": "Recent Alerts"
   },
   "application": {
     "create": {
@@ -101,7 +309,10 @@
       "next": "Next",
       "prev": "Back",
       "submit": "Submit Application",
+      "saveDraft": "Save as Draft",
       "success": "Application submitted successfully",
+      "draftSaved": "Draft saved",
+      "draftError": "Failed to save draft",
       "steps": {
         "service": "Service",
         "category": "Category",
@@ -115,13 +326,13 @@
         "renewal": "Renewal",
         "replacement": "Replacement",
         "category": "License Category",
-        "minAge": "Min Age: {age}",
-        "fieldTest": "Agricultural Field Test",
         "motorcycle": "Motorcycle",
         "privateCar": "Private Car",
         "publicTaxi": "Public Taxi",
         "heavyVehicle": "Heavy Vehicle",
-        "agricultural": "Agricultural Vehicle",
+        "bus": "Bus",
+        "agricultural": "Agricultural",
+        "minAge": "Min Age",
         "nationalId": "National ID / Iqama",
         "dateOfBirth": "Date of Birth",
         "nationality": "Nationality",
@@ -141,8 +352,18 @@
         "arabic": "Arabic",
         "english": "English",
         "specialNeeds": "Special Needs / Medical Conditions",
-        "confirmAccuracy": "I confirm that all provided data is true and accurate."
-      }
+        "confirmAccuracy": "I confirm that all provided data is true and accurate.",
+        "termsLabel": "I agree to",
+        "termsLink": "Terms and Conditions"
+      },
+      "validation": {
+        "required": "This field is required",
+        "invalidNationalId": "Please enter a valid ID number",
+        "underage": "You must be at least {age} years old for this category",
+        "existingApplication": "You have an active application. Please continue from your dashboard."
+      },
+      "autoSave": "Auto saving...",
+      "lastSaved": "Last saved"
     },
     "status": {
       "draft": "Draft",
@@ -165,7 +386,6 @@
         "medical": "Medical Examination",
         "theory": "Theory Training & Test",
         "practical": "Practical Training & Test",
-        "fieldTest": "Agricultural Field Test",
         "issuance": "License Issuance"
       },
       "status": {
@@ -189,9 +409,45 @@
       "noPaymentsMsg": "No pending payments right now."
     }
   },
-  "applications": {
-     "title": "My Applications",
-     "subtitle": "Track and manage your requests",
+"applications": {
+      "title": "My Applications",
+      "subtitle": "Track and manage your requests",
+      "filters": {
+        "all": "All",
+        "pending": "Pending",
+        "inProgress": "In Progress",
+        "completed": "Completed",
+        "search": "Search by application number...",
+        "empty": "No applications found",
+        "emptySubtitle": "Submit a new application to get started",
+        "newApplication": "New Application",
+        "columns": {
+          "number": "App Number",
+          "service": "Service",
+          "category": "Category",
+          "status": "Status",
+          "submittedAt": "Submitted At",
+          "actions": "Actions"
+        },
+        "viewDetails": "View Details"
+      },
+      "details": {
+        "title": "Application Details",
+        "createdOn": "Created On",
+        "serviceType": "Service Type",
+        "category": "License Category",
+        "fees": "Fees",
+        "paid": "Paid",
+        "pending": "Pending",
+        "upcomingAppointment": "Upcoming Appointment",
+        "noAppointment": "No appointment scheduled",
+        "cancelDialog": {
+          "title": "Cancel Application",
+          "description": "Are you sure you want to cancel this application? This action cannot be undone.",
+          "cancel": "Cancel",
+          "confirm": "Confirm Cancellation"
+        }
+      },
      "employee": {
         "title": "Application Queue",
         "subtitle": "Review and process license requests",
@@ -223,108 +479,110 @@
           "remarks": "Decision Remarks",
           "remarksPlaceholder": "Enter reason for rejection or approval notes...",
           "history": "Action History"
-  "common": {
-    "notfound": "Page Not Found"
-  }
-}
+        }
      }
   },
-  "landing": {
-    "hero": {
-      "badge": "Official Mojaz Platform",
-      "title": "The Future of Driving License Management",
-      "subtitle": "The smart, unified platform for issuing and renewing driving licenses with ease and security, in accordance with the highest international standards and an ambitious Saudi vision.",
-      "cta": "Get Started",
-      "howItWorks": "How it Works"
+  "payment": {
+    "title": "Payments",
+    "subtitle": "Manage driving license application fees",
+    "pendingPayments": "Pending Payments",
+    "paymentHistory": "Payment History",
+    "fees": {
+      "applicationFee": "Application Fee",
+      "medicalFee": "Medical Examination",
+      "theoryFee": "Theory Test",
+      "practicalFee": "Practical Test",
+      "issuanceFee": "License Issuance",
+      "retakeFee": "Retake Fee",
+      "total": "Total",
+      "paid": "Paid",
+      "pending": "Pending",
+      "dueDate": "Due Date"
     },
-    "services": {
-      "title": "Our Premium Services",
-      "subtitle": "We provide integrated digital solutions for all your driving license needs",
-      "items": {
-        "new": {
-          "title": "New License Issuance",
-          "desc": "Start your journey to obtain your driving license for the first time with ease."
-        },
-        "renewal": {
-          "title": "License Renewal",
-          "desc": "Renew your current license in minutes through a fully automated process."
-        },
-        "replacement": {
-          "title": "Replacement (Lost/Damaged)",
-          "desc": "Obtain a replacement for your lost or damaged license at the click of a button."
-        },
-        "upgrade": {
-          "title": "Category Upgrade",
-          "desc": "Upgrade your current license category to include additional vehicle types."
-        }
+    "payNow": "Pay Now",
+    "payAmount": "Amount",
+    "paymentMethod": "Payment Method",
+    "mada": "Mada",
+    "visa": "Visa",
+    "masterCard": "MasterCard",
+    "applePay": "Apple Pay",
+    "cardNumber": "Card Number",
+    "expiryDate": "Expiry Date",
+    "cvv": "CVV",
+    "cardHolder": "Cardholder Name",
+    "confirmPayment": "Confirm Payment",
+    "processing": "Processing...",
+    "success": "Payment Successful",
+    "successMessage": "Your payment has been processed successfully. Please keep your payment receipt.",
+    "receipt": "Receipt",
+    "downloadReceipt": "Download Receipt",
+    "continueButton": "Continue",
+    "history": {
+      "date": "Date",
+      "application": "Application",
+      "amount": "Amount",
+      "method": "Method",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "pending": "Pending",
+      "paid": "Paid",
+      "overdue": "Overdue",
+      "failed": "Failed",
+      "refunded": "Refunded"
+    },
+    "selectMethod": "Select Payment Method",
+    "enterCardDetails": "Enter Card Details",
+    "processingPayment": "Processing payment...",
+    "paymentFailed": "Payment Failed",
+    "tryAgain": "Try Again",
+    "noPendingPayments": "No Pending Payments",
+    "allPaid": "All Fees Paid",
+    "employee": {
+      "title": "Payment Management",
+      "subtitle": "View and process all payments",
+      "filters": {
+        "status": "Status",
+        "dateRange": "Date Range",
+        "method": "Payment Method",
+        "search": "Search by application number..."
+      },
+      "columns": {
+        "application": "Application",
+        "applicant": "Applicant",
+        "feeType": "Fee Type",
+        "amount": "Amount",
+        "status": "Status",
+        "paidAt": "Paid At",
+        "method": "Method",
+        "actions": "Actions"
+      },
+      "refund": "Refund",
+      "export": "Export",
+      "manualRefund": "Manual Refund",
+      "confirmRefund": "Confirm Refund",
+      "refundDialog": {
+        "title": "Refund Amount",
+        "description": "Are you sure you want to refund this amount? This action cannot be undone.",
+        "confirm": "Confirm Refund",
+        "cancel": "Cancel"
       }
-    },
-    "timeline": {
-      "title": "The Licensing Journey",
-      "subtitle": "Clear and simplified steps from application to collection",
-      "stages": [
-        "Application Submission",
-        "Review & Audit",
-        "Medical Examination",
-        "Driving School",
-        "Theory Test",
-        "Practical Test",
-        "Final Approval",
-        "Fee Payment",
-        "License Printing",
-        "Digital/Physical Collection"
-      ]
-    },
-    "categories": {
-      "title": "License Categories",
-      "subtitle": "Learn about the requirements for each available license category",
-      "types": {
-        "A": "Motorcycle",
-        "B": "Private Car",
-        "C": "Public Transport",
-        "D": "Bus",
-        "E": "Heavy Vehicles",
-        "F": "Agricultural Vehicles"
-      }
-    },
-    "stats": {
-      "title": "Mojaz in Numbers",
-      "activeUsers": "Active Users",
-      "issuedLicenses": "Issued Licenses",
-      "satisfactionRate": "Satisfaction Rate",
-      "centers": "Exam Centers"
-    },
-    "faq": {
-      "title": "Frequently Asked Questions",
-      "items": [
-        {
-          "q": "What are the requirements for a new driving license?",
-          "a": "The applicant must meet the legal age, pass the medical examination, and complete the required training hours."
-        },
-        {
-          "q": "How long does the renewal process take?",
-          "a": "Renewal is processed instantly via the platform once fees are paid and a valid medical report is available."
-        }
-      ]
     }
   },
   "auth": {
     "login": {
       "title": "Login",
       "subtitle": "Access your Mojaz account",
-      "identifier": "National ID or Email Address",
-      "placeholderIdentifier": "Enter National ID or Email",
+      "identifier": "Email or Phone Number",
+      "placeholderIdentifier": "Enter your email or phone number",
+      "email": "Email Address",
+      "phone": "Phone Number",
       "password": "Password",
-      "placeholderPassword": "Enter your password",
       "submit": "Login",
       "forgotPassword": "Forgot Password?",
       "noAccount": "Don't have an account?",
-      "registerNow": "Register Now"
-    },
-    "errors": {
-      "identifierRequired": "National ID or Email is required",
-      "passwordRequired": "Password is required",
-      "invalidCredentials": "Invalid credentials"
+      "register": "Register Now"
     },
     "register": {
       "title": "Create Account",
@@ -342,7 +600,6 @@
       "termsLink": "Terms and Conditions",
       "submit": "Create Account",
       "processing": "Processing...",
-      "hasAccount": "Already have an account?",
       "alreadyHaveAccount": "Already have an account?",
       "loginLink": "Login",
       "errors": {
@@ -388,212 +645,310 @@
       }
     }
   },
-  "common": {
-    "title": "Mojaz",
-    "welcome": "Welcome to Mojaz Platform",
-    "description": "The official electronic driving license issuance system. Your integrated gateway for license services with ease and security.",
-    "auth": {
-      "login": "Login",
-      "register": "Create New Account"
+  "progress": {
+    "title": "My Progress",
+    "subtitle": "Track your driving license application progress",
+    "overall": "Overall Progress",
+    "stages": {
+      "medical": "Medical Examination",
+      "theoryTraining": "Theory Training",
+      "theoryTest": "Theory Test",
+      "practicalTraining": "Practical Training",
+      "practicalTest": "Practical Test"
     },
-    "toggleLanguage": "العربية",
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "view": "View",
-    "loading": "Loading...",
-    "error": "An error occurred",
-    "noData": "No data available",
-    "back": "Back",
-    "next": "Next",
-    "submit": "Submit",
-    "notfound": {
-      "title": "Page Not Found",
-      "description": "Sorry, the page you are looking for does not exist or has been moved.",
-      "backToHome": "Return to Home"
+    "medical": {
+      "title": "Medical Examination",
+      "status": "Status",
+      "passed": "Passed",
+      "failed": "Failed",
+      "pending": "Pending",
+      "completed": "Completed",
+      "date": "Exam Date"
+    },
+    "theory": {
+      "title": "Theory Test",
+      "attempts": "Attempts",
+      "score": "Score",
+      "passed": "Passed",
+      "failed": "Failed",
+      "pending": "Pending",
+      "certificate": "Certificate",
+      "maxAttempts": "Max Attempts",
+      "retakeEligible": "Eligible for retake",
+      "bookRetake": "Book Retake"
+    },
+    "practical": {
+      "title": "Practical Test",
+      "attempts": "Attempts",
+      "score": "Score",
+      "passed": "Passed",
+      "failed": "Failed",
+      "pending": "Pending",
+      "certificate": "Certificate",
+      "maxAttempts": "Max Attempts",
+      "retakeEligible": "Eligible for retake",
+      "bookRetake": "Book Retake"
+    },
+    "training": {
+      "title": "Training",
+      "hoursCompleted": "Hours Completed",
+      "hoursRequired": "Hours Required",
+      "instructor": "Instructor",
+      "center": "Training Center"
+    },
+    "retakeEligible": "Eligible for retake",
+    "retakeNotEligible": "Not eligible for retake",
+    "bookRetake": "Book Retake",
+    "downloadCertificate": "Download Certificate"
+  },
+  "training": {
+    "title": "Training Records",
+    "subtitle": "Past and current training sessions",
+    "sessions": "Sessions",
+    "hoursCompleted": "Hours Completed",
+    "hoursRemaining": "Hours Remaining",
+    "bookSession": "Book Training Session",
+    "instructor": "Instructor",
+    "center": "Center",
+    "duration": "Duration",
+    "notes": "Notes",
+    "recordCompletion": "Record Session Completion",
+    "noSessions": "No training sessions",
+    "noSessionsDesc": "Book a training session to get started",
+    "upcoming": "Upcoming Sessions",
+    "completed": "Completed Sessions",
+    "totalHours": "Total Hours"
+  },
+  "test": {
+    "title": "Test Results",
+    "subtitle": "View test results and certificates",
+    "results": "Results",
+    "enterResults": "Enter Results",
+    "score": "Score",
+    "pass": "Pass",
+    "fail": "Fail",
+    "certificate": "Certificate",
+    "attempts": "Attempts",
+    "maxAttempts": "Max Attempts",
+    "retakeDate": "Retake Date",
+    "theory": {
+      "title": "Theory Test",
+      "score": "Theory Test Score",
+      "passingScore": "Passing Score"
+    },
+    "practical": {
+      "title": "Practical Test",
+      "score": "Practical Test Score",
+      "passingScore": "Passing Score"
+    },
+    "noResults": "No results",
+    "noResultsDesc": "You haven't taken any tests yet",
+    "viewCertificate": "View Certificate",
+    "retakeEligible": "Eligible for retake",
+    "bookRetake": "Book Retake"
+  },
+  "medical": {
+    "title": "Medical Results",
+    "subtitle": "Medical examination results",
+    "results": "Results",
+    "enterResults": "Enter Results",
+    "passed": "Passed",
+    "failed": "Failed",
+    "pending": "Pending",
+    "vision": "Vision Test",
+    "hearing": "Hearing Test",
+    "bloodGroup": "Blood Group",
+    "medicalCertificate": "Medical Certificate",
+    "noResults": "No results",
+    "noResultsDesc": "You haven't taken the medical exam yet",
+    "viewCertificate": "View Certificate"
+  },
+  "employee": {
+    "training": {
+      "title": "Training Management",
+      "subtitle": "Manage applicant training sessions",
+      "allTrainees": "All Trainees",
+      "trainers": "Trainers",
+      "createSession": "Create Training Session",
+      "recordCompletion": "Record Completion",
+      "reports": "Reports",
+      "search": "Search by applicant or application number...",
+      "filter": {
+        "all": "All",
+        "completed": "Completed",
+        "pending": "Pending",
+        "scheduled": "Scheduled",
+        "notStarted": "Not Started"
+      }
+    },
+    "testing": {
+      "title": "Testing Management",
+      "subtitle": "Schedule and manage tests",
+      "schedule": "Test Schedule",
+      "enterResults": "Enter Results",
+      "reports": "Test Reports",
+      "upcoming": "Upcoming Tests",
+      "completed": "Completed Tests"
     }
   },
-  "wizard": {
-    "autoSave": {
-      "saving": "Saving...",
-      "saved": "Saved",
-      "notSaved": "Not saved yet",
-      "saveFailed": "Save failed - check your connection",
-      "justNow": "Just now",
-      "oneMinuteAgo": "1 minute ago",
-      "minutesAgo": "{{count}} minutes ago",
-      "connectionIssues": "Connection issues. Data is saved locally in your browser.",
-      "lastSaved": "Last saved:"
+  "license": {
+    "title": "My Licenses",
+    "subtitle": "View and manage your driving licenses",
+    "myLicenses": "My Licenses",
+    "digitalLicense": "Digital License",
+    "number": "License Number",
+    "class": "Class",
+    "issueDate": "Issue Date",
+    "expiryDate": "Expiry Date",
+    "status": "Status",
+    "active": "Active",
+    "expired": "Expired",
+    "suspended": "Suspended",
+    "downloadPdf": "Download PDF",
+    "shareLicense": "Share License",
+    "reportLost": "Report Lost",
+    "verification": {
+      "title": "License Verification",
+      "search": "Search",
+      "searchByNumber": "Search by License Number",
+      "searchByNationalId": "Search by National ID",
+      "scanQr": "Scan QR Code",
+      "result": "Verification Result",
+      "valid": "Valid License",
+      "invalid": "Invalid License",
+      "history": "Verification History",
+      "noHistory": "No verification history"
     },
-    "steps": {
-      "service": {
-        "label": "Service Selection",
-        "title": "Select Service Type",
-        "description": "Please choose the service you wish to apply for from the options below"
+    "employee": {
+      "issue": {
+        "title": "License Issuance",
+        "subtitle": "Issue driving licenses to qualified applicants",
+        "pending": "Pending Issuance",
+        "ready": "Ready for Issuance",
+        "generate": "Generate License Number",
+        "print": "Print License",
+        "issueDigital": "Issue Digital"
       },
-      "category": {
-        "label": "License Category",
-        "title": "Choose License Category",
-        "description": "Select the category of driving license you wish to obtain"
+      "manage": {
+        "title": "License Management",
+        "subtitle": "Search and manage all licenses",
+        "search": "Search by license or national ID...",
+        "filters": {
+          "status": "Status",
+          "class": "Class",
+          "expiryRange": "Expiry Range"
+        },
+        "actions": {
+          "view": "View Details",
+          "renew": "Renew",
+          "suspend": "Suspend",
+          "cancel": "Cancel",
+          "print": "Print Duplicate"
+        },
+        "export": "Export"
       },
-      "personal": {
-        "label": "Personal Info",
-        "title": "Personal Information",
-        "description": "Please complete your personal details to verify eligibility"
-      },
-      "details": {
-        "label": "Application Details",
-        "title": "Application Details",
-        "description": "Enter additional application details and preferred center"
-      },
-      "review": {
-        "label": "Review & Submit",
-        "title": "Review & Submit",
-        "description": "Review your application data and accept declaration before final submission"
+      "reports": {
+        "title": "License Reports",
+        "subtitle": "License statistics and reports",
+        "byClass": "By Class",
+        "byMonth": "By Month",
+        "expiredSoon": "Expiring Soon",
+        "renewalRates": "Renewal Rates",
+        "totalIssued": "Total Issued",
+        "active": "Active",
+        "expired": "Expired"
       }
-    },
-    "navigation": {
-      "back": "Previous",
-      "next": "Next",
-      "submit": "Submit Application",
-      "processing": "Processing..."
-    },
-    "step1": {
-      "newLicense": {
-        "title": "New Driving License",
-        "description": "Apply for a driving license for the first time"
-      },
-      "renewal": {
-        "title": "License Renewal",
-        "description": "Renew your existing driving license before expiry"
-      },
-      "replacement": {
-        "title": "Replacement (Damaged/Lost)",
-        "description": "Issue a replacement for a damaged or lost license"
-      },
-      "categoryUpgrade": {
-        "title": "Category Upgrade",
-        "description": "Add a new category to your current driving license"
-      },
-      "testRetake": {
-        "title": "Test Retake",
-        "description": "Book a new appointment for a driving test retake"
-      },
-      "appointmentBooking": {
-        "title": "Book Appointment",
-        "description": "Schedule a visit to Traffic Dept or Exam Centers"
-      },
-      "notAvailable": "This service is currently not available in the MVP version"
-    },
-    "step2": {
-      "title": "Choose License Category",
-      "minAge": "Min Age: {{age}} years",
-      "years": "years",
-      "ageError": "Sorry, you must be {{minAge}} years or older for this category",
-      "disabledMessage": "{{count}} category not available for your age",
-      "errorLoading": "Failed to load categories",
-      "errorLoadingMessage": "We encountered a problem while fetching the license categories. Please try again.",
-      "retry": "Retry",
-      "categoryA": { "title": "Category A - Motorcycle" },
-      "categoryB": { "title": "Category B - Private Car" },
-      "categoryC": { "title": "Category C - Commercial Vehicle" },
-      "categoryD": { "title": "Category D - Bus" },
-      "categoryE": { "title": "Category E - Heavy Vehicle" },
-      "categoryF": { "title": "Category F - Agricultural Vehicle" }
-    },
-    "step3": {
-      "title": "Personal Information",
-      "nationalId": "National ID",
-      "dateOfBirth": "Date of Birth",
-      "nationality": "Nationality",
-      "gender": "Gender",
-      "male": "Male",
-      "female": "Female",
-      "mobileNumber": "Mobile Number",
-      "email": "Email",
-      "region": "Region",
-      "city": "City",
-      "address": "Address",
-      "addressPlaceholder": "Enter detailed address"
-    },
-    "step4": {
-      "title": "Application Details",
-      "applicantType": "Applicant Type",
-      "citizen": "Citizen",
-      "resident": "Resident",
-      "visitor": "Visitor",
-      "preferredCenter": "Preferred Driving Center",
-      "selectCenter": "Select Driving Center",
-      "loadingCenters": "Loading centers...",
-      "testLanguage": "Test Language",
-      "arabic": "Arabic",
-      "english": "English",
-      "appointmentPreference": "Appointment Preference",
-      "noPreference": "No Preference",
-      "morning": "Morning",
-      "afternoon": "Afternoon",
-      "evening": "Evening",
-      "specialNeedsDeclaration": "Do you have special needs?",
-      "specialNeedsInfo": "Please disclose any special needs to enable us to provide necessary support during tests",
-      "specialNeedsNote": "Details",
-      "specialNeedsNotePlaceholder": "Describe your special needs..."
-    },
-    "step5": {
-      "title": "Review & Submit",
-      "description": "Please review your application before final submission",
-      "serviceType": "Service Type",
-      "category": "License Category",
-      "personalInfo": "Personal Information",
-      "center": "Driving Center",
-      "ar": "Arabic",
-      "en": "English",
-      "declaration": "I declare that all entered information is correct and I accept the terms and conditions for issuing a driving license.",
-      "edit": "Edit",
-      "submit": "Submit Application",
-      "submitting": "Submitting...",
-      "successMessage": "Your application has been submitted successfully!"
-    },
-    "validation": {
-      "step1": {
-        "serviceRequired": "Please select a service to continue"
-      },
-      "step2": {
-        "categoryRequired": "Please select a license category to continue",
-        "ageError": "Sorry, you must be {{age}} years or older for this category"
-      },
-      "step3": {
-        "nationalIdFormat": "National ID must be 10 digits",
-        "dobInvalid": "Invalid Date of Birth",
-        "nationalityRequired": "Nationality is required",
-        "genderRequired": "Gender is required",
-        "mobileFormat": "Invalid mobile number (example: +9665XXXXXXXX)",
-        "emailFormat": "Invalid email address",
-        "addressMin": "Address must be at least 5 characters",
-        "cityRequired": "City is required",
-        "regionRequired": "Region is required"
-      },
-      "step4": {
-        "centerRequired": "Please select a driving center",
-        "specialNeedsNoteRequired": "Please describe your special needs"
-      },
-      "step5": {
-        "declarationRequired": "You must accept the declaration to continue"
-      }
-    },
-    "loading": "Loading...",
-    "existingApp": {
-      "title": "You Have an Active Application",
-      "message": "You have an existing application with number",
-      "applicationNumber": "Application Number: {{number}}",
-      "status": "Status: {{status}}",
-      "viewApplication": "View Application"
-    },
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "subtitle": "System Performance Overview",
+      "today": "Today",
+      "export": "Export",
+      "applicationsToday": "Applications Today",
+      "licensesIssued": "Licenses Issued",
+      "revenue": "Revenue",
+      "activeUsers": "Active Users",
+      "applicationsByStatus": "Applications by Status",
+      "applicationsTrend": "Applications Trend",
+      "recentActivity": "Recent Activity"
+    }
+  },
+  "reports": {
+    "title": "Reports",
+    "subtitle": "Comprehensive Analytics",
     "common": {
-      "select": "Select",
-      "currentLocale": "en",
-      "yes": "Yes",
-      "no": "No"
+      "all": "All",
+      "category": "Category",
+      "status": "Status"
+    },
+    "overview": "Overview",
+    "generateReport": "Generate Report",
+    "filters": {
+      "fromDate": "From Date",
+      "toDate": "To Date",
+      "status": "Status",
+      "category": "Category",
+      "serviceType": "Service Type",
+      "apply": "Apply",
+      "search": "Search..."
+    },
+    "export": {
+      "csv": "Export CSV",
+      "excel": "Export Excel",
+      "pdf": "Export PDF"
+    },
+    "applications": {
+      "title": "Applications Report",
+      "subtitle": "Driving License Applications Analysis",
+      "byStatus": "By Status",
+      "byCategory": "By Category",
+      "trend": "Trend",
+      "avgTime": "Average Time",
+      "rejectionReasons": "Rejection Reasons",
+      "table": "Applications List",
+      "number": "Application No.",
+      "applicant": "Applicant",
+      "stage": "Stage",
+      "submittedDate": "Submitted Date",
+      "completedDate": "Completed Date",
+      "category": "Category",
+      "status": "Status"
+    },
+    "financial": {
+      "title": "Financial Report",
+      "subtitle": "Revenue and Payments Analysis",
+      "total": "Total Revenue",
+      "thisMonth": "This Month",
+      "thisYear": "This Year",
+      "breakdown": "Revenue Breakdown",
+      "revenueTrend": "Revenue Trend",
+      "byCategory": "By Category",
+      "outstanding": "Outstanding Payments",
+      "refunds": "Refunds"
+    },
+    "users": {
+      "title": "Users Report",
+      "subtitle": "User Statistics and Activity",
+      "total": "Total Users",
+      "active": "Active This Month",
+      "newRegistrations": "New Registrations",
+      "byRole": "By Role"
+    },
+    "performance": {
+      "title": "Performance Report",
+      "subtitle": "Performance KPIs",
+      "processingTime": "Processing Time",
+      "approvalRate": "Approval Rate"
+    },
+    "audits": {
+      "title": "Audit Logs",
+      "subtitle": "System Operations Log",
+      "user": "User",
+      "action": "Action",
+      "entity": "Entity",
+      "timestamp": "Timestamp"
     }
   }
 }

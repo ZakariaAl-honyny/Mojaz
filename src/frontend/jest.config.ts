@@ -2,31 +2,33 @@ import type { Config } from 'jest'
 import nextJest from 'next/jest.js'
 
 const createJestConfig = nextJest({
-  // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
   dir: './',
 })
 
-// Add any custom config to be passed to Jest
 const config: Config = {
   coverageProvider: 'v8',
   testEnvironment: 'jsdom',
-  // Add more setup options before each test is run
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
-    '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/__mocks__/fileMock.js',
+    '^next-intl$': '<rootDir>/__mocks__/next-intl.ts',
   },
-  // Fix ESM import issues with next-intl
-  transformIgnorePatterns: [
-    '/node_modules/(?!(next-intl|@next-intl)/)',
-    'node_modules/(.+)\\.js$',
+  testMatch: [
+    '**/tests/unit/**/*.test.ts',
+    '**/tests/unit/**/*.test.tsx',
+    '**/tests/unit/**/*.spec.ts',
+    '**/tests/unit/**/*.spec.tsx',
   ],
-  // Add support for TypeScript
+  testPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/.next/',
+    '<rootDir>/tests/e2e/',
+    '<rootDir>/tests/application-workflow.spec.ts',
+    '<rootDir>/tests/core-features.spec.ts',
+  ],
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(js|jsx|ts|tsx)$': ['ts-jest', { useESM: false }],
   },
 }
 
-// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
 export default createJestConfig(config)
