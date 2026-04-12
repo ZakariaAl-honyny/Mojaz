@@ -13,9 +13,12 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.LicenseNumber).IsRequired().HasMaxLength(32);
-            builder.Property(x => x.ApplicationId).IsRequired();
-            builder.Property(x => x.HolderId).IsRequired();
-            builder.Property(x => x.LicenseCategoryId).IsRequired();
+             builder.Property(x => x.ApplicationId).IsRequired();
+             builder.Property(x => x.HolderId).IsRequired();
+             builder.Property(x => x.LicenseCategoryId).IsRequired();
+
+             builder.HasOne<LicenseCategory>().WithMany().HasForeignKey(x => x.LicenseCategoryId).OnDelete(DeleteBehavior.Restrict);
+             builder.HasOne<User>().WithMany().HasForeignKey(x => x.HolderId).OnDelete(DeleteBehavior.Restrict);
             builder.Property(x => x.BranchId).IsRequired(false);
             builder.Property(x => x.IssuedAt).IsRequired();
             builder.Property(x => x.ExpiresAt).IsRequired();

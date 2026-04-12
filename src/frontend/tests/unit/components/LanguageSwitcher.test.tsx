@@ -1,16 +1,18 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import LanguageSwitcher from '@/components/shared/LanguageSwitcher'
-import { NextIntlClientProvider } from 'next-intl'
 
 // Mock useLocale and usePathname
 const mockPush = jest.fn()
+const mockReplace = jest.fn()
 jest.mock('@/i18n/routing', () => ({
   usePathname: () => '/',
-  useRouter: () => ({ push: mockPush })
+  useRouter: () => ({ 
+    push: mockPush,
+    replace: mockReplace 
+  })
 }))
 
 jest.mock('next-intl', () => ({
-  ...jest.requireActual('next-intl'),
   useLocale: () => 'ar'
 }))
 
@@ -22,26 +24,31 @@ describe('LanguageSwitcher', () => {
     }
   }
 
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   it('renders correctly with current locale', () => {
     render(
-      <NextIntlClientProvider locale="ar" messages={messages}>
+      <div>
         <LanguageSwitcher />
-      </NextIntlClientProvider>
+      </div>
     )
     
     // Arabic is default, so it should show English toggle or a dropdown
     expect(screen.getByRole('button')).toBeInTheDocument()
   })
 
-  it('calls router push when changing language', () => {
+  it('calls router replace when changing language', () => {
     render(
-      <NextIntlClientProvider locale="ar" messages={messages}>
+      <div>
         <LanguageSwitcher />
-      </NextIntlClientProvider>
+      </div>
     )
     
     const button = screen.getByRole('button')
     fireEvent.click(button)
-    // Detailed click logic depends on implementation (e.g., if it's a direct toggle or dropdown)
+    // Should call router.replace to change locale
+    expect(mockReplace).toHaveBeenCalled()
   })
 })

@@ -4,7 +4,7 @@ import {Button} from '@/components/ui/button';
 import {Home, AlertCircle} from 'lucide-react';
 
 export default function NotFound() {
-  const t = useTranslations('common.notfound');
+  const t = useTranslations('common');
 
   return (
     <main className="min-h-screen flex items-center justify-center p-6 bg-neutral-50 dark:bg-neutral-900 grain-overlay">
@@ -19,10 +19,10 @@ export default function NotFound() {
             404
           </h1>
           <h2 className="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
-            {t('title')}
+            {t('notfound.title')}
           </h2>
           <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
-            {t('description')}
+            {t('notfound.description')}
           </p>
         </div>
 
@@ -30,7 +30,7 @@ export default function NotFound() {
           <Link href="/">
             <Button size="lg" className="w-full bg-primary-600 hover:bg-primary-700 text-white rounded-xl py-6 text-lg font-medium transition-all duration-300 hover-lift flex items-center justify-center gap-2">
               <Home className="w-5 h-5 rtl:mirror" />
-              {t('backToHome')}
+              {t('notfound.backToHome')}
             </Button>
           </Link>
         </div>

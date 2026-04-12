@@ -1,4 +1,67 @@
 {
+  "common": {
+    "title": "مُجاز - منصة رخصة القيادة",
+    "description": "منصتك الموثوقة لخدمات رخصة القيادة في المملكة العربية السعودية",
+    "loading": "جاري التحميل...",
+    "toggleLanguage": "التبديل إلى الإنجليزية",
+    "auth": {
+      "login": "تسجيل الدخول",
+      "register": "إنشاء حساب"
+    },
+    "notfound": {
+      "title": "الصفحة غير موجودة",
+      "description": "عذراً، الصفحة التي تبحث عنها غير موجودة.",
+      "backToHome": "العودة للرئيسية"
+    },
+    "all": "الكل",
+    "yes": "نعم",
+    "no": "لا",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "view": "عرض",
+    "search": "بحث",
+    "filter": "تصفية",
+    "export": "تصدير",
+    "download": "تحميل",
+    "upload": "رفع",
+    "error": "خطأ",
+    "success": "نجاح",
+    "warning": "تحذير",
+    "info": "معلومات",
+    "noData": "لا توجد بيانات",
+    "refresh": "تحديث",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "submit": "إرسال",
+    "reset": "إعادة تعيين",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "actions": "الإجراءات",
+    "status": "الحالة",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "phone": "رقم الجوال",
+    "address": "العنوان",
+    "notes": "ملاحظات",
+    "description": "الوصف",
+    "details": "التفاصيل",
+    "createdAt": "تاريخ الإنشاء",
+    "updatedAt": "تاريخ التحديث",
+    "createdBy": "أنشأه",
+    "updatedBy": "حدثه",
+    "total": "الإجمالي",
+    "subtotal": "المجموع",
+    "tax": "الضريبة",
+    "discount": "الخصم",
+    "amount": "المبلغ",
+    "quantity": "الكمية",
+    "unit": "الوحدة"
+  },
   "navigation": {
     "dashboard": "لوحة التحكم",
     "applications": "طلباتي",
@@ -12,7 +75,191 @@
     "medicalResults": "النتائج الطبية",
     "testResults": "نتائج الاختبارات",
     "users": "المستخدمين",
-    "reports": "التقارير"
+    "reports": "التقارير",
+    "queue": "قائمة الانتظار",
+    "schedule": "إدارة الجدول",
+    "attendance": "متطلبات الحضور",
+    "bookAppointment": "حجز موعد",
+    "appointmentsList": "مواعيدي",
+    "notificationSettings": "إعدادات التنبيهات",
+    "emailPreferences": "تفضيلات البريد الإلكتروني",
+    "progress": "تقدمي",
+    "training": "التدريب",
+    "myResults": "نتائجي",
+    "licenses": "رخصي",
+    "issueLicense": "إصدار الرخص",
+    "verifyLicense": "التحقق من الرخصة",
+    "licenseReports": "تقارير الرخص",
+    "analytics": "التحليلات",
+    "applicationReports": "تقرير الطلبات",
+    "financialReports": "التقرير المالي",
+    "userReports": "تقرير المستخدمين",
+    "performanceReports": "تقرير الأداء",
+    "auditReports": "سجلات التدقيق"
+  },
+  "notification": {
+    "title": "التنبيهات",
+    "subtitle": "إدارة إشعاراتك",
+    "search": "بحث...",
+    "all": "الكل",
+    "unread": "غير مقروء",
+    "markAllRead": "تحديد الكل كمقروء",
+    "deleteOld": "حذف القديمة",
+    "noNotifications": "لا توجد تنبيهات",
+    "noNotificationsDesc": "ستظهر التنبيهات هنا عند استلامها",
+    "types": {
+      "payment": "الدفع",
+      "appointment": "الموعد",
+      "status": "الحالة",
+      "system": "النظام",
+      "test": "اختبار"
+    },
+    "settings": {
+      "title": "إعدادات الإشعارات",
+      "emailPreferences": "تفضيلات البريد الإلكتروني",
+      "pushNotifications": "إشعارات Push",
+      "pushEnabled": "تفعيل الإشعارات الفورية",
+      "emailNotifications": "إشعارات البريد الإلكتروني",
+      "emailEnabled": "تفعيل إشعارات البريد الإلكتروني",
+      "paymentReminders": "تذكيرات الدفع",
+      "appointmentAlerts": "تنبيهات المواعيد",
+      "statusUpdates": "تحديثات الحالة",
+      "systemAnnouncements": "إعلانات النظام",
+      "applicationStatus": "تغييرات حالة الطلب",
+      "testResults": "نتائج الاختبارات",
+      "licenseIssuance": "إصدار الرخصة",
+      "promotions": "العروض والت promotions",
+      "testNotification": "إرسال اختبار",
+      "savePreferences": "حفظ الإعدادات",
+      "deviceManagement": "إدارة الأجهزة",
+      "devices": "الأجهزة المسجلة",
+      "removeDevice": "إزالة",
+      "noDevices": "لا توجد أجهزة مسجلة"
+    },
+    "employee": {
+      "sendTo": "إرسال إلى",
+      "sendToSingle": "مستخدم واحد",
+      "sendToAll": "جميع المستخدمين",
+      "sendToRole": "حسب الدور",
+      "sendToFilter": "حسب فلتر",
+      "template": "القالب",
+      "schedule": "جدولة",
+      "preview": "معاينة",
+      "send": "إرسال",
+      "scheduledFor": "مجدول بتاريخ",
+      "message": "الرسالة",
+      "subject": "العنوان",
+      "selectUser": "اختر المستخدم",
+      "selectRole": "اختر الدور",
+      "sendNotification": "إرسال إشعار",
+      "notificationSent": "تم إرسال الإشعار بنجاح",
+      "scheduleNotification": "جدولة إشعار",
+      "scheduleSuccess": "تم جدولة الإشعار بنجاح"
+    },
+    "bell": {
+      "notifications": "التنبيهات",
+      "unread": "غير مقروء",
+      "viewAll": "عرض الكل",
+      "noNew": "لا توجد إشعارات جديدة"
+    }
+  },
+  "appointment": {
+    "title": "المواعيد",
+    "subtitle": "إدارة مواعيد رخصة القيادة",
+    "upcoming": "المواعيد القادمة",
+    "history": "سجل المواعيد",
+    "pastAppointments": "المواعيد السابقة",
+    "noAppointments": "لا توجد مواعيد مجدولة",
+    "bookNew": "حجز موعد جديد",
+    "upcomingAppointment": "الموعد القادم",
+    "noUpcoming": "لا توجد مواعيد قادمة",
+    "book": {
+      "title": "حجز موعد",
+      "subtitle": "جدول موعدك التالي",
+      "selectType": "اختر نوع الموعد",
+      "selectDate": "اختر التاريخ",
+      "selectTime": "اختر الوقت",
+      "selectCenter": "اختر المركز",
+      "confirm": "تأكيد الحجز",
+      "step": "الخطوة",
+      "of": "من",
+      "back": "السابق",
+      "next": "التالي",
+      "confirmBooking": "تأكيد الحجز",
+      "processing": "جاري المعالجة...",
+      "success": "تم حجز الموعد بنجاح!",
+      "selectTypeDesc": "اختر نوع الموعد الذي تحتاجه",
+      "types": {
+        "medical": "الفحص الطبي",
+        "theory": "الاختبار النظري",
+        "practical": "الاختبار العملي"
+      }
+    },
+    "types": {
+      "medical": "الفحص الطبي",
+      "theory": "الاختبار النظري",
+      "practical": "الاختبار العملي"
+    },
+    "status": {
+      "confirmed": "مؤكد",
+      "pending": "قيد الانتظار",
+      "completed": "مكتمل",
+      "cancelled": "ملغي",
+      "noShow": "لم يحضر",
+      "rescheduled": "تم إعادة الجدولة"
+    },
+    "details": {
+      "title": "تفاصيل الموعد",
+      "date": "التاريخ",
+      "time": "الوقت",
+      "location": "الموقع",
+      "center": "المركز",
+      "reschedule": "إعادة الجدولة",
+      "cancel": "إلغاء الموعد",
+      "addToCalendar": "إضافة للتقويم",
+      "status": "الحالة"
+    },
+    "calendar": {
+      "morning": "صباحاً",
+      "afternoon": "مساءً",
+      "noSlots": "لا توجد مواعيد متاحة"
+    },
+    "employee": {
+      "title": "إدارة المواعيد",
+      "subtitle": "إدارة جميع المواعيد المجدولة",
+      "schedule": "إدارة الجدول",
+      "attendance": "متطلبات الحضور",
+      "createSlots": "إنشاء مواعيد",
+      "weeklyTemplate": "القالب الأسبوعي",
+      "workingHours": "ساعات العمل",
+      "breaks": "فترة الراحة",
+      "holidays": "العطلات",
+      "slotDuration": "مدة الموعد",
+      "minutes": "دقيقة",
+      "hour": "ساعة",
+      "checkIn": "تسجيل الحضور",
+      "checkOut": "تسجيل الانصراف",
+      "present": "حاضر",
+      "absent": "غائب",
+      "late": "متأخر"
+    },
+    "slots": {
+      "create": "إنشاء مواعيد",
+      "weekly": "القالب الأسبوعي",
+      "workingHours": "ساعات العمل",
+      "breaks": "فترة الراحة",
+      "holidays": "إدارة العطلات",
+      "save": "حفظ الجدول",
+      "cancel": "إلغاء"
+    },
+"actions": {
+      "confirm": "تأكيد",
+      "reschedule": "إعادة الجدولة",
+      "cancel": "إلغاء",
+      "viewDetails": "عرض التفاصيل",
+"checkIn": "تسجيل الحضور",
+      "checkOut": "تسجيل الانصراف"
+    }
   },
   "dashboard": {
     "greeting": "مرحباً",
@@ -22,7 +269,38 @@
     "profileStatus": "حالة الملف",
     "createNewApplication": "طلب رخصة جديد",
     "applicationTimeline": "الجدول الزمني للطلب",
-    "timelineSubtitle": "تتبع مراحل تقدم طلب رخصة القيادة الخاصة بك"
+    "timelineSubtitle": "تتبع مراحل تقدم طلب رخصة القيادة الخاصة بك",
+    "complete": "مكتمل",
+    "notifications": "التنبيهات",
+    "employeeGreeting": "لوحة تحكم الموظف",
+    "employeeSubtitle": "قائمة الانتظار والمهام اليومية",
+    "auditLogs": "سجلات التدقيق",
+    "settings": "الإعدادات",
+    "queue": {
+      "total": "إجمالي الطلبات",
+      "pending": "قيد المراجعة",
+      "todayAppointments": "مواعيد اليوم",
+      "completedToday": "مكتمل اليوم"
+    },
+    "recentActivity": "النشاط الأخير",
+    "todaySchedule": "جدول اليوم",
+    "medicalExams": "الفحوصات الطبية",
+    "theoryTests": "الاختبارات النظرية",
+    "practicalTests": "الاختبارات العملية",
+    "systemHealth": "صحة النظام",
+    "operational": "يعمل",
+    "adminGreeting": "لوحة تحكم الإدارة",
+    "adminSubtitle": "نظرة عامة على نظام مُجاز",
+    "backup": "نسخة احتياطية",
+    "totalUsers": "إجمالي المستخدمين",
+    "issuedLicensesThisMonth": "الرخص المصدرة هذا الشهر",
+    "systemAnalytics": "تحليلات النظام",
+    "analyticsSubtitle": "إحصائيات الأداء والتطبيقات",
+    "chartPlaceholder": "قم بتكوين المخطط البياني",
+    "systemHealthStatus": "حالة النظام",
+    "overallStatus": "الحالة العامة",
+    "uptime": "وقت التشغيل",
+    "recentAlerts": "التنبيهات الأخيرة"
   },
   "application": {
     "create": {
@@ -31,7 +309,10 @@
       "next": "التالي",
       "prev": "السابق",
       "submit": "تقديم الطلب",
+      "saveDraft": "حفظ كمسودة",
       "success": "تم تقديم الطلب بنجاح",
+      "draftSaved": "تم حفظ المسودة",
+      "draftError": "فشل حفظ المسودة",
       "steps": {
         "service": "الخدمة",
         "category": "الفئة",
@@ -49,6 +330,9 @@
         "privateCar": "خصوصي",
         "publicTaxi": "أجرة عامة",
         "heavyVehicle": "نقل ثقيل",
+        "bus": "حافلة",
+        "agricultural": "زراعي",
+        "minAge": "الحد الأدنى للعمر",
         "nationalId": "رقم الهوية الوطنية / الإقامة",
         "dateOfBirth": "تاريخ الميلاد",
         "nationality": "الجنسية",
@@ -68,8 +352,18 @@
         "arabic": "العربية",
         "english": "الإنجليزية",
         "specialNeeds": "الاحتياجات الخاصة / الحالات الطبية",
-        "confirmAccuracy": "أقر بأن جميع البيانات المقدمة صحيحة ودقيقة."
-      }
+        "confirmAccuracy": "أقر بأن جميع البيانات المقدمة صحيحة ودقيقة.",
+        "termsLabel": "أوافق على",
+        "termsLink": "الشروط والأحكام"
+      },
+      "validation": {
+        "required": "هذا الحقل مطلوب",
+        "invalidNationalId": "يرجى إدخال رقم هوية صحيح",
+        "underage": "يجب أن يكون عمرك {age} عاماً على الأقل لهذه الفئة",
+        "existingApplication": "لديك طلب نشط حالياً. يرجى المتابعة من لوحة التحكم."
+      },
+      "autoSave": "حفظ تلقائي...",
+      "lastSaved": "آخر حفظ"
     },
     "status": {
       "draft": "مسودة",
@@ -115,9 +409,45 @@
       "noPaymentsMsg": "لا توجد مدفوعات معلقة حالياً."
     }
   },
-  "applications": {
-    "title": "طلباتي",
-    "subtitle": "تتبع وإدارة طلبات رخصة القيادة الخاصة بك",
+"applications": {
+      "title": "طلباتي",
+      "subtitle": "تتبع وإدارة طلبات رخصة القيادة الخاصة بك",
+      "filters": {
+        "all": "الكل",
+        "pending": "قيد الانتظار",
+        "inProgress": "قيد التنفيذ",
+        "completed": "مكتمل",
+        "search": "بحث برقم الطلب...",
+        "empty": "لا توجد طلبات حالياً",
+        "emptySubtitle": "قم بتقديم طلب جديد للبدء",
+        "newApplication": "طلب جديد",
+        "columns": {
+          "number": "رقم الطلب",
+          "service": "نوع الخدمة",
+          "category": "الفئة",
+          "status": "الحالة",
+          "submittedAt": "تاريخ التقديم",
+          "actions": "الإجراءات"
+        },
+        "viewDetails": "عرض التفاصيل"
+      },
+      "details": {
+        "title": "تفاصيل الطلب",
+        "createdOn": "تاريخ الإنشاء",
+        "serviceType": "نوع الخدمة",
+        "category": "فئة الرخصة",
+        "fees": "الرسوم",
+        "paid": "مدفوع",
+        "pending": "معلق",
+        "upcomingAppointment": "الموعد القادم",
+        "noAppointment": "لا يوجد موعد",
+        "cancelDialog": {
+          "title": "إلغاء الطلب",
+          "description": "هل أنت متأكد من إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
+          "cancel": "إلغاء",
+          "confirm": "تأكيد الإلغاء"
+        }
+      },
     "employee": {
       "title": "قائمة الطلبات",
       "subtitle": "مراجعة ومعالجة طلبات الرخص",
@@ -164,10 +494,100 @@
       "verification": "التحقق الرقمي"
     }
   },
+  "payment": {
+    "title": "المدفوعات",
+    "subtitle": "إدارة رسوم طلبات رخصة القيادة",
+    "pendingPayments": "المدفوعات المعلقة",
+    "paymentHistory": "سجل المدفوعات",
+    "fees": {
+      "applicationFee": "رسوم الطلب",
+      "medicalFee": "الفحص الطبي",
+      "theoryFee": "الاختبار النظري",
+      "practicalFee": "الاختبار العملي",
+      "issuanceFee": "إصدار الرخصة",
+      "retakeFee": "رسوم إعادة الاختبار",
+      "total": "الإجمالي",
+      "paid": "المدفوع",
+      "pending": "معلق",
+      "dueDate": "تاريخ الاستحقاق"
+    },
+    "payNow": "ادفع الآن",
+    "payAmount": "المبلغ",
+    "paymentMethod": "طريقة الدفع",
+    "mada": "مدى",
+    "visa": "فيزا",
+    "masterCard": "ماستركارد",
+    "applePay": "آبل باي",
+    "cardNumber": "رقم البطاقة",
+    "expiryDate": "تاريخ الانتهاء",
+    "cvv": "رمز الأمان",
+    "cardHolder": "اسم حامل البطاقة",
+    "confirmPayment": "تأكيد الدفع",
+    "processing": "جاري المعالجة...",
+    "success": "تم الدفع بنجاح",
+    "successMessage": "تم معالجة دفعتك بنجاح. يرzení الاحتفاظ بإيصال الدفع.",
+    "receipt": "الإيصال",
+    "downloadReceipt": "تحميل الإيصال",
+    "continueButton": "متابعة",
+    "history": {
+      "date": "التاريخ",
+      "application": "رقم الطلب",
+      "amount": "المبلغ",
+      "method": "الطريقة",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "status": {
+      "pending": "معلق",
+      "paid": "مدفوع",
+      "overdue": "متأخر",
+      "failed": "فشل",
+      "refunded": "مُسترد"
+    },
+    "selectMethod": "اختر طريقة الدفع",
+    "enterCardDetails": "أدخل بيانات البطاقة",
+    "processingPayment": "جاري معالجة الدفع...",
+    "paymentFailed": "فشل الدفع",
+    "tryAgain": "حاول مرة أخرى",
+    "noPendingPayments": "لا توجد مدفوعات معلقة",
+    "allPaid": "تم سداد جميع الرسوم",
+    "employee": {
+      "title": "إدارة المدفوعات",
+      "subtitle": "عرض ومعالجة جميع المدفوعات",
+      "filters": {
+        "status": "الحالة",
+        "dateRange": "النطاق الزمني",
+        "method": "طريقة الدفع",
+        "search": "بحث برقم الطلب..."
+      },
+      "columns": {
+        "application": "رقم الطلب",
+        "applicant": "المتقدم",
+        "feeType": "نوع الرسوم",
+        "amount": "المبلغ",
+        "status": "الحالة",
+        "paidAt": "تاريخ الدفع",
+        "method": "الطريقة",
+        "actions": "الإجراءات"
+      },
+      "refund": "استرداد",
+      "export": "تصدير",
+      "manualRefund": "استرداد يدوي",
+      "confirmRefund": "تأكيد الاسترداد",
+      "refundDialog": {
+        "title": "استرداد المبلغ",
+        "description": "هل أنت متأكد من استرداد هذا المبلغ؟ لا يمكن التراجع عن هذا الإجراء.",
+        "confirm": "تأكيد الاسترداد",
+        "cancel": "إلغاء"
+      }
+    }
+  },
   "auth": {
     "login": {
       "title": "تسجيل الدخول",
       "subtitle": "الوصول إلى حسابك في منصة مُجاز",
+      "identifier": "البريد الإلكتروني أو رقم الجوال",
+      "placeholderIdentifier": "أدخل بريدك الإلكتروني أو رقم الجوال",
       "email": "البريد الإلكتروني",
       "phone": "رقم الجوال",
       "password": "كلمة المرور",
@@ -179,14 +599,26 @@
     "register": {
       "title": "إنشاء حساب",
       "subtitle": "انضم إلى منصة مُجاز للحصول على خدمات رخص القيادة",
+      "emailTitle": "التسجيل بالبريد الإلكتروني",
+      "phoneTitle": "التسجيل برقم الجوال",
+      "phoneSubtitle": "أدخل بياناتك لإنشاء حساب بواسطة رقم الجوال",
       "fullName": "الاسم الكامل",
+      "fullNamePlaceholder": "أدخل اسمك الثلاثي كما هو في الهوية",
       "email": "البريد الإلكتروني",
       "phone": "رقم الجوال",
       "password": "كلمة المرور",
       "confirmPassword": "تأكيد كلمة المرور",
+      "acceptTerms": "أوافق على",
+      "termsLink": "الشروط والأحكام السياسات",
       "submit": "إنشاء الحساب",
+      "processing": "جاري المعالجة...",
       "hasAccount": "لديك حساب بالفعل؟",
-      "login": "تسجيل الدخول"
+      "loginLink": "تسجيل الدخول",
+      "alreadyHaveAccount": "لديك حساب بالفعل؟",
+      "errors": {
+        "registrationFailed": "فشلت عملية التسجيل. يرجى المحاولة مرة أخرى.",
+        "genericError": "حدث خطأ غير متوقع. يرجى المحاولة لاحقاً."
+      }
     },
     "forgotPassword": {
       "title": "استعادة كلمة المرور",
@@ -207,13 +639,329 @@
     },
     "otp": {
       "title": "التحقق من الهوية",
-      "subtitle": "أدخل رمز التحقق المرسل إليك",
-       "submit": "تحقق",
-       "resend": "إعادة إرسال الرمز",
-       "resendIn": "إعادة إرسال خلال {seconds} ثانية"
-     }
-   },
-   "common": {
-     "notfound": "الصفحة غير موجودة"
-   }
- }
+      "subtitle": "التحقق من الرمز",
+      "description": "تم إرسال رمز التحقق إلى",
+      "confirm": "تحقق الآن",
+      "invalidCode": "يرجى إدخال رمز صحيح مكون من 6 أرقام",
+      "success": "تم التحقق بنجاح! جاري تحويلك...",
+      "otpResent": "تم إعادة إرسال الرمز بنجاح",
+      "invalidSession": "جلسة التحقق غير صالحة",
+      "backToRegister": "العودة للتسجيل",
+      "resendAction": "إعادة إرسال الرمز",
+      "resendIn": "إعادة إرسال خلال",
+      "seconds": "ثانية",
+      "didntReceive": "لم يصلك الرمز؟",
+      "changeRegistrationInfo": "تعديل بيانات التسجيل",
+      "errors": {
+        "verificationFailed": "رمز التحقق غير صحيح أو منتهي الصلاحية",
+        "resendFailed": "فشل إعادة إرسال الرمز. يرجى المحاولة لاحقاً."
+      }
+    }
+  },
+  "progress": {
+    "title": "تقدمي",
+    "subtitle": "تتبع مراحل الحصول على رخصة القيادة",
+    "overall": "التقدم العام",
+    "stages": {
+      "medical": "الفحص الطبي",
+      "theoryTraining": "التدريب النظري",
+      "theoryTest": "الاختبار النظري",
+      "practicalTraining": "التدريب العملي",
+      "practicalTest": "الاختبار العملي"
+    },
+    "medical": {
+      "title": "الفحص الطبي",
+      "status": "الحالة",
+      "passed": "ناجح",
+      "failed": "راسب",
+      "pending": "قيد الانتظار",
+      "completed": "مكتمل",
+      "date": "تاريخ الفحص"
+    },
+    "theory": {
+      "title": "الاختبار النظري",
+      "attempts": "محاولات",
+      "score": "الدرجة",
+      "passed": "ناجح",
+      "failed": "راسب",
+      "pending": "في الانتظار",
+      "certificate": "شهادة النجاح",
+      "maxAttempts": "الحد الأقصى للمحاولات",
+      "retakeEligible": "مؤهل لإعادة الاختبار",
+      "bookRetake": "حجز إعادة الاختبار"
+    },
+    "practical": {
+      "title": "الاختبار العملي",
+      "attempts": "محاولات",
+      "score": "الدرجة",
+      "passed": "ناجح",
+      "failed": "راسب",
+      "pending": "في الانتظار",
+      "certificate": "شهادة النجاح",
+      "maxAttempts": "الحد الأقصى للمحاولات",
+      "retakeEligible": "مؤهل لإعادة الاختبار",
+      "bookRetake": "حجز إعادة الاختبار"
+    },
+    "training": {
+      "title": "التدريب",
+      "hoursCompleted": "الساعات المكتملة",
+      "hoursRequired": "الساعات المطلوبة",
+      "instructor": "المدرب",
+      "center": "مركز التدريب"
+    },
+    "retakeEligible": "مؤهل لإعادة الاختبار",
+    "retakeNotEligible": "غير مؤهل لإعادة الاختبار",
+    "bookRetake": "حجز إعادة الاختبار",
+    "downloadCertificate": "تحميل الشهادة"
+  },
+  "training": {
+    "title": "سجل التدريب",
+    "subtitle": "جلسات التدريب السابقة والحالية",
+    "sessions": "الجلسات",
+    "hoursCompleted": "الساعات المكتملة",
+    "hoursRemaining": "الساعات المتبقية",
+    "bookSession": "حجز جلسة تدريب",
+    "instructor": "المدرب",
+    "center": "مركز التدريب",
+    "duration": "المدة",
+    "notes": "ملاحظات",
+    "recordCompletion": "تسجيل إكمال الجلسة",
+    "noSessions": "لا توجد جلسات تدريب",
+    "noSessionsDesc": "قم بحجز جلسة تدريب للبدء",
+    "upcoming": "الجلسات القادمة",
+    "completed": "الجلسات المكتملة",
+    "totalHours": "إجمالي الساعات"
+  },
+  "test": {
+    "title": "نتائج الاختبارات",
+    "subtitle": "عرض نتائج الاختبارات وشهادات النجاح",
+    "results": "النتائج",
+    "enterResults": "إدخال النتائج",
+    "score": "الدرجة",
+    "pass": "ناجح",
+    "fail": "راسب",
+    "certificate": "الشهادة",
+    "attempts": "المحاولات",
+    "maxAttempts": "الحد الأقصى للمحاولات",
+    "retakeDate": "تاريخ إعادة الاختبار",
+    "theory": {
+      "title": "الاختبار النظري",
+      "score": "درجة الاختبار النظري",
+      "passingScore": "درجة النجاح"
+    },
+    "practical": {
+      "title": "الاختبار العملي",
+      "score": "درجة الاختبار العملي",
+      "passingScore": "درجة النجاح"
+    },
+    "noResults": "لا توجد نتائج",
+    "noResultsDesc": "لم تخض أي اختبارات بعد",
+    "viewCertificate": "عرض الشهادة",
+    "retakeEligible": "مؤهل لإعادة الاختبار",
+    "bookRetake": "حجز إعادة الاختبار"
+  },
+  "medical": {
+    "title": "النتائج الطبية",
+    "subtitle": "نتائج الفحوصات الطبية",
+    "results": "النتائج",
+    "enterResults": "إدخال النتائج",
+    "passed": "ناجح",
+    "failed": "راسب",
+    "pending": "قيد الانتظار",
+    "vision": "فحص البصر",
+    "hearing": "فحص السمع",
+    "bloodGroup": "فصيلة الدم",
+    "medicalCertificate": "الشهادة الطبية",
+    "noResults": "لا توجد نتائج",
+    "noResultsDesc": "لم تخض الفحص الطبي بعد",
+    "viewCertificate": "عرض الشهادة"
+  },
+  "employee": {
+    "training": {
+      "title": "إدارة التدريب",
+      "subtitle": "إدارة جلسات تدريب المتقدمين",
+      "allTrainees": "جميع المتدربين",
+      "trainers": "المدربين",
+      "createSession": "إنشاء جلسة تدريب",
+      "recordCompletion": "تسجيل الإكمال",
+      "reports": "التقارير",
+      "search": "بحث بالمتقدم أو رقم الطلب...",
+      "filter": {
+        "all": "الكل",
+        "completed": "مكتمل",
+        "pending": "قيد الانتظار",
+        "scheduled": "مجدول",
+        "notStarted": "لم يبدأ"
+      }
+    },
+    "testing": {
+      "title": "إدارة الاختبارات",
+      "subtitle": "جدولة وإدخال نتائج الاختبارات",
+      "schedule": "جدول الاختبارات",
+      "enterResults": "إدخال النتائج",
+      "reports": "تقارير الاختبارات",
+      "upcoming": "الاختبارات القادمة",
+      "completed": "الاختبارات المكتملة"
+    }
+  },
+  "license": {
+    "title": "رخصي",
+    "subtitle": "عرض وإدارة رخص القيادة الخاصة بك",
+    "myLicenses": "رخصي",
+    "digitalLicense": "الرخصة الرقمية",
+    "number": "رقم الرخصة",
+    "class": "الفئة",
+    "issueDate": "تاريخ الإصدار",
+    "expiryDate": "تاريخ الانتهاء",
+    "status": "الحالة",
+    "active": "نشطة",
+    "expired": "منتهية",
+    "suspended": "معلقة",
+    "downloadPdf": "تحميل PDF",
+    "shareLicense": "مشاركة الرخصة",
+    "reportLost": "الإبلاغ عن فقدان",
+    "verification": {
+      "title": "التحقق من الرخصة",
+      "search": "بحث",
+      "searchByNumber": "بحث برقم الرخصة",
+      "searchByNationalId": "بحث برقم الهوية",
+      "scanQr": "مسح QR",
+      "result": "نتيجة التحقق",
+      "valid": "رخصة صالحة",
+      "invalid": "رخصة غير صالحة",
+      "history": "سجل التحقق",
+      "noHistory": "لا يوجد سجل تحقق"
+    },
+    "employee": {
+      "issue": {
+        "title": "إصدار الرخص",
+        "subtitle": "إصدار رخص القيادة للمتقدمين المؤهلين",
+        "pending": "في انتظار الإصدار",
+        "ready": "جاهز للإصدار",
+        "generate": "إنشاء رقم الرخصة",
+        "print": "طباعة الرخصة",
+        "issueDigital": "إصدار رقمي"
+      },
+      "manage": {
+        "title": "إدارة الرخص",
+        "subtitle": "البحث وإدارة جميع الرخص",
+        "search": "بحث برقم الرخصة أو رقم الهوية...",
+        "filters": {
+          "status": "الحالة",
+          "class": "الفئة",
+          "expiryRange": "نطاق الانتهاء"
+        },
+        "actions": {
+          "view": "عرض التفاصيل",
+          "renew": "تجديد",
+          "suspend": "إيقاف",
+          "cancel": "إلغاء",
+          "print": "طباعة نسخة"
+        },
+        "export": "تصدير"
+      },
+      "reports": {
+        "title": "تقارير الرخص",
+        "subtitle": "إحصائيات وتقارير الرخص",
+        "byClass": "حسب الفئة",
+        "byMonth": "حسب الشهر",
+        "expiredSoon": "تنتهي قريباً",
+        "renewalRates": "معدلات التجديد",
+        "totalIssued": "إجمالي المصدرة",
+        "active": "نشطة",
+        "expired": "منتهية"
+      }
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "لوحة تحكم الإدارة",
+      "subtitle": "نظرة عامة على أداء النظام",
+      "today": "اليوم",
+      "export": "تصدير",
+      "applicationsToday": "طلبات اليوم",
+      "licensesIssued": "الرخص المصدرة",
+      "revenue": "الإيرادات",
+      "activeUsers": "المستخدمون النشطون",
+      "applicationsByStatus": "الطلبات حسب الحالة",
+      "applicationsTrend": "اتجاه الطلبات",
+      "recentActivity": "النشاط الأخير"
+    }
+  },
+  "reports": {
+    "title": "التقارير",
+    "subtitle": "تحليلات وإحصائيات شاملة",
+    "common": {
+      "all": "الكل",
+      "category": "الفئة",
+      "status": "الحالة"
+    },
+    "overview": "نظرة عامة",
+    "generateReport": "إنشاء تقرير",
+    "filters": {
+      "fromDate": "من تاريخ",
+      "toDate": "إلى تاريخ",
+      "status": "الحالة",
+      "category": "الفئة",
+      "serviceType": "نوع الخدمة",
+      "apply": "تطبيق",
+      "search": "بحث..."
+    },
+    "export": {
+      "csv": "تصدير CSV",
+      "excel": "تصدير Excel",
+      "pdf": "تصدير PDF"
+    },
+    "applications": {
+      "title": "تقرير الطلبات",
+      "subtitle": "تحليل طلبات رخص القيادة",
+      "byStatus": "حسب الحالة",
+      "byCategory": "حسب الفئة",
+      "trend": "الاتجاه",
+      "avgTime": "متوسط الوقت",
+      "rejectionReasons": "أسباب الرفض",
+      "table": "قائمة الطلبات",
+      "number": "رقم الطلب",
+      "applicant": "المتقدم",
+      "stage": "المرحلة",
+      "submittedDate": "تاريخ التقديم",
+      "completedDate": "تاريخ الإكمال",
+      "category": "الفئة",
+      "status": "الحالة"
+    },
+    "financial": {
+      "title": "التقرير المالي",
+      "subtitle": "تحليل الإيرادات والمدفوعات",
+      "total": "إجمالي الإيرادات",
+      "thisMonth": "هذا الشهر",
+      "thisYear": "هذا العام",
+      "breakdown": "تفصيل الإيرادات",
+      "revenueTrend": "اتجاه الإيرادات",
+      "byCategory": "حسب الفئة",
+      "outstanding": "المدفوعات المعلقة",
+      "refunds": "الاستردادات"
+    },
+    "users": {
+      "title": "تقرير المستخدمين",
+      "subtitle": "إحصائيات المستخدمين ونشاطهم",
+      "total": "إجمالي المستخدمين",
+      "active": "نشط هذا الشهر",
+      "newRegistrations": "تسجيلات جديدة",
+      "byRole": "حسب الدور"
+    },
+    "performance": {
+      "title": "تقرير الأداء",
+      "subtitle": "مؤشرات الأداء وال KPIs",
+      "processingTime": "وقت المعالجة",
+      "approvalRate": "معدل الموافقة"
+    },
+    "audits": {
+      "title": "سجلات التدقيق",
+      "subtitle": "سجل جميع عمليات النظام",
+      "user": "المستخدم",
+      "action": "الإجراء",
+      "entity": "الكيان",
+      "timestamp": "الوقت"
+    }
+  }
+}

@@ -24,4 +24,5 @@ public interface IApplicationService
     Task<ApiResponse<EligibilityCheckResult>> CheckEligibilityAsync(Guid userId, EligibilityCheckRequest request);
     Task<ApiResponse<ApplicationDto>> UpgradeAsync(UpgradeApplicationRequest request, Guid userId);
     Task<bool> IsOwnerAsync(Guid applicationId, Guid userId);
+    Task<ApiResponse<List<LicenseCategoryDto>>> GetLicenseCategoriesAsync();
 }

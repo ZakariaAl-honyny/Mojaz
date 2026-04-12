@@ -18,20 +18,21 @@
         "${GITHUB_TOKEN}"
       ]
     },
-    "play wright": {
-      "type": "local",
-      "command": [
-        "npx",
-        "@playwright/mcp@latest"
-      ]
-    },
-    "sql-server": {
+    "playwright": {
       "type": "local",
       "command": [
         "npx",
         "-y",
-        "@mcp-collection/mssql-mcp",
-        "Server=localhost,1434;Database=MojazDB;User Id=sa;Password=as123456;TrustServerCertificate=true"
+        "playwright-mcp@latest"
+      ]
+    },
+    "sqlserver": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-sqlserver",
+        "${SQLSERVER_CONNECTION_STRING}"
       ]
     }
   }

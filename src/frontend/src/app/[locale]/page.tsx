@@ -1,5 +1,11 @@
+<<<<<<< Updated upstream
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
+=======
+import {getTranslations} from 'next-intl/server';
+import {setRequestLocale} from 'next-intl/server';
+import {Link} from '@/i18n/routing';
+>>>>>>> Stashed changes
 
 export default async function HomePage({
   params
@@ -9,6 +15,10 @@ export default async function HomePage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('common');
+<<<<<<< Updated upstream
+=======
+  const tAuth = await getTranslations('auth');
+>>>>>>> Stashed changes
 
   return (
     <main className="flex-1 flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-700">
@@ -25,13 +35,13 @@ export default async function HomePage({
             href="/register"
             className="rounded-gov bg-primary-500 px-8 py-4 text-lg font-semibold text-white shadow-lg hover:bg-primary-600 transition-all hover:scale-105"
           >
-            {t('auth.register')}
+            {tAuth('register.submit')}
           </Link>
           <Link
             href="/login"
             className="rounded-gov px-8 py-4 text-lg font-semibold text-primary-500 border-2 border-primary-500 hover:bg-primary-50 transition-all"
           >
-            {t('auth.login')}
+            {tAuth('login.submit')}
           </Link>
         </div>
 

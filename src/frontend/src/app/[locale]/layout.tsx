@@ -42,11 +42,10 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
-  const bodyFont = locale === 'ar' ? 'font-arabic' : 'font-inter';
 
   return (
     <html lang={locale} dir={direction} className={`${inter.variable} ${ibmPlexArabic.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className={`min-h-full flex flex-col ${bodyFont}`}>
+      <body className="min-h-full flex flex-col">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -55,7 +54,9 @@ export default async function LocaleLayout({
         >
           <QueryProvider>
             <NextIntlClientProvider messages={messages}>
-              {children}
+              <div className={locale === 'ar' ? 'font-arabic' : 'font-inter'}>
+                {children}
+              </div>
             </NextIntlClientProvider>
           </QueryProvider>
         </ThemeProvider>
