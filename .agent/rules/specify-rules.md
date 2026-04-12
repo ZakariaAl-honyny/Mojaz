@@ -1,4 +1,4 @@
-﻿# Mojaz Development Guidelines
+# Mojaz Development Guidelines
 
 Auto-generated from all feature plans. Last updated: 2026-04-10
 
@@ -30,6 +30,7 @@ Auto-generated from all feature plans. Last updated: 2026-04-10
 - SQL Server 2022 (Licenses metadata), Blob Storage (NEEDS CLARIFICATION: exact blob storage provider AWS S3/Azure Blob/Local system) (024-license-issuance)
 - C# 12 (.NET 8) / TypeScript 5 (Next.js 15) + EF Core 8, FluentValidation, AutoMapper, shadcn/ui (026-license-replacement)
 - C# (.NET 8), TypeScript (Next.js 15) + Recharts (Frontend), TanStack Table (Frontend), QuestPDF (Backend), EF Core (Backend) (028-reports-system)
+- C# (ASP.NET Core 8), TypeScript (Next.js 15) + EF Core 8, shadcn/ui, next-intl, Hangfire, FluentValidation (027-license-renewal)
 
 - C# 12 / .NET 8 LTS + AutoMapper 13, FluentValidation 11, EF Core 8 (SqlServer), (003-backend-scaffold)
 
@@ -52,7 +53,9 @@ C# 12 / .NET 8 LTS: Follow standard conventions
 ## Recent Changes
 - 028-reports-system: Added C# (.NET 8), TypeScript (Next.js 15) + Recharts (Frontend), TanStack Table (Frontend), QuestPDF (Backend), EF Core (Backend)
 - 026-license-replacement: Added C# 12 (.NET 8) / TypeScript 5 (Next.js 15) + EF Core 8, FluentValidation, AutoMapper, shadcn/ui
+- 027-license-renewal: Added C# (ASP.NET Core 8), TypeScript (Next.js 15) + EF Core 8, shadcn/ui, next-intl, Hangfire, FluentValidation
 - 024-license-issuance: Added C# / .NET 8 (Backend), React / Next.js 15 (Frontend) + Entity Framework Core 8, QuestPDF, FluentValidation
+- 023-payment-simulation: Added C# 12 / .NET 8, TypeScript 5 / Next.js 15 + EF Core 8, QuestPDF, React Query 5, Tailwind CSS
 
 
 <!-- MANUAL ADDITIONS START -->

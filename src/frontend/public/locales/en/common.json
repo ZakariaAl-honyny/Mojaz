@@ -19,5 +19,27 @@
   "retry": "Retry",
   "continue": "Continue",
   "confirm": "Confirm",
-  "tryAgain": "Try Again"
+  "tryAgain": "Try Again",
+  "renewal": {
+    "title": "License Renewal",
+    "subtitle": "Renew your driving license",
+    "eligible": "Eligible for simplified renewal",
+    "notEligible": "Not eligible for simplified renewal",
+    "checkEligibility": "Check Eligibility",
+    "currentLicense": "Current License",
+    "expiresAt": "Expires on",
+    "gracePeriod": "Grace Period",
+    "withinGracePeriod": "Within grace period",
+    "outsideGracePeriod": "Outside grace period",
+    "existingRenewal": "Renewal in progress",
+    "medicalRequired": "Medical examination required",
+    "feePaid": "Fee paid",
+    "issueNew": "Issue new license",
+    "licenseIssued": "License issued successfully",
+    "oldLicenseDeactivated": "Old license deactivated",
+    "simplifiedFlow": "Simplified flow",
+    "skipTraining": "Skip Training",
+    "skipTheory": "Skip Theory Test",
+    "skipPractical": "Skip Practical Test"
+  }
 }
