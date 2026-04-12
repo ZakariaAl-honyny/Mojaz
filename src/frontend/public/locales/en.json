@@ -223,7 +223,10 @@
           "remarks": "Decision Remarks",
           "remarksPlaceholder": "Enter reason for rejection or approval notes...",
           "history": "Action History"
-        }
+  "common": {
+    "notfound": "Page Not Found"
+  }
+}
      }
   },
   "landing": {

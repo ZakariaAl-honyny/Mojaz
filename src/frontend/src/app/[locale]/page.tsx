@@ -1,10 +1,10 @@
-import {getTranslations, setRequestLocale} from 'next-intl/server';
-import {Link} from '@/i18n/routing';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Link } from '@/i18n/routing';
 
 export default async function HomePage({
   params
 }: {
-  params: Promise<{locale: string}>
+  params: Promise<{ locale: string }>
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -14,7 +14,7 @@ export default async function HomePage({
     <main className="flex-1 flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-700">
       <div className="max-w-2xl">
         <h1 className="text-5xl font-bold tracking-tight text-primary-500 sm:text-7xl mb-6">
-          {t('welcome')}
+          {t('title')}
         </h1>
         <p className="mt-6 text-xl leading-8 text-neutral-600 mb-10">
           {t('description')}
@@ -48,4 +48,3 @@ export default async function HomePage({
     </main>
   );
 }
-
