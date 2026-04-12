@@ -37,8 +37,20 @@ public class IntegrationTestBase : IDisposable
                 var authDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(Microsoft.AspNetCore.Authentication.IAuthenticationSchemeProvider));
                 if (authDescriptor != null) services.Remove(authDescriptor);
                 
-                // Also remove any other authentication-related registrations if they exist
-                // This is a blunt approach, but for integration tests, we want total control.
+                // Remove existing JWT authentication schemes added by the main app
+                var jwtSchemeDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions));
+                while (jwtSchemeDescriptor != null)
+                {
+                    services.Remove(jwtSchemeDescriptor);
+                    jwtSchemeDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions));
+                }
+                
+                // Remove any existing authentication handlers
+                var handlersToRemove = services.Where(d => d.ServiceType.Name.Contains("AuthenticationHandler")).ToList();
+                foreach (var handler in handlersToRemove)
+                {
+                    services.Remove(handler);
+                }
 
                 // Add TestAuthHandler as the authentication scheme provider
                 services.AddAuthentication(options =>
@@ -68,6 +80,48 @@ public class IntegrationTestBase : IDisposable
         DbContext = Scope.ServiceProvider.GetRequiredService<MojazDbContext>();
         
         DbContext.Database.EnsureCreated();
+        
+        // Seed required reference data
+        SeedTestDataAsync().GetAwaiter().GetResult();
+    }
+    
+    private async Task SeedTestDataAsync()
+    {
+        // Add license categories if not exist
+        if (!await DbContext.LicenseCategories.AnyAsync())
+        {
+            var categories = new[]
+            {
+                new Mojaz.Domain.Entities.LicenseCategory { Id = Guid.NewGuid(), Code = Mojaz.Domain.Enums.LicenseCategoryCode.A, NameAr = "دراجة نارية", NameEn = "Motorcycle", MinimumAge = 16, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.LicenseCategory { Id = Guid.NewGuid(), Code = Mojaz.Domain.Enums.LicenseCategoryCode.B, NameAr = "سيارة خاصة", NameEn = "Private Car", MinimumAge = 18, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.LicenseCategory { Id = Guid.NewGuid(), Code = Mojaz.Domain.Enums.LicenseCategoryCode.C, NameAr = "شاحنة خفيفة", NameEn = "Light Truck", MinimumAge = 21, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.LicenseCategory { Id = Guid.NewGuid(), Code = Mojaz.Domain.Enums.LicenseCategoryCode.D, NameAr = "شاحنة ثقيلة", NameEn = "Heavy Truck", MinimumAge = 21, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.LicenseCategory { Id = Guid.NewGuid(), Code = Mojaz.Domain.Enums.LicenseCategoryCode.E, NameAr = "حافلة", NameEn = "Bus", MinimumAge = 21, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.LicenseCategory { Id = Guid.NewGuid(), Code = Mojaz.Domain.Enums.LicenseCategoryCode.F, NameAr = "TRACTOR", NameEn = "Tractor", MinimumAge = 18, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
+            };
+            DbContext.LicenseCategories.AddRange(categories);
+            await DbContext.SaveChangesAsync();
+        }
+        
+        // Add system settings if not exist
+        if (!await DbContext.SystemSettings.AnyAsync())
+        {
+            var settings = new[]
+            {
+                new Mojaz.Domain.Entities.SystemSetting { SettingKey = "MIN_AGE_CATEGORY_A", SettingValue = "16", Description = "Minimum age for category A", CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.SystemSetting { SettingKey = "MIN_AGE_CATEGORY_B", SettingValue = "18", Description = "Minimum age for category B", CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.SystemSetting { SettingKey = "MIN_AGE_CATEGORY_C", SettingValue = "21", Description = "Minimum age for category C", CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.SystemSetting { SettingKey = "MIN_AGE_CATEGORY_D", SettingValue = "21", Description = "Minimum age for category D", CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.SystemSetting { SettingKey = "MIN_AGE_CATEGORY_E", SettingValue = "21", Description = "Minimum age for category E", CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.SystemSetting { SettingKey = "MIN_AGE_CATEGORY_F", SettingValue = "18", Description = "Minimum age for category F", CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.SystemSetting { SettingKey = "MAX_THEORY_ATTEMPTS", SettingValue = "3", Description = "Max theory test attempts", CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.SystemSetting { SettingKey = "MAX_PRACTICAL_ATTEMPTS", SettingValue = "3", Description = "Max practical test attempts", CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.SystemSetting { SettingKey = "LICENSE_VALIDITY_YEARS", SettingValue = "10", Description = "License validity years", CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.SystemSetting { SettingKey = "APPLICATION_FEE", SettingValue = "100", Description = "Application fee", CreatedAt = DateTime.UtcNow },
+            };
+            DbContext.SystemSettings.AddRange(settings);
+            await DbContext.SaveChangesAsync();
+        }
     }
 
     protected async Task AuthenticateAsUserAsync(Guid userId, string role = "Applicant")

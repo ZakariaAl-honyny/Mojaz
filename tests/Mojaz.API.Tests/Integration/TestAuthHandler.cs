@@ -12,9 +12,8 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
     public TestAuthHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
-        UrlEncoder encoder,
-        ISystemClock clock)
-        : base(options, logger, encoder, clock)
+        UrlEncoder encoder)
+        : base(options, logger, encoder)
     {
     }
 
@@ -27,26 +26,32 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
         }
 
         var token = authHeader.Substring("Bearer ".Length);
+        
+        // Support format: test-token-{userId}-{role}
+        // Or: test-token-{guid}-{role}
         if (!token.StartsWith("test-token-"))
         {
             return Task.FromResult(AuthenticateResult.Fail("Invalid Test Token"));
         }
 
-        // Token format: test-token-{userId}-{role}
-        var parts = token.Split('-');
-        if (parts.Length < 4)
+        // Extract userId and role from token
+        // Format: test-token-{userId}-{role}
+        var remaining = token.Substring("test-token-".Length);
+        
+        // Find the last hyphen to separate role from userId
+        var lastHyphenIndex = remaining.LastIndexOf('-');
+        if (lastHyphenIndex <= 0)
         {
             return Task.FromResult(AuthenticateResult.Fail("Invalid Test Token Format"));
         }
 
-        var userId = parts[2];
-        var role = parts[3];
+        var role = remaining.Substring(lastHyphenIndex + 1);
+        var userId = remaining.Substring(0, lastHyphenIndex);
 
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, userId),
             new Claim(ClaimTypes.Role, role),
-            new Claim(ClaimTypes.Role, role), // Add duplicate for role checking
             new Claim("UserId", userId)
         };
 

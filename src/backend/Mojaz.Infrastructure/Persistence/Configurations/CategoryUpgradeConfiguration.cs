@@ -28,6 +28,17 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.HasIndex(x => x.LicenseId);
             builder.HasIndex(x => x.ApplicationId);
             builder.HasIndex(x => x.UpgradedAt);
+
+            // Disable cascade delete to prevent cycle/multiple cascade path errors
+            builder.HasOne(x => x.License)
+                .WithMany()
+                .HasForeignKey(x => x.LicenseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.Application)
+                .WithMany()
+                .HasForeignKey(x => x.ApplicationId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
