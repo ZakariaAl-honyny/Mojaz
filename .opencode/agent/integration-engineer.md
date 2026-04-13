@@ -1,7 +1,6 @@
 ---
 name: "Integration Engineer"
-model: opencode/minmax-v2-pro-free
-reasoningEffort: high
+reasoningEffect: high
 role: "External services specialist"
 mode: subagent
 ---

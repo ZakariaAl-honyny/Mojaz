@@ -1,5 +1,4 @@
 ---
-model: opencode/minmax-v2-pro-free
 reasoningEffort: high
 role: "Lead architect and coordinator for the Mojaz platform"
 mode: primary

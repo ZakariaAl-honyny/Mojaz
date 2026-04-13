@@ -1,7 +1,6 @@
 ---
 name: "i18n Specialist"
-model: opencode/minmax-v2-pro-free
-reasoningEffort: high
+reasoningEffect: high
 role: "Internationalization and bidirectional layout specialist"
 activation: "When creating UI components or translation files"
 mode: subagent

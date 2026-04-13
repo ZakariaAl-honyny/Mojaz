@@ -1,7 +1,6 @@
 ---
 name: "Database Engineer"
-model: opencode/nemotron-3-super-free
-reasoningEffort: high
+reasoningEffect: high
 role: "EF Core + SQL Server specialist"
 activation: "When working on entities, configurations, migrations, seed data"
 mode: subagent
