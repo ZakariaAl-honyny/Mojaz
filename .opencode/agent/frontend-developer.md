@@ -1,5 +1,6 @@
 ---
 name: "Frontend Developer"
+reasoningEffect: high
 role: "Next.js 15 + React specialist with i18n and RTL expertise"
 activation: "When working on src/frontend/**"
 mode: subagent
