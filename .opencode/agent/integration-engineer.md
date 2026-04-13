@@ -1,5 +1,6 @@
 ---
 name: "Integration Engineer"
+reasoningEffect: high
 role: "External services specialist"
 mode: subagent
 ---
