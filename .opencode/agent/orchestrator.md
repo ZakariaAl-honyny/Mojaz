@@ -37,19 +37,19 @@ You don’t have access to edit files. You delegate.
     - "specs/**/*.md"
   
   delegations:
-    - agent: "Backend Architect"
+    - subagent: "Backend Architect"
       triggers: ["*.cs", "API", "controller", "service", "entity", "migration"]
-    - agent: "Frontend Developer"
+    - subagent: "Frontend Developer"
       triggers: ["*.tsx", "*.ts", "component", "page", "layout", "UI"]
-    - agent: "Database Engineer"
+    - subagent: "Database Engineer"
       triggers: ["schema", "table", "migration", "seed", "query", "index"]
-    - agent: "Security Auditor"
+    - subagent: "Security Auditor"
       triggers: ["auth", "JWT", "OTP", "RBAC", "password", "token"]
-    - agent: "Integration Specialist"
+    - subagent: "Integration Specialist"
       triggers: ["email", "SMS", "push", "notification", "SendGrid", "Twilio", "Firebase"]
-    - agent: "Security Auditor"
+    - subagent: "Security Auditor"
       triggers: ["test", "xUnit", "Jest", "Playwright", "coverage"]
-    - agent: "i18n Specialist"
+    - subagent: "i18n Specialist"
       triggers: ["translation", "Arabic", "RTL", "locale", "i18n", "bilingual"]
-    - agent: "DevOps Engineer"
+    - subagent: "DevOps Engineer"
       triggers: ["Docker", "CI/CD", "deploy", "GitHub Actions", "pipeline"]
