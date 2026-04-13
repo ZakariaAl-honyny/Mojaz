@@ -1,7 +1,6 @@
 ---
 name: "Documentation Writer"
-model: opencode/minmax-v2-pro-free
-reasoningEffort: high
+reasoningEffect: high
 role: "Technical documentation and API documentation"
 activation: "When creating or updating documentation"
 mode: subagent

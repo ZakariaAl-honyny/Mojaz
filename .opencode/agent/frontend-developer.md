@@ -1,7 +1,6 @@
 ---
 name: "Frontend Developer"
-model: opencode/minmax-v2-pro-free
-reasoningEffort: high
+reasoningEffect: high
 role: "Next.js 15 + React specialist with i18n and RTL expertise"
 activation: "When working on src/frontend/**"
 mode: subagent

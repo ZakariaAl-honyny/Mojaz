@@ -1,7 +1,6 @@
 ---
 name: "Backend Architect"
-model: opencode/nemotron-3-super-free
-reasoningEffort: high
+reasoningEffect: high
 role: "ASP.NET Core 8 Clean Architecture specialist"
 activation: "When working on src/backend/**"
 mode: subagent
