@@ -3,7 +3,7 @@ using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -124,24 +124,58 @@ var user = new User
 
     public async Task<ApiResponse<LoginResponse>> LoginAsync(LoginRequest request)
     {
-        // Find user by email or phone with case-insensitive search
+        // Find user by NationalId, email, or phone
         User? user = null;
         
-        if (request.Method == RegistrationMethod.Email)
+        // Support three login methods: NationalId, Email, or Phone
+        if (request.Method == RegistrationMethod.NationalId || string.IsNullOrEmpty(request.Identifier))
         {
-            var usersByEmail = await _userRepository.FindAsync(u => u.Email.ToLower() == request.Identifier.ToLower().Trim() && !u.IsDeleted);
+            // Try to find by NationalId (identifier field contains NationalId)
+            var usersByNationalId = await _userRepository.FindAsync(u => 
+                u.NationalId == request.Identifier.Trim() && !u.IsDeleted);
+            user = usersByNationalId.FirstOrDefault();
+        }
+        
+        // If not found by NationalId, try by email
+        if (user == null && (request.Method == RegistrationMethod.Email || request.Identifier.Contains("@")))
+        {
+            var usersByEmail = await _userRepository.FindAsync(u => 
+                u.Email.ToLower() == request.Identifier.ToLower().Trim() && !u.IsDeleted);
             user = usersByEmail.FirstOrDefault();
         }
-        else
+        
+        // If still not found, try by phone
+        if (user == null)
         {
-            var usersByPhone = await _userRepository.FindAsync(u => u.PhoneNumber == request.Identifier.Trim() && !u.IsDeleted);
+            var usersByPhone = await _userRepository.FindAsync(u => 
+                u.PhoneNumber == request.Identifier.Trim() && !u.IsDeleted);
             user = usersByPhone.FirstOrDefault();
         }
+
+        // Debug: Log the lookup result
+        _auditService.LogAsync("LOGIN_ATTEMPT", "User", 
+            $"Identifier={request.Identifier}, Method={request.Method}, UserFound={user != null}").ConfigureAwait(false);
 
         if (user != null && user.LockoutEnd > DateTime.UtcNow)
             return ApiResponse<LoginResponse>.Fail(403, $"Account locked until {user.LockoutEnd:HH:mm}.");
 
-        if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+        // Verify password - BCrypt verification
+        bool passwordValid = false;
+        if (user != null && !string.IsNullOrEmpty(user.PasswordHash))
+        {
+            try 
+            {
+                passwordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
+            }
+            catch (Exception ex)
+            {
+                // Log BCrypt failure for debugging
+                _auditService.LogAsync("LOGIN_ERROR", "User", 
+                    $"BCrypt error: {ex.Message}, Hash={user.PasswordHash.Substring(0, Math.Min(20, user.PasswordHash.Length))}").ConfigureAwait(false);
+            }
+        }
+        
+        if (user == null || !passwordValid)
         {
             if (user != null)
             {
@@ -162,7 +196,8 @@ var user = new User
         if (!user.IsEmailVerified && !user.IsPhoneVerified)
             return ApiResponse<LoginResponse>.Fail(403, "Account is not verified.");
 
-        var accessToken = _jwtService.GenerateAccessToken(user.Id, user.FullNameEn, user.Role.ToString());
+        // Cast UserRole to AppRole since they have the same values but are different enums
+        var accessToken = _jwtService.GenerateAccessToken(user.Id, user.FullNameEn, (AppRole)user.Role);
         var refreshTokenValue = _jwtService.GenerateRefreshToken();
 
         var refreshToken = new RefreshToken
@@ -190,81 +225,130 @@ var user = new User
         });
     }
 
-    public async Task<ApiResponse<bool>> VerifyOtpAsync(VerifyOtpRequest request)
+public async Task<ApiResponse<bool>> VerifyOtpAsync(VerifyOtpRequest request)
     {
+        // Find OTP by destination and purpose
         var otps = await _otpRepository.FindAsync(o => 
-            o.UserId == request.UserId && 
-            o.Purpose == request.Type && 
+            o.Destination == request.Destination && 
+            o.Purpose == request.Purpose && 
             !o.IsUsed && 
             o.ExpiresAt > DateTime.UtcNow);
         
         var otp = otps.FirstOrDefault();
-
-        if (otp == null || !BCrypt.Net.BCrypt.Verify(request.Code, otp.CodeHash))
-            return ApiResponse<bool>.Fail(400, "Invalid or expired OTP.");
-
-        otp.IsUsed = true;
-        otp.UsedAt = DateTime.UtcNow;
-
-        var user = await _userRepository.GetByIdAsync(request.UserId);
-        if (user != null)
+        
+        if (otp == null)
+            return ApiResponse<bool>.Fail(400, "No valid OTP found for this destination.");
+            
+        if (!BCrypt.Net.BCrypt.Verify(request.Code, otp.CodeHash))
         {
-            if (request.Type == OtpPurpose.Registration) 
+            otp.AttemptCount++;
+            if (otp.AttemptCount >= 3)
             {
-                if (user.RegistrationMethod == RegistrationMethod.Email)
-                {
-                    user.IsEmailVerified = true;
-                    user.EmailVerifiedAt = DateTime.UtcNow;
-                    user.IsActive = true;
-                }
-                else if (user.RegistrationMethod == RegistrationMethod.Phone)
-                {
-                    user.IsPhoneVerified = true;
-                    user.PhoneVerifiedAt = DateTime.UtcNow;
-                    user.IsActive = true;
-                }
+                otp.IsUsed = true; // Mark as used after failed attempts
+                otp.IsInvalidated = true;
             }
-            _userRepository.Update(user);
+            await _unitOfWork.SaveChangesAsync();
+            return ApiResponse<bool>.Fail(400, "Invalid verification code.");
         }
 
+        // OTP is valid - mark as used
+        otp.IsUsed = true;
+        
+        // Find the user and mark as verified
+        var users = await _userRepository.FindAsync(u => u.Id == otp.UserId && !u.IsDeleted);
+        var user = users.FirstOrDefault();
+        
+        if (user != null)
+        {
+            if (otp.DestinationType == DestinationType.Email)
+                user.IsEmailVerified = true;
+            else
+                user.IsPhoneVerified = true;
+            
+            // If verified via email, activate the account
+            if (otp.DestinationType == DestinationType.Email && !user.IsActive)
+                user.IsActive = true;
+                
+            _userRepository.Update(user);
+        }
+        
         await _unitOfWork.SaveChangesAsync();
+        
+        await _auditService.LogAsync("OTP_VERIFIED", "User", user?.Id.ToString() ?? otp.UserId.ToString());
+        
         return ApiResponse<bool>.Ok(true, "Verification successful.");
     }
 
-    public async Task<ApiResponse<bool>> ResendOtpAsync(ResendOtpRequest request)
+    public async Task<ApiResponse<OtpResponseDto>> ResendOtpAsync(ResendOtpRequest request)
     {
-        var user = await _userRepository.GetByIdAsync(request.UserId);
-        if (user == null) return ApiResponse<bool>.Fail(404, "User not found.");
-
+        // Find existing valid OTP
+        var otps = await _otpRepository.FindAsync(o => 
+            o.Destination == request.Destination && 
+            o.Purpose == request.Purpose && 
+            !o.IsUsed && 
+            o.ExpiresAt > DateTime.UtcNow);
+        
+        var existingOtp = otps.FirstOrDefault();
+        
+        // Check cooldown (60 seconds)
+        if (existingOtp != null && existingOtp.CreatedAt > DateTime.UtcNow.AddSeconds(-60))
+            return ApiResponse<OtpResponseDto>.Fail(429, "Please wait before requesting another OTP.");
+        
+        // Find user
+        var users = await _userRepository.FindAsync(u => 
+            (u.Email == request.Destination || u.PhoneNumber == request.Destination) && 
+            !u.IsDeleted);
+        var user = users.FirstOrDefault();
+        
+        if (user == null)
+            return ApiResponse<OtpResponseDto>.Fail(404, "User not found.");
+        
+        // Generate new OTP
         var otpValue = new Random().Next(100000, 999999).ToString();
+        var destinationType = request.Destination.Contains('@') ? DestinationType.Email : DestinationType.Phone;
+        
         var otp = new OtpCode
         {
             UserId = user.Id,
             CodeHash = BCrypt.Net.BCrypt.HashPassword(otpValue),
-            ExpiresAt = DateTime.UtcNow.AddMinutes(5),
-            Purpose = request.Type,
-            Destination = user.RegistrationMethod == RegistrationMethod.Email ? user.Email! : user.PhoneNumber!,
-            DestinationType = user.RegistrationMethod == RegistrationMethod.Email ? DestinationType.Email : DestinationType.Phone
+            ExpiresAt = DateTime.UtcNow.AddMinutes(destinationType == DestinationType.Email ? 15 : 5),
+            Purpose = request.Purpose,
+            Destination = request.Destination,
+            DestinationType = destinationType
         };
-
+        
         await _otpRepository.AddAsync(otp);
+        
+        // Invalidate old OTP if exists
+        if (existingOtp != null)
+        {
+            existingOtp.IsInvalidated = true;
+            existingOtp.IsUsed = true;
+        }
+        
         await _unitOfWork.SaveChangesAsync();
-
+        
+        // Send notification
         await _notificationService.SendAsync(new NotificationRequest
         {
             UserId = user.Id,
-            EventType = NotificationEventType.ApplicationSubmitted,
-            TitleAr = "رمز تفعيل جديد - مُجاز",
-            TitleEn = "New Activation Code - Mojaz",
-            MessageAr = $"رمز التفعيل الخاص بك الجديد هو: {otpValue}",
-            MessageEn = $"Your new activation code is: {otpValue}",
-            Email = user.RegistrationMethod == RegistrationMethod.Email,
-            Sms = user.RegistrationMethod == RegistrationMethod.Phone,
+            EventType = NotificationEventType.OtpResent,
+            TitleAr = "رمز التحقق الجديد - مُجاز",
+            TitleEn = "New Verification Code - Mojaz",
+            MessageAr = $"رمز التحقق الجديد: {otpValue}",
+            MessageEn = $"Your new verification code is: {otpValue}",
+            Email = destinationType == DestinationType.Email,
+            Sms = destinationType == DestinationType.Phone,
             InApp = true,
             Push = true
         });
-
-        return ApiResponse<bool>.Ok(true, "New OTP has been sent.");
+        
+        // Mask the destination
+        var masked = destinationType == DestinationType.Email 
+            ? request.Destination.Substring(0, 2) + "***" + request.Destination.Substring(request.Destination.IndexOf('@'))
+            : "***" + request.Destination.Substring(request.Destination.Length - 4);
+        
+return ApiResponse<OtpResponseDto>.Ok(new OtpResponseDto { DestinationMasked = masked }, "OTP resent successfully.");
     }
 
     public async Task<ApiResponse<bool>> ForgotPasswordAsync(ForgotPasswordRequest request)
@@ -372,7 +456,8 @@ var user = new User
         if (user == null || !user.IsActive)
             return ApiResponse<LoginResponse>.Fail(403, "User not found or inactive.");
 
-        var newAccessToken = _jwtService.GenerateAccessToken(user.Id, user.FullNameEn, user.Role.ToString());
+        // Cast UserRole to AppRole since they have the same values but are different enums
+        var newAccessToken = _jwtService.GenerateAccessToken(user.Id, user.FullNameEn, (AppRole)user.Role);
         var newRefreshTokenValue = _jwtService.GenerateRefreshToken();
 
         storedToken.IsRevoked = true;
@@ -423,5 +508,22 @@ var user = new User
         var randomPart = _random.Next(10000000, 99999999);
         var combined = (timestamp + randomPart) % 10000000000;
         return combined.ToString("D10");
+    }
+    
+    public async Task<ApiResponse<bool>> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword)
+    {
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user == null) return ApiResponse<bool>.Fail(404, "User not found.");
+        
+        if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.PasswordHash))
+            return ApiResponse<bool>.Fail(401, "Current password is incorrect.");
+        
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword, 12);
+        _userRepository.Update(user);
+        await _unitOfWork.SaveChangesAsync();
+        
+        await _auditService.LogAsync("PASSWORD_CHANGED", "User", userId.ToString());
+        
+        return ApiResponse<bool>.Ok(true, "Password changed successfully.");
     }
 }
