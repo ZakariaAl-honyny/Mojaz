@@ -321,13 +321,20 @@ public class DevController : ControllerBase
         try
         {
             // Test Twilio SMS
+            // Note: Trial Twilio accounts cannot send to unreverified numbers
+            // The FromNumber needs to be verified for production use
             await _smsService.SendAsync("+967771234567", "Mojaz Test: Your verification code is 123456");
-
             results["SMS"] = new { success = true, message = "SMS sent" };
         }
         catch (System.Exception ex)
         {
-            results["SMS"] = new { success = false, error = ex.Message };
+            // For trial accounts, note the limitation
+            results["SMS"] = new { 
+                success = false, 
+                error = ex.Message.Contains("not a valid") 
+                    ? "Twilio trial: Sender number not verified for international SMS" 
+                    : ex.Message 
+            };
         }
 
         return Ok(results);
