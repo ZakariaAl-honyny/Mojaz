@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { ChevronLeft, ChevronRight, Home } from "lucide-react";
 import { FinalApprovalPanel } from "@/components/domain/application/FinalApprovalPanel";
 import { cn } from "@/lib/utils";

@@ -12,7 +12,7 @@ import {
   Clock, 
   GraduationCap 
 } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { StaggeredFade, StaggeredItem } from "@/components/ui/staggered-fade";
 
 export function ServiceGrid() {
@@ -46,6 +46,7 @@ export function ServiceGrid() {
             <StaggeredItem key={service.id}>
               <Link 
                 href={service.href}
+                data-testid={`service-${service.id}-link`}
                 className="group relative block h-full p-8 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-gov transition-all hover:border-secondary-500/50 hover:shadow-xl hover:shadow-secondary-500/5 overflow-hidden"
               >
                 {/* Hover Glow Effect */}

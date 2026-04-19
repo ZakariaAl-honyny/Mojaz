@@ -5,7 +5,7 @@ import { ApplicationStatus } from "@/types/api.types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileText, CreditCard, Activity, CalendarClock } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { GateLockIndicator } from "@/components/domain/training/GateLockIndicator";
 import { TheoryTestHistory } from "@/components/domain/theory/TheoryTestHistory";
 import { PaymentSection } from "@/components/domain/payment/PaymentSection";

@@ -15,7 +15,7 @@ import {
   Clock,
   Shield
 } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { cn } from "@/lib/utils";

@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ShieldCheck } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export function CTASection() {
@@ -35,7 +35,7 @@ export function CTASection() {
 
           <ScrollReveal delay={0.2}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <Link href="/register">
+              <Link href="/register" data-testid="cta-register-button">
                 <Button 
                   size="lg" 
                   className="bg-[#06B6D4] hover:bg-[#C49000] text-neutral-900 font-bold px-12 h-16 rounded-2xl text-xl shadow-[0_0_30px_rgba(212,160,23,0.3)] transition-all hover:scale-105 active:scale-95"

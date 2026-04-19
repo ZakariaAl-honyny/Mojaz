@@ -23,6 +23,11 @@ import { useRouter } from '@/i18n/routing';
 
 type UserRole = 'Applicant' | 'Receptionist' | 'Examiner' | 'Doctor' | 'Manager' | 'Admin';
 
+type LoginValues = {
+  identifier: string;
+  password: string;
+};
+
 const roles: { value: UserRole; key: string }[] = [
   { value: 'Applicant', key: 'applicant' },
   { value: 'Receptionist', key: 'receptionist' },
@@ -106,6 +111,7 @@ export default function LoginForm() {
               placeholder={t("login.placeholderIdentifier")}
               {...register('identifier')}
               dir="ltr"
+              data-testid="login-identifier-input"
               className="h-14 bg-background/50 border-border rounded-2xl text-white placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all font-english"
             />
           </div>
@@ -123,6 +129,7 @@ export default function LoginForm() {
               placeholder={t("login.placeholderPassword")}
               {...register('password')}
               dir="ltr"
+              data-testid="login-password-input"
               className="h-14 bg-background/50 border-border rounded-2xl text-white placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all pe-12 font-english"
             />
             <Button
@@ -150,7 +157,7 @@ export default function LoginForm() {
             {t("login.roleSelection")}
           </Label>
           <Select value={selectedRole} onValueChange={(value) => setSelectedRole(value as UserRole)}>
-            <SelectTrigger className="h-12 bg-background/80 border-border rounded-xl">
+            <SelectTrigger className="h-12 bg-background/80 border-border rounded-xl" data-testid="login-role-select">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -166,6 +173,7 @@ export default function LoginForm() {
         <div className="flex items-center justify-end">
           <Link
             href="/forgot-password"
+            data-testid="login-forgot-password-link"
             className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
           >
             {t("login.forgotPassword")}
@@ -175,6 +183,7 @@ export default function LoginForm() {
         <Button
           type="submit"
           disabled={isLoading}
+          data-testid="login-submit-button"
           className="w-full h-14 text-lg font-black bg-primary hover:bg-primary/90 transition-all rounded-[1.2rem] shadow-xl shadow-primary/20 active:scale-[0.98] mt-2 group"
         >
           {isLoading ? (
@@ -192,7 +201,7 @@ export default function LoginForm() {
 
         <p className="text-center text-sm font-medium text-muted-foreground pt-4 border-t border-border/50">
           {t("noAccount")}{" "}
-          <Link href="/register" className="text-primary font-bold hover:underline transition-all">
+          <Link href="/register" data-testid="login-register-link" className="text-primary font-bold hover:underline transition-all">
             {t("signUp")}
           </Link>
         </p>

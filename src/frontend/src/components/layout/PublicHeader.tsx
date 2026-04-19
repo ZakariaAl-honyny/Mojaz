@@ -27,12 +27,10 @@ export default function PublicHeader() {
 
   const navLinks = [
     { href: '/', key: 'home' },
-    { href: '/services', key: 'services' },
-    { href: '/centers', key: 'centers' },
+    { href: '#services', key: 'services' },
     { href: '/traffic-laws', key: 'traffic_laws' },
     { href: '/violations', key: 'violations' },
-    { href: '/about', key: 'about' },
-    { href: '/faq', key: 'faq' }
+    { href: '#faq', key: 'faq' }
   ];
 
   return (
@@ -76,12 +74,12 @@ export default function PublicHeader() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden xl:flex items-center gap-2">
+          <nav className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link 
                 key={link.key} 
                 href={link.href} 
-                className="px-6 py-2 rounded-xl text-[11px] font-black uppercase tracking-[0.15em] text-neutral-500 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-white hover:bg-primary-500/5 transition-all"
+                className="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.1em] text-neutral-500 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-white hover:bg-primary-500/5 transition-all text-center whitespace-nowrap"
               >
                 {commonT(`nav.${link.key}`)}
               </Link>

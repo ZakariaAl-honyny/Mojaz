@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronRight, ShieldCheck, Globe } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { StaggeredFade, StaggeredItem } from "@/components/ui/staggered-fade";
 
@@ -69,7 +69,7 @@ export function HeroSection() {
             </StaggeredItem>
 
             <StaggeredItem className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
-              <Link href="/register">
+              <Link href="/register" data-testid="nav-register-button">
                 <Button
                   size="lg"
                   className="bg-[#06B6D4] hover:bg-[#C49000] text-neutral-900 font-bold px-8 h-14 rounded-gov transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(212,160,23,0.3)]"
@@ -81,7 +81,7 @@ export function HeroSection() {
                 </Button>
               </Link>
 
-              <Link href="/login">
+              <Link href="/login" data-testid="nav-login-button">
                 <Button
                   variant="outline"
                   size="lg"

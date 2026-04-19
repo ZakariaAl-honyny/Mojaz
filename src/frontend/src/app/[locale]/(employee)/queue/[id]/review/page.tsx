@@ -17,7 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { StatusBadge } from "@/components/domain/application/StatusBadge";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { useState } from "react";
 
 export default function ApplicationReviewPage() {

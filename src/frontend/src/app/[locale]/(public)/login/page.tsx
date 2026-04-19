@@ -15,7 +15,7 @@ export default async function LoginPage({
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-primary/5 via-background to-accent/5">
       {/* Header */}
       <header className="p-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+        <Link href="/" data-testid="login-back-to-home" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
           <span className="text-sm font-medium">{t("common.backToHome")}</span>
         </Link>
       </header>

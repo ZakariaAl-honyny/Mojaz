@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { ApplicationStatus } from "@/types/api.types";
 import { StatusBadge } from "./StatusBadge";
 import { Card, CardContent } from "@/components/ui/card";
