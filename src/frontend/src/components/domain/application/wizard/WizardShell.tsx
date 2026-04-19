@@ -12,7 +12,8 @@ import Step1ServiceSelection from './steps/Step1ServiceSelection';
 import { Step2LicenseCategory } from './steps/Step2LicenseCategory';
 import Step3PersonalInfo from './steps/Step3PersonalInfo';
 import Step4ApplicationDetails from './steps/Step4ApplicationDetails';
-import { Step5ReviewSubmit } from './steps/Step5ReviewSubmit';
+import Step5DocumentUpload from './steps/Step5DocumentUpload';
+import { Step5ReviewSubmit as Step6ReviewSubmit } from './steps/Step5ReviewSubmit';
 import { AutoSaveIndicator } from './shared/AutoSaveIndicator';
 
 const steps = [
@@ -20,8 +21,10 @@ const steps = [
   Step2LicenseCategory,
   Step3PersonalInfo,
   Step4ApplicationDetails,
-  Step5ReviewSubmit,
+  Step5DocumentUpload,
+  Step6ReviewSubmit,
 ];
+
 
 export function WizardShell() {
   const params = useParams();

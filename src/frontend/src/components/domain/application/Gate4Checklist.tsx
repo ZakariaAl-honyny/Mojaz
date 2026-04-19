@@ -30,7 +30,7 @@ export function Gate4Checklist({ result, isLoading }: Gate4ChecklistProps) {
         className={cn(
           "p-4 rounded-lg border-2 transition-all duration-300",
           result.isFullyPassed
-            ? "bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-800"
+            ? "bg-King blue-50 border-King blue-200 dark:bg-King blue-950/30 dark:border-King blue-800"
             : "bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800"
         )}
       >
@@ -39,7 +39,7 @@ export function Gate4Checklist({ result, isLoading }: Gate4ChecklistProps) {
             className={cn(
               "w-10 h-10 rounded-full flex items-center justify-center",
               result.isFullyPassed
-                ? "bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-400"
+                ? "bg-King blue-100 text-King blue-600 dark:bg-King blue-900 dark:text-King blue-400"
                 : "bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-400"
             )}
           >
@@ -88,7 +88,7 @@ function ConditionRow({ condition, delay }: { condition: Gate4Condition; delay: 
       className={cn(
         "flex items-center justify-between p-4 rounded-lg border transition-all duration-300",
         condition.isPassed
-          ? "bg-white border-green-200 dark:bg-gray-900 dark:border-green-800"
+          ? "bg-white border-King blue-200 dark:bg-gray-900 dark:border-King blue-800"
           : "bg-red-50 border-red-200 dark:bg-red-950/30 dark:border-red-800"
       )}
       style={{ animationDelay: `${delay}ms` }}
@@ -98,7 +98,7 @@ function ConditionRow({ condition, delay }: { condition: Gate4Condition; delay: 
           className={cn(
             "w-8 h-8 rounded-full flex items-center justify-center",
             condition.isPassed
-              ? "bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-400"
+              ? "bg-King blue-100 text-King blue-600 dark:bg-King blue-900 dark:text-King blue-400"
               : "bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-400"
           )}
         >
@@ -125,7 +125,7 @@ function ConditionRow({ condition, delay }: { condition: Gate4Condition; delay: 
         className={cn(
           "px-3 py-1 rounded-full text-xs font-medium",
           condition.isPassed
-            ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+            ? "bg-King blue-100 text-King blue-700 dark:bg-King blue-900 dark:text-King blue-300"
             : "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
         )}
       >

@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FluentAssertions;
 using Hangfire;
-using Mojaz.Application.DTOs.License;
-using Mojaz.Application.Interfaces.Infrastructure;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.License;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using Moq;
 using Xunit;
 
-using ApplicationEntity = Mojaz.Domain.Entities.Application;
-using ApplicationEmailService = Mojaz.Application.Interfaces.Services.IEmailService;
+using ApplicationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
+using ApplicationEmailService = DrivingLicenseIssuanceSystem.Application.Interfaces.Services.IEmailService;
 
-namespace Mojaz.Application.Tests.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Tests.Services;
 
 public class LicenseServiceTests
 {

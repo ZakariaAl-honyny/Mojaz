@@ -1,6 +1,6 @@
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Application.DTOs.Application;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Application;
 
 public class EligibilityCheckRequest
 {

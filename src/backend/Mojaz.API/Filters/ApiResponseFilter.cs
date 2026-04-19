@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Shared;
 using System.Threading.Tasks;
 
-namespace Mojaz.API.Filters;
+namespace DrivingLicenseIssuanceSystem.API.Filters;
 
 public class ApiResponseFilter : IAsyncResultFilter
 {

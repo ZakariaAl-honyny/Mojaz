@@ -1,4 +1,4 @@
-namespace Mojaz.Shared;
+namespace DrivingLicenseIssuanceSystem.Shared;
 
 /// <summary>
 /// Standard API response wrapper for all endpoints.

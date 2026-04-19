@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 
-namespace Mojaz.API.Tests.Integration;
+namespace DrivingLicenseIssuanceSystem.API.Tests.Integration;
 
 public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
@@ -51,7 +51,8 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, userId),
-            new Claim(ClaimTypes.Role, role),
+            new Claim(ClaimTypes.Role, role),  // Add ClaimTypes.Role for [Authorize(Roles = "...")]
+            new Claim("role", role),           // Add "role" for policy RequireClaim("role", ...)
             new Claim("UserId", userId)
         };
 

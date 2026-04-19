@@ -1,4 +1,4 @@
-namespace Mojaz.Shared.Constants
+namespace DrivingLicenseIssuanceSystem.Shared.Constants
 {
     public static class SmsTemplates
     {
@@ -33,11 +33,11 @@ namespace Mojaz.Shared.Constants
             // OTP is in values[0]
             if (language == "ar")
             {
-                return $"مُجاز: رمز التحقق الخاص بك هو {values[0]}.Expires in 5 min.";
+                return $"نظام إصدار رخص القيادة: رمز التحقق الخاص بك هو {values[0]}.Expires in 5 min.";
             }
             else
             {
-                return $"Mojaz: Your verification code is {values[0]}. Valid for 5 min.";
+                return $"DrivingLicenseIssuanceSystem: Your verification code is {values[0]}. Valid for 5 min.";
             }
         }
 
@@ -45,11 +45,11 @@ namespace Mojaz.Shared.Constants
         {
             if (language == "ar")
             {
-                return $"مُجاز: رمز استعادة كلمة المرور {values[0]}.Expires 5 min.";
+                return $"نظام إصدار رخص القيادة: رمز استعادة كلمة المرور {values[0]}.Expires 5 min.";
             }
             else
             {
-                return $"Mojaz: Password reset code {values[0]}. Valid 5 min.";
+                return $"DrivingLicenseIssuanceSystem: Password reset code {values[0]}. Valid 5 min.";
             }
         }
 
@@ -58,11 +58,11 @@ namespace Mojaz.Shared.Constants
             // values[0] = appointment date/time
             if (language == "ar")
             {
-                return $"مُجاز: تم تأكيد موعدك في {values[0]}. يرجى الحضور في الموعد المحدد.";
+                return $"نظام إصدار رخص القيادة: تم تأكيد موعدك في {values[0]}. يرجى الحضور في الموعد المحدد.";
             }
             else
             {
-                return $"Mojaz: Your appointment is confirmed at {values[0]}. Please arrive on time.";
+                return $"DrivingLicenseIssuanceSystem: Your appointment is confirmed at {values[0]}. Please arrive on time.";
             }
         }
 
@@ -71,11 +71,11 @@ namespace Mojaz.Shared.Constants
             // values[0] = appointment date/time
             if (language == "ar")
             {
-                return $"مُجاز: تذكير بالموعد غداً في {values[0]}. يرجى إحضار المستندات المطلوبة.";
+                return $"نظام إصدار رخص القيادة: تذكير بالموعد غداً في {values[0]}. يرجى إحضار المستندات المطلوبة.";
             }
             else
             {
-                return $"Mojaz: Reminder - Your appointment is tomorrow at {values[0]}. Bring required documents.";
+                return $"DrivingLicenseIssuanceSystem: Reminder - Your appointment is tomorrow at {values[0]}. Bring required documents.";
             }
         }
 
@@ -85,12 +85,12 @@ namespace Mojaz.Shared.Constants
             if (language == "ar")
             {
                 var resultText = values[1] == "passed" ? "ناجح" : "راسب";
-                return $"مُجاز: نتيجة اختبار {values[0]}: {resultText}. للتفاصيل راجع التطبيق.";
+                return $"نظام إصدار رخص القيادة: نتيجة اختبار {values[0]}: {resultText}. للتفاصيل راجع التطبيق.";
             }
             else
             {
                 var resultText = values[1] == "passed" ? "PASSED" : "FAILED";
-                return $"Mojaz: {values[0]} test result: {resultText}. Check app for details.";
+                return $"DrivingLicenseIssuanceSystem: {values[0]} test result: {resultText}. Check app for details.";
             }
         }
 
@@ -98,11 +98,11 @@ namespace Mojaz.Shared.Constants
         {
             if (language == "ar")
             {
-                return "مُجاز: رخصة القيادة الخاصة بك جاهزة للاستلام. يرجى مراجعة أقرب فرع.";
+                return "نظام إصدار رخص القيادة: رخصة القيادة الخاصة بك جاهزة للاستلام. يرجى مراجعة أقرب فرع.";
             }
             else
             {
-                return "Mojaz: Your driving license is ready for pickup. Please visit nearest branch.";
+                return "DrivingLicenseIssuanceSystem: Your driving license is ready for pickup. Please visit nearest branch.";
             }
         }
     }

@@ -5,12 +5,12 @@ import { ApplicationSummaryDto } from '@/types/application.types';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import { Eye, Clock, MoreHorizontal } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 
-export const columns: ColumnDef<ApplicationSummaryDto>[] = [
+export const getColumns = (t: any): ColumnDef<ApplicationSummaryDto>[] => [
   {
     accessorKey: 'applicationNumber',
-    header: 'رقم الطلب',
+    header: t('columns.id'),
     cell: ({ row }) => {
       return (
         <div className="flex flex-col">
@@ -26,7 +26,7 @@ export const columns: ColumnDef<ApplicationSummaryDto>[] = [
   },
   {
     accessorKey: 'applicantName',
-    header: 'مقدم الطلب',
+    header: t('columns.applicant'),
     cell: ({ row }) => (
       <div className="font-medium text-sm">
         {row.getValue('applicantName')}
@@ -35,16 +35,16 @@ export const columns: ColumnDef<ApplicationSummaryDto>[] = [
   },
   {
     accessorKey: 'licenseCategoryCode',
-    header: 'الفئة',
+    header: t('columns.category'),
     cell: ({ row }) => (
       <div className="inline-flex items-center px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-700 text-xs font-bold border border-neutral-200">
-        فئة {row.getValue('licenseCategoryCode')}
+        {t('columns.categoryPrefix')} {row.getValue('licenseCategoryCode')}
       </div>
     ),
   },
   {
     accessorKey: 'currentStage',
-    header: 'المرحلة',
+    header: t('columns.stage'),
     cell: ({ row }) => (
       <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
         <Clock className="w-3 h-3" />
@@ -54,17 +54,17 @@ export const columns: ColumnDef<ApplicationSummaryDto>[] = [
   },
   {
     accessorKey: 'status',
-    header: 'الحالة',
+    header: t('columns.status'),
     cell: ({ row }) => (
       <StatusBadge status={row.getValue('status')} />
     ),
   },
   {
-    accessorKey: 'submittedDate',
-    header: 'تاريخ التقديم',
+    accessorKey: 'submittedAt',
+    header: t('columns.date'),
     cell: ({ row }) => (
-      <div className="text-xs text-muted-foreground">
-        {new Date(row.getValue('submittedDate')).toLocaleDateString('ar-SA')}
+      <div className="text-xs text-muted-foreground whitespace-nowrap">
+        {row.getValue('submittedAt') ? new Date(row.getValue('submittedAt') as string).toLocaleDateString() : '-'}
       </div>
     ),
   },

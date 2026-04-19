@@ -31,7 +31,7 @@ export default function MedicalResultsPage() {
     <div className="space-y-10 py-6">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="space-y-2">
-           <h1 className="text-5xl font-black text-neutral-900 tracking-tight leading-none">Medical Verification</h1>
+           <h1 className="text-4xl font-black text-neutral-900 tracking-tight leading-none">Medical Verification</h1>
            <p className="text-lg text-neutral-500 max-w-xl font-medium leading-relaxed italic">
               Medical Examiner Portal: Search for applicants and submit certified health results.
            </p>

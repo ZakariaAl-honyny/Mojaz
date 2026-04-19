@@ -1,18 +1,19 @@
+using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Mojaz.Application.Interfaces.Repositories;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Infrastructure.Authentication;
-using Mojaz.Infrastructure.Repositories;
-using Mojaz.Infrastructure.Services;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Repositories;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Infrastructure.Authentication;
+using DrivingLicenseIssuanceSystem.Infrastructure.Repositories;
+using DrivingLicenseIssuanceSystem.Infrastructure.Services;
 using RazorLight;
 using SendGrid;
 
-namespace Mojaz.Infrastructure.Extensions
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Extensions
 {
     public static class EmailServiceExtensions
     {
-        public static IServiceCollection AddMojazEmail(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddDrivingLicenseIssuanceSystemEmail(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<SendGridSettings>(configuration.GetSection("SendGridSettings"));
             services.Configure<EmailDedupSettings>(configuration.GetSection("EmailDedupSettings"));
@@ -27,7 +28,7 @@ namespace Mojaz.Infrastructure.Extensions
             services.AddScoped<IEmailLogRepository, EmailLogRepository>();
             
             services.AddSingleton<IRazorLightEngine>(_ => new RazorLightEngineBuilder()
-                .UseFileSystemProject("src/backend/Mojaz.Infrastructure/EmailTemplates")
+                .UseFileSystemProject(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "DrivingLicenseIssuanceSystem.Infrastructure", "EmailTemplates"))
                 .UseMemoryCachingProvider()
                 .Build());
             

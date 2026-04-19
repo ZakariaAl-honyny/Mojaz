@@ -1,6 +1,6 @@
 using System;
 
-namespace Mojaz.Application.DTOs.License
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.License
 {
     public class UpgradeTargetCategoryDto
     {

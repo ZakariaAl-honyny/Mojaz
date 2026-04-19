@@ -1,8 +1,8 @@
 using AutoMapper;
-using Mojaz.Application.DTOs.Training;
-using Mojaz.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Training;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
 
-namespace Mojaz.Application.Mappings
+namespace DrivingLicenseIssuanceSystem.Application.Mappings
 {
     public class TrainingProfile : Profile
     {

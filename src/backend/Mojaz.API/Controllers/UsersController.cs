@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using Mojaz.Application.DTOs.User;
-using Mojaz.Application.Services;
-using Mojaz.Shared.Constants;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.User;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Shared;
 
-namespace Mojaz.API.Controllers;
+namespace DrivingLicenseIssuanceSystem.API.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
@@ -108,7 +109,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateRoleAsync(Guid userId, [FromBody] UpdateUserRoleRequest request)
     {
-        await _userService.UpdateUserRoleAsync(userId, request.AppRole);
+        await _userService.UpdateUserRoleAsync(userId, (UserRole)request.AppRole);
         return Ok(new ApiResponse<object>
         {
             Success = true,

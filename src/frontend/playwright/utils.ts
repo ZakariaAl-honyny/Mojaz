@@ -1,9 +1,9 @@
 import { expect, Page } from '@playwright/test';
 
 /**
- * Common Mojaz Test Utilities
+ * Common DrivingLicenseIssuanceSystem Test Utilities
  */
-export const mojazUtils = {
+export const DrivingLicenseIssuanceSystemUtils = {
   /**
    * Measure performance of a specific action
    */

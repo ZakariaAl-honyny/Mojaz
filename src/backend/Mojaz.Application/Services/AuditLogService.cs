@@ -1,10 +1,10 @@
 using Microsoft.Extensions.Logging;
-using Mojaz.Application.DTOs.Audit;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Audit;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
 using System.Linq.Expressions;
 
-namespace Mojaz.Application.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Services;
 
 public interface IAuditLogService
 {

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import { useLocale } from 'next-intl';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
 interface ActivityLoadChartProps {
@@ -8,6 +8,7 @@ interface ActivityLoadChartProps {
 }
 
 export const ActivityLoadChart = ({ data }: ActivityLoadChartProps) => {
+  const locale = useLocale();
   return (
     <div className="h-[300px] w-full">
       <ResponsiveContainer width="100%" height="100%">
@@ -18,7 +19,7 @@ export const ActivityLoadChart = ({ data }: ActivityLoadChartProps) => {
             axisLine={false} 
             tickLine={false} 
             tick={{ fontSize: 10, fill: '#9CA3AF' }}
-            tickFormatter={(value) => new Date(value).toLocaleDateString('ar-SA', { day: 'numeric', month: 'short' })}
+            tickFormatter={(value) => new Date(value).toLocaleDateString(locale, { day: 'numeric', month: 'short' })}
           />
           <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#9CA3AF' }} />
           <Tooltip 
@@ -27,7 +28,7 @@ export const ActivityLoadChart = ({ data }: ActivityLoadChartProps) => {
           />
           <Bar 
             dataKey="count" 
-            fill="#006C35" 
+            fill="#6366F1" 
             radius={[4, 4, 0, 0]} 
             barSize={32}
           />

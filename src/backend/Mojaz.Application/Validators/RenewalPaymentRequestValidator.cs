@@ -1,7 +1,7 @@
 using FluentValidation;
-using Mojaz.Application.DTOs.Renewal;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Renewal;
 
-namespace Mojaz.Application.Validators;
+namespace DrivingLicenseIssuanceSystem.Application.Validators;
 
 public class RenewalPaymentRequestValidator : AbstractValidator<PaymentRequest>
 {

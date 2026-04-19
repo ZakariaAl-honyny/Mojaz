@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces.Services
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services
 {
     /// <summary>
     /// Interface for sending push notifications via FCM.
@@ -11,6 +11,7 @@ namespace Mojaz.Application.Interfaces.Services
         Task SendAsync(PushMessage message);
         Task SendToUserAsync(Guid userId, PushMessage message);
         Task RegisterTokenAsync(Guid userId, string token, string deviceType);
+        Task UnregisterTokenAsync(Guid userId, string token);
     }
 
     /// <summary>

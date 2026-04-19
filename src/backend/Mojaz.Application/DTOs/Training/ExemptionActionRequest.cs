@@ -1,6 +1,6 @@
 using System;
 
-namespace Mojaz.Application.DTOs.Training
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Training
 {
     public class ExemptionActionRequest
     {

@@ -1,10 +1,10 @@
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces;
 
 /// <summary>
 /// Repository interface for PracticalTest entity operations

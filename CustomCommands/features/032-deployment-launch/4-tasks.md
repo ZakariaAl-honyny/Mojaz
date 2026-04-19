@@ -6,8 +6,8 @@
 - [ ] Create `.env.production.example` template [1-3]
 
 ## Phase 2: Backend Production Readiness
-- [ ] Implement enhanced Health Checks in `Mojaz.API` (SQL, Disk) [2-1]
-- [ ] Implement Prometheus metrics exporter in `Mojaz.API` [2-2]
+- [ ] Implement enhanced Health Checks in `DrivingLicenseIssuanceSystem.API` (SQL, Disk) [2-1]
+- [ ] Implement Prometheus metrics exporter in `DrivingLicenseIssuanceSystem.API` [2-2]
 - [ ] Add auto-migration logic in `Program.cs` for Production environment [2-3]
 - [ ] Create `DbInitializer.cs` for system settings and demo data seeding [2-4]
 

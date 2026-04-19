@@ -1,4 +1,4 @@
-@using Mojaz.Application.DTOs.Email.Templates
+@using DrivingLicenseIssuanceSystem.Application.DTOs.Email.Templates
 @model AccountVerificationEmailData
 @{
     Layout = "_BaseLayout.cshtml";
@@ -15,8 +15,8 @@
 }
 
 @section En {
-    <h2 style="color: #006C35;">Welcome to Mojaz!</h2>
-    <p>Thank you for registering on the <strong>Mojaz</strong> platform. To activate your account, please use the following verification code:</p>
+    <h2 style="color: #006C35;">Welcome to DrivingLicenseIssuanceSystem!</h2>
+    <p>Thank you for registering on the <strong>DrivingLicenseIssuanceSystem</strong> platform. To activate your account, please use the following verification code:</p>
     <div style="font-size: 32px; font-weight: bold; background: #f0fdf4; padding: 20px; text-align: center; border: 2px dashed #006C35; border-radius: 12px; color: #006C35; margin: 20px 0; letter-spacing: 5px;">
         @Model.OtpCode
     </div>

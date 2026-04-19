@@ -1,19 +1,19 @@
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using Mojaz.Application.DTOs.Renewal;
-using Mojaz.Application.Interfaces.Infrastructure;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Renewal;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-using ApplicationEntity = Mojaz.Domain.Entities.Application;
+using ApplicationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
 
-namespace Mojaz.Application.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Services;
 
 public class RenewalService : IRenewalService
 {
@@ -110,14 +110,12 @@ public class RenewalService : IRenewalService
                 return ApiResponse<EligibilityResponse>.Fail(400, "License is outside the renewal grace period.");
             }
 
-            // Get renewal fee - use category ID in the fee type name
-            var feeTypeStr = $"RenewalFee_{licenseCategoryId}";
+            // Get renewal fee - filter by FeeType.Renewal and matching category
             var feeStructures = await _feeStructureRepository.FindAsync(f =>
-                f.IsActive);
+                f.IsActive && f.FeeType == FeeType.RenewalFee);
 
-            var feeTypeEnum = Enum.Parse<FeeType>(feeTypeStr, true);
             var renewalFee = feeStructures.FirstOrDefault(f => 
-                f.FeeType == feeTypeEnum)?.Amount ?? 0;
+                f.LicenseCategoryId == licenseCategoryId)?.Amount ?? 0;
 
             var response = new EligibilityResponse
             {
@@ -243,15 +241,16 @@ public class RenewalService : IRenewalService
                 return ApiResponse<bool>.Fail(400, "Medical examination must be completed before payment.");
             }
 
-            // Get the fee type for renewal
-            var feeTypeStr = $"RenewalFee_{renewalApplication.LicenseCategoryId}";
-            var feeTypeEnum = Enum.Parse<FeeType>(feeTypeStr, true);
+            // Get the fee type for renewal - use RenewalFee enum
+            var feeStructures = await _feeStructureRepository.FindAsync(f =>
+                f.IsActive && f.FeeType == FeeType.RenewalFee && f.LicenseCategoryId == renewalApplication.LicenseCategoryId);
+            var renewalFee = feeStructures.FirstOrDefault()?.Amount ?? 0;
 
             // Create payment transaction
             var payment = new PaymentTransaction
             {
                 ApplicationId = applicationId,
-                FeeType = feeTypeEnum,
+                FeeType = FeeType.RenewalFee,
                 Amount = paymentInfo.Amount,
                 PaymentMethod = paymentInfo.PaymentMethod,
                 TransactionReference = paymentInfo.TransactionId,

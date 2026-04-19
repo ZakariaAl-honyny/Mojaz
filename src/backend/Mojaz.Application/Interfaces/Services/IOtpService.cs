@@ -1,4 +1,4 @@
-namespace Mojaz.Application.Interfaces.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
 using System.Threading.Tasks;
 

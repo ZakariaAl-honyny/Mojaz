@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Mojaz.Application.DTOs.Training;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Interfaces;
-using Mojaz.Application.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Training;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
 using AutoMapper;
 using Xunit;
 using System.Threading;
-using Mojaz.Application.Mappings;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.Mappings;
+using DrivingLicenseIssuanceSystem.Shared;
 
-namespace Mojaz.Application.Tests.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Tests.Services;
 
 public class TrainingServiceTests
 {
@@ -167,7 +167,7 @@ public class TrainingServiceTests
 
         // Assert
         result.Success.Should().BeTrue();
-        result.Data.TotalHoursRequired.Should().Be(15);
+        result.Data!.TotalHoursRequired.Should().Be(15);
         _trainingRepositoryMock.Verify(x => x.AddAsync(It.IsAny<TrainingRecord>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

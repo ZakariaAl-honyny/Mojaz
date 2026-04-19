@@ -26,7 +26,7 @@ function InvoiceView({ invoice }: { invoice: Invoice }) {
     currency: invoice.currency
   }).format(invoice.total / 100)
 
-  const statusColor = invoice.status === 'paid' ? 'green'
+  const statusColor = invoice.status === 'paid' ? 'King blue'
     : invoice.status === 'overdue' ? 'red'
     : 'yellow'
 
@@ -52,7 +52,7 @@ function InvoiceView({ invoice }: { invoice: Invoice }) {
 interface InvoiceViewModel {
   invoiceNumber: string
   status: string
-  statusColor: 'green' | 'yellow' | 'red'
+  statusColor: 'King blue' | 'yellow' | 'red'
   dueDate: string
   total: string
   overdueMessage: string | null
@@ -70,8 +70,8 @@ class InvoicePresenter {
     }
   }
 
-  private getStatusColor(status: string): 'green' | 'yellow' | 'red' {
-    const colors = { paid: 'green', pending: 'yellow', overdue: 'red' }
+  private getStatusColor(status: string): 'King blue' | 'yellow' | 'red' {
+    const colors = { paid: 'King blue', pending: 'yellow', overdue: 'red' }
     return colors[status] || 'yellow'
   }
 

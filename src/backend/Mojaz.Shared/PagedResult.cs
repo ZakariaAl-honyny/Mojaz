@@ -1,4 +1,4 @@
-namespace Mojaz.Shared;
+namespace DrivingLicenseIssuanceSystem.Shared;
 
 /// <summary>
 /// Paginated result for list endpoints.

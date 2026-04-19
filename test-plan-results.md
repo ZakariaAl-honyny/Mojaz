@@ -1,7 +1,7 @@
-# Mojaz API Local Test Plan & Results
+# DrivingLicenseIssuanceSystem API Local Test Plan & Results
 
 ## Test Environment Setup
-- **Database**: SQL Server Local (`Server=.;Database=MojazDb;Trusted_Connection=True`)
+- **Database**: SQL Server Local (`Server=.;Database=DrivingLicenseIssuanceSystemDb;Trusted_Connection=True`)
 - **API URL**: http://localhost:5013
 - **Test Date**: 2026-04-17
 

@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Shared;
 using System.Security.Claims;
 
-namespace Mojaz.API.Controllers
+namespace DrivingLicenseIssuanceSystem.API.Controllers
 {
     /// <summary>
     /// Endpoints for in-app and unified notifications.

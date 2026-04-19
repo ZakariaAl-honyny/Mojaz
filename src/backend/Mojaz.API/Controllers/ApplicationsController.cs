@@ -1,25 +1,25 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
-using Mojaz.Application.DTOs.Application;
-using Mojaz.Application.Applications.Dtos;
-using Mojaz.Application.DTOs.LicenseReplacement;
-using Mojaz.Application.Interfaces;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Enums;
-using Mojaz.Shared;
-using Mojaz.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Application;
+using DrivingLicenseIssuanceSystem.Application.Applications.Dtos;
+using DrivingLicenseIssuanceSystem.Application.DTOs.LicenseReplacement;
+using DrivingLicenseIssuanceSystem.Application.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Shared;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using FluentValidation;
-using Mojaz.Application.Validators;
+using DrivingLicenseIssuanceSystem.Application.Validators;
 
-namespace Mojaz.API.Controllers;
+namespace DrivingLicenseIssuanceSystem.API.Controllers;
 
 /// <summary>
-/// Manage license applications for the Mojaz platform.
+/// Manage license applications for the DrivingLicenseIssuanceSystem platform.
 /// Standard 10-stage workflow endpoints (CRUD + Status + Timeline).
 /// </summary>
 [ApiController]
@@ -169,7 +169,7 @@ public class ApplicationsController : ControllerBase
     /// </summary>
     [HttpGet("{id}/timeline")]
     [Authorize]
-    [ProducesResponseType(typeof(ApiResponse<List<Mojaz.Application.DTOs.Application.ApplicationTimelineDto>>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<List<DrivingLicenseIssuanceSystem.Application.DTOs.Application.ApplicationTimelineDto>>), 200)]
     [ProducesResponseType(typeof(ApiResponse<object>), 403)]
     [ProducesResponseType(typeof(ApiResponse<object>), 404)]
     public async Task<IActionResult> GetTimelineAsync(Guid id)

@@ -1,12 +1,12 @@
 using Microsoft.Extensions.Configuration;
-using Mojaz.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 using System;
 using System.Threading.Tasks;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 
-namespace Mojaz.Infrastructure.Services;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Services;
 
 public class SmsService : ISmsService
 {

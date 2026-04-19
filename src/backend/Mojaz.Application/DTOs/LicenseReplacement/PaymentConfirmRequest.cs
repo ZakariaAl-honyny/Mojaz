@@ -1,4 +1,4 @@
-namespace Mojaz.Application.DTOs.LicenseReplacement;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.LicenseReplacement;
 
 public class PaymentConfirmRequest
 {

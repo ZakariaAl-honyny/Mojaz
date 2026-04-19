@@ -4,9 +4,9 @@ importScripts('https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-com
 // Initialize Firebase
 firebase.initializeApp({
   apiKey: "AIzaSyB-EXAMPLE-KEY-REPLACE-WITH-REAL-KEY",
-  authDomain: "mojaz-659bb.firebaseapp.com",
-  projectId: "mojaz-659bb",
-  storageBucket: "mojaz-659bb.appspot.com",
+  authDomain: "DrivingLicenseIssuanceSystem-659bb.firebaseapp.com",
+  projectId: "DrivingLicenseIssuanceSystem-659bb",
+  storageBucket: "DrivingLicenseIssuanceSystem-659bb.appspot.com",
   messagingSenderId: "1234567890",
   appId: "1:1234567890:web:abcdef123456"
 });

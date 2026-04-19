@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Reports.Dtos;
-using Mojaz.Shared.Constants;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Reports.Dtos;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Shared;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mojaz.API.Controllers;
+namespace DrivingLicenseIssuanceSystem.API.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
@@ -118,6 +118,6 @@ public class ReportsController : ControllerBase
     public async Task<IActionResult> ExportCsvAsync([FromQuery] ReportingFilter filter)
     {
         var csvBytes = await _reportService.ExportReportsToCsvAsync(filter);
-        return File(csvBytes, "text/csv", $"mojaz-report-{DateTime.UtcNow:yyyyMMddHHmmss}.csv");
+        return File(csvBytes, "text/csv", $"DrivingLicenseIssuanceSystem-report-{DateTime.UtcNow:yyyyMMddHHmmss}.csv");
     }
 }

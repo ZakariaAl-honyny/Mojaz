@@ -1,7 +1,7 @@
-using Mojaz.Application.DTOs.Renewal;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Renewal;
+using DrivingLicenseIssuanceSystem.Shared;
 
-namespace Mojaz.Application.Interfaces.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
 public interface IRenewalService
 {

@@ -1,6 +1,6 @@
 using Hangfire.Dashboard;
 
-namespace Mojaz.API.Filters;
+namespace DrivingLicenseIssuanceSystem.API.Filters;
 
 /// <summary>
 /// Authorization filter for Hangfire Dashboard - only Admin role can access in production.

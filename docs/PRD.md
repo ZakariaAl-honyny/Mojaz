@@ -1,6 +1,6 @@
-# Mojaz Platform — Master Product Requirements Document
+# DrivingLicenseIssuanceSystem Platform — Master Product Requirements Document
 
-**Document ID:** MOJAZ-PRD-2025-001  
+**Document ID:** DrivingLicenseIssuanceSystem-PRD-2025-001  
 **Version:** 3.0 — Final Merged Edition  
 **Date:** June 2025  
 **Status:** Approved for Implementation  
@@ -43,7 +43,7 @@
 
 ## 1. Executive Summary
 
-**Mojaz (مُجاز)** is a comprehensive government digital platform for managing the complete driving license lifecycle. The system simulates real Saudi government systems (inspired by Absher Design System) with full Arabic RTL and English LTR support.
+**DrivingLicenseIssuanceSystem (نظام إصدار رخص القيادة)** is a comprehensive government digital platform for managing the complete driving license lifecycle. The system simulates real Saudi government systems (inspired by Absher Design System) with full Arabic RTL and English LTR support.
 
 The driving license issuance system is an integrated government electronic platform aimed at digitizing and automating the entire process of issuing driving licenses, from application submission to final license receipt.
 
@@ -51,9 +51,9 @@ The driving license issuance system is an integrated government electronic platf
 
 | Item | Detail |
 |------|--------|
-| Platform Name | مُجاز (Mojaz) |
+| Platform Name | نظام إصدار رخص القيادة (DrivingLicenseIssuanceSystem) |
 | Meaning | "Licensed" / "Authorized" in Arabic |
-| Primary Color | #006C35 (Royal Green) |
+| Primary Color | (King blue) |
 | Design System | Absher-Inspired |
 | Languages | Arabic (default, RTL) + English (LTR) |
 | Theme | Dark + Light mode |
@@ -166,7 +166,7 @@ The first version (MVP) focuses on:
 | React / Next.js 15 | Core framework (App Router) |
 | TypeScript 5 | Type safety |
 | Tailwind CSS 4 | Styling and design |
-| shadcn/ui | Ready-made component library (Mojaz-themed) |
+| shadcn/ui | Ready-made component library (DrivingLicenseIssuanceSystem-themed) |
 | Lucide React | Icon library |
 | Axios 1.7 | HTTP client |
 | React Query 5 | Server state management |
@@ -1158,7 +1158,7 @@ User can control notification channels from account settings:
 
 - Official and professional government design
 - Arabic RTL / English LTR
-- Dark / Light Mode
+- Dark / Light Mode 
 - Fully responsive
 - High loading speed
 
@@ -1613,12 +1613,12 @@ LicenseCategories ──1:N──> FeeStructures, Licenses
 ### 22.1 Solution Structure (Clean Architecture)
 
 ```
-Mojaz.sln
-├── Mojaz.Domain/           → Entities, Enums, Interfaces (no external deps)
-├── Mojaz.Shared/           → ApiResponse<T>, PagedResult<T>, Constants
-├── Mojaz.Application/      → Services, DTOs, Validators, AutoMapper profiles
-├── Mojaz.Infrastructure/   → EF Core, Repositories, External Services
-└── Mojaz.API/              → Controllers, Middleware, Program.cs
+DrivingLicenseIssuanceSystem.sln
+├── DrivingLicenseIssuanceSystem.Domain/           → Entities, Enums, Interfaces (no external deps)
+├── DrivingLicenseIssuanceSystem.Shared/           → ApiResponse<T>, PagedResult<T>, Constants
+├── DrivingLicenseIssuanceSystem.Application/      → Services, DTOs, Validators, AutoMapper profiles
+├── DrivingLicenseIssuanceSystem.Infrastructure/   → EF Core, Repositories, External Services
+└── DrivingLicenseIssuanceSystem.API/              → Controllers, Middleware, Program.cs
 ```
 
 ### 22.2 Adopted Patterns

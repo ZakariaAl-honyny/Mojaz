@@ -1,7 +1,7 @@
-using Mojaz.Application.Dashboards.Dtos;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.Dashboards.Dtos;
+using DrivingLicenseIssuanceSystem.Shared;
 
-namespace Mojaz.Application.Interfaces.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
 public interface IDashboardService
 {

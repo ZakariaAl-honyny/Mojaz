@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Mojaz.Application.DTOs.SystemSettings;
+using DrivingLicenseIssuanceSystem.Application.DTOs.SystemSettings;
 
-namespace Mojaz.Application.Interfaces.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
 public interface ISystemSettingsService
 {

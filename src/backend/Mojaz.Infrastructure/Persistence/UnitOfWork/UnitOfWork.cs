@@ -1,19 +1,19 @@
-using Mojaz.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Persistence.UnitOfWork
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Persistence.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly MojazDbContext _context;
+        private readonly DrivingLicenseIssuanceSystemDbContext _context;
         private readonly Dictionary<Type, object> _repositories = new();
         private readonly ILogger<UnitOfWork>? _logger;
 
-        public UnitOfWork(MojazDbContext context, ILogger<UnitOfWork>? logger = null)
+        public UnitOfWork(DrivingLicenseIssuanceSystemDbContext context, ILogger<UnitOfWork>? logger = null)
         {
             _context = context;
             _logger = logger;

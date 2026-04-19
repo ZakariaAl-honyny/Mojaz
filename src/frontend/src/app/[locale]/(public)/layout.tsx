@@ -1,6 +1,7 @@
+'use client';
+
 import React from 'react';
-import PublicHeader from '@/components/layout/PublicHeader';
-import Footer from '@/components/layout/Footer';
+import { ThemeProvider } from '@/providers/theme-provider';
 
 export default function PublicLayout({
   children,
@@ -8,12 +9,15 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative min-h-screen flex flex-col grain-overlay">
-      <PublicHeader />
-      <main className="flex-grow">
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <div className="relative min-h-screen flex flex-col">
         {children}
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </ThemeProvider>
   );
 }

@@ -1,7 +1,7 @@
-using Mojaz.Domain.Enums;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Shared;
 
-namespace Mojaz.Application.Interfaces.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
 public interface ICategoryUpgradeService
 {

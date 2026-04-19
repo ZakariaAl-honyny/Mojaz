@@ -1,11 +1,11 @@
-using Mojaz.Domain.Common;
+using DrivingLicenseIssuanceSystem.Domain.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mojaz.Domain.Interfaces;
+namespace DrivingLicenseIssuanceSystem.Domain.Interfaces;
 
 public interface IRepository<T> where T : class
 {

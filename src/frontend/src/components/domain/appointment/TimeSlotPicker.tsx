@@ -49,7 +49,7 @@ export function TimeSlotPicker({
     const hour = parseInt(s.time.split(':')[0]);
     return hour < 12;
   });
-  
+
   const afternoonSlots = slots.filter(s => {
     const hour = parseInt(s.time.split(':')[0]);
     return hour >= 12;
@@ -57,7 +57,7 @@ export function TimeSlotPicker({
 
   const renderSlotGroup = (groupSlots: AvailableSlotDto[], title: string) => {
     if (groupSlots.length === 0) return null;
-    
+
     return (
       <div className="mb-4">
         <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{title}</h4>
@@ -83,7 +83,7 @@ export function TimeSlotPicker({
               </div>
               <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {slot.isAvailable ? (
-                  <span className="text-green-600 dark:text-green-400">
+                  <span className="text-King blue-600 dark:text-King blue-400">
                     {slot.availableCapacity} {t('slotAvailable').toLowerCase()}
                   </span>
                 ) : (
@@ -107,7 +107,7 @@ export function TimeSlotPicker({
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
         {t('selectTime')}
       </h3>
-      
+
       {renderSlotGroup(morningSlots, 'Morning')}
       {renderSlotGroup(afternoonSlots, 'Afternoon')}
     </div>

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using System;
 using System.Linq;
 
-namespace Mojaz.API.Middleware
+namespace DrivingLicenseIssuanceSystem.API.Middleware
 {
     /// <summary>
     /// Middleware to enforce that applicants can only access their own applications.
@@ -39,7 +39,7 @@ namespace Mojaz.API.Middleware
                         if (Guid.TryParse(idString, out var applicationId))
                         {
                             // Use DI to resolve IApplicationService
-                            var appService = context.RequestServices.GetService(typeof(Mojaz.Application.Interfaces.Services.IApplicationService)) as Mojaz.Application.Interfaces.Services.IApplicationService;
+                            var appService = context.RequestServices.GetService(typeof(DrivingLicenseIssuanceSystem.Application.Interfaces.Services.IApplicationService)) as DrivingLicenseIssuanceSystem.Application.Interfaces.Services.IApplicationService;
                             if (appService != null)
                             {
                                 var userId = Guid.Parse(context.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -48,7 +48,7 @@ namespace Mojaz.API.Middleware
                                 if (!owns)
                                 {
                                     context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                                    await context.Response.WriteAsJsonAsync(new Mojaz.Shared.ApiResponse<object>
+                                    await context.Response.WriteAsJsonAsync(new DrivingLicenseIssuanceSystem.Shared.ApiResponse<object>
                                     {
                                         Success = false,
                                         Message = "You are not authorized to access this application.",

@@ -1,5 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <NoWarn>NU1900</NoWarn>
+    <RootNamespace>DrivingLicenseIssuanceSystem.Infrastructure</RootNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Mojaz.Domain\Mojaz.Domain.csproj" />
     <ProjectReference Include="..\Mojaz.Shared\Mojaz.Shared.csproj" />
@@ -22,19 +30,14 @@
     </PackageReference>
     <PackageReference Include="QuestPDF" Version="2024.7.0" />
     <PackageReference Include="SendGrid" Version="9.29.3" />
+    <PackageReference Include="SendGrid.Extensions.DependencyInjection" Version="1.0.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />    
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
     <PackageReference Include="Twilio" Version="7.3.1" />
-    <PackageReference Include="RazorLight" Version="2.0.0-rc.3" />
+    <PackageReference Include="RazorLight" Version="2.0.0-rc3" />
     <PackageReference Include="PreMailer.Net" Version="2.7.2" />
     <PackageReference Include="Polly" Version="7.2.3" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
 
 </Project>

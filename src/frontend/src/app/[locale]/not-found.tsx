@@ -1,10 +1,14 @@
-import {useTranslations} from 'next-intl';
-import {Link} from '@/i18n/routing';
-import {Button} from '@/components/ui/button';
-import {Home, AlertCircle} from 'lucide-react';
+import { setRequestLocale, getTranslations } from 'next-intl/server';
+import { Link } from '@/i18n/routing';
+import { Button } from '@/components/ui/button';
+import { Home, AlertCircle } from 'lucide-react';
 
-export default function NotFound() {
-  const t = useTranslations('common');
+export default async function NotFound(props: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = (await props.params) || { locale: 'ar' };
+  setRequestLocale(locale);
+  const t = await getTranslations('common');
 
   return (
     <main className="min-h-screen flex items-center justify-center p-6 bg-neutral-50 dark:bg-neutral-900 grain-overlay">
@@ -13,23 +17,18 @@ export default function NotFound() {
           <AlertCircle className="w-12 h-12 text-primary-600 dark:text-primary-400" />
           <div className="absolute inset-0 rounded-full border-4 border-primary-500/20 animate-ping" />
         </div>
-        
+
         <div className="space-y-3">
-          <h1 className="text-4xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 uppercase">
-            404
-          </h1>
-          <h2 className="text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
-            {t('notfound.title')}
-          </h2>
-          <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+          <h1 className="text-3xl font-black text-foreground">{t('notfound.title')}</h1>
+          <p className="text-muted-foreground text-lg leading-relaxed">
             {t('notfound.description')}
           </p>
         </div>
 
-        <div className="pt-4">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/">
-            <Button size="lg" className="w-full bg-primary-600 hover:bg-primary-700 text-white rounded-xl py-6 text-lg font-medium transition-all duration-300 hover-lift flex items-center justify-center gap-2">
-              <Home className="w-5 h-5 rtl:mirror" />
+            <Button size="lg" className="w-full sm:w-auto h-12 px-8 rounded-full bg-primary hover:bg-primary/90 font-bold">
+              <Home className="w-5 h-5 me-2" />
               {t('notfound.backToHome')}
             </Button>
           </Link>

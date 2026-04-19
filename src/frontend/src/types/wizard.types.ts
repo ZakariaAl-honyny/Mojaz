@@ -21,7 +21,20 @@ export enum LicenseCategoryCode {
   F = 'F',
 }
 
-export type StepId = 1 | 2 | 3 | 4 | 5;
+export type StepId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+
+export interface DocumentData {
+  id: string;
+  type: string;
+  name: string;
+  size: number;
+  url: string;
+  status: 'Uploading' | 'Completed' | 'Failed';
+}
+
+export interface Step5Data {
+  documents: DocumentData[];
+}
 
 export interface Step1Data {
   serviceType: ServiceType | null;
@@ -96,16 +109,25 @@ export interface WizardState {
   step2: Step2Data;
   step3: Step3Data;
   step4: Step4Data;
+  step5: Step5Data;
+
+  // Service flows
+  medicalVerified: boolean;
+  theoryTestPassed: boolean;
+  theoryTestScore: number | null;
 
   // Declaration
   declarationAccepted: boolean;
 
   // Actions
-  setStep1: (data: Step1Data) => void;
-  setStep2: (data: Step2Data) => void;
-  setStep3: (data: Step3Data) => void;
-  setStep4: (data: Step4Data) => void;
+  setStep1: (data: Partial<Step1Data>) => void;
+  setStep2: (data: Partial<Step2Data>) => void;
+  setStep3: (data: Partial<Step3Data>) => void;
+  setStep4: (data: Partial<Step4Data>) => void;
+  setStep5: (data: Partial<Step5Data>) => void;
   setDeclaration: (accepted: boolean) => void;
+  setMedicalVerified: (verified: boolean) => void;
+  setTheoryTestResult: (passed: boolean, score: number) => void;
   goTo: (step: StepId) => void;
   markCompleted: (step: StepId) => void;
   setApplicationId: (id: string) => void;
@@ -114,4 +136,4 @@ export interface WizardState {
   incrementSaveFailures: () => void;
   resetSaveFailures: () => void;
   resetWizard: () => void;
-}
+}

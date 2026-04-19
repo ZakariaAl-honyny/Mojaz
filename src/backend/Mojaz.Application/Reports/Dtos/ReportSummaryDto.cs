@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Mojaz.Application.Reports.Dtos;
+namespace DrivingLicenseIssuanceSystem.Application.Reports.Dtos;
 
 public class ReportSummaryDto
 {

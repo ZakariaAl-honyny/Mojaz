@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Infrastructure.Persistence;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Infrastructure.Persistence.Repositories;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Repositories;
 
 public class OtpRepository : IOtpRepository
 {
-    private readonly MojazDbContext _db;
-    public OtpRepository(MojazDbContext db)
+    private readonly DrivingLicenseIssuanceSystemDbContext _db;
+    public OtpRepository(DrivingLicenseIssuanceSystemDbContext db)
     {
         _db = db;
     }

@@ -31,45 +31,38 @@ export function ApplicationCard({
 
   return (
     <Link href={`/${locale}/applications/${id}`}>
-      <Card data-testid="application-card" className="border-0 shadow-sm hover:shadow-md transition-shadow group bg-white cursor-pointer relative overflow-hidden">
-        {/* Subtle decorative edge */}
-        <div className={cn(
-          "absolute rtl:right-0 ltr:left-0 top-0 bottom-0 w-1 rounded-s-xl",
-          status === "Draft" ? "bg-neutral-300" :
-          status === "Rejected" || status === "Cancelled" ? "bg-red-500" :
-          status === "Issued" || status === "Approved" || status === "Paid" ? "bg-green-500" :
-          "bg-primary-500"
-        )} />
+      <Card data-testid="application-card" className="border border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.3)] bg-white/5 backdrop-blur-3xl rounded-[2.5rem] overflow-hidden group cursor-pointer transition-all duration-500 hover:scale-[1.02] hover:bg-white/10 relative">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary-500/50 to-transparent group-hover:via-primary-500 transition-all duration-700" />
         
-        <CardContent className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex-1 space-y-3">
-             <div className="flex items-center gap-3">
-                <span className="font-bold text-primary-900 border border-primary-200 bg-primary-50 px-2 py-0.5 rounded text-sm font-mono">
+        <CardContent className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div className="flex-1 space-y-4">
+             <div className="flex items-center gap-4">
+                <span className="font-black text-white bg-white/5 border border-white/10 px-4 py-1.5 rounded-xl text-xs tracking-widest uppercase gov-gloss">
                   {number}
                 </span>
                 <StatusBadge status={status} />
              </div>
              
              <div>
-                <h3 className="font-semibold text-lg text-neutral-800">
+                <h3 className="font-black text-2xl text-white tracking-tight font-arabic">
                   {t(`application.create.fields.${categoryNameKey}` as any)}
                 </h3>
              </div>
              
-             <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-500">
-                <span className="flex items-center gap-1.5 bg-neutral-100 px-2 py-1 rounded">
-                   <Activity className="w-3.5 h-3.5" />
+             <div className="flex flex-wrap items-center gap-6 text-xs text-neutral-500">
+                <span className="flex items-center gap-2 bg-white/5 border border-white/5 px-3 py-1.5 rounded-xl font-bold text-primary-400">
+                   <Activity className="w-4 h-4" />
                    {currentStage}
                 </span>
-                <span className="flex items-center gap-1.5">
-                   <Calendar className="w-3.5 h-3.5" />
+                <span className="flex items-center gap-2 font-bold">
+                   <Calendar className="w-4 h-4 text-neutral-600" />
                    {t("application.details.submittedOn")}: {new Date(updatedAt).toLocaleDateString()}
                 </span>
              </div>
           </div>
           
-          <div className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-neutral-50 group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors">
-            <ChevronRight className="w-5 h-5 rtl:rotate-180" />
+          <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-white/5 border border-white/10 group-hover:bg-primary-600 group-hover:border-primary-500 group-hover:text-white transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(0,108,53,0.5)]">
+            <ChevronRight className="w-6 h-6 rtl:rotate-180 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
           </div>
         </CardContent>
       </Card>

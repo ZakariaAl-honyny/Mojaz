@@ -1,7 +1,7 @@
 # Technical Plan: Deployment & Launch
 
 ## Overview
-This feature prepares the Mojaz platform for a production-like deployment using Docker Compose, Nginx, and health monitoring. It ensures the system can be deployed repeatedly and reliably.
+This feature prepares the DrivingLicenseIssuanceSystem platform for a production-like deployment using Docker Compose, Nginx, and health monitoring. It ensures the system can be deployed repeatedly and reliably.
 
 ## Tech Stack (Deployment)
 - **Containerization**: Docker Compose
@@ -13,7 +13,7 @@ This feature prepares the Mojaz platform for a production-like deployment using 
 ## Architecture Changes
 - **Nginx**: Sits in front of the frontend and backend.
 - **Backend**: Adds `/metrics` endpoint and enhanced `/health` checks.
-- **Compose**: Adds a `mojaz-nginx` service.
+- **Compose**: Adds a `DrivingLicenseIssuanceSystem-nginx` service.
 
 ## Database Migration & Seeding
 - Migrations will run on backend startup in Production mode.

@@ -1,16 +1,18 @@
-using Mojaz.Application.Interfaces.Repositories;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Infrastructure.Persistence.Repositories;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Repositories;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
 
-namespace Mojaz.Infrastructure.Persistence.Repositories
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Repositories
 {
     public class FeeStructureRepository : Repository<FeeStructure>, IFeeStructureRepository
     {
-        public FeeStructureRepository(MojazDbContext context) : base(context)
+        public FeeStructureRepository(DrivingLicenseIssuanceSystemDbContext context) : base(context)
         {
         }
 
@@ -26,6 +28,35 @@ namespace Mojaz.Infrastructure.Persistence.Repositories
                 (fs.EffectiveTo == null || fs.EffectiveTo >= now));
             
             return feeStructures.FirstOrDefault();
+        }
+
+        public async Task<IEnumerable<FeeStructure>> GetAllAsync()
+        {
+            return await _dbSet
+                .Include(fs => fs.LicenseCategory)
+                .OrderBy(fs => fs.FeeType)
+                .ThenByDescending(fs => fs.EffectiveFrom)
+                .ToListAsync();
+        }
+
+        public async Task<FeeStructure?> GetByIdAsync(Guid id)
+        {
+            return await _dbSet
+                .Include(fs => fs.LicenseCategory)
+                .FirstOrDefaultAsync(fs => fs.Id == id);
+        }
+
+        public async Task<FeeStructure> AddAsync(FeeStructure feeStructure)
+        {
+            await _dbSet.AddAsync(feeStructure);
+            return feeStructure;
+        }
+
+        public async Task<FeeStructure> UpdateAsync(FeeStructure feeStructure)
+        {
+            _dbSet.Update(feeStructure);
+            await Task.CompletedTask;
+            return feeStructure;
         }
     }
 }

@@ -19,6 +19,7 @@ interface UseApplicationWizardReturn {
   setStep2Data: (data: Step2Data) => void;
   setStep3Data: (data: Step3Data) => void;
   setStep4Data: (data: Step4Data) => void;
+  setStep5Data: (data: any) => void;
   direction: number;
 }
 
@@ -35,6 +36,7 @@ const STEP_FIELD_MAP: StepFieldMap = {
   2: ["categoryCode"],
   3: ["nationalId", "dateOfBirth", "nationality", "gender", "mobileNumber", "email", "address", "city", "region"],
   4: ["applicantType", "preferredCenterId", "testLanguage", "appointmentPreference", "specialNeedsDeclaration"],
+  5: ["documents"],
 };
 
 /**
@@ -47,7 +49,7 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || "ar";
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [direction, setDirection] = useState(1);
   const prevStepRef = useRef<number>(1);
@@ -60,6 +62,7 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
     step2,
     step3,
     step4,
+    step5,
     applicationId,
     goTo: storeGoTo,
     markCompleted,
@@ -67,6 +70,7 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
     setStep2,
     setStep3,
     setStep4,
+    setStep5,
     resetWizard,
   } = useWizardStore();
 
@@ -77,11 +81,11 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
    * Navigate to a specific step.
    * Updates direction based on whether moving forward or backward.
    * 
-   * @param step - Step number to navigate to (1-5)
+   * @param step - Step number to navigate to (1-6)
    */
   const goTo = useCallback(
     (step: number) => {
-      const validStep = Math.max(1, Math.min(5, step)) as StepId;
+      const validStep = Math.max(1, Math.min(6, step)) as StepId;
       setDirection(validStep > prevStepRef.current ? 1 : -1);
       prevStepRef.current = validStep;
       storeGoTo(validStep);
@@ -115,7 +119,7 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
     ): Promise<boolean> => {
       // Get fields required for current step validation
       const stepFields = STEP_FIELD_MAP[currentStep] || [];
-      
+
       // Validate current step fields if trigger function is provided
       if (trigger && stepFields.length > 0) {
         const isValid = await trigger(stepFields);
@@ -124,7 +128,7 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
           if (setFocus && stepFields.length > 0) {
             const firstField = stepFields[0];
             setFocus(firstField);
-            
+
             // Scroll field into view on mobile
             const fieldElement = document.getElementById(firstField) || document.querySelector(`[name="${firstField}"]`);
             if (fieldElement) {
@@ -134,10 +138,10 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
           return false;
         }
       }
-      
+
       // Mark current step as completed in the store
       markCompleted(currentStep);
-      
+
       // Write current step data to store (ensures persistence)
       switch (currentStep) {
         case 1:
@@ -152,16 +156,19 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
         case 4:
           setStep4(step4);
           break;
+        case 5:
+          setStep5(step5);
+          break;
       }
-      
-      // Advance to next step (maximum step is 5)
-      const nextStep = Math.min(5, currentStep + 1) as StepId;
+
+      // Advance to next step (maximum step is 6)
+      const nextStep = Math.min(6, currentStep + 1) as StepId;
       setDirection(1);
       storeGoTo(nextStep);
-      
+
       return true;
     },
-    [currentStep, step1, step2, step3, step4, markCompleted, setStep1, setStep2, setStep3, setStep4, storeGoTo]
+    [currentStep, step1, step2, step3, step4, step5, markCompleted, setStep1, setStep2, setStep3, setStep4, setStep5, storeGoTo]
   );
 
   /**
@@ -179,25 +186,25 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
     setIsSubmitting(true);
     try {
       await submitApplicationAsync(applicationId);
-      
+
       // Reset wizard state in store
       resetWizard();
-      
+
       // Clear wizard draft from sessionStorage
-      sessionStorage.removeItem("mojaz-wizard-draft");
-      
+      sessionStorage.removeItem("DrivingLicenseIssuanceSystem-wizard-draft");
+
       // Log success (toast implementation pending)
       console.log("Application submitted successfully!");
-      
+
       // Redirect to application detail page with locale
       router.push(`/${locale}/applicant/applications/${applicationId}`);
     } catch (error) {
       console.error("Failed to submit application:", error);
-      
+
       // Log error message
       const errorMessage = error instanceof Error ? error.message : "Failed to submit application. Please try again.";
       console.error(errorMessage);
-      
+
       throw error;
     } finally {
       setIsSubmitting(false);
@@ -233,6 +240,13 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
     [setStep4]
   );
 
+  const setStep5Data = useCallback(
+    (data: any) => {
+      setStep5(data);
+    },
+    [setStep5]
+  );
+
   return {
     currentStep,
     completedSteps,
@@ -245,6 +259,7 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
     setStep2Data,
     setStep3Data,
     setStep4Data,
+    setStep5Data,
     direction,
   };
 }

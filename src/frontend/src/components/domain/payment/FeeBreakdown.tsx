@@ -49,13 +49,13 @@ export function FeeBreakdown({ fees, total, paid, pending, className }: FeeBreak
                 className={cn(
                   'w-8 h-8 rounded-full flex items-center justify-center',
                   fee.isPaid
-                    ? 'bg-green-100 dark:bg-green-900/30'
+                    ? 'bg-King blue-100 dark:bg-King blue-900/30'
                     : 'bg-neutral-100 dark:bg-neutral-800'
                 )}
               >
                 {fee.isPaid ? (
                   <svg
-                    className="w-4 h-4 text-green-600 dark:text-green-400"
+                    className="w-4 h-4 text-King blue-600 dark:text-King blue-400"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -103,7 +103,7 @@ export function FeeBreakdown({ fees, total, paid, pending, className }: FeeBreak
                 className={cn(
                   'font-semibold',
                   fee.isPaid
-                    ? 'text-green-600 dark:text-green-400'
+                    ? 'text-King blue-600 dark:text-King blue-400'
                     : 'text-neutral-900 dark:text-neutral-100'
                 )}
               >
@@ -114,7 +114,7 @@ export function FeeBreakdown({ fees, total, paid, pending, className }: FeeBreak
                 })}
               </p>
               {fee.isPaid && (
-                <p className="text-xs text-green-600 dark:text-green-400">
+                <p className="text-xs text-King blue-600 dark:text-King blue-400">
                   {t('fees.paid')}
                 </p>
               )}
@@ -129,7 +129,7 @@ export function FeeBreakdown({ fees, total, paid, pending, className }: FeeBreak
           <span className="text-neutral-600 dark:text-neutral-400">
             {t('fees.paid')}
           </span>
-          <span className="font-semibold text-green-600 dark:text-green-400">
+          <span className="font-semibold text-King blue-600 dark:text-King blue-400">
             {paid.toLocaleString('en-SA', {
               style: 'currency',
               currency: 'SAR',

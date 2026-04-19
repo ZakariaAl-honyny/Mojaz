@@ -1,6 +1,6 @@
 using System;
 
-namespace Mojaz.Shared.Extensions;
+namespace DrivingLicenseIssuanceSystem.Shared.Extensions;
 
 public static class StringExtensions
 {

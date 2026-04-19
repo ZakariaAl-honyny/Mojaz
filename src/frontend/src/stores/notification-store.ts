@@ -9,7 +9,7 @@ interface NotificationState {
   devices: DeviceInfo[];
   isLoading: boolean;
   error: string | null;
-  
+
   // Actions
   setNotifications: (notifications: Notification[]) => void;
   setUnreadCount: (count: number) => void;
@@ -39,40 +39,40 @@ export const useNotificationStore = create<NotificationState>()(
       setDevices: (devices) => set({ devices }),
       setLoading: (isLoading) => set({ isLoading }),
       setError: (error) => set({ error }),
-      
+
       addNotification: (notification) => set((state) => ({
         notifications: [notification, ...state.notifications],
         unreadCount: state.unreadCount + 1,
       })),
-      
+
       markAsRead: (id) => set((state) => {
-        const notification = state.notifications.find(n => n.id === id);
+        const notification = state.notifications.find(n => String(n.id) === id);
         const wasUnread = notification && !notification.isRead;
         return {
-          notifications: state.notifications.map(n => 
-            n.id === id ? { ...n, isRead: true } : n
+          notifications: state.notifications.map(n =>
+            String(n.id) === id ? { ...n, isRead: true } : n
           ),
           unreadCount: wasUnread ? Math.max(0, state.unreadCount - 1) : state.unreadCount,
         };
       }),
-      
+
       markAllAsRead: () => set((state) => ({
         notifications: state.notifications.map(n => ({ ...n, isRead: true })),
         unreadCount: 0,
       })),
-      
+
       removeNotification: (id) => set((state) => {
-        const notification = state.notifications.find(n => n.id === id);
+        const notification = state.notifications.find(n => String(n.id) === id);
         const wasUnread = notification && !notification.isRead;
         return {
-          notifications: state.notifications.filter(n => n.id !== id),
+          notifications: state.notifications.filter(n => String(n.id) !== id),
           unreadCount: wasUnread ? Math.max(0, state.unreadCount - 1) : state.unreadCount,
         };
       }),
     }),
     {
-      name: 'mojaz-notifications',
-      partialize: (state) => ({ 
+      name: 'DrivingLicenseIssuanceSystem-notifications',
+      partialize: (state) => ({
         notifications: state.notifications.slice(0, 50),
         unreadCount: state.unreadCount,
       }),

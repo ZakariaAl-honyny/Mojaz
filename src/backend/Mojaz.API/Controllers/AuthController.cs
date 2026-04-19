@@ -2,15 +2,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
-using Mojaz.Application.DTOs.Auth;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Enums;
-using Mojaz.Shared;
-using Mojaz.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Auth;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Shared;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Mojaz.API.Controllers;
+namespace DrivingLicenseIssuanceSystem.API.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]

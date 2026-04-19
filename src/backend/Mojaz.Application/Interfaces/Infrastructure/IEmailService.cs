@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces.Infrastructure
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure
 {
     public interface IEmailService
     {

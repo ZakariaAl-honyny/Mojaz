@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces.Notifications
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Notifications
 {
     /// <summary>
     /// Interface for Hangfire Email job processor.

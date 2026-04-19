@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Mojaz.Shared.Utilities;
+namespace DrivingLicenseIssuanceSystem.Shared.Utilities;
 
 public static class PasswordGenerator
 {

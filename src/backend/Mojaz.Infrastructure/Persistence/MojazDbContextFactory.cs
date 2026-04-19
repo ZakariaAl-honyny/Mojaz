@@ -1,16 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Mojaz.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
 
-namespace Mojaz.Infrastructure.Persistence
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Persistence
 {
-    public class MojazDbContextFactory : IDesignTimeDbContextFactory<MojazDbContext>
+    public class DrivingLicenseIssuanceSystemDbContextFactory : IDesignTimeDbContextFactory<DrivingLicenseIssuanceSystemDbContext>
     {
-        public MojazDbContext CreateDbContext(string[] args)
+        public DrivingLicenseIssuanceSystemDbContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<MojazDbContext>();
-            optionsBuilder.UseSqlServer("Server=localhost;Database=Mojaz;TrustServerCertificate=true;MultipleActiveResultSets=true");
-            return new MojazDbContext(optionsBuilder.Options);
+            var optionsBuilder = new DbContextOptionsBuilder<DrivingLicenseIssuanceSystemDbContext>();
+            optionsBuilder.UseSqlServer("Server=localhost;Database=DrivingLicenseIssuanceSystem;TrustServerCertificate=true;MultipleActiveResultSets=true");
+            return new DrivingLicenseIssuanceSystemDbContext(optionsBuilder.Options);
         }
     }
 }

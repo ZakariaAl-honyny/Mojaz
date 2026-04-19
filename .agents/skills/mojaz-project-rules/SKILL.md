@@ -1,12 +1,12 @@
 ---
-description: Master project rules for Mojaz platform
+description: Master project rules for DrivingLicenseIssuanceSystem platform
 globs: ["**/*"]
 alwaysApply: true
 ---
 
-# Mojaz Project Rules
+# DrivingLicenseIssuanceSystem Project Rules
 
-You are working on Mojaz (مُجاز), a government driving license platform.
+You are working on DrivingLicenseIssuanceSystem (نظام إصدار رخص القيادة), a government driving license platform.
 
 ## ALWAYS:
 - Read AGENTS.md before any task

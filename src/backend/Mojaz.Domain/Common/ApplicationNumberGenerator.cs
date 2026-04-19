@@ -1,9 +1,9 @@
 using System;
 
-namespace Mojaz.Domain.Common;
+namespace DrivingLicenseIssuanceSystem.Domain.Common;
 
 /// <summary>
-/// Generates unique application numbers for the Mojaz platform.
+/// Generates unique application numbers for the DrivingLicenseIssuanceSystem platform.
 /// Format: MOJ-{YEAR}-{8_RANDOM_DIGITS}
 /// Example: MOJ-2025-48291037
 /// </summary>

@@ -1,26 +1,26 @@
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Services;
 
 public class Gate4ValidationService : IGate4ValidationService
 {
-    private readonly IRepository<Mojaz.Domain.Entities.Application> _applicationRepository;
-    private readonly IRepository<Mojaz.Domain.Entities.User> _userRepository;
+    private readonly IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.Application> _applicationRepository;
+    private readonly IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.User> _userRepository;
     private readonly IRepository<TheoryTest> _theoryTestRepository;
     private readonly IRepository<PracticalTest> _practicalTestRepository;
     private readonly IRepository<MedicalExamination> _medicalExamRepository;
     private readonly IRepository<PaymentTransaction> _paymentRepository;
 
     public Gate4ValidationService(
-        IRepository<Mojaz.Domain.Entities.Application> applicationRepository,
-        IRepository<Mojaz.Domain.Entities.User> userRepository,
+        IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.Application> applicationRepository,
+        IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.User> userRepository,
         IRepository<TheoryTest> theoryTestRepository,
         IRepository<PracticalTest> practicalTestRepository,
         IRepository<MedicalExamination> medicalExamRepository,

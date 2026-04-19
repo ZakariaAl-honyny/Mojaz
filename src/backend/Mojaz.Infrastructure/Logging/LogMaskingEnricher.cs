@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Mojaz.Infrastructure.Logging;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Logging;
 
 public class LogMaskingEnricher : ILogEventEnricher
 {

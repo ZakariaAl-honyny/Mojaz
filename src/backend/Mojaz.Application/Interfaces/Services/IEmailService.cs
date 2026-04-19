@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Mojaz.Application.DTOs.Email;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Email;
 
-namespace Mojaz.Application.Interfaces.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
 public interface IEmailService
 {

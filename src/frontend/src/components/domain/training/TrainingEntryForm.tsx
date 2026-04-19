@@ -21,7 +21,7 @@ interface TrainingEntryFormProps {
 
 /**
  * TrainingEntryForm - Employee-facing form to record training hours.
- * Designed with a ledger-inspired grid and Royal Green accents.
+ * Designed with a ledger-inspired grid and Royal King blue accents.
  */
 export function TrainingEntryForm({
   applicationId,
@@ -69,7 +69,7 @@ export function TrainingEntryForm({
     >
       {/* Decorative corner accents for ledger aesthetic */}
       <div className="absolute top-0 right-0 w-8 h-8 opacity-10 bg-primary-600 rounded-bl-3xl"></div>
-      
+
       <div className="space-y-6">
         <div className="flex items-center gap-2 mb-2">
           <PlusCircle className="w-5 h-5 text-primary-600" />
@@ -138,11 +138,11 @@ export function TrainingEntryForm({
           </div>
         </div>
       </div>
-      
+
       {/* Visual divider for the bottom of the card */}
       <div className="mt-6 border-t border-dashed border-neutral-100 dark:border-neutral-800 pt-2 flex justify-between">
-        <span className="text-[9px] font-mono text-neutral-300">MOJAZ-TRN-ENTRY</span>
-        <span className="text-[9px] font-mono text-neutral-300">REF: {applicationId.substring(0,8)}</span>
+        <span className="text-[9px] font-mono text-neutral-300">DrivingLicenseIssuanceSystem-TRN-ENTRY</span>
+        <span className="text-[9px] font-mono text-neutral-300">REF: {applicationId.substring(0, 8)}</span>
       </div>
     </form>
   );

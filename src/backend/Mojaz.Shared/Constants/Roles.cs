@@ -1,4 +1,4 @@
-namespace Mojaz.Shared.Constants;
+namespace DrivingLicenseIssuanceSystem.Shared.Constants;
 
 public static class Roles
 {

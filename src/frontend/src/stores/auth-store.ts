@@ -1,11 +1,12 @@
-import {create} from 'zustand';
-import {persist, createJSONStorage} from 'zustand/middleware';
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface User {
   id: string;
   fullName: string;
   email: string;
   role: string;
+  profilePicture?: string;
 }
 
 interface AuthState {
@@ -29,15 +30,15 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       locale: 'ar',
       setAuth: (user, accessToken, refreshToken) =>
-        set({user, accessToken, refreshToken, isAuthenticated: true}),
+        set({ user, accessToken, refreshToken, isAuthenticated: true }),
       setTokens: (accessToken, refreshToken) =>
-        set({accessToken, refreshToken}),
-      setLocale: (locale) => set({locale}),
+        set({ accessToken, refreshToken }),
+      setLocale: (locale) => set({ locale }),
       logout: () =>
-        set({user: null, accessToken: null, refreshToken: null, isAuthenticated: false}),
+        set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false }),
     }),
     {
-      name: 'mojaz-auth-storage',
+      name: 'DrivingLicenseIssuanceSystem-auth-storage',
       storage: createJSONStorage(() => localStorage),
     }
   )

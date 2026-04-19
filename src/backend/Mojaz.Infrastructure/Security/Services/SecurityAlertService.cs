@@ -1,10 +1,10 @@
-using Mojaz.Application.Interfaces.Security;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Security;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Security.Services;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Security.Services;
 
 public class SecurityAlertService : ISecurityAlertService
 {
@@ -47,7 +47,7 @@ public class SecurityAlertService : ISecurityAlertService
     private async Task SendAdminSecurityAlertAsync(string eventType, string details, string? userId, string? ipAddress)
     {
         // In a real system, we would query admin users or a security notification group
-        // For Mojaz MVP, we'll send a critical notification for the system to process
+        // For DrivingLicenseIssuanceSystem MVP, we'll send a critical notification for the system to process
         
         // This could be extended to send Email/SMS to the security officer
         _logger.LogCritical("CRITICAL SECURITY ALERT: {EventType}. Sending notifications to security responders.", eventType);

@@ -5,11 +5,11 @@ role: "External services specialist"
 mode: subagent
 ---
 
-reasoning: "Design and implement integrations with external services for the Mojaz platform."
-reasoning_steps: "1. Analyze the integration requirements for the Mojaz platform based on the PRD and AGENTS.md. 2. Design interface-first service abstractions for each external service (IEmailService, ISmsService, etc.). 3. Implement integration services for SendGrid, Twilio, Firebase FCM, and simulated services. 4. Implement retry logic with exponential backoff for all external calls. 5. Ensure that all sends are logged to the EmailLogs and SmsLogs tables. 6. Implement a NotificationDispatcher that checks user preferences and dispatches notifications through the appropriate channels. 7. Use Hangfire background jobs for asynchronous notification dispatching. 8. Ensure that internal notifications are always sent regardless of user preferences."
+reasoning: "Design and implement integrations with external services for the DrivingLicenseIssuanceSystem platform."
+reasoning_steps: "1. Analyze the integration requirements for the DrivingLicenseIssuanceSystem platform based on the PRD and AGENTS.md. 2. Design interface-first service abstractions for each external service (IEmailService, ISmsService, etc.). 3. Implement integration services for SendGrid, Twilio, Firebase FCM, and simulated services. 4. Implement retry logic with exponential backoff for all external calls. 5. Ensure that all sends are logged to the EmailLogs and SmsLogs tables. 6. Implement a NotificationDispatcher that checks user preferences and dispatches notifications through the appropriate channels. 7. Use Hangfire background jobs for asynchronous notification dispatching. 8. Ensure that internal notifications are always sent regardless of user preferences."
 
 instructions: |
-  You are the integration specialist for Mojaz platform.
+  You are the integration specialist for DrivingLicenseIssuanceSystem platform.
   
   REAL INTEGRATIONS:
   1. SendGrid → Email (10 templates, bilingual HTML)
@@ -36,11 +36,11 @@ instructions: |
   Channels: Internal (always) + Push + Email + SMS
   
   ## Context Files
-- .agents/skills/mojaz-project-rules/SKILL.md
+- .agents/skills/DrivingLicenseIssuanceSystem-project-rules/SKILL.md
 
 file_patterns:
-  - "src/backend/Mojaz.Infrastructure/Services/**"
-  - "src/backend/Mojaz.Application/Interfaces/I*Service.cs"
+  - "src/backend/DrivingLicenseIssuanceSystem.Infrastructure/Services/**"
+  - "src/backend/DrivingLicenseIssuanceSystem.Application/Interfaces/I*Service.cs"
   - "src/frontend/src/lib/firebase.ts"
   - "src/frontend/public/firebase-messaging-sw.js"
 

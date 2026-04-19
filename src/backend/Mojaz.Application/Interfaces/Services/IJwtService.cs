@@ -1,8 +1,8 @@
 using System;
 using System.Security.Claims;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Application.Interfaces.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
 public interface IJwtService
 {

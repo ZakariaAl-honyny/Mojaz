@@ -4,20 +4,21 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using Mojaz.Application.DTOs.LicenseReplacement;
-using Mojaz.Application.Interfaces.Infrastructure;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.LicenseReplacement;
+using DrivingLicenseIssuanceSystem.Application.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using Moq;
 using Xunit;
 
-using ApplicationEntity = Mojaz.Domain.Entities.Application;
+using ApplicationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
 
-namespace Mojaz.Application.Tests.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Tests.Services;
 
 public class ReplaceLicenseServiceTests
 {
@@ -30,6 +31,7 @@ public class ReplaceLicenseServiceTests
     private readonly Mock<IRepository<User>> _userRepositoryMock;
     private readonly Mock<IRepository<ApplicationDocument>> _documentRepositoryMock;
     private readonly Mock<INotificationService> _notificationServiceMock;
+    private readonly Mock<IAuditService> _auditServiceMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<IMapper> _mapperMock;
     private readonly Mock<ILogger<ReplaceLicenseService>> _loggerMock;
@@ -46,6 +48,7 @@ public class ReplaceLicenseServiceTests
         _userRepositoryMock = new Mock<IRepository<User>>();
         _documentRepositoryMock = new Mock<IRepository<ApplicationDocument>>();
         _notificationServiceMock = new Mock<INotificationService>();
+        _auditServiceMock = new Mock<IAuditService>();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _mapperMock = new Mock<IMapper>();
         _loggerMock = new Mock<ILogger<ReplaceLicenseService>>();
@@ -60,6 +63,7 @@ public class ReplaceLicenseServiceTests
             _userRepositoryMock.Object,
             _documentRepositoryMock.Object,
             _notificationServiceMock.Object,
+            _auditServiceMock.Object,
             _unitOfWorkMock.Object,
             _mapperMock.Object,
             _loggerMock.Object);
@@ -96,7 +100,7 @@ public class ReplaceLicenseServiceTests
         // Assert
         result.Success.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data.IsEligible.Should().BeTrue();
+        result.Data!.IsEligible.Should().BeTrue();
         result.Data.LicenseId.Should().Be(licenseId);
         result.Data.LicenseNumber.Should().Be(license.LicenseNumber);
     }

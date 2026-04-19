@@ -1,7 +1,7 @@
-using Mojaz.Application.DTOs.Payment;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Payment;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces.Infrastructure
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure
 {
     public interface IPaymentReceiptGenerator
     {

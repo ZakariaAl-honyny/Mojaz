@@ -2,7 +2,7 @@
 
 ```bash
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# opencode CLI Custom Commands for Mojaz
+# opencode CLI Custom Commands for DrivingLicenseIssuanceSystem
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -35,25 +35,25 @@ Read the feature spec in features/{NNN}-{name}/ and:
 
 # Create a new entity
 opencode "Create the {EntityName} entity class in 
-src/backend/Mojaz.Domain/Entities/{EntityName}.cs
+src/backend/DrivingLicenseIssuanceSystem.Domain/Entities/{EntityName}.cs
 following the schema in PRD Section 21.
 Also create the EF Core configuration in
-src/backend/Mojaz.Infrastructure/Data/Configurations/{EntityName}Configuration.cs
+src/backend/DrivingLicenseIssuanceSystem.Infrastructure/Data/Configurations/{EntityName}Configuration.cs
 Include all constraints, indexes, and relationships."
 
 # Create a new service
-opencode "Create the {Service}Service for Mojaz:
-1. Interface I{Service}Service in Mojaz.Application/Interfaces/
-2. Implementation {Service}Service in Mojaz.Application/Services/
-3. Request/Response DTOs in Mojaz.Application/DTOs/
-4. FluentValidation validators in Mojaz.Application/Validators/
-5. AutoMapper profile in Mojaz.Application/Mappings/
+opencode "Create the {Service}Service for DrivingLicenseIssuanceSystem:
+1. Interface I{Service}Service in DrivingLicenseIssuanceSystem.Application/Interfaces/
+2. Implementation {Service}Service in DrivingLicenseIssuanceSystem.Application/Services/
+3. Request/Response DTOs in DrivingLicenseIssuanceSystem.Application/DTOs/
+4. FluentValidation validators in DrivingLicenseIssuanceSystem.Application/Validators/
+5. AutoMapper profile in DrivingLicenseIssuanceSystem.Application/Mappings/
 Follow Clean Architecture rules from AGENTS.md.
 All configurable values from SystemSettings table."
 
 # Create a new controller
 opencode "Create the {Resource}Controller in 
-src/backend/Mojaz.API/Controllers/
+src/backend/DrivingLicenseIssuanceSystem.API/Controllers/
 with these endpoints: {list endpoints}
 Follow rules:
 - Return ApiResponse<T> always
@@ -64,8 +64,8 @@ Follow rules:
 
 # Generate migration
 opencode "Run: dotnet ef migrations add {MigrationName} 
---project src/backend/Mojaz.Infrastructure 
---startup-project src/backend/Mojaz.API
+--project src/backend/DrivingLicenseIssuanceSystem.Infrastructure 
+--startup-project src/backend/DrivingLicenseIssuanceSystem.API
 Then verify the migration looks correct."
 ```
 
@@ -120,7 +120,7 @@ opencode "Write xUnit tests for {ServiceName}Service:
 - Mock external dependencies with Moq
 - Use FluentAssertions
 - Test configurable values come from SystemSettings
-Put tests in tests/Mojaz.UnitTests/Services/{ServiceName}ServiceTests.cs"
+Put tests in tests/DrivingLicenseIssuanceSystem.UnitTests/Services/{ServiceName}ServiceTests.cs"
 
 # Generate Gate tests
 opencode "Write comprehensive tests for Gate {N} validation:
@@ -128,7 +128,7 @@ opencode "Write comprehensive tests for Gate {N} validation:
 - Each individual failing condition
 - Edge cases (exact boundary values)
 - Verify values read from SystemSettings (not hardcoded)
-Put tests in tests/Mojaz.UnitTests/Validators/Gate{N}ValidatorTests.cs"
+Put tests in tests/DrivingLicenseIssuanceSystem.UnitTests/Validators/Gate{N}ValidatorTests.cs"
 
 # Generate E2E test
 opencode "Write a Playwright E2E test for the {flow} flow:
@@ -163,7 +163,7 @@ opencode "Scan src/frontend/src/ and report:
 Format as a violation report."
 
 # API contract validation
-opencode "Read all controllers in src/backend/Mojaz.API/Controllers/ 
+opencode "Read all controllers in src/backend/DrivingLicenseIssuanceSystem.API/Controllers/ 
 and verify:
 1. Total endpoint count matches ~52 from PRD
 2. All endpoints have proper HTTP method
@@ -213,22 +213,22 @@ echo "━━━ Creating $ENTITY entity, configuration, and repository ━━━
 
 opencode "Create the complete backend implementation for $ENTITY:
 
-1. Entity: src/backend/Mojaz.Domain/Entities/$ENTITY.cs
+1. Entity: src/backend/DrivingLicenseIssuanceSystem.Domain/Entities/$ENTITY.cs
    - Match PRD Section 21 schema exactly
    - Include navigation properties
 
-2. Configuration: src/backend/Mojaz.Infrastructure/Data/Configurations/${ENTITY}Configuration.cs
+2. Configuration: src/backend/DrivingLicenseIssuanceSystem.Infrastructure/Data/Configurations/${ENTITY}Configuration.cs
    - Fluent API only
    - All constraints, indexes, relationships
    - String length limits
 
 3. Add DbSet to AppDbContext
 
-4. Repository: src/backend/Mojaz.Infrastructure/Repositories/${ENTITY}Repository.cs
+4. Repository: src/backend/DrivingLicenseIssuanceSystem.Infrastructure/Repositories/${ENTITY}Repository.cs
    - Implement I${ENTITY}Repository
    - Include standard CRUD + soft delete
 
-5. Interface: src/backend/Mojaz.Domain/Interfaces/I${ENTITY}Repository.cs
+5. Interface: src/backend/DrivingLicenseIssuanceSystem.Domain/Interfaces/I${ENTITY}Repository.cs
 
 Follow all rules in AGENTS.md."
 ```

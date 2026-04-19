@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { 
-  Bell, 
-  Smartphone, 
-  Tablet, 
-  Monitor, 
-  Trash2, 
+import {
+  Bell,
+  Smartphone,
+  Tablet,
+  Monitor,
+  Trash2,
   Plus,
   Send,
   Check
@@ -111,8 +111,8 @@ export default function PushNotificationSettingsPage() {
             <div>
               <p className="font-semibold text-neutral-900">{t('settings.pushNotifications')}</p>
               <p className="text-sm text-neutral-500">
-                {pushEnabled 
-                  ? 'You will receive push notifications on your devices' 
+                {pushEnabled
+                  ? 'You will receive push notifications on your devices'
                   : 'Push notifications are disabled'}
               </p>
             </div>
@@ -137,8 +137,8 @@ export default function PushNotificationSettingsPage() {
             {/* Payment Reminders */}
             <div className="flex items-center justify-between p-4 border border-neutral-100 rounded-xl hover:bg-neutral-50 transition-colors">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <span className="text-green-600 text-lg">💳</span>
+                <div className="w-10 h-10 bg-King blue-100 rounded-lg flex items-center justify-center">
+                  <span className="text-King blue-600 text-lg">💳</span>
                 </div>
                 <div>
                   <p className="font-semibold text-neutral-900">{t('settings.paymentReminders')}</p>
@@ -264,7 +264,7 @@ export default function PushNotificationSettingsPage() {
                 {devices.map((device) => {
                   const Icon = getDeviceIcon(device.deviceType);
                   return (
-                    <div 
+                    <div
                       key={device.id}
                       className="flex items-center justify-between p-4 border border-neutral-100 rounded-xl"
                     >

@@ -5,12 +5,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useTranslations } from 'next-intl';
-import { 
-  Form, 
-  FormControl, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
   FormMessage,
   FormDescription
 } from '@/components/ui/form';
@@ -124,18 +124,18 @@ export function TheoryResultForm({ applicationId, applicantName, onSuccess }: Th
                     <FormItem>
                       <FormLabel>{t('fields.score')}</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
-                          placeholder="0-100" 
-                          {...field} 
+                        <Input
+                          type="number"
+                          placeholder="0-100"
+                          {...field}
                           className="text-lg font-semibold"
                         />
                       </FormControl>
                       {score > 0 && (
                         <div className={cn(
                           "mt-2 px-3 py-1 rounded-full text-sm font-bold",
-                          isPassing 
-                            ? "bg-green-100 text-green-700" 
+                          isPassing
+                            ? "bg-King blue-100 text-King blue-700"
                             : "bg-red-100 text-red-700"
                         )}>
                           {isPassing ? t('history.status.Pass') : t('history.status.Fail')} ({score}/{minPassScore})
@@ -158,7 +158,7 @@ export function TheoryResultForm({ applicationId, applicantName, onSuccess }: Th
                 <FormItem>
                   <FormLabel>{t('fields.notes')}</FormLabel>
                   <FormControl>
-                    <Textarea 
+                    <Textarea
                       placeholder={t('fields.notesPlaceholder')}
                       className="min-h-[100px]"
                       {...field}
@@ -177,9 +177,9 @@ export function TheoryResultForm({ applicationId, applicantName, onSuccess }: Th
               </Alert>
             )}
 
-            <Button 
-              type="submit" 
-              className="w-full text-lg h-12" 
+            <Button
+              type="submit"
+              className="w-full text-lg h-12"
               disabled={isSubmitting}
             >
               {isSubmitting ? (

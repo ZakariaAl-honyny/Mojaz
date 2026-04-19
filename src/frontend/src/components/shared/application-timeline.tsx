@@ -101,7 +101,7 @@ export const ApplicationTimeline = ({ timeline, className }: ApplicationTimeline
                 </h4>
                 {stage.state === 'current' && (
                   <span className="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-amber-100 text-amber-700 animate-pulse">
-                    قيد التنفيذ
+                    {t('inProgress')}
                   </span>
                 )}
               </div>

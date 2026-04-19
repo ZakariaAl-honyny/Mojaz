@@ -1,15 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using Mojaz.Application.Interfaces.Repositories;
-using Mojaz.Domain.Entities;
-using Mojaz.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Repositories;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
 
-namespace Mojaz.Infrastructure.Persistence.Repositories;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Repositories;
 
 public class LicenseRepository : ILicenseRepository
 {
-    private readonly MojazDbContext _context;
+    private readonly DrivingLicenseIssuanceSystemDbContext _context;
 
-    public LicenseRepository(MojazDbContext context)
+    public LicenseRepository(DrivingLicenseIssuanceSystemDbContext context)
     {
         _context = context;
     }

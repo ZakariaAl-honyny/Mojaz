@@ -1,4 +1,4 @@
-namespace Mojaz.Application.Applications.Dtos;
+namespace DrivingLicenseIssuanceSystem.Application.Applications.Dtos;
 
 public class ApplicationTimelineDto
 {

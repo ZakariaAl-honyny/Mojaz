@@ -4,11 +4,11 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { paymentService, PaymentDto } from "@/services/payment.service";
 import { ReceiptDownloadButton } from "./ReceiptDownloadButton";
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
 } from "@/components/ui/card";
 import { StatusBadge } from "@/components/domain/application/StatusBadge";
 import { ApplicationStatus } from "@/types/api.types";
@@ -89,8 +89,8 @@ export function PaymentHistoryList({ applicationId }: PaymentHistoryListProps) {
                       <span className="font-bold text-neutral-900 text-lg">
                         {payment.amount} SAR
                       </span>
-                      <StatusBadge 
-                        status={getStatusString(payment.status) as ApplicationStatus} 
+                      <StatusBadge
+                        status={getStatusString(payment.status) as ApplicationStatus}
                       />
                     </div>
                     <div className="text-sm font-medium text-neutral-700">
@@ -110,9 +110,9 @@ export function PaymentHistoryList({ applicationId }: PaymentHistoryListProps) {
                 </div>
 
                 {payment.status === 1 && ( // Assuming 1 is "Paid"
-                  <ReceiptDownloadButton 
-                    paymentId={payment.id} 
-                    className="md:w-auto w-full" 
+                  <ReceiptDownloadButton
+                    paymentId={payment.id}
+                    className="md:w-auto w-full"
                   />
                 )}
               </div>
@@ -128,7 +128,7 @@ export function PaymentHistoryList({ applicationId }: PaymentHistoryListProps) {
 function getStatusString(status: number): string {
   switch (status) {
     case 0: return "Submitted"; // Pending -> Blue
-    case 1: return "Approved";  // Paid -> Green
+    case 1: return "Approved";  // Paid -> King blue
     case 2: return "Rejected";  // Failed -> Red
     default: return "Submitted";
   }

@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Mojaz.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
 
-namespace Mojaz.Infrastructure.Persistence.Configurations
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Configurations
 {
     public class UserConfiguration : IEntityTypeConfiguration<User>
     {
@@ -30,11 +30,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(u => u.ApplicantType).HasMaxLength(30);
             builder.Property(u => u.PreferredLanguage).HasMaxLength(10);
             builder.Property(u => u.NotificationPreferences).HasMaxLength(200);
-            builder.Property(u => u.EnableEmail).HasDefaultValue(true);
-            builder.Property(u => u.EnableSms).HasDefaultValue(true);
-            builder.Property(u => u.EnablePush).HasDefaultValue(true);
             builder.Property(u => u.RegistrationMethod).HasMaxLength(20);
-            builder.Property(u => u.IsSecurityBlocked).HasDefaultValue(false);
             builder.HasQueryFilter(u => !u.IsDeleted);
             // Contact constraint: at least one of Email or PhoneNumber must be present
         }

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { motion } from 'framer-motion';
 import {
   Plus,
   Search,
@@ -79,16 +80,16 @@ export default function ApplicantApplicationsPage() {
     <button
       onClick={() => setFilter(value)}
       className={cn(
-        "px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2",
+        "px-8 py-3 rounded-full font-black uppercase tracking-widest text-[10px] transition-all flex items-center gap-3",
         filter === value
-          ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
-          : "bg-white text-neutral-600 hover:bg-neutral-50"
+          ? "bg-primary-600 text-white shadow-[0_10px_20px_rgba(30,58,138,0.3)] border border-primary-400/30"
+          : "bg-white/5 text-neutral-400 hover:text-white hover:bg-white/10 border border-white/5"
       )}
     >
       {label}
       <span className={cn(
-        "text-xs px-2 py-0.5 rounded-full",
-        filter === value ? "bg-white/20" : "bg-neutral-100"
+        "px-2 py-0.5 rounded-md min-w-[1.5rem]",
+        filter === value ? "bg-white/20 text-white" : "bg-white/10 text-neutral-500"
       )}>
         {count}
       </span>
@@ -96,57 +97,59 @@ export default function ApplicantApplicationsPage() {
   );
 
   return (
-    <div className="space-y-10 py-6">
+    <div className="space-y-12 py-12 px-4 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-        <div className="space-y-2">
-          <h1 className="text-5xl font-black text-neutral-900 tracking-tight leading-none">
+      <div className="relative flex flex-col md:flex-row md:items-end md:justify-between gap-10">
+        <div className="space-y-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-primary-400">
+            <FileText className="w-3.5 h-3.5" />
+            {t('title')}
+          </div>
+          <h1 className="text-5xl font-black text-white tracking-widest leading-none font-arabic uppercase">
             {t('title')}
           </h1>
-          <p className="text-lg text-neutral-400 max-w-lg font-medium leading-relaxed italic">
+          <p className="text-xl text-neutral-400 max-w-xl font-bold font-arabic leading-relaxed">
             {t('subtitle')}
           </p>
         </div>
         <Button
-          size="lg"
-          className="h-16 px-8 rounded-2xl bg-primary-500 hover:bg-primary-600 shadow-2xl shadow-primary-500/20 text-lg font-bold transition-all active:scale-95 flex items-center gap-4 group"
+          className="h-20 px-12 rounded-[2rem] bg-primary-600 hover:bg-primary-500 text-white shadow-[0_20px_40px_rgba(30,58,138,0.4)] transition-all hover:scale-105 active:scale-95 text-xl font-black group"
           onClick={() => router.push('/applications/new')}
         >
-          <Plus className="w-6 h-6 group-hover:rotate-90 transition-transform" />
+          <Plus className="me-4 w-7 h-7 group-hover:rotate-90 transition-transform" />
           {t('filters.newApplication')}
         </Button>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="flex flex-col md:flex-row gap-3">
-        <FilterTab 
-          value="all" 
-          label={t('filters.all')} 
-          count={mockApplications.length} 
-        />
-        <FilterTab 
-          value="pending" 
-          label={t('filters.pending')} 
-          count={mockApplications.filter(a => ['Submitted', 'Draft'].includes(a.status)).length} 
-        />
-        <FilterTab 
-          value="inProgress" 
-          label={t('filters.inProgress')} 
-          count={mockApplications.filter(a => ['InReview', 'Paid', 'MedicalDone', 'TheoryDone', 'PracticalDone'].includes(a.status)).length} 
-        />
-        <FilterTab 
-          value="completed" 
-          label={t('filters.completed')} 
-          count={mockApplications.filter(a => ['Approved', 'Issued'].includes(a.status)).length} 
-        />
-      </div>
+      {/* Search & Filters */}
+      <div className="flex flex-col lg:flex-row items-center gap-6 justify-between">
+        <div className="flex flex-wrap gap-4 w-full lg:w-auto">
+          <FilterTab 
+            value="all" 
+            label={t('filters.all')} 
+            count={mockApplications.length} 
+          />
+          <FilterTab 
+            value="pending" 
+            label={t('filters.pending')} 
+            count={mockApplications.filter(a => ['Submitted', 'Draft'].includes(a.status)).length} 
+          />
+          <FilterTab 
+            value="inProgress" 
+            label={t('filters.inProgress')} 
+            count={mockApplications.filter(a => ['InReview', 'Paid', 'MedicalDone', 'TheoryDone', 'PracticalDone'].includes(a.status)).length} 
+          />
+          <FilterTab 
+            value="completed" 
+            label={t('filters.completed')} 
+            count={mockApplications.filter(a => ['Approved', 'Issued'].includes(a.status)).length} 
+          />
+        </div>
 
-      {/* Search */}
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="relative max-w-md w-full">
-          <Search className="absolute left-4 top-3.5 h-5 w-5 text-neutral-300 rtl:left-auto rtl:right-4" />
+        <div className="relative w-full lg:max-w-md group">
+          <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-500 group-focus-within:text-primary-400 transition-colors" />
           <Input 
-            className="h-12 ps-12 rounded-xl border-neutral-100 bg-white shadow-sm" 
+            className="h-16 ps-16 rounded-[1.5rem] border-white/10 bg-white/5 backdrop-blur-xl text-white placeholder:text-neutral-500 focus:ring-primary-500/50 focus:border-primary-500/50 transition-all font-bold" 
             placeholder={t('filters.search')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -160,63 +163,75 @@ export default function ApplicantApplicationsPage() {
           filteredApplications.map((app) => (
             <Card 
               key={app.id} 
-              className="border-none shadow-xl hover:shadow-2xl transition-all duration-300 p-2 group bg-white rounded-3xl cursor-pointer"
+              className="border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4)] bg-white/5 backdrop-blur-3xl rounded-[2rem] overflow-hidden group hover:border-primary-500/30 transition-all duration-500 cursor-pointer"
               onClick={() => router.push(`/applications/${app.id}`)}
             >
-              <CardContent className="p-8 flex flex-col md:flex-row items-center justify-between gap-8">
-                <div className="flex items-center gap-6 flex-1">
+              <CardContent className="p-8 flex flex-col md:flex-row items-center justify-between gap-10">
+                <div className="flex items-center gap-8 flex-1">
                   <div className={cn(
-                    "w-16 h-16 rounded-2xl flex items-center justify-center p-4",
-                    app.status === 'Issued' ? "bg-success/10 text-success" : "bg-primary-500/10 text-primary-500"
+                    "w-20 h-20 rounded-3xl flex items-center justify-center shadow-2xl transition-transform duration-500 group-hover:scale-110",
+                    app.status === 'Issued' ? "bg-emerald-500/20 text-emerald-400 shadow-emerald-500/20" : "bg-primary-600/20 text-primary-400 shadow-primary-500/20"
                   )}>
-                    <FileText className="w-8 h-8" />
+                    <FileText className="w-10 h-10" />
                   </div>
-                  <div className="space-y-1">
-                    <h3 className="text-xl font-bold text-neutral-900 group-hover:text-primary-500 transition-colors uppercase tracking-tight">
+                  <div className="space-y-2">
+                    <h3 className="text-2xl font-black text-white group-hover:text-primary-400 transition-colors uppercase tracking-tight font-arabic">
                       {app.categoryName}
                     </h3>
-                    <p className="text-sm font-bold text-neutral-400 tracking-wider">
-                      {t('filters.columns.number')}: {app.applicationNumber}
+                    <p className="text-xs font-black text-neutral-500 tracking-[0.2em] uppercase">
+                      #{app.applicationNumber}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row items-center gap-12 flex-1 md:justify-center">
-                  <div className="text-center md:text-left rtl:md:text-right">
-                    <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest mb-1">
+                <div className="flex flex-col md:flex-row items-center gap-16 flex-1 md:justify-center">
+                  <div className="text-center md:text-start">
+                    <p className="text-[10px] text-neutral-500 font-black uppercase tracking-[0.2em] mb-3">
                       {t('filters.columns.status')}
                     </p>
                     <StatusBadge status={app.status} />
                   </div>
 
-                  <div className="w-48 text-center md:text-left rtl:md:text-right hidden sm:block">
-                    <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest mb-1">
-                      Progress
-                    </p>
-                    <div className="w-full h-2 bg-neutral-100 rounded-full overflow-hidden">
-                      <div 
+                  <div className="w-64 hidden xl:block">
+                    <div className="flex justify-between items-center mb-3">
+                      <p className="text-[10px] text-neutral-500 font-black uppercase tracking-[0.2em]">
+                        Progress
+                      </p>
+                      <span className="text-[10px] font-black text-primary-400">{app.progress}%</span>
+                    </div>
+                    <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${app.progress}%` }}
+                        transition={{ duration: 1, ease: "easeOut" }}
                         className={cn(
-                          "h-full transition-all duration-1000", 
-                          app.status === 'Issued' ? "bg-success w-full" : "bg-primary-500",
-                          app.progress === 100 ? "w-full" : `w-[${app.progress}%]`
+                          "h-full rounded-full shadow-[0_0_15px_rgba(30,58,138,0.5)]", 
+                          app.status === 'Issued' ? "bg-emerald-500" : "bg-primary-600"
                         )} 
-                        style={{ width: `${app.progress}%` }}
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
+                  <div className="text-end me-4 hidden sm:block">
+                    <p className="text-[10px] text-neutral-500 font-black uppercase tracking-[0.2em] mb-1">
+                      {t('filters.columns.date')}
+                    </p>
+                    <p className="text-sm font-black text-white">
+                      {new Date(app.date).toLocaleDateString('ar-SA')}
+                    </p>
+                  </div>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-12 w-12 rounded-xl bg-neutral-50 text-neutral-400 hover:bg-neutral-100 transition-all"
+                    className="h-16 w-16 rounded-2xl bg-white/5 text-neutral-400 hover:bg-primary-600 hover:text-white hover:scale-110 transition-all border border-white/10"
                     onClick={(e) => {
                       e.stopPropagation();
                       router.push(`/applications/${app.id}`);
                     }}
                   >
-                    <Eye className="w-5 h-5" />
+                    <Eye className="w-7 h-7" />
                   </Button>
                 </div>
               </CardContent>

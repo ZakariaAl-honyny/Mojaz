@@ -5,20 +5,20 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
 using Moq;
 using Xunit;
 
-namespace Mojaz.Application.Tests.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Tests.Services;
 
 public class Gate4ValidationServiceTests
 {
-    private readonly Mock<IRepository<Mojaz.Domain.Entities.Application>> _applicationRepositoryMock;
-    private readonly Mock<IRepository<Mojaz.Domain.Entities.User>> _userRepositoryMock;
+    private readonly Mock<IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.Application>> _applicationRepositoryMock;
+    private readonly Mock<IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.User>> _userRepositoryMock;
     private readonly Mock<IRepository<TheoryTest>> _theoryTestRepositoryMock;
     private readonly Mock<IRepository<PracticalTest>> _practicalTestRepositoryMock;
     private readonly Mock<IRepository<MedicalExamination>> _medicalExamRepositoryMock;
@@ -27,8 +27,8 @@ public class Gate4ValidationServiceTests
 
     public Gate4ValidationServiceTests()
     {
-        _applicationRepositoryMock = new Mock<IRepository<Mojaz.Domain.Entities.Application>>();
-        _userRepositoryMock = new Mock<IRepository<Mojaz.Domain.Entities.User>>();
+        _applicationRepositoryMock = new Mock<IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.Application>>();
+        _userRepositoryMock = new Mock<IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.User>>();
         _theoryTestRepositoryMock = new Mock<IRepository<TheoryTest>>();
         _practicalTestRepositoryMock = new Mock<IRepository<PracticalTest>>();
         _medicalExamRepositoryMock = new Mock<IRepository<MedicalExamination>>();
@@ -49,8 +49,8 @@ public class Gate4ValidationServiceTests
         // Arrange
         var applicationId = Guid.NewGuid();
         var applicantId = Guid.NewGuid();
-        var application = new Mojaz.Domain.Entities.Application { Id = applicationId, ApplicantId = applicantId };
-        var applicant = new Mojaz.Domain.Entities.User { Id = applicantId, NationalId = "1234567890", IsSecurityBlocked = false };
+        var application = new DrivingLicenseIssuanceSystem.Domain.Entities.Application { Id = applicationId, ApplicantId = applicantId };
+        var applicant = new DrivingLicenseIssuanceSystem.Domain.Entities.User { Id = applicantId, NationalId = "1234567890" };
 
         SetupMocks(applicationId, application, applicant, true, true, true, true, true, true);
 
@@ -69,8 +69,8 @@ public class Gate4ValidationServiceTests
         // Arrange
         var applicationId = Guid.NewGuid();
         var applicantId = Guid.NewGuid();
-        var application = new Mojaz.Domain.Entities.Application { Id = applicationId, ApplicantId = applicantId };
-        var applicant = new Mojaz.Domain.Entities.User { Id = applicantId, NationalId = "1234567890", IsSecurityBlocked = false };
+        var application = new DrivingLicenseIssuanceSystem.Domain.Entities.Application { Id = applicationId, ApplicantId = applicantId };
+        var applicant = new DrivingLicenseIssuanceSystem.Domain.Entities.User { Id = applicantId, NationalId = "1234567890" };
 
         SetupMocks(applicationId, application, applicant, false, true, true, true, true, true);
 
@@ -88,10 +88,30 @@ public class Gate4ValidationServiceTests
         // Arrange
         var applicationId = Guid.NewGuid();
         var applicantId = Guid.NewGuid();
-        var application = new Mojaz.Domain.Entities.Application { Id = applicationId, ApplicantId = applicantId };
-        var applicant = new Mojaz.Domain.Entities.User { Id = applicantId, NationalId = "1234567890", IsSecurityBlocked = true };
+        var application = new DrivingLicenseIssuanceSystem.Domain.Entities.Application { Id = applicationId, ApplicantId = applicantId };
+        var applicant = new DrivingLicenseIssuanceSystem.Domain.Entities.User { Id = applicantId, NationalId = "1234567890", IsSecurityBlocked = true };
 
-        SetupMocks(applicationId, application, applicant, true, true, false, true, true, true);
+        // Setup specific mock for security blocked scenario
+        _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>())).ReturnsAsync(application);
+        _userRepositoryMock.Setup(x => x.GetByIdAsync(application.ApplicantId, It.IsAny<CancellationToken>())).ReturnsAsync(applicant);
+
+        // Setup mocks for other conditions that should pass
+        var theoryResult = TestResult.Pass;
+        _theoryTestRepositoryMock.Setup(x => x.FindAsync(It.IsAny<Expression<Func<TheoryTest, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<TheoryTest> { new TheoryTest { ApplicationId = applicationId, Result = theoryResult, CreatedAt = DateTime.UtcNow } });
+
+        var practicalResult = TestResult.Pass;
+        _practicalTestRepositoryMock.Setup(x => x.FindAsync(It.IsAny<Expression<Func<PracticalTest, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<PracticalTest> { new PracticalTest { ApplicationId = applicationId, Result = practicalResult, CreatedAt = DateTime.UtcNow } });
+
+        var medicalResult = MedicalFitnessResult.Fit;
+        var validUntil = DateTime.UtcNow.AddDays(30);
+        _medicalExamRepositoryMock.Setup(x => x.FindAsync(It.IsAny<Expression<Func<MedicalExamination, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<MedicalExamination> { new MedicalExamination { ApplicationId = applicationId, FitnessResult = medicalResult, ValidUntil = validUntil, CreatedAt = DateTime.UtcNow } });
+
+        var paymentStatus = PaymentStatus.Paid;
+        _paymentRepositoryMock.Setup(x => x.FindAsync(It.IsAny<Expression<Func<PaymentTransaction, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<PaymentTransaction> { new PaymentTransaction { ApplicationId = applicationId, Status = paymentStatus } });
 
         // Act
         var result = await _service.ValidateAsync(applicationId);
@@ -107,8 +127,8 @@ public class Gate4ValidationServiceTests
         // Arrange
         var applicationId = Guid.NewGuid();
         var applicantId = Guid.NewGuid();
-        var application = new Mojaz.Domain.Entities.Application { Id = applicationId, ApplicantId = applicantId };
-        var applicant = new Mojaz.Domain.Entities.User { Id = applicantId, NationalId = "1234567890", IsSecurityBlocked = false };
+        var application = new DrivingLicenseIssuanceSystem.Domain.Entities.Application { Id = applicationId, ApplicantId = applicantId };
+        var applicant = new DrivingLicenseIssuanceSystem.Domain.Entities.User { Id = applicantId, NationalId = "1234567890" };
 
         SetupMocks(applicationId, application, applicant, true, true, true, true, false, true);
 
@@ -120,7 +140,7 @@ public class Gate4ValidationServiceTests
         result.Conditions.First(c => c.Key == "MedicalCertificateValid").IsPassed.Should().BeFalse();
     }
 
-    private void SetupMocks(Guid applicationId, Mojaz.Domain.Entities.Application application, Mojaz.Domain.Entities.User applicant, 
+    private void SetupMocks(Guid applicationId, DrivingLicenseIssuanceSystem.Domain.Entities.Application application, DrivingLicenseIssuanceSystem.Domain.Entities.User applicant, 
         bool theoryPass, bool practicalPass, bool securityClean, bool identityValid, bool medicalValid, bool paymentsCleared)
     {
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>())).ReturnsAsync(application);

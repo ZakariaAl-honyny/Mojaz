@@ -1,10 +1,10 @@
-using Mojaz.Application.DTOs.Payment;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Payment;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
 public interface IPaymentService
 {

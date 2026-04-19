@@ -26,7 +26,7 @@ export function DocumentReviewPanel({
   const t = useTranslations('document');
   const reviewMutation = useReviewDocument(applicationId);
   const bulkApproveMutation = useBulkApprove(applicationId);
-  
+
   const [selectedDocument, setSelectedDocument] = useState<DocumentDto | null>(null);
 
   // Count documents by status
@@ -96,7 +96,7 @@ export function DocumentReviewPanel({
       case DocumentStatus.Pending:
         return <Clock className="w-4 h-4 text-amber-500" />;
       case DocumentStatus.Approved:
-        return <Check className="w-4 h-4 text-green-500" />;
+        return <Check className="w-4 h-4 text-King blue-500" />;
       case DocumentStatus.Rejected:
         return <X className="w-4 h-4 text-red-500" />;
       default:
@@ -141,7 +141,7 @@ export function DocumentReviewPanel({
             <button
               onClick={() => handleApprove(doc.id)}
               disabled={reviewMutation.isPending}
-              className="p-1.5 rounded-lg text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
+              className="p-1.5 rounded-lg text-King blue-600 hover:bg-King blue-50 dark:hover:bg-King blue-900/20 transition-colors"
               title={t('review.approve')}
             >
               <Check className="w-4 h-4" />
@@ -183,14 +183,14 @@ export function DocumentReviewPanel({
             </div>
           </div>
         </div>
-        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+        <div className="bg-King blue-50 dark:bg-King blue-900/20 rounded-lg p-4">
           <div className="flex items-center gap-3">
-            <Check className="w-5 h-5 text-green-600" />
+            <Check className="w-5 h-5 text-King blue-600" />
             <div>
-              <p className="text-2xl font-bold text-green-700 dark:text-green-400">
+              <p className="text-2xl font-bold text-King blue-700 dark:text-King blue-400">
                 {approvedDocs.length}
               </p>
-              <p className="text-sm text-green-600 dark:text-green-500">
+              <p className="text-sm text-King blue-600 dark:text-King blue-500">
                 {t('status.approved')}
               </p>
             </div>
@@ -217,7 +217,7 @@ export function DocumentReviewPanel({
           <Button
             onClick={handleBulkApprove}
             disabled={bulkApproveMutation.isPending}
-            className="bg-green-600 hover:bg-green-700"
+            className="bg-King blue-600 hover:bg-King blue-700"
           >
             <Check className="w-4 h-4 me-2" />
             {bulkApproveMutation.isPending ? t('review.approve') + '...' : t('review.bulkApprove')}

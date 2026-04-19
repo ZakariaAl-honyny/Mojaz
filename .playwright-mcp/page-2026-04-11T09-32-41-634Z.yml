@@ -2,14 +2,14 @@
   - banner [ref=e3]:
     - generic [ref=e4]:
       - generic [ref=e5]:
-        - link "M مُجاز Mojaz Digital" [ref=e6] [cursor=pointer]:
+        - link "M نظام إصدار رخص القيادة DrivingLicenseIssuanceSystem Digital" [ref=e6] [cursor=pointer]:
           - /url: /ar
           - generic [ref=e7]: M
           - generic [ref=e8]:
-            - text: مُجاز
+            - text: نظام إصدار رخص القيادة
             - generic [ref=e9]:
               - img [ref=e10]
-              - generic [ref=e12]: Mojaz Digital
+              - generic [ref=e12]: DrivingLicenseIssuanceSystem Digital
         - navigation [ref=e13]:
           - link "الرئيسية" [ref=e14] [cursor=pointer]:
             - /url: /ar
@@ -39,7 +39,7 @@
           - generic [ref=e35]:
             - generic [ref=e36]: M
             - heading "تسجيل الدخول" [level=2] [ref=e37]
-            - paragraph [ref=e38]: الوصول إلى حسابك في منصة مُجاز
+            - paragraph [ref=e38]: الوصول إلى حسابك في منصة نظام إصدار رخص القيادة
           - generic [ref=e39]:
             - generic [ref=e40]:
               - text: رقم الهوية أو البريد الإلكتروني
@@ -68,9 +68,9 @@
           - generic [ref=e64]:
             - generic [ref=e65]: M
             - generic [ref=e66]:
-              - generic [ref=e67]: مُجاز
+              - generic [ref=e67]: نظام إصدار رخص القيادة
               - text: Gov Digital Platform
-          - paragraph [ref=e68]: مُجاز هي المنصة الحكومية الموحدة لخدمات رخص القيادة في المملكة، تهدف إلى أتمتة كافة الإجراءات وتقديم تجربة مستخدم رقمية بمعايير عالمية.
+          - paragraph [ref=e68]: نظام إصدار رخص القيادة هي المنصة الحكومية الموحدة لخدمات رخص القيادة في المملكة، تهدف إلى أتمتة كافة الإجراءات وتقديم تجربة مستخدم رقمية بمعايير عالمية.
           - generic [ref=e69]:
             - link [ref=e70] [cursor=pointer]:
               - /url: "#"
@@ -111,7 +111,7 @@
           - heading "عن المنصة" [level=4] [ref=e113]
           - list [ref=e114]:
             - listitem [ref=e115]:
-              - link "عن مُجاز" [ref=e116] [cursor=pointer]:
+              - link "عن نظام إصدار رخص القيادة" [ref=e116] [cursor=pointer]:
                 - /url: /ar/about
             - listitem [ref=e117]:
               - link "دليل الاستخدام" [ref=e118] [cursor=pointer]:
@@ -151,7 +151,7 @@
           - img [ref=e151]
           - generic [ref=e153]: Zero Paper Initiative
       - generic [ref=e154]:
-        - paragraph [ref=e155]: © 2026 مُجاز. جميع الحقوق محفوظة لوزارة الداخلية.
+        - paragraph [ref=e155]: © 2026 نظام إصدار رخص القيادة. جميع الحقوق محفوظة لوزارة الداخلية.
         - generic [ref=e156]:
           - generic [ref=e157]: Vision 2030
           - generic [ref=e158]: Powered by Gaea System

@@ -1,4 +1,4 @@
-namespace Mojaz.Domain.Entities;
+namespace DrivingLicenseIssuanceSystem.Domain.Entities;
 
 /// <summary>
 /// Base entity with common properties for all domain entities.

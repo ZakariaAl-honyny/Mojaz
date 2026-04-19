@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Mojaz.Domain.Entities;
-using DomainApplication = Mojaz.Domain.Entities.Application;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DomainApplication = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
 
-namespace Mojaz.Infrastructure.Persistence.Configurations
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Configurations
 {
     public class LicenseRenewalConfiguration : IEntityTypeConfiguration<LicenseRenewal>
     {

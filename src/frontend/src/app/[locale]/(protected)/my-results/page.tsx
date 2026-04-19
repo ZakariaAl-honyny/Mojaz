@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { 
-  Award, 
-  CheckCircle2, 
-  XCircle, 
-  Download, 
+import {
+  Award,
+  CheckCircle2,
+  XCircle,
+  Download,
   Target,
   Car,
   Clock,
@@ -46,11 +46,11 @@ const mockTestResults = {
   ]
 };
 
-const ResultCard = ({ 
-  type, 
-  results 
-}: { 
-  type: 'theory' | 'practical'; 
+const ResultCard = ({
+  type,
+  results
+}: {
+  type: 'theory' | 'practical';
   results: any[];
 }) => {
   const t = useTranslations('test');
@@ -82,7 +82,7 @@ const ResultCard = ({
               </p>
             </div>
           </div>
-          
+
           {hasPassed && (
             <Badge className="bg-success/10 text-success font-bold text-sm px-4 py-2">
               <CheckCircle2 className="w-4 h-4 me-1" />
@@ -91,18 +91,18 @@ const ResultCard = ({
           )}
         </div>
       </CardHeader>
-      
+
       <CardContent className="p-6 pt-0 space-y-4">
         {hasAttempt ? (
           <div className="space-y-3">
             {results.map((result) => (
-              <div 
-                key={result.id} 
+              <div
+                key={result.id}
                 className={cn(
                   "p-4 rounded-xl border",
-                  result.passed 
-                    ? "bg-success/5 border-success/20" 
-                    : result.pending 
+                  result.passed
+                    ? "bg-success/5 border-success/20"
+                    : result.pending
                       ? "bg-blue-50 border-blue-100"
                       : "bg-error/5 border-error/20"
                 )}
@@ -120,7 +120,7 @@ const ResultCard = ({
                     {result.date || 'Pending'}
                   </span>
                 </div>
-                
+
                 {result.score && (
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-neutral-500">{t('score')}</span>
@@ -132,7 +132,7 @@ const ResultCard = ({
                     </span>
                   </div>
                 )}
-                
+
                 {result.pending && (
                   <div className="flex items-center gap-2 mt-2">
                     <Clock className="w-4 h-4 text-blue-500" />
@@ -141,10 +141,10 @@ const ResultCard = ({
                     </span>
                   </div>
                 )}
-                
+
                 {result.certificateAvailable && result.passed && (
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="w-full mt-3 h-10 font-bold rounded-xl border-primary-200 text-primary-600"
                   >
                     <Download className="w-4 h-4 me-2" />
@@ -160,7 +160,7 @@ const ResultCard = ({
             <p className="text-neutral-500 font-medium">{t('noResultsDesc')}</p>
           </div>
         )}
-        
+
         {/* Retake eligibility */}
         {!hasPassed && attemptCount > 0 && (
           <div className="p-4 bg-warning/10 rounded-xl border border-warning/20">
@@ -193,7 +193,7 @@ export default function MyResultsPage() {
     <div className="space-y-8 py-6">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="space-y-2">
-          <h1 className="text-4xl md:text-5xl font-black text-neutral-900 tracking-tight leading-none">
+          <h1 className="text-4xl md:text-4xl font-black text-neutral-900 tracking-tight leading-none">
             {t('title')}
           </h1>
           <p className="text-lg text-neutral-500 max-w-xl font-medium leading-relaxed">
@@ -206,8 +206,8 @@ export default function MyResultsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className={cn(
           "border-none shadow-xl rounded-3xl overflow-hidden",
-          theoryPassed 
-            ? "bg-gradient-to-br from-success to-green-600 text-white" 
+          theoryPassed
+            ? "bg-gradient-to-br from-success to-King blue-600 text-white"
             : "bg-neutral-900 text-white"
         )}>
           <CardContent className="p-8 flex items-center justify-between">
@@ -230,8 +230,8 @@ export default function MyResultsPage() {
 
         <Card className={cn(
           "border-none shadow-xl rounded-3xl overflow-hidden",
-          practicalPassed 
-            ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white" 
+          practicalPassed
+            ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
             : "bg-neutral-900 text-white"
         )}>
           <CardContent className="p-8 flex items-center justify-between">
@@ -287,7 +287,7 @@ export default function MyResultsPage() {
                   </Button>
                 </div>
               )}
-              
+
               {practicalPassed && (
                 <div className="p-5 bg-white rounded-2xl border border-primary-100 flex items-center justify-between">
                   <div className="flex items-center gap-4">

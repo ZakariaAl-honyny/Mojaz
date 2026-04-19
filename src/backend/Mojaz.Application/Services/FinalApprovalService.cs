@@ -1,21 +1,21 @@
 using AutoMapper;
-using Mojaz.Application.DTOs.Application;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
-using Mojaz.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Application;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Services;
 
 public class FinalApprovalService : IFinalApprovalService
 {
-    private readonly IRepository<Mojaz.Domain.Entities.Application> _applicationRepository;
+    private readonly IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.Application> _applicationRepository;
     private readonly IRepository<User> _userRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -28,7 +28,7 @@ public class FinalApprovalService : IFinalApprovalService
     private const string StageDocuments = "02-Documents";
 
     public FinalApprovalService(
-        IRepository<Mojaz.Domain.Entities.Application> applicationRepository,
+        IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.Application> applicationRepository,
         IRepository<User> userRepository,
         IUnitOfWork unitOfWork,
         IMapper mapper,

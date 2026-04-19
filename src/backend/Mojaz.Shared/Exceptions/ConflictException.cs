@@ -1,6 +1,6 @@
 using System;
 
-namespace Mojaz.Shared.Exceptions;
+namespace DrivingLicenseIssuanceSystem.Shared.Exceptions;
 
 public class ConflictException : Exception
 {

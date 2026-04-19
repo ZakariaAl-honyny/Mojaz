@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Mojaz.Application.DTOs.SystemSettings;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.SystemSettings;
 
 public class UpdateSettingRequest
 {

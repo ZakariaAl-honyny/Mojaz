@@ -1,10 +1,10 @@
-using Mojaz.Application.DTOs.Document;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Document;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
 public interface IDocumentService
 {

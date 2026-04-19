@@ -1,7 +1,7 @@
-# AGENTS.md — Mojaz (مُجاز) Platform
+# AGENTS.md — DrivingLicenseIssuanceSystem (نظام إصدار رخص القيادة) Platform
 
 > This file defines instructions, rules, and conventions for AI coding agents
-> (Cursor, Copilot, Claude, etc.) working on the Mojaz platform.
+> (Cursor, Copilot, Claude, etc.) working on the DrivingLicenseIssuanceSystem platform.
 > Every agent MUST read and follow these rules before generating any code.
 
 ---
@@ -9,11 +9,11 @@
 ## 🏗️ PROJECT IDENTITY
 
 ```yaml
-Project: Mojaz (مُجاز) — Government Driving License Platform
+Project: Driving License Issuance System (نظام إصدار رخص القيادة) — Government Driving License Platform in Yemen Sana'a
 Type: Full-Stack Web Application
 Domain: Government / GovTech / Driving License Lifecycle
 Languages: Arabic (RTL, default) + English (LTR)
-Design System: Absher-Inspired, Royal Green (#006C35)
+Design System: Absher-Inspired, Royal King blue (#006C35)
 MVP Scope: 8 services, 6 license categories, 7 roles, 10 workflow stages
 ```
 
@@ -24,35 +24,35 @@ MVP Scope: 8 services, 6 license categories, 7 roles, 10 workflow stages
 ### Backend — ASP.NET Core 8 (Clean Architecture)
 
 ```
-Mojaz.sln
+DrivingLicenseIssuanceSystem.sln
 ├── src/
-│   ├── Mojaz.Domain/           → Entities, Enums, Value Objects, Interfaces
+│   ├── DrivingLicenseIssuanceSystem.Domain/           → Entities, Enums, Value Objects, Interfaces
 │   │                             NO external dependencies. NO NuGet packages.
 │   │                             This is the innermost layer.
 │   │
-│   ├── Mojaz.Shared/           → ApiResponse<T>, PagedResult<T>, Constants,
+│   ├── DrivingLicenseIssuanceSystem.Shared/           → ApiResponse<T>, PagedResult<T>, Constants,
 │   │                             Exceptions, Extensions
 │   │                             Shared across all layers. Minimal dependencies.
 │   │
-│   ├── Mojaz.Application/      → Services, DTOs, Validators, Interfaces,
+│   ├── DrivingLicenseIssuanceSystem.Application/      → Services, DTOs, Validators, Interfaces,
 │   │                             AutoMapper Profiles, Commands/Queries
 │   │                             Depends on: Domain, Shared
 │   │                             NO direct reference to Infrastructure.
 │   │
-│   ├── Mojaz.Infrastructure/   → EF Core DbContext, Repositories, External
+│   ├── DrivingLicenseIssuanceSystem.Infrastructure/   → EF Core DbContext, Repositories, External
 │   │                             Service Implementations (Email, SMS, Push),
 │   │                             Migrations, Configurations
 │   │                             Depends on: Domain, Shared, Application
 │   │
-│   └── Mojaz.API/              → Controllers, Middleware, Filters, Program.cs,
+│   └── DrivingLicenseIssuanceSystem.API/              → Controllers, Middleware, Filters, Program.cs,
 │                                  Swagger Config, DI Registration
 │                                  Depends on: All layers (composition root)
 │
 ├── tests/
-│   ├── Mojaz.Domain.Tests/
-│   ├── Mojaz.Application.Tests/
-│   ├── Mojaz.Infrastructure.Tests/
-│   └── Mojaz.API.Tests/
+│   ├── DrivingLicenseIssuanceSystem.Domain.Tests/
+│   ├── DrivingLicenseIssuanceSystem.Application.Tests/
+│   ├── DrivingLicenseIssuanceSystem.Infrastructure.Tests/
+│   └── DrivingLicenseIssuanceSystem.API.Tests/
 ```
 
 **STRICT RULES:**
@@ -178,8 +178,8 @@ frontend/
 ```typescript
 // ALL agents MUST use these exact colors. NEVER invent new colors.
 
-const mojazColors = {
-  // Primary — Royal Green (Government)
+const DrivingLicenseIssuanceSystemColors = {
+  // Primary — Royal King blue (Government)
   primary: {
     50:  '#E6F2EC',
     100: '#B3D9C4',
@@ -250,8 +250,8 @@ font-family: 'Inter', 'IBM Plex Sans', sans-serif;
   theme: {
     extend: {
       colors: {
-        primary: mojazColors.primary,
-        secondary: mojazColors.secondary,
+        primary: DrivingLicenseIssuanceSystemColors.primary,
+        secondary: DrivingLicenseIssuanceSystemColors.secondary,
         // Map shadcn variables
       },
       fontFamily: {
@@ -273,7 +273,7 @@ font-family: 'Inter', 'IBM Plex Sans', sans-serif;
 2. NEVER use inline styles
 3. NEVER create separate CSS files per component (only globals.css)
 4. Use cn() utility for conditional classes (from lib/utils.ts)
-5. Use shadcn/ui as base — customize with Mojaz theme
+5. Use shadcn/ui as base — customize with DrivingLicenseIssuanceSystem theme
 6. Every component MUST support RTL and LTR
 7. Every component MUST support Dark and Light mode
 8. Use CSS logical properties: ms-4 (margin-inline-start) not ml-4
@@ -424,7 +424,7 @@ PATCH  /api/v1/applications/{id}/cancel
 ### Standard Response — MANDATORY for ALL endpoints
 
 ```csharp
-// Mojaz.Shared/ApiResponse.cs
+// DrivingLicenseIssuanceSystem.Shared/ApiResponse.cs
 // EVERY endpoint returns this wrapper. No exceptions.
 
 public class ApiResponse<T>
@@ -848,8 +848,8 @@ describe('ApplicationWizard', () => {
 ```
 main                          → Production
 develop                       → Development
-feature/MOJAZ-101-email-reg   → Feature branch
-bugfix/MOJAZ-205-role-check   → Bug fix
+feature/DrivingLicenseIssuanceSystem-101-email-reg   → Feature branch
+bugfix/DrivingLicenseIssuanceSystem-205-role-check   → Bug fix
 hotfix/auth-token-expiry      → Production hotfix
 release/v1.0.0                → Release branch
 ```

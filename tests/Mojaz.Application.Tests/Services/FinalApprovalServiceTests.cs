@@ -5,22 +5,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using FluentAssertions;
-using Mojaz.Application.DTOs.Application;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Mappings;
-using Mojaz.Application.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Application;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Mappings;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
 using Moq;
 using Xunit;
 
-namespace Mojaz.Application.Tests.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Tests.Services;
 
 public class FinalApprovalServiceTests
 {
-    private readonly Mock<IRepository<Mojaz.Domain.Entities.Application>> _applicationRepositoryMock;
+    private readonly Mock<IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.Application>> _applicationRepositoryMock;
     private readonly Mock<IRepository<User>> _userRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<IAuditService> _auditServiceMock;
@@ -31,7 +31,7 @@ public class FinalApprovalServiceTests
 
     public FinalApprovalServiceTests()
     {
-        _applicationRepositoryMock = new Mock<IRepository<Mojaz.Domain.Entities.Application>>();
+        _applicationRepositoryMock = new Mock<IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.Application>>();
         _userRepositoryMock = new Mock<IRepository<User>>();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _auditServiceMock = new Mock<IAuditService>();
@@ -63,7 +63,7 @@ public class FinalApprovalServiceTests
         // Arrange
         var applicationId = Guid.NewGuid();
         var managerId = Guid.NewGuid();
-        var application = new Mojaz.Domain.Entities.Application 
+        var application = new DrivingLicenseIssuanceSystem.Domain.Entities.Application 
         { 
             Id = applicationId, 
             CurrentStage = "08-FinalApproval", 
@@ -98,7 +98,7 @@ public class FinalApprovalServiceTests
         // Arrange
         var applicationId = Guid.NewGuid();
         var managerId = Guid.NewGuid();
-        var application = new Mojaz.Domain.Entities.Application 
+        var application = new DrivingLicenseIssuanceSystem.Domain.Entities.Application 
         { 
             Id = applicationId, 
             CurrentStage = "08-FinalApproval",
@@ -132,7 +132,7 @@ public class FinalApprovalServiceTests
         // Arrange
         var applicationId = Guid.NewGuid();
         var managerId = Guid.NewGuid();
-        var application = new Mojaz.Domain.Entities.Application 
+        var application = new DrivingLicenseIssuanceSystem.Domain.Entities.Application 
         { 
             Id = applicationId, 
             CurrentStage = "08-FinalApproval", 
@@ -165,7 +165,7 @@ public class FinalApprovalServiceTests
         // Arrange
         var applicationId = Guid.NewGuid();
         var managerId = Guid.NewGuid();
-        var application = new Mojaz.Domain.Entities.Application 
+        var application = new DrivingLicenseIssuanceSystem.Domain.Entities.Application 
         { 
             Id = applicationId, 
             CurrentStage = "08-FinalApproval", 
@@ -199,7 +199,7 @@ public class FinalApprovalServiceTests
         // Arrange
         var applicationId = Guid.NewGuid();
         var managerId = Guid.NewGuid();
-        var application = new Mojaz.Domain.Entities.Application 
+        var application = new DrivingLicenseIssuanceSystem.Domain.Entities.Application 
         { 
             Id = applicationId, 
             CurrentStage = "08-FinalApproval",

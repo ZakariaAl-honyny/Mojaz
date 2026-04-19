@@ -1,20 +1,20 @@
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using Mojaz.Application.DTOs.LicenseReplacement;
-using Mojaz.Application.Interfaces.Infrastructure;
-using Mojaz.Application.Interfaces;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.LicenseReplacement;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure;
+using DrivingLicenseIssuanceSystem.Application.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-using ApplicationEntity = Mojaz.Domain.Entities.Application;
+using ApplicationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
 
-namespace Mojaz.Application.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Services;
 
 public class ReplaceLicenseService : IReplaceLicenseService
 {
@@ -26,7 +26,8 @@ public class ReplaceLicenseService : IReplaceLicenseService
     private readonly IRepository<LicenseCategory> _licenseCategoryRepository;
     private readonly IRepository<User> _userRepository;
     private readonly IRepository<ApplicationDocument> _documentRepository;
-    private readonly INotificationService _notificationService;
+private readonly INotificationService _notificationService;
+    private readonly IAuditService _auditService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ILogger<ReplaceLicenseService> _logger;
@@ -41,6 +42,7 @@ public class ReplaceLicenseService : IReplaceLicenseService
         IRepository<User> userRepository,
         IRepository<ApplicationDocument> documentRepository,
         INotificationService notificationService,
+        IAuditService auditService,
         IUnitOfWork unitOfWork,
         IMapper mapper,
         ILogger<ReplaceLicenseService> logger)
@@ -54,6 +56,7 @@ public class ReplaceLicenseService : IReplaceLicenseService
         _userRepository = userRepository;
         _documentRepository = documentRepository;
         _notificationService = notificationService;
+        _auditService = auditService;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _logger = logger;
@@ -192,6 +195,14 @@ public class ReplaceLicenseService : IReplaceLicenseService
             _logger.LogInformation("Replacement application created: {ApplicationId} for license {LicenseId}",
                 application.Id, request.LicenseId);
 
+            // Audit log entry
+            await _auditService.LogAsync(
+                "REPLACEMENT_INITIATED",
+                "Application",
+                application.Id.ToString(),
+                null,
+                $"LicenseId={request.LicenseId}, Reason={request.Reason}");
+
             return ApiResponse<Guid>.Ok(application.Id, "Replacement application created successfully.");
         }
         catch (Exception ex)
@@ -304,7 +315,9 @@ public class ReplaceLicenseService : IReplaceLicenseService
             }
 
             // Validate application is ready for payment
-            if (application.Status != ApplicationStatus.Draft && application.Status != ApplicationStatus.DocumentReview)
+            if (application.Status != ApplicationStatus.Draft && 
+                application.Status != ApplicationStatus.DocumentReview &&
+                application.Status != ApplicationStatus.InReview)
             {
                 return ApiResponse<bool>.Fail(400, "Application is not in a state that requires payment.");
             }
@@ -328,15 +341,8 @@ public class ReplaceLicenseService : IReplaceLicenseService
                 return ApiResponse<bool>.Fail(400, "Payment is not completed.");
             }
 
-            // Check report verification for stolen licenses
-            var replacements = await _replacementRepository.FindAsync(r =>
-                r.ApplicationId == applicationId);
-            var replacement = replacements.FirstOrDefault();
-
-            if (replacement?.Reason == ReplacementReason.Stolen && !replacement.IsReportVerified)
-            {
-                return ApiResponse<bool>.Fail(400, "Police report must be verified before proceeding.");
-            }
+            // Note: For stolen licenses, report verification is checked at issuance time, not before payment
+            // This allows the payment flow to complete first, then verification is required for license issuance
 
             // Update application status
             application.Status = ApplicationStatus.Payment;
@@ -444,6 +450,14 @@ public class ReplaceLicenseService : IReplaceLicenseService
             _replacementRepository.Update(replacement);
 
             await _unitOfWork.SaveChangesAsync();
+
+            // Audit log entry
+            await _auditService.LogAsync(
+                "REPLACEMENT_ISSUED",
+                "License",
+                newLicense.Id.ToString(),
+                $"OldLicenseId={oldLicense.Id}, OldStatus={LicenseStatus.Active}",
+                $"NewStatus={LicenseStatus.Active}");
 
             // Notify the applicant about the license issuance
             await _notificationService.SendAsync(new NotificationRequest

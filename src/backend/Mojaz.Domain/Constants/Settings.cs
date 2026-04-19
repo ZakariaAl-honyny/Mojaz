@@ -1,4 +1,4 @@
-namespace Mojaz.Domain.Constants;
+namespace DrivingLicenseIssuanceSystem.Domain.Constants;
 
 public static class Settings
 {

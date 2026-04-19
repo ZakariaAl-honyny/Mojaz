@@ -1,7 +1,7 @@
 using System;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Domain.Entities
+namespace DrivingLicenseIssuanceSystem.Domain.Entities
 {
     public class EmailLog : AuditableEntity
     {

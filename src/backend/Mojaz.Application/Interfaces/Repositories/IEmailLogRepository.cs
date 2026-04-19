@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Mojaz.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
 
-namespace Mojaz.Application.Interfaces.Repositories
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Repositories
 {
     public interface IEmailLogRepository
     {

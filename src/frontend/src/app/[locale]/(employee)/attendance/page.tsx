@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { 
-  Users, 
-  Clock, 
+import {
+  Users,
+  Clock,
   CheckCircle2,
   XCircle,
   AlertCircle,
@@ -43,7 +43,7 @@ const mockAttendance: AttendanceRecord[] = [
 const getStatusIcon = (status: string) => {
   switch (status) {
     case 'present':
-      return <CheckCircle2 className="w-5 h-5 text-green-500" />;
+      return <CheckCircle2 className="w-5 h-5 text-King blue-500" />;
     case 'late':
       return <Timer className="w-5 h-5 text-yellow-500" />;
     case 'absent':
@@ -69,17 +69,17 @@ const getStatusVariant = (status: string) => {
 export default function AttendanceTrackingPage() {
   const t = useTranslations('appointment');
   const tEmployee = useTranslations('appointment.employee');
-  
+
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [selectedDate, setSelectedDate] = useState('2026-04-12');
-  
+
   const filteredAttendance = mockAttendance.filter(record => {
     if (searchQuery && !record.applicantName.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     if (filterStatus !== 'all' && record.status !== filterStatus) return false;
     return true;
   });
-  
+
   const stats = {
     total: mockAttendance.length,
     present: mockAttendance.filter(r => r.status === 'present').length,
@@ -92,7 +92,7 @@ export default function AttendanceTrackingPage() {
     console.log('Check in:', id);
     // API call
   };
-  
+
   const handleCheckOut = (id: string) => {
     console.log('Check out:', id);
     // API call
@@ -107,8 +107,8 @@ export default function AttendanceTrackingPage() {
           <p className="text-neutral-500">{selectedDate}</p>
         </div>
         <div className="flex gap-2">
-          <Input 
-            type="date" 
+          <Input
+            type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
             className="w-auto"
@@ -131,12 +131,12 @@ export default function AttendanceTrackingPage() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-green-50">
-                <UserCheck className="w-5 h-5 text-green-600" />
+              <div className="p-2 rounded-lg bg-King blue-50">
+                <UserCheck className="w-5 h-5 text-King blue-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.present}</p>
@@ -145,7 +145,7 @@ export default function AttendanceTrackingPage() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
@@ -159,7 +159,7 @@ export default function AttendanceTrackingPage() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
@@ -173,7 +173,7 @@ export default function AttendanceTrackingPage() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
@@ -195,14 +195,14 @@ export default function AttendanceTrackingPage() {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-              <Input 
+              <Input
                 placeholder="Search by name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="ps-10"
               />
             </div>
-            <select 
+            <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
               className="px-3 py-2 rounded-lg border border-neutral-200 bg-white"
@@ -271,8 +271,8 @@ export default function AttendanceTrackingPage() {
                     <td className="p-4">
                       {record.status === 'pending' && (
                         <div className="flex gap-2">
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             onClick={() => handleCheckIn(record.id)}
                           >
                             {tEmployee('checkIn')}
@@ -280,8 +280,8 @@ export default function AttendanceTrackingPage() {
                         </div>
                       )}
                       {record.status === 'present' && (
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           onClick={() => handleCheckOut(record.id)}
                         >

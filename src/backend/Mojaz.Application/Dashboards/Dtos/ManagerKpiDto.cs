@@ -1,4 +1,4 @@
-namespace Mojaz.Application.Dashboards.Dtos;
+namespace DrivingLicenseIssuanceSystem.Application.Dashboards.Dtos;
 
 public class ManagerKpiDto
 {

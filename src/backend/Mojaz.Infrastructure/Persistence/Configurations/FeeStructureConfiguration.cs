@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Infrastructure.Persistence.Configurations
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Configurations
 {
     public class FeeStructureConfiguration : IEntityTypeConfiguration<FeeStructure>
     {

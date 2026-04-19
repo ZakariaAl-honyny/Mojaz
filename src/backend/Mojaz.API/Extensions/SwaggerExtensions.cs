@@ -2,11 +2,11 @@ using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 
-namespace Mojaz.API.Extensions;
+namespace DrivingLicenseIssuanceSystem.API.Extensions;
 
 public static class SwaggerExtensions
 {
-    public static IServiceCollection AddMojazSwagger(this IServiceCollection services)
+    public static IServiceCollection AddDrivingLicenseIssuanceSystemSwagger(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
@@ -14,10 +14,10 @@ public static class SwaggerExtensions
             options.CustomSchemaIds(type => type.FullName);
             options.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "Mojaz API — مُجاز",
+                Title = "DrivingLicenseIssuanceSystem API — نظام إصدار رخص القيادة",
                 Version = "v1",
                 Description = "Government Driving License Platform API",
-                Contact = new OpenApiContact { Name = "Mojaz Team" }
+                Contact = new OpenApiContact { Name = "DrivingLicenseIssuanceSystem Team" }
             });
 
             // XML Documentation logic
@@ -57,12 +57,12 @@ public static class SwaggerExtensions
         return services;
     }
 
-    public static IApplicationBuilder UseMojazSwagger(this IApplicationBuilder app)
+    public static IApplicationBuilder UseDrivingLicenseIssuanceSystemSwagger(this IApplicationBuilder app)
     {
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Mojaz API v1");
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "DrivingLicenseIssuanceSystem API v1");
             c.RoutePrefix = "swagger"; // Standard
         });
 

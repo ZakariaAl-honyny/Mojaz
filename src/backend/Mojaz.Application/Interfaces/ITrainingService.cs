@@ -1,7 +1,7 @@
-using Mojaz.Application.DTOs.Training;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Training;
+using DrivingLicenseIssuanceSystem.Shared;
 
-namespace Mojaz.Application.Interfaces
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces
 {
     public interface ITrainingService
     {

@@ -5,28 +5,28 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronRight, ShieldCheck, Globe } from "lucide-react";
 import Link from "next/link";
-import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { StaggeredFade, StaggeredItem } from "@/components/ui/StaggeredFade";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
+import { StaggeredFade, StaggeredItem } from "@/components/ui/staggered-fade";
 
 export function HeroSection() {
   const t = useTranslations("landing.hero");
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#006C35] pt-16">
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-primary-600 pt-16">
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 z-0">
         {/* Animated Gradient Mesh Effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#006C35] via-[#005C2D] to-[#004C25]" />
-        
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-500 to-primary-700" />
+
         {/* Subtle Noise Texture */}
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none" 
-             style={{ backgroundImage: "url('https://grainy-gradients.vercel.app/noise.svg')" }} />
+        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none"
+          style={{ backgroundImage: "url('https://grainy-gradients.vercel.app/noise.svg')" }} />
 
         {/* Abstract road/motion lines - SVG pattern */}
         <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 100 100" preserveAspectRatio="none">
           <motion.path
             d="M-10,50 C20,40 40,60 70,50 C100,40 120,60 150,50"
-            stroke="#D4A017"
+            stroke="#06B6D4"
             strokeWidth="0.2"
             fill="none"
             initial={{ pathLength: 0, opacity: 0 }}
@@ -35,7 +35,7 @@ export function HeroSection() {
           />
           <motion.path
             d="M-10,60 C20,50 40,70 70,60 C100,50 120,70 150,60"
-            stroke="#D4A017"
+            stroke="#06B6D4"
             strokeWidth="0.1"
             fill="none"
             initial={{ pathLength: 0, opacity: 0 }}
@@ -45,19 +45,19 @@ export function HeroSection() {
         </svg>
 
         {/* Radial glow for focus */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#D4A017]/5 rounded-full blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#06B6D4]/5 rounded-full blur-[120px]" />
       </div>
 
       <div className="container relative z-10 mx-auto px-4 md:px-6">
         <div className="max-w-4xl mx-auto text-center lg:text-start flex flex-col lg:flex-row items-center gap-12">
-          
+
           <StaggeredFade className="flex-1 space-y-8">
             <StaggeredItem>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm text-secondary-500 text-sm font-medium mb-4">
-                <ShieldCheck className="w-4 h-4" />
-                <span>المملكة العربية السعودية • منصة مُجاز</span>
-              </div>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.15] font-arabic ltr:font-english">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[#06B6D4] text-sm font-bold uppercase tracking-wider">
+                  <span className="w-2 h-2 rounded-full bg-[#06B6D4] animate-pulse" />
+                  {t("badge_text")}
+                </div>
+              <h1 className="text-4xl md:text-4xl lg:text-7xl font-bold tracking-tight text-white leading-[1.15] font-arabic ltr:font-english">
                 {t("title")}
               </h1>
             </StaggeredItem>
@@ -70,9 +70,9 @@ export function HeroSection() {
 
             <StaggeredItem className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
               <Link href="/register">
-                <Button 
-                  size="lg" 
-                  className="bg-[#D4A017] hover:bg-[#C49000] text-neutral-900 font-bold px-8 h-14 rounded-gov transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(212,160,23,0.3)]"
+                <Button
+                  size="lg"
+                  className="bg-[#06B6D4] hover:bg-[#C49000] text-neutral-900 font-bold px-8 h-14 rounded-gov transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(212,160,23,0.3)]"
                 >
                   <span className="flex items-center gap-2">
                     {t("cta.start")}
@@ -80,11 +80,11 @@ export function HeroSection() {
                   </span>
                 </Button>
               </Link>
-              
+
               <Link href="/login">
-                <Button 
-                  variant="outline" 
-                  size="lg" 
+                <Button
+                  variant="outline"
+                  size="lg"
                   className="border-white/20 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 h-14 px-8 rounded-gov transition-all"
                 >
                   {t("cta.login")}
@@ -94,43 +94,43 @@ export function HeroSection() {
 
             {/* Micro-badges */}
             <StaggeredItem className="pt-8 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-white/40 text-sm">
-              <div className="flex items-center gap-2">
-                <Globe className="w-4 h-4" />
-                <span>دعم كامل للغتين</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4" />
-                <span>موثق عبر نفاذ</span>
-              </div>
+                <div className="flex items-center gap-3 bg-white/5 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
+                  <Globe className="w-5 h-5 text-[#06B6D4]" />
+                  <span className="text-white/80 text-sm font-semibold">{t("features.bilingual")}</span>
+                </div>
+                <div className="flex items-center gap-3 bg-white/5 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
+                  <ShieldCheck className="w-5 h-5 text-secondary-500" />
+                  <span className="text-white/80 text-sm font-semibold">{t("features.verified")}</span>
+                </div>
             </StaggeredItem>
           </StaggeredFade>
 
           {/* Abstract License Preview or Illustration */}
           <ScrollReveal direction="right" className="hidden lg:block flex-1 relative h-[500px]">
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#D4A017]/20 to-transparent rounded-3xl blur-3xl" />
-            
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#06B6D4]/20 to-transparent rounded-3xl blur-3xl" />
+
             {/* Mock License Card / Floating Identity */}
             <div className="relative w-full h-full flex items-center justify-center">
-              <motion.div 
-                animate={{ 
+              <motion.div
+                animate={{
                   y: [0, -20, 0],
                   rotateZ: [2, -2, 2]
                 }}
-                transition={{ 
-                  duration: 6, 
-                  repeat: Infinity, 
-                  ease: "easeInOut" 
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut"
                 }}
                 className="w-[420px] aspect-[1.6/1] bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-8 relative overflow-hidden group"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4A017]/10 blur-[40px] rounded-full -translate-y-1/2 translate-x-1/2" />
-                
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#06B6D4]/10 blur-[40px] rounded-full -translate-y-1/2 translate-x-1/2" />
+
                 <div className="flex justify-between items-start mb-12">
-                   <div className="w-16 h-16 rounded-full bg-white/10 animate-pulse" />
-                   <div className="space-y-2 text-right">
-                     <div className="h-4 w-32 bg-white/20 rounded ml-auto" />
-                     <div className="h-3 w-20 bg-white/10 rounded ml-auto" />
-                   </div>
+                  <div className="w-16 h-16 rounded-full bg-white/10 animate-pulse" />
+                  <div className="space-y-2 text-right">
+                    <div className="h-4 w-32 bg-white/20 rounded ml-auto" />
+                    <div className="h-3 w-20 bg-white/10 rounded ml-auto" />
+                  </div>
                 </div>
 
                 <div className="space-y-4">
@@ -142,24 +142,24 @@ export function HeroSection() {
                 </div>
 
                 <div className="absolute bottom-8 right-8 text-white/20 font-bold text-4xl select-none group-hover:text-secondary-500/30 transition-colors">
-                  MOJAZ
+                  DrivingLicenseIssuanceSystem
                 </div>
               </motion.div>
 
               {/* Smaller floating element */}
-              <motion.div 
-                animate={{ 
+              <motion.div
+                animate={{
                   y: [-10, 10, -10],
                   x: [10, -10, 10]
                 }}
-                transition={{ 
-                  duration: 8, 
-                  repeat: Infinity, 
-                  ease: "easeInOut" 
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "easeInOut"
                 }}
-                className="absolute top-20 right-0 w-24 h-24 bg-[#D4A017]/20 backdrop-blur-lg border border-white/10 rounded-xl shadow-lg flex items-center justify-center"
+                className="absolute top-20 right-0 w-24 h-24 bg-[#06B6D4]/20 backdrop-blur-lg border border-white/10 rounded-xl shadow-lg flex items-center justify-center"
               >
-                 <ShieldCheck className="w-10 h-10 text-secondary-500" />
+                <ShieldCheck className="w-10 h-10 text-secondary-500" />
               </motion.div>
             </div>
           </ScrollReveal>

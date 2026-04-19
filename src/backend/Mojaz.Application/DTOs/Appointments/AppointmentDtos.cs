@@ -1,7 +1,7 @@
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 using System;
 
-namespace Mojaz.Application.DTOs.Appointments;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Appointments;
 
 public class AppointmentDto
 {

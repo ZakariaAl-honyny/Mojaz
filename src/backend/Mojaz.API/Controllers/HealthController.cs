@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Shared;
 
-namespace Mojaz.API.Controllers;
+namespace DrivingLicenseIssuanceSystem.API.Controllers;
 
 /// <summary>
 /// Health check endpoint for monitoring API status.
@@ -49,7 +49,7 @@ public class HealthController : ControllerBase
     /// </summary>
     /// <returns>Database health status</returns>
     [HttpGet("database")]
-    public async Task<IActionResult> GetDatabaseHealth([FromServices] Mojaz.Infrastructure.Persistence.MojazDbContext dbContext)
+    public async Task<IActionResult> GetDatabaseHealth([FromServices] DrivingLicenseIssuanceSystem.Infrastructure.Persistence.DrivingLicenseIssuanceSystemDbContext dbContext)
     {
         try
         {

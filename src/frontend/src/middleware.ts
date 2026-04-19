@@ -1,31 +1,21 @@
 import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
-import { NextRequest, NextResponse } from 'next/server';
 
 const intlMiddleware = createMiddleware(routing);
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-
-  // 1. Handle locale with next-intl middleware
-  const response = intlMiddleware(request);
-  
-  // 2. Custom redirects
-  if (pathname === '/') {
-    return NextResponse.redirect(new URL('/ar', request.url));
-  }
-
-  // 3. Simple Role-Based Access Simulation (Mock)
-  // ... rest of logic if needed, but for now just Return response from intlMiddleware
-  
-  return response;
+export function middleware(request: import('next/server').NextRequest) {
+  return intlMiddleware(request);
 }
 
+// Robust matcher that strictly ignores all static assets, images, and API routes
 export const config = {
-  // Match all pathnames except for
-  // - /api (API routes)
-  // - /_next (Next.js internals)
-  // - /_static (inside /public)
-  // - /favicon.ico, /sitemap.xml, /robots.txt (static files)
-  matcher: ['/((?!api|_next|_static|favicon.ico|sitemap.xml|robots.txt).*)']
+  matcher: [
+    // Match all pathnames except for
+    // - /api (API routes)
+    // - /_next/static (static files)
+    // - /_next/image (image optimization)
+    // - /images (public images)
+    // - /favicon.ico and other static files with extensions
+    '/((?!api|_next/static|_next/image|images|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'
+  ]
 };

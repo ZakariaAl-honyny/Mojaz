@@ -1,13 +1,13 @@
-using Mojaz.Domain.Interfaces;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using Mojaz.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
 using System.Linq;
 
-namespace Mojaz.Infrastructure.Security.Background;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Security.Background;
 
 public class AuditLogCleanupJob
 {

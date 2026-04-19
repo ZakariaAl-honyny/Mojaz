@@ -1,6 +1,6 @@
-# IMPLEMENTATION_PLAN.md — Mojaz (مُجاز) Platform
+# IMPLEMENTATION_PLAN.md — DrivingLicenseIssuanceSystem (نظام إصدار رخص القيادة) Platform
 
-> Comprehensive implementation plan for building the Mojaz MVP.
+> Comprehensive implementation plan for building the DrivingLicenseIssuanceSystem MVP.
 > Duration: 20 weeks (10 sprints × 2 weeks each)
 > This document breaks down every sprint into detailed, actionable tasks.
 
@@ -100,7 +100,7 @@ Required Accounts:
 # ═══════════════════════════════════════════════
 # STEP 1: Create root project directory
 # ═══════════════════════════════════════════════
-mkdir mojaz && cd mojaz
+mkdir DrivingLicenseIssuanceSystem && cd DrivingLicenseIssuanceSystem
 git init
 
 # ═══════════════════════════════════════════════
@@ -113,56 +113,56 @@ mkdir -p src/backend src/frontend tests docs specs
 # ═══════════════════════════════════════════════
 cd src/backend
 
-dotnet new sln -n Mojaz
+dotnet new sln -n DrivingLicenseIssuanceSystem
 
 # Create projects following Clean Architecture
-dotnet new classlib -n Mojaz.Domain -o Mojaz.Domain
-dotnet new classlib -n Mojaz.Shared -o Mojaz.Shared
-dotnet new classlib -n Mojaz.Application -o Mojaz.Application
-dotnet new classlib -n Mojaz.Infrastructure -o Mojaz.Infrastructure
-dotnet new webapi -n Mojaz.API -o Mojaz.API --no-https false
+dotnet new classlib -n DrivingLicenseIssuanceSystem.Domain -o DrivingLicenseIssuanceSystem.Domain
+dotnet new classlib -n DrivingLicenseIssuanceSystem.Shared -o DrivingLicenseIssuanceSystem.Shared
+dotnet new classlib -n DrivingLicenseIssuanceSystem.Application -o DrivingLicenseIssuanceSystem.Application
+dotnet new classlib -n DrivingLicenseIssuanceSystem.Infrastructure -o DrivingLicenseIssuanceSystem.Infrastructure
+dotnet new webapi -n DrivingLicenseIssuanceSystem.API -o DrivingLicenseIssuanceSystem.API --no-https false
 
 # Add projects to solution
-dotnet sln add Mojaz.Domain/Mojaz.Domain.csproj
-dotnet sln add Mojaz.Shared/Mojaz.Shared.csproj
-dotnet sln add Mojaz.Application/Mojaz.Application.csproj
-dotnet sln add Mojaz.Infrastructure/Mojaz.Infrastructure.csproj
-dotnet sln add Mojaz.API/Mojaz.API.csproj
+dotnet sln add DrivingLicenseIssuanceSystem.Domain/DrivingLicenseIssuanceSystem.Domain.csproj
+dotnet sln add DrivingLicenseIssuanceSystem.Shared/DrivingLicenseIssuanceSystem.Shared.csproj
+dotnet sln add DrivingLicenseIssuanceSystem.Application/DrivingLicenseIssuanceSystem.Application.csproj
+dotnet sln add DrivingLicenseIssuanceSystem.Infrastructure/DrivingLicenseIssuanceSystem.Infrastructure.csproj
+dotnet sln add DrivingLicenseIssuanceSystem.API/DrivingLicenseIssuanceSystem.API.csproj
 
 # Set project references (Clean Architecture dependency flow)
-cd Mojaz.Application
-dotnet add reference ../Mojaz.Domain/Mojaz.Domain.csproj
-dotnet add reference ../Mojaz.Shared/Mojaz.Shared.csproj
+cd DrivingLicenseIssuanceSystem.Application
+dotnet add reference ../DrivingLicenseIssuanceSystem.Domain/DrivingLicenseIssuanceSystem.Domain.csproj
+dotnet add reference ../DrivingLicenseIssuanceSystem.Shared/DrivingLicenseIssuanceSystem.Shared.csproj
 
-cd ../Mojaz.Infrastructure
-dotnet add reference ../Mojaz.Domain/Mojaz.Domain.csproj
-dotnet add reference ../Mojaz.Shared/Mojaz.Shared.csproj
-dotnet add reference ../Mojaz.Application/Mojaz.Application.csproj
+cd ../DrivingLicenseIssuanceSystem.Infrastructure
+dotnet add reference ../DrivingLicenseIssuanceSystem.Domain/DrivingLicenseIssuanceSystem.Domain.csproj
+dotnet add reference ../DrivingLicenseIssuanceSystem.Shared/DrivingLicenseIssuanceSystem.Shared.csproj
+dotnet add reference ../DrivingLicenseIssuanceSystem.Application/DrivingLicenseIssuanceSystem.Application.csproj
 
-cd ../Mojaz.API
-dotnet add reference ../Mojaz.Application/Mojaz.Application.csproj
-dotnet add reference ../Mojaz.Infrastructure/Mojaz.Infrastructure.csproj
-dotnet add reference ../Mojaz.Shared/Mojaz.Shared.csproj
+cd ../DrivingLicenseIssuanceSystem.API
+dotnet add reference ../DrivingLicenseIssuanceSystem.Application/DrivingLicenseIssuanceSystem.Application.csproj
+dotnet add reference ../DrivingLicenseIssuanceSystem.Infrastructure/DrivingLicenseIssuanceSystem.Infrastructure.csproj
+dotnet add reference ../DrivingLicenseIssuanceSystem.Shared/DrivingLicenseIssuanceSystem.Shared.csproj
 
 # ═══════════════════════════════════════════════
 # STEP 4: Install Backend NuGet Packages
 # ═══════════════════════════════════════════════
 
-# Mojaz.Domain — NO packages (zero dependencies)
+# DrivingLicenseIssuanceSystem.Domain — NO packages (zero dependencies)
 
-# Mojaz.Shared
-cd ../Mojaz.Shared
+# DrivingLicenseIssuanceSystem.Shared
+cd ../DrivingLicenseIssuanceSystem.Shared
 # (no packages needed, pure C# classes)
 
-# Mojaz.Application
-cd ../Mojaz.Application
+# DrivingLicenseIssuanceSystem.Application
+cd ../DrivingLicenseIssuanceSystem.Application
 dotnet add package AutoMapper 13.0.1
 dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection
 dotnet add package FluentValidation 11.9.0
 dotnet add package FluentValidation.DependencyInjectionExtensions
 
-# Mojaz.Infrastructure
-cd ../Mojaz.Infrastructure
+# DrivingLicenseIssuanceSystem.Infrastructure
+cd ../DrivingLicenseIssuanceSystem.Infrastructure
 dotnet add package Microsoft.EntityFrameworkCore 8.0.8
 dotnet add package Microsoft.EntityFrameworkCore.SqlServer 8.0.8
 dotnet add package Microsoft.EntityFrameworkCore.Tools 8.0.8
@@ -177,8 +177,8 @@ dotnet add package Serilog.AspNetCore 8.0.1
 dotnet add package Serilog.Sinks.Console
 dotnet add package Serilog.Sinks.File
 
-# Mojaz.API
-cd ../Mojaz.API
+# DrivingLicenseIssuanceSystem.API
+cd ../DrivingLicenseIssuanceSystem.API
 dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer 8.0.8
 dotnet add package Swashbuckle.AspNetCore 6.7.0
 dotnet add package AspNetCoreRateLimit 5.0.0
@@ -190,14 +190,14 @@ dotnet add package Microsoft.AspNetCore.Cors
 cd ../../..  # Back to root
 cd tests
 
-dotnet new xunit -n Mojaz.Domain.Tests
-dotnet new xunit -n Mojaz.Application.Tests
-dotnet new xunit -n Mojaz.Infrastructure.Tests
-dotnet new xunit -n Mojaz.API.Tests
+dotnet new xunit -n DrivingLicenseIssuanceSystem.Domain.Tests
+dotnet new xunit -n DrivingLicenseIssuanceSystem.Application.Tests
+dotnet new xunit -n DrivingLicenseIssuanceSystem.Infrastructure.Tests
+dotnet new xunit -n DrivingLicenseIssuanceSystem.API.Tests
 
 # Add test packages
-for proj in Mojaz.Domain.Tests Mojaz.Application.Tests \
-            Mojaz.Infrastructure.Tests Mojaz.API.Tests; do
+for proj in DrivingLicenseIssuanceSystem.Domain.Tests DrivingLicenseIssuanceSystem.Application.Tests \
+            DrivingLicenseIssuanceSystem.Infrastructure.Tests DrivingLicenseIssuanceSystem.API.Tests; do
   cd $proj
   dotnet add package Moq 4.20.70
   dotnet add package FluentAssertions 6.12.0
@@ -206,22 +206,22 @@ for proj in Mojaz.Domain.Tests Mojaz.Application.Tests \
 done
 
 # Add test project references
-cd Mojaz.Domain.Tests
-dotnet add reference ../../src/backend/Mojaz.Domain/Mojaz.Domain.csproj
-cd ../Mojaz.Application.Tests
-dotnet add reference ../../src/backend/Mojaz.Application/Mojaz.Application.csproj
-dotnet add reference ../../src/backend/Mojaz.Domain/Mojaz.Domain.csproj
-cd ../Mojaz.Infrastructure.Tests
-dotnet add reference ../../src/backend/Mojaz.Infrastructure/Mojaz.Infrastructure.csproj
-cd ../Mojaz.API.Tests
-dotnet add reference ../../src/backend/Mojaz.API/Mojaz.API.csproj
+cd DrivingLicenseIssuanceSystem.Domain.Tests
+dotnet add reference ../../src/backend/DrivingLicenseIssuanceSystem.Domain/DrivingLicenseIssuanceSystem.Domain.csproj
+cd ../DrivingLicenseIssuanceSystem.Application.Tests
+dotnet add reference ../../src/backend/DrivingLicenseIssuanceSystem.Application/DrivingLicenseIssuanceSystem.Application.csproj
+dotnet add reference ../../src/backend/DrivingLicenseIssuanceSystem.Domain/DrivingLicenseIssuanceSystem.Domain.csproj
+cd ../DrivingLicenseIssuanceSystem.Infrastructure.Tests
+dotnet add reference ../../src/backend/DrivingLicenseIssuanceSystem.Infrastructure/DrivingLicenseIssuanceSystem.Infrastructure.csproj
+cd ../DrivingLicenseIssuanceSystem.API.Tests
+dotnet add reference ../../src/backend/DrivingLicenseIssuanceSystem.API/DrivingLicenseIssuanceSystem.API.csproj
 
 # Add test projects to solution
 cd ../../src/backend
-dotnet sln add ../../tests/Mojaz.Domain.Tests/Mojaz.Domain.Tests.csproj
-dotnet sln add ../../tests/Mojaz.Application.Tests/Mojaz.Application.Tests.csproj
-dotnet sln add ../../tests/Mojaz.Infrastructure.Tests/Mojaz.Infrastructure.Tests.csproj
-dotnet sln add ../../tests/Mojaz.API.Tests/Mojaz.API.Tests.csproj
+dotnet sln add ../../tests/DrivingLicenseIssuanceSystem.Domain.Tests/DrivingLicenseIssuanceSystem.Domain.Tests.csproj
+dotnet sln add ../../tests/DrivingLicenseIssuanceSystem.Application.Tests/DrivingLicenseIssuanceSystem.Application.Tests.csproj
+dotnet sln add ../../tests/DrivingLicenseIssuanceSystem.Infrastructure.Tests/DrivingLicenseIssuanceSystem.Infrastructure.Tests.csproj
+dotnet sln add ../../tests/DrivingLicenseIssuanceSystem.API.Tests/DrivingLicenseIssuanceSystem.API.Tests.csproj
 
 # ═══════════════════════════════════════════════
 # STEP 6: Frontend — Create Next.js Project
@@ -270,10 +270,10 @@ version: '3.8'
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: mojaz-db
+    container_name: DrivingLicenseIssuanceSystem-db
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=MojazDev@2025!
+      - MSSQL_SA_PASSWORD=DrivingLicenseIssuanceSystemDev@2025!
       - MSSQL_PID=Developer
     ports:
       - "1433:1433"
@@ -283,13 +283,13 @@ services:
   api:
     build:
       context: ./src/backend
-      dockerfile: Mojaz.API/Dockerfile
-    container_name: mojaz-api
+      dockerfile: DrivingLicenseIssuanceSystem.API/Dockerfile
+    container_name: DrivingLicenseIssuanceSystem-api
     depends_on:
       - sqlserver
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=MojazDB;User Id=sa;Password=MojazDev@2025!;TrustServerCertificate=True
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=DrivingLicenseIssuanceSystemDB;User Id=sa;Password=DrivingLicenseIssuanceSystemDev@2025!;TrustServerCertificate=True
     ports:
       - "5000:8080"
 
@@ -297,7 +297,7 @@ services:
     build:
       context: ./src/frontend
       dockerfile: Dockerfile
-    container_name: mojaz-frontend
+    container_name: DrivingLicenseIssuanceSystem-frontend
     depends_on:
       - api
     environment:
@@ -370,7 +370,7 @@ TASK 0.3 — Frontend Project Scaffold
 ├── Tasks:
 │   ├── [ ] Create Next.js 15 project with App Router
 │   ├── [ ] Install and configure all npm packages
-│   ├── [ ] Setup Tailwind with Mojaz theme colors
+│   ├── [ ] Setup Tailwind with DrivingLicenseIssuanceSystem theme colors
 │   ├── [ ] Install and configure shadcn/ui
 │   ├── [ ] Setup next-intl for i18n
 │   │   ├── Create locale routing ([locale] folder)
@@ -406,7 +406,7 @@ TASK 0.4 — Database Design Finalization
 ├── Tasks:
 │   ├── [ ] Create all 21 entity classes in Domain layer
 │   ├── [ ] Create EF Core configurations for each entity
-│   ├── [ ] Create DbContext (MojazDbContext)
+│   ├── [ ] Create DbContext (DrivingLicenseIssuanceSystemDbContext)
 │   ├── [ ] Create initial migration
 │   ├── [ ] Create seed data
 │   │   ├── Default admin user
@@ -456,7 +456,7 @@ TASK 0.6 — DevOps Setup
 ```
 □ GitHub repository created with branch protection
 □ .NET 8 solution builds with Clean Architecture (5 projects)
-□ Next.js 15 app runs with Mojaz theme, i18n, dark/light mode
+□ Next.js 15 app runs with DrivingLicenseIssuanceSystem theme, i18n, dark/light mode
 □ All 21 database tables created with seed data
 □ Docker Compose runs full stack (DB + API + Frontend)
 □ AGENTS.md finalized
@@ -482,7 +482,7 @@ WEEK 3 — CORE INFRASTRUCTURE + AUTH BACKEND
 ════════════════════════════════════════════
 
 TASK 1.1 — Repository Pattern + Unit of Work
-├── Spec: MOJAZ-000
+├── Spec: DrivingLicenseIssuanceSystem-000
 ├── Priority: Critical
 ├── Layer: Infrastructure
 ├── Tasks:
@@ -508,7 +508,7 @@ TASK 1.1 — Repository Pattern + Unit of Work
 └── Tests: 15+ unit tests
 
 TASK 1.2 — User Registration (Backend)
-├── Spec: MOJAZ-101, MOJAZ-102
+├── Spec: DrivingLicenseIssuanceSystem-101, DrivingLicenseIssuanceSystem-102
 ├── Priority: Critical
 ├── Layer: Application + API
 ├── Tasks:
@@ -555,7 +555,7 @@ TASK 1.2 — User Registration (Backend)
 └── Tests: 20+ tests
 
 TASK 1.3 — OTP Verification System
-├── Spec: MOJAZ-104
+├── Spec: DrivingLicenseIssuanceSystem-104
 ├── Priority: Critical
 ├── Layer: Application + API
 ├── Tasks:
@@ -586,7 +586,7 @@ TASK 1.3 — OTP Verification System
 └── Tests: 15+ tests
 
 TASK 1.4 — JWT + Login System
-├── Spec: MOJAZ-103, MOJAZ-106
+├── Spec: DrivingLicenseIssuanceSystem-103, DrivingLicenseIssuanceSystem-106
 ├── Priority: Critical
 ├── Layer: Application + Infrastructure + API
 ├── Tasks:
@@ -636,7 +636,7 @@ TASK 1.4 — JWT + Login System
 └── Tests: 25+ tests
 
 TASK 1.5 — Password Recovery
-├── Spec: MOJAZ-105
+├── Spec: DrivingLicenseIssuanceSystem-105
 ├── Priority: High
 ├── Layer: Application + API
 ├── Tasks:
@@ -653,7 +653,7 @@ TASK 1.5 — Password Recovery
 └── Tests: 10+ tests
 
 TASK 1.6 — RBAC Authorization Setup
-├── Spec: MOJAZ-200
+├── Spec: DrivingLicenseIssuanceSystem-200
 ├── Priority: Critical
 ├── Layer: API
 ├── Tasks:
@@ -674,7 +674,7 @@ TASK 1.6 — RBAC Authorization Setup
 └── Tests: 15+ tests
 
 TASK 1.7 — Audit Log System
-├── Spec: MOJAZ-1501
+├── Spec: DrivingLicenseIssuanceSystem-1501
 ├── Priority: Critical
 ├── Layer: Infrastructure + API
 ├── Tasks:
@@ -702,7 +702,7 @@ WEEK 4 — REAL INTEGRATIONS + AUTH FRONTEND
 ═══════════════════════════════════════════
 
 TASK 2.1 — Email Integration (SendGrid) — REAL ✅
-├── Spec: MOJAZ-902, MOJAZ-1001
+├── Spec: DrivingLicenseIssuanceSystem-902, DrivingLicenseIssuanceSystem-1001
 ├── Priority: Critical
 ├── Layer: Infrastructure
 ├── Tasks:
@@ -735,7 +735,7 @@ TASK 2.1 — Email Integration (SendGrid) — REAL ✅
 └── Tests: 10+ tests
 
 TASK 2.2 — SMS Integration (Twilio) — REAL ✅
-├── Spec: MOJAZ-904, MOJAZ-1002
+├── Spec: DrivingLicenseIssuanceSystem-904, DrivingLicenseIssuanceSystem-1002
 ├── Priority: Critical
 ├── Layer: Infrastructure
 ├── Tasks:
@@ -762,7 +762,7 @@ TASK 2.2 — SMS Integration (Twilio) — REAL ✅
 └── Tests: 8+ tests
 
 TASK 2.3 — Push Notifications (Firebase FCM) — REAL ✅
-├── Spec: MOJAZ-903, MOJAZ-1003
+├── Spec: DrivingLicenseIssuanceSystem-903, DrivingLicenseIssuanceSystem-1003
 ├── Priority: High
 ├── Layer: Infrastructure + Frontend
 ├── Tasks:
@@ -791,7 +791,7 @@ TASK 2.3 — Push Notifications (Firebase FCM) — REAL ✅
 └── Tests: 8+ tests
 
 TASK 2.4 — Unified Notification Service
-├── Spec: MOJAZ-900
+├── Spec: DrivingLicenseIssuanceSystem-900
 ├── Priority: High
 ├── Layer: Application
 ├── Tasks:
@@ -815,7 +815,7 @@ TASK 2.4 — Unified Notification Service
 └── Tests: 12+ tests
 
 TASK 2.5 — Frontend: Auth Pages
-├── Spec: MOJAZ-1302
+├── Spec: DrivingLicenseIssuanceSystem-1302
 ├── Priority: Critical
 ├── Layer: Frontend
 ├── Tasks:
@@ -877,7 +877,7 @@ TASK 2.5 — Frontend: Auth Pages
 └── Tests: 20+ tests
 
 TASK 2.6 — Frontend: Layout & Navigation
-├── Spec: MOJAZ-1300
+├── Spec: DrivingLicenseIssuanceSystem-1300
 ├── Priority: High
 ├── Layer: Frontend
 ├── Tasks:
@@ -909,7 +909,7 @@ WEEK 5-6 — USER MANAGEMENT + INTEGRATION TESTING
 ═════════════════════════════════════════════════
 
 TASK 2.7 — User Management (Admin)
-├── Spec: MOJAZ-1212
+├── Spec: DrivingLicenseIssuanceSystem-1212
 ├── Priority: High
 ├── Layer: Full Stack
 ├── Tasks:
@@ -932,7 +932,7 @@ TASK 2.7 — User Management (Admin)
 └── Tests: 15+ tests
 
 TASK 2.8 — System Settings Management (Admin)
-├── Spec: MOJAZ-1211
+├── Spec: DrivingLicenseIssuanceSystem-1211
 ├── Priority: High
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1008,7 +1008,7 @@ WEEK 7-8 — APPLICATIONS
 ════════════════════════
 
 TASK 3.1 — Application Service (Backend)
-├── Spec: MOJAZ-301, MOJAZ-302
+├── Spec: DrivingLicenseIssuanceSystem-301, DrivingLicenseIssuanceSystem-302
 ├── Priority: Critical
 ├── Layer: Application + Infrastructure + API
 ├── Tasks:
@@ -1053,7 +1053,7 @@ TASK 3.1 — Application Service (Backend)
 └── Tests: 30+ tests
 
 TASK 3.2 — Application Wizard (Frontend)
-├── Spec: MOJAZ-1303
+├── Spec: DrivingLicenseIssuanceSystem-1303
 ├── Priority: Critical
 ├── Layer: Frontend
 ├── Tasks:
@@ -1102,7 +1102,7 @@ TASK 3.2 — Application Wizard (Frontend)
 └── Tests: 20+ tests
 
 TASK 3.3 — Document Upload & Review
-├── Spec: MOJAZ-303, MOJAZ-304
+├── Spec: DrivingLicenseIssuanceSystem-303, DrivingLicenseIssuanceSystem-304
 ├── Priority: Critical
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1145,13 +1145,13 @@ WEEK 9-10 — STATUS TRACKING + EMPLOYEE PORTAL
 ═════════════════════════════════════════════
 
 TASK 3.4 — Application Status Tracking (Applicant)
-├── Spec: MOJAZ-305, MOJAZ-306
+├── Spec: DrivingLicenseIssuanceSystem-305, DrivingLicenseIssuanceSystem-306
 ├── Priority: High
 ├── Layer: Frontend
 ├── Tasks:
 │   ├── [ ] Create ApplicationTimeline component
 │   │   ├── 10 stages as vertical timeline
-│   │   ├── Completed stages: green checkmark
+│   │   ├── Completed stages: King blue checkmark
 │   │   ├── Current stage: highlighted + animated
 │   │   ├── Future stages: grayed out
 │   │   ├── Stage details expandable
@@ -1173,7 +1173,7 @@ TASK 3.4 — Application Status Tracking (Applicant)
 └── Tests: 10+ tests
 
 TASK 3.5 — Applicant Dashboard
-├── Spec: MOJAZ-1302
+├── Spec: DrivingLicenseIssuanceSystem-1302
 ├── Priority: High
 ├── Layer: Frontend
 ├── Tasks:
@@ -1196,7 +1196,7 @@ TASK 3.5 — Applicant Dashboard
 └── Tests: 8+ tests
 
 TASK 3.6 — Employee Dashboard + Application Queue
-├── Spec: MOJAZ-1310, MOJAZ-1311
+├── Spec: DrivingLicenseIssuanceSystem-1310, DrivingLicenseIssuanceSystem-1311
 ├── Priority: High
 ├── Layer: Frontend
 ├── Tasks:
@@ -1262,7 +1262,7 @@ WEEK 11-12 — MEDICAL + TRAINING + APPOINTMENTS
 ═══════════════════════════════════════════════
 
 TASK 4.1 — Appointment System
-├── Spec: MOJAZ-606, MOJAZ-1204
+├── Spec: DrivingLicenseIssuanceSystem-606, DrivingLicenseIssuanceSystem-1204
 ├── Priority: Critical
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1291,7 +1291,7 @@ TASK 4.1 — Appointment System
 └── Tests: 20+ tests
 
 TASK 4.2 — Medical Examination
-├── Spec: MOJAZ-404, MOJAZ-1205
+├── Spec: DrivingLicenseIssuanceSystem-404, DrivingLicenseIssuanceSystem-1205
 ├── Priority: Critical
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1322,7 +1322,7 @@ TASK 4.2 — Medical Examination
 └── Tests: 15+ tests
 
 TASK 4.3 — Training Records
-├── Spec: MOJAZ-405, MOJAZ-504
+├── Spec: DrivingLicenseIssuanceSystem-405, DrivingLicenseIssuanceSystem-504
 ├── Priority: High
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1352,7 +1352,7 @@ WEEK 13-14 — THEORY + PRACTICAL TESTS
 ══════════════════════════════════════
 
 TASK 4.4 — Theory Test
-├── Spec: MOJAZ-406, MOJAZ-1206
+├── Spec: DrivingLicenseIssuanceSystem-406, DrivingLicenseIssuanceSystem-1206
 ├── Priority: Critical
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1385,7 +1385,7 @@ TASK 4.4 — Theory Test
 └── Tests: 15+ tests
 
 TASK 4.5 — Practical Test
-├── Spec: MOJAZ-407, MOJAZ-1206
+├── Spec: DrivingLicenseIssuanceSystem-407, DrivingLicenseIssuanceSystem-1206
 ├── Priority: Critical
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1410,7 +1410,7 @@ TASK 4.5 — Practical Test
 └── Tests: 15+ tests
 
 TASK 4.6 — Test Retake Service
-├── Spec: MOJAZ-605
+├── Spec: DrivingLicenseIssuanceSystem-605
 ├── Priority: High
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1430,7 +1430,7 @@ TASK 4.6 — Test Retake Service
 └── Tests: 8+ tests
 
 TASK 4.7 — Category F (Agricultural) Specifics
-├── Spec: MOJAZ-706
+├── Spec: DrivingLicenseIssuanceSystem-706
 ├── Priority: High
 ├── Layer: Backend + Frontend
 ├── Tasks:
@@ -1480,7 +1480,7 @@ WEEK 15-16 — APPROVAL + PAYMENT
 ════════════════════════════════
 
 TASK 5.1 — Final Approval Stage
-├── Spec: MOJAZ-408
+├── Spec: DrivingLicenseIssuanceSystem-408
 ├── Priority: Critical
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1512,7 +1512,7 @@ TASK 5.1 — Final Approval Stage
 └── Tests: 15+ tests
 
 TASK 5.2 — Payment System (Simulated)
-├── Spec: MOJAZ-800, MOJAZ-1207
+├── Spec: DrivingLicenseIssuanceSystem-800, DrivingLicenseIssuanceSystem-1207
 ├── Priority: Critical
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1565,7 +1565,7 @@ WEEK 17-18 — LICENSE ISSUANCE + REMAINING SERVICES
 ═══════════════════════════════════════════════════
 
 TASK 5.3 — License Issuance
-├── Spec: MOJAZ-410, MOJAZ-1208
+├── Spec: DrivingLicenseIssuanceSystem-410, DrivingLicenseIssuanceSystem-1208
 ├── Priority: Critical
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1601,7 +1601,7 @@ TASK 5.3 — License Issuance
 └── Tests: 12+ tests
 
 TASK 5.4 — License Renewal Service
-├── Spec: MOJAZ-602
+├── Spec: DrivingLicenseIssuanceSystem-602
 ├── Priority: High
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1618,7 +1618,7 @@ TASK 5.4 — License Renewal Service
 └── Tests: 10+ tests
 
 TASK 5.5 — Lost/Damaged Replacement Service
-├── Spec: MOJAZ-603
+├── Spec: DrivingLicenseIssuanceSystem-603
 ├── Priority: High
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1634,7 +1634,7 @@ TASK 5.5 — Lost/Damaged Replacement Service
 └── Tests: 8+ tests
 
 TASK 5.6 — Category Upgrade Service
-├── Spec: MOJAZ-604
+├── Spec: DrivingLicenseIssuanceSystem-604
 ├── Priority: High
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1650,7 +1650,7 @@ TASK 5.6 — Category Upgrade Service
 └── Tests: 10+ tests
 
 TASK 5.7 — Application Cancellation Service
-├── Spec: MOJAZ-607
+├── Spec: DrivingLicenseIssuanceSystem-607
 ├── Priority: Medium
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1698,7 +1698,7 @@ WEEK 19 — REPORTS + LANDING PAGE
 ═════════════════════════════════
 
 TASK 6.1 — Reports System (7 Reports)
-├── Spec: MOJAZ-1400
+├── Spec: DrivingLicenseIssuanceSystem-1400
 ├── Priority: High
 ├── Layer: Full Stack
 ├── Tasks:
@@ -1733,12 +1733,12 @@ TASK 6.1 — Reports System (7 Reports)
 └── Tests: 15+ tests
 
 TASK 6.2 — Landing Page
-├── Spec: MOJAZ-1301
+├── Spec: DrivingLicenseIssuanceSystem-1301
 ├── Priority: High
 ├── Layer: Frontend
 ├── Tasks:
 │   ├── [ ] Section 1: Header
-│   │   ├── Logo + System name "مُجاز"
+│   │   ├── Logo + System name "نظام إصدار رخص القيادة"
 │   │   ├── Language switcher
 │   │   ├── Theme switcher
 │   │   ├── Login button
@@ -1761,7 +1761,7 @@ TASK 6.2 — Landing Page
 │   │   ├── 6 category cards (A-F)
 │   │   ├── Icon + Name + Min Age
 │   │   └── Category details on hover/click
-│   ├── [ ] Section 6: Why Mojaz
+│   ├── [ ] Section 6: Why DrivingLicenseIssuanceSystem
 │   │   ├── Feature cards (6 features)
 │   │   └── Icons + descriptions
 │   ├── [ ] Section 7: Statistics
@@ -1787,7 +1787,7 @@ TASK 6.2 — Landing Page
 └── Tests: 5+ tests
 
 TASK 6.3 — Audit Logs UI (Admin)
-├── Spec: MOJAZ-1320
+├── Spec: DrivingLicenseIssuanceSystem-1320
 ├── Priority: Medium
 ├── Layer: Frontend
 ├── Tasks:
@@ -2119,19 +2119,19 @@ Production
 
 ```bash
 # Build and tag images
-docker build -t mojaz-api:v1.0.0 -f src/backend/Mojaz.API/Dockerfile .
-docker build -t mojaz-frontend:v1.0.0 -f src/frontend/Dockerfile .
+docker build -t DrivingLicenseIssuanceSystem-api:v1.0.0 -f src/backend/DrivingLicenseIssuanceSystem.API/Dockerfile .
+docker build -t DrivingLicenseIssuanceSystem-frontend:v1.0.0 -f src/frontend/Dockerfile .
 
 # Run database migrations
-dotnet ef database update --project src/backend/Mojaz.Infrastructure \
-    --startup-project src/backend/Mojaz.API
+dotnet ef database update --project src/backend/DrivingLicenseIssuanceSystem.Infrastructure \
+    --startup-project src/backend/DrivingLicenseIssuanceSystem.API
 
 # Deploy with Docker Compose
 docker-compose -f docker-compose.prod.yml up -d
 
 # Verify deployment
-curl https://api.mojaz.gov/health
-curl https://mojaz.gov
+curl https://api.DrivingLicenseIssuanceSystem.gov/health
+curl https://DrivingLicenseIssuanceSystem.gov
 ```
 
 ### 13.3 Post-Launch Checklist
@@ -2159,7 +2159,7 @@ curl https://mojaz.gov
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│                  MOJAZ MVP — FINAL NUMBERS               │
+│                  DrivingLicenseIssuanceSystem MVP — FINAL NUMBERS               │
 ├──────────────────────────────────────────────────────────┤
 │  Duration:        20 weeks (10 sprints)                  │
 │  Backend:         ~52 API endpoints                      │

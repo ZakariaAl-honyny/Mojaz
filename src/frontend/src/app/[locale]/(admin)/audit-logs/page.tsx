@@ -5,20 +5,17 @@ import { auditService, AuditLogDto, AuditLogResponse } from '@/services/audit.se
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-
-const actionLabels: Record<string, { ar: string; en: string }> = {
-  CREATE: { ar: 'إنشاء', en: 'Create' },
-  UPDATE: { ar: 'تحديث', en: 'Update' },
-  DELETE: { ar: 'حذف', en: 'Delete' },
-};
+import { useTranslations, useLocale, useFormatter } from 'next-intl';
 
 export default function AuditLogsPage() {
+  const t = useTranslations('admin');
+  const locale = useLocale();
+  const format = useFormatter();
   const [logs, setLogs] = useState<AuditLogDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [entityFilter, setEntityFilter] = useState('');
-  const [locale, setLocale] = useState<'ar' | 'en'>('ar');
 
   useEffect(() => {
     loadLogs();
@@ -41,26 +38,6 @@ export default function AuditLogsPage() {
     }
   };
 
-  const t = (key: string) => {
-    const translations: Record<string, string> = {
-      'audit.title': locale === 'ar' ? 'سجل التدقيق' : 'Audit Logs',
-      'audit.entity': locale === 'ar' ? 'الكيان' : 'Entity',
-      'audit.action': locale === 'ar' ? 'الإجراء' : 'Action',
-      'audit.user': locale === 'ar' ? 'المستخدم' : 'User',
-      'audit.date': locale === 'ar' ? 'التاريخ' : 'Date',
-      'audit.details': locale === 'ar' ? 'التفاصيل' : 'Details',
-      'audit.noLogs': locale === 'ar' ? 'لا توجد سجلات' : 'No logs found',
-      'audit.search': locale === 'ar' ? 'بحث بالكيان...' : 'Search by entity...',
-      'audit.previous': locale === 'ar' ? 'السابق' : 'Previous',
-      'audit.next': locale === 'ar' ? 'التالي' : 'Next',
-    };
-    return translations[key] || key;
-  };
-
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleString(locale === 'ar' ? 'ar-SA' : 'en-US');
-  };
-
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -80,7 +57,7 @@ export default function AuditLogsPage() {
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="text-center py-8 text-gray-500">Loading...</div>
+              <div className="text-center py-8 text-gray-500">{t('common.loading')}</div>
             ) : logs.length === 0 ? (
               <div className="text-center py-8 text-gray-500">{t('audit.noLogs')}</div>
             ) : (
@@ -98,16 +75,20 @@ export default function AuditLogsPage() {
                   <tbody>
                     {logs.map((log) => (
                       <tr key={log.id} className="border-b hover:bg-gray-50">
-                        <td className="p-4 text-sm">{formatDate(log.timestamp)}</td>
+                        <td className="p-4 text-sm">
+                          {format.dateTime(new Date(log.timestamp), {
+                            dateStyle: 'medium',
+                            timeStyle: 'short'
+                          })}
+                        </td>
                         <td className="p-4">{log.userName || '-'}</td>
                         <td className="p-4">{log.entityName}</td>
                         <td className="p-4">
-                          <span className={`px-2 py-1 rounded-full text-sm ${
-                            log.actionType === 'CREATE' ? 'bg-green-100 text-green-800' :
-                            log.actionType === 'UPDATE' ? 'bg-blue-100 text-blue-800' :
-                            'bg-red-100 text-red-800'
-                          }`}>
-                            {actionLabels[log.actionType]?.[locale] || log.actionType}
+                          <span className={`px-2 py-1 rounded-full text-sm ${log.actionType === 'CREATE' ? 'bg-primary-100 text-primary-800' :
+                                log.actionType === 'UPDATE' ? 'bg-blue-100 text-blue-800' :
+                                  'bg-red-100 text-red-800'
+                            }`}>
+                            {t(`audit.actions.${log.actionType}`)}
                           </span>
                         </td>
                         <td className="p-4 text-sm text-gray-500 max-w-xs truncate">

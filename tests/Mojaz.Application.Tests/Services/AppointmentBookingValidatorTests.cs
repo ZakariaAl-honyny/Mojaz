@@ -4,22 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Mojaz.Application.DTOs.Appointments;
-using Mojaz.Application.DTOs.Theory;
-using Mojaz.Application.Interfaces;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
-using Mojaz.Shared.Constants;
-using Mojaz.Application.DTOs.Practical;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Appointments;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Theory;
+using DrivingLicenseIssuanceSystem.Application.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Practical;
 using Xunit;
 
-using ApplicationEntity = Mojaz.Domain.Entities.Application;
+using ApplicationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
 
-namespace Mojaz.Application.Tests.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Tests.Services;
 
 public class AppointmentBookingValidatorTests
 {

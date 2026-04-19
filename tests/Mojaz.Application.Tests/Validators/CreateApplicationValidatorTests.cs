@@ -1,13 +1,13 @@
 using Moq;
-using Mojaz.Application.Validators;
-using Mojaz.Application.DTOs.Application;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Domain.Entities;
-using Mojaz.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Validators;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Application;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 using FluentValidation.TestHelper;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Application.Tests.Validators;
+namespace DrivingLicenseIssuanceSystem.Application.Tests.Validators;
 
 public class CreateApplicationValidatorTests
 {
@@ -104,4 +104,5 @@ public class CreateApplicationValidatorTests
         // Assert
         result.ShouldNotHaveValidationErrorFor(x => x.DateOfBirth);
     }
+
 }

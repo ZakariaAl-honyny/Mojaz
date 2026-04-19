@@ -1,16 +1,16 @@
-@model Mojaz.Application.DTOs.Email.Templates.ApplicationDecisionEmailData
+@model DrivingLicenseIssuanceSystem.Application.DTOs.Email.Templates.ApplicationDecisionEmailData
 @{
     ViewBag.Title = "Application Decision";
     var isApproved = (Model.DecisionEn?.ToLowerInvariant() ?? "").Contains("approve");
     var headerColor = isApproved ? "#006C35" : "#b71c1c";
 }
 @section Ar {
-    <h2 style="color:@headerColor;">ÞÑÇÑ ÇáØáÈ</h2>
-    <p>ÇáÞÑÇÑ: <b>@Model.DecisionAr</b></p>
+    <h2 style="color:@headerColor;">ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½</h2>
+    <p>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: <b>@Model.DecisionAr</b></p>
     @if (!string.IsNullOrWhiteSpace(Model.ReasonAr))
     {
         <div style="margin-top:12px;background:#fff3f3;color:#b71c1c;padding:10px;border-radius:6px;">
-            ÇáÓÈÈ: @Model.ReasonAr
+            ï¿½ï¿½ï¿½ï¿½ï¿½: @Model.ReasonAr
         </div>
     }
 }

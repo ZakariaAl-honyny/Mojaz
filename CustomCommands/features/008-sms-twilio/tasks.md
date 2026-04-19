@@ -7,13 +7,13 @@
 
 ## Phase 1: Application Layer (Priority: P1)
 
-- [ ] **T801**: Create `ISmsService` in `src/backend/src/Mojaz.Application/Interfaces/Infrastructure/`.
+- [ ] **T801**: Create `ISmsService` in `src/backend/src/DrivingLicenseIssuanceSystem.Application/Interfaces/Infrastructure/`.
 - [ ] **T802**: Define `SmsTemplateNames` constants for the 6 required types.
 - [ ] **T803**: Setup `TwilioSettings` POCO class.
 
 ## Phase 2: Infrastructure Layer (Priority: P1)
 
-- [ ] **T804**: Install `Twilio` NuGet package in `Mojaz.Infrastructure`.
+- [ ] **T804**: Install `Twilio` NuGet package in `DrivingLicenseIssuanceSystem.Infrastructure`.
 - [ ] **T805**: Implement `TwilioSmsService` (SendAsync, SendTemplatedAsync).
 - [ ] **T806**: Map `SmsLog` table persistence inside the service.
 - [ ] **T807**: Configure `TwilioSettings` in `appsettings.json` and `Program.cs`.

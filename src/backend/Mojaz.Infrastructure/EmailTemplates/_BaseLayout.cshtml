@@ -1,11 +1,11 @@
-@* Bilingual Mojaz Email Base Layout *@
+@* Bilingual DrivingLicenseIssuanceSystem Email Base Layout *@
 @model dynamic
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=600, initial-scale=1.0">
-    <title>@(ViewBag.Title ?? "Mojaz Email")</title>
+    <title>@(ViewBag.Title ?? "DrivingLicenseIssuanceSystem Email")</title>
     <style>
         body { margin:0; padding:0; background:#f7f7f7; font-family:Tahoma, Arial, sans-serif; }
         .container { width:600px; margin:0 auto; background:#fff; border-radius:8px; overflow:hidden; }
@@ -23,7 +23,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">Mojaz | ãæÌÒ</div>
+        <div class="header">DrivingLicenseIssuanceSystem | ï¿½ï¿½ï¿½ï¿½</div>
         <div class="row">
             <div class="block-ar">
                 @RenderSection("Ar", required: false)
@@ -32,7 +32,7 @@
                 @RenderSection("En", required: false)
             </div>
         </div>
-        <div class="footer">&copy; @(DateTime.UtcNow.Year) Mojaz. All rights reserved.</div>
+        <div class="footer">&copy; @(DateTime.UtcNow.Year) DrivingLicenseIssuanceSystem. All rights reserved.</div>
     </div>
 </body>
 </html>

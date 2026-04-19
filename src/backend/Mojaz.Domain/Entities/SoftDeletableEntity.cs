@@ -1,4 +1,4 @@
-namespace Mojaz.Domain.Entities;
+namespace DrivingLicenseIssuanceSystem.Domain.Entities;
 
 /// <summary>
 /// Entity that supports soft deletion.

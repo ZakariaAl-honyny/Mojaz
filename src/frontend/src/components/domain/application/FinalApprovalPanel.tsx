@@ -86,7 +86,7 @@ export function FinalApprovalPanel({ applicationId, isEditable = true }: FinalAp
             className={cn(
               "flex-1 min-w-[140px]",
               canApprove
-                ? "bg-green-600 hover:bg-green-700 text-white"
+                ? "bg-King blue-600 hover:bg-King blue-700 text-white"
                 : "bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
             )}
           >

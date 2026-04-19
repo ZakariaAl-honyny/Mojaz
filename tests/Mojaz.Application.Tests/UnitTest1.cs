@@ -1,4 +1,4 @@
-﻿namespace Mojaz.Application.Tests;
+﻿namespace DrivingLicenseIssuanceSystem.Application.Tests;
 
 public class UnitTest1
 {

@@ -8,13 +8,13 @@ A .NET 8 solution following Clean Architecture with 5 projects that serves as th
 ## REQUIREMENTS:
 
 ### 1. Solution Structure:
-- **Mojaz.Domain:** Entities, Enums, Value Objects, Domain Interfaces
+- **DrivingLicenseIssuanceSystem.Domain:** Entities, Enums, Value Objects, Domain Interfaces
   - NO external NuGet packages (zero dependencies)
   - Base entity classes: BaseEntity (Id, CreatedAt, UpdatedAt), AuditableEntity (CreatedBy, UpdatedBy), SoftDeletableEntity (IsDeleted)
   - All 21 entity classes defined per database schema
   - Enums: ApplicationStatus, LicenseCategoryCode, FeeType, AppointmentType, DocumentType, NotificationEventType, PaymentStatus, TestResult, MedicalFitnessResult, UserRole, RegistrationMethod
 
-- **Mojaz.Shared:** Cross-cutting shared types
+- **DrivingLicenseIssuanceSystem.Shared:** Cross-cutting shared types
   - ApiResponse<T> with Success, Message, Data, Errors, StatusCode
   - PagedResult<T> with Items, TotalCount, Page, PageSize, TotalPages, HasPreviousPage, HasNextPage
   - Result<T> for internal operation results
@@ -22,7 +22,7 @@ A .NET 8 solution following Clean Architecture with 5 projects that serves as th
   - Constants: Roles, Policies, CacheKeys
   - Extension methods
 
-- **Mojaz.Application:** Business logic layer
+- **DrivingLicenseIssuanceSystem.Application:** Business logic layer
   - References: Domain, Shared only
   - Services interfaces and implementations
   - DTOs (Request/Response/Dto suffix)
@@ -30,9 +30,9 @@ A .NET 8 solution following Clean Architecture with 5 projects that serves as th
   - AutoMapper profiles
   - Service registration extension method
 
-- **Mojaz.Infrastructure:** External concerns
+- **DrivingLicenseIssuanceSystem.Infrastructure:** External concerns
   - References: Domain, Shared, Application
-  - EF Core DbContext (MojazDbContext)
+  - EF Core DbContext (DrivingLicenseIssuanceSystemDbContext)
   - Repository<T> implementation
   - UnitOfWork implementation
   - External service implementations (Email, SMS, Push)
@@ -40,7 +40,7 @@ A .NET 8 solution following Clean Architecture with 5 projects that serves as th
   - Migrations
   - Infrastructure registration extension method
 
-- **Mojaz.API:** Composition root
+- **DrivingLicenseIssuanceSystem.API:** Composition root
   - References: All layers
   - Controllers (thin, delegate to services)
   - Middleware: GlobalExceptionHandler, RequestLogging, AuditLog
@@ -59,7 +59,7 @@ A .NET 8 solution following Clean Architecture with 5 projects that serves as th
 - API: JwtBearer, Swashbuckle, AspNetCoreRateLimit
 
 ### 3. Test Projects (4):
-- Mojaz.Domain.Tests, Mojaz.Application.Tests, Mojaz.Infrastructure.Tests, Mojaz.API.Tests
+- DrivingLicenseIssuanceSystem.Domain.Tests, DrivingLicenseIssuanceSystem.Application.Tests, DrivingLicenseIssuanceSystem.Infrastructure.Tests, DrivingLicenseIssuanceSystem.API.Tests
 - Using: xUnit, Moq, FluentAssertions
 
 ### 4. Global Exception Handler:

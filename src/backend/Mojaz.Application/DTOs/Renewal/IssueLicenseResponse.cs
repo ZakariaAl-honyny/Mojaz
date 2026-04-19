@@ -1,6 +1,6 @@
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Shared;
 
-namespace Mojaz.Application.DTOs.Renewal;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Renewal;
 
 public class IssueLicenseResponse
 {

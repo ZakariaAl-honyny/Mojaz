@@ -1,4 +1,4 @@
-# .dockerignore for Mojaz Backend (ASP.NET Core)
+# .dockerignore for DrivingLicenseIssuanceSystem Backend (ASP.NET Core)
 .git
 bin
 obj

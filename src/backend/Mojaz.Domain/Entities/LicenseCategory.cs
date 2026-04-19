@@ -1,7 +1,7 @@
-using Mojaz.Domain.Common;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Common;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Domain.Entities;
+namespace DrivingLicenseIssuanceSystem.Domain.Entities;
 
 public class LicenseCategory : AuditableEntity
 {

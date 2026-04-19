@@ -13,12 +13,12 @@
 src/
 ??? backend/
 ?   ??? src/                        ? Redundant nesting
-?       ??? Mojaz.sln
-?       ??? Mojaz.Domain/
-?       ??? Mojaz.Application/
-?       ??? Mojaz.Infrastructure/
-?       ??? Mojaz.Shared/
-?       ??? Mojaz.API/
+?       ??? DrivingLicenseIssuanceSystem.sln
+?       ??? DrivingLicenseIssuanceSystem.Domain/
+?       ??? DrivingLicenseIssuanceSystem.Application/
+?       ??? DrivingLicenseIssuanceSystem.Infrastructure/
+?       ??? DrivingLicenseIssuanceSystem.Shared/
+?       ??? DrivingLicenseIssuanceSystem.API/
 ?       ??? Directory.Build.props
 ?       ??? Directory.Packages.props
 ?       ??? Dockerfile
@@ -30,12 +30,12 @@ src/
 ```
 src/
 ??? backend/                        ? Projects directly here (no src/ nesting)
-?   ??? Mojaz.sln
-?   ??? Mojaz.Domain/
-?   ??? Mojaz.Application/
-?   ??? Mojaz.Infrastructure/
-?   ??? Mojaz.Shared/
-?   ??? Mojaz.API/
+?   ??? DrivingLicenseIssuanceSystem.sln
+?   ??? DrivingLicenseIssuanceSystem.Domain/
+?   ??? DrivingLicenseIssuanceSystem.Application/
+?   ??? DrivingLicenseIssuanceSystem.Infrastructure/
+?   ??? DrivingLicenseIssuanceSystem.Shared/
+?   ??? DrivingLicenseIssuanceSystem.API/
 ?   ??? Directory.Build.props
 ?   ??? Directory.Packages.props
 ?   ??? Dockerfile
@@ -43,10 +43,10 @@ src/
 ??? frontend/
 
 tests/                             ? Tests at repo root (unchanged)
-??? Mojaz.Domain.Tests/
-??? Mojaz.Application.Tests/
-??? Mojaz.Infrastructure.Tests/
-??? Mojaz.API.Tests/
+??? DrivingLicenseIssuanceSystem.Domain.Tests/
+??? DrivingLicenseIssuanceSystem.Application.Tests/
+??? DrivingLicenseIssuanceSystem.Infrastructure.Tests/
+??? DrivingLicenseIssuanceSystem.API.Tests/
 ```
 
 ---
@@ -54,15 +54,15 @@ tests/                             ? Tests at repo root (unchanged)
 ## ? **Moved Files & Directories**
 
 ### **Core Projects** (5 projects)
-- ? `src/backend/src/Mojaz.Domain/` ? `src/backend/Mojaz.Domain/`
-- ? `src/backend/src/Mojaz.Shared/` ? `src/backend/Mojaz.Shared/`
-- ? `src/backend/src/Mojaz.Application/` ? `src/backend/Mojaz.Application/`
-- ? `src/backend/src/Mojaz.Infrastructure/` ? `src/backend/Mojaz.Infrastructure/`
-- ? `src/backend/src/Mojaz.API/` ? `src/backend/Mojaz.API/`
+- ? `src/backend/src/DrivingLicenseIssuanceSystem.Domain/` ? `src/backend/DrivingLicenseIssuanceSystem.Domain/`
+- ? `src/backend/src/DrivingLicenseIssuanceSystem.Shared/` ? `src/backend/DrivingLicenseIssuanceSystem.Shared/`
+- ? `src/backend/src/DrivingLicenseIssuanceSystem.Application/` ? `src/backend/DrivingLicenseIssuanceSystem.Application/`
+- ? `src/backend/src/DrivingLicenseIssuanceSystem.Infrastructure/` ? `src/backend/DrivingLicenseIssuanceSystem.Infrastructure/`
+- ? `src/backend/src/DrivingLicenseIssuanceSystem.API/` ? `src/backend/DrivingLicenseIssuanceSystem.API/`
 
 ### **Configuration Files**
-- ? `src/backend/src/Mojaz.sln` ? `src/backend/Mojaz.sln`
-- ? `src/backend/src/Mojaz.slnx` ? `src/backend/Mojaz.slnx`
+- ? `src/backend/src/DrivingLicenseIssuanceSystem.sln` ? `src/backend/DrivingLicenseIssuanceSystem.sln`
+- ? `src/backend/src/DrivingLicenseIssuanceSystem.slnx` ? `src/backend/DrivingLicenseIssuanceSystem.slnx`
 - ? `src/backend/src/Directory.Build.props` ? `src/backend/Directory.Build.props`
 - ? `src/backend/src/Directory.Packages.props` ? `src/backend/Directory.Packages.props`
 - ? `src/backend/src/global.json` ? `src/backend/global.json`
@@ -75,13 +75,13 @@ tests/                             ? Tests at repo root (unchanged)
 
 ## ?? **Updated References**
 
-### **Solution File** (`src/backend/Mojaz.sln`)
+### **Solution File** (`src/backend/DrivingLicenseIssuanceSystem.sln`)
 ```
 ? Before:
-Project(...) = "Mojaz.Domain.Tests", "..\..\..\tests\Mojaz.Domain.Tests\...", ...
+Project(...) = "DrivingLicenseIssuanceSystem.Domain.Tests", "..\..\..\tests\DrivingLicenseIssuanceSystem.Domain.Tests\...", ...
 
 ? After:
-Project(...) = "Mojaz.Domain.Tests", "..\..\tests\Mojaz.Domain.Tests\...", ...
+Project(...) = "DrivingLicenseIssuanceSystem.Domain.Tests", "..\..\tests\DrivingLicenseIssuanceSystem.Domain.Tests\...", ...
 ```
 
 **Impact**: Test project paths now use correct relative path (2 levels up instead of 3)
@@ -92,7 +92,7 @@ Project(...) = "Mojaz.Domain.Tests", "..\..\tests\Mojaz.Domain.Tests\...", ...
 
 ### **Core Project Build** ?
 ```
-? Mojaz.Domain compiles successfully
+? DrivingLicenseIssuanceSystem.Domain compiles successfully
 ? All projects accessible from new paths
 ? Solution file updated and resolved
 ? NuGet restore works correctly
@@ -102,11 +102,11 @@ Project(...) = "Mojaz.Domain.Tests", "..\..\tests\Mojaz.Domain.Tests\...", ...
 ```bash
 # Old (no longer works)
 cd src/backend/src
-dotnet build Mojaz.sln
+dotnet build DrivingLicenseIssuanceSystem.sln
 
 # New (current structure)
 cd src/backend
-dotnet build Mojaz.sln
+dotnet build DrivingLicenseIssuanceSystem.sln
 ```
 
 ---
@@ -142,7 +142,7 @@ Status: Files modified and moved
 Action Required: Commit the restructuring
 
 Modified/Deleted Files:
-  ? src/backend/Mojaz.sln (updated test paths)
+  ? src/backend/DrivingLicenseIssuanceSystem.sln (updated test paths)
   ? specs/003-backend-scaffold/tasks.md (updated paths)
   ? Multiple .gitignore and config files
   ? Project files moved to new locations
@@ -154,13 +154,13 @@ Modified/Deleted Files:
 
 ### 1. **Verify Build**
 ```bash
-cd C:\Users\ALlahabi\Desktop\Mojaz\Mojaz\src\backend
-dotnet build Mojaz.sln --configuration Release
+cd C:\Users\ALlahabi\Desktop\DrivingLicenseIssuanceSystem\DrivingLicenseIssuanceSystem\src\backend
+dotnet build DrivingLicenseIssuanceSystem.sln --configuration Release
 ```
 
 ### 2. **Commit Restructuring**
 ```bash
-cd C:\Users\ALlahabi\Desktop\Mojaz\Mojaz
+cd C:\Users\ALlahabi\Desktop\DrivingLicenseIssuanceSystem\DrivingLicenseIssuanceSystem
 git add .
 git commit -m "refactor(structure): flatten backend paths src/backend/src ? src/backend"
 ```
@@ -185,7 +185,7 @@ git merge 003-backend-scaffold
 **Status**: ? **READY FOR COMMIT**
 
 - ? All files moved successfully
-- ? Build verified (Mojaz.Domain compiles)
+- ? Build verified (DrivingLicenseIssuanceSystem.Domain compiles)
 - ? Solution file updated
 - ? Paths flattened and logical
 - ? No functional changes, only structural

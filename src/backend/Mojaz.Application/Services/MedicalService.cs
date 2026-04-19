@@ -1,15 +1,15 @@
-using Mojaz.Application.DTOs.Medical;
-using Mojaz.Application.Interfaces.Repositories;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Medical;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Repositories;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using AutoMapper;
 using System;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Services;
 
 /// <summary>
 /// Service for medical examination operations
@@ -38,14 +38,14 @@ public class MedicalService : IMedicalService
         Guid doctorId)
     {
         // Verify application exists and belongs to applicant
-        var application = await _unitOfWork.Repository<Mojaz.Domain.Entities.Application>().GetByIdAsync(request.ApplicationId);
+        var application = await _unitOfWork.Repository<DrivingLicenseIssuanceSystem.Domain.Entities.Application>().GetByIdAsync(request.ApplicationId);
         if (application == null)
         {
             return ApiResponse<MedicalResultDto>.NotFound("Application not found");
         }
 
         // Verify appointment exists
-        var appointment = await _unitOfWork.Repository<Mojaz.Domain.Entities.Appointment>().GetByIdAsync(request.AppointmentId);
+        var appointment = await _unitOfWork.Repository<DrivingLicenseIssuanceSystem.Domain.Entities.Appointment>().GetByIdAsync(request.AppointmentId);
         if (appointment == null)
         {
             return ApiResponse<MedicalResultDto>.NotFound("Appointment not found");

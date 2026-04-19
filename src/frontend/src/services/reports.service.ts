@@ -1,5 +1,5 @@
 import apiClient from '@/lib/api-client';
-import { ApiResponse, PaginatedResult } from '@/types/api.types';
+import { ApiResponse, PagedResult } from '@/types/api.types';
 
 export interface ReportingFilter {
   startDate?: string;
@@ -46,7 +46,7 @@ export const reportsService = {
   },
 
   getDelayedApplications: async (filter: ReportingFilter, page = 1, pageSize = 10) => {
-    const response = await apiClient.get<ApiResponse<PaginatedResult<DelayedApplicationEntry>>>('/reports/delayed-applications', { 
+    const response = await apiClient.get<ApiResponse<PagedResult<DelayedApplicationEntry>>>('/reports/delayed-applications', { 
       params: { ...filter, page, pageSize } 
     });
     return response.data;

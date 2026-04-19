@@ -70,35 +70,37 @@ export function NotificationList({ isOpen, onClose }: NotificationListProps) {
       <div
         className={cn(
           'fixed start-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2',
-          'rounded-xl border border-neutral-200 bg-white shadow-xl',
-          'dark:border-neutral-800 dark:bg-neutral-950',
-          'max-h-[80vh] flex flex-col'
+          'gov-glass-panel rounded-[2rem] border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]',
+          'max-h-[80vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-300'
         )}
       >
         {/* Header */}
         <div
           className={cn(
-            'flex items-center justify-between border-b border-neutral-200 px-4 py-3',
-            'dark:border-neutral-800'
+            'flex items-center justify-between border-b border-white/5 px-6 py-5',
+            'bg-white/[0.02]'
           )}
         >
-          <div className="flex items-center gap-2">
-            <Bell className="size-5 text-primary" />
-            <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-              {t('title')}
-            </h2>
-            {unreadCount > 0 && (
-              <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-medium text-white">
-                {unreadCount}
-              </span>
-            )}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary-600/20 flex items-center justify-center">
+               <Bell className="size-5 text-primary-400" />
+            </div>
+            <div>
+              <h2 className="text-lg font-black text-white tracking-tight">
+                {t('title')}
+              </h2>
+              {unreadCount > 0 && (
+                <p className="text-[10px] font-bold text-primary-500 uppercase tracking-widest">
+                  {unreadCount} {t('unread')}
+                </p>
+              )}
+            </div>
           </div>
           <button
             onClick={onClose}
             className={cn(
-              'rounded-lg p-1 text-neutral-500 hover:bg-neutral-100',
-              'dark:text-neutral-400 dark:hover:bg-neutral-800',
-              'transition-colors'
+              'w-8 h-8 rounded-full flex items-center justify-center text-neutral-500 hover:text-white hover:bg-white/5',
+              'transition-all duration-300'
             )}
             aria-label="Close"
           >
@@ -110,8 +112,8 @@ export function NotificationList({ isOpen, onClose }: NotificationListProps) {
         {unreadCount > 0 && (
           <div
             className={cn(
-              'border-b border-neutral-200 px-4 py-2',
-              'dark:border-neutral-800'
+              'border-b border-white/5 px-6 py-3',
+              'bg-primary-600/5'
             )}
           >
             <Button
@@ -119,12 +121,12 @@ export function NotificationList({ isOpen, onClose }: NotificationListProps) {
               size="sm"
               onClick={handleMarkAllAsRead}
               disabled={markAllAsReadLoading}
-              className="gap-1.5 text-primary hover:text-primary/80"
+              className="h-9 px-4 gap-2 text-primary-400 hover:text-primary-300 hover:bg-primary-400/10 rounded-xl font-bold text-xs"
             >
               {markAllAsReadLoading ? (
-                <Loader2 className="size-4 animate-spin" />
+                <Loader2 className="size-3.5 animate-spin" />
               ) : (
-                <CheckCheck className="size-4" />
+                <CheckCheck className="size-3.5" />
               )}
               {t('markAllRead')}
             </Button>
@@ -149,38 +151,37 @@ export function NotificationList({ isOpen, onClose }: NotificationListProps) {
                   <button
                     onClick={() => handleNotificationClick(notification)}
                     className={cn(
-                      'w-full px-4 py-3 text-start transition-colors hover:bg-neutral-50',
-                      'dark:hover:bg-neutral-900',
-                      !notification.isRead && 'bg-primary/5'
+                      'w-full px-6 py-5 text-start transition-all duration-300 hover:bg-white/[0.03]',
+                      !notification.isRead && 'bg-primary-600/[0.02] border-s-2 border-primary-500'
                     )}
                   >
-                    <div className="flex items-start gap-3">
+                    <div className="flex items-start gap-4">
                       <div
                         className={cn(
                           'mt-1.5 size-2 shrink-0 rounded-full',
                           notification.isRead
-                            ? 'bg-neutral-300 dark:bg-neutral-600'
-                            : 'bg-primary'
+                            ? 'bg-neutral-700'
+                            : 'bg-primary-500 shadow-[0_0_10px_rgba(30,58,138,0.5)]'
                         )}
                       />
                       <div className="flex-1 space-y-1">
                         <p
                           className={cn(
-                            'font-medium text-neutral-900 dark:text-neutral-100',
-                            !notification.isRead && 'font-semibold'
+                            'text-[15px] font-black text-white leading-tight',
+                            !notification.isRead && 'text-primary-400'
                           )}
                         >
                           {isRTL ? notification.titleAr : notification.titleEn}
                         </p>
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                        <p className="text-sm text-neutral-400 leading-relaxed">
                           {isRTL ? notification.messageAr : notification.messageEn}
                         </p>
-                        <p className="text-xs text-neutral-400">
+                        <p className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest pt-1">
                           {formatDate(notification.createdAt)}
                         </p>
                       </div>
                       {!notification.isRead && (
-                        <Check className="size-4 text-primary" />
+                        <Check className="size-4 text-primary-500 mt-1" />
                       )}
                     </div>
                   </button>

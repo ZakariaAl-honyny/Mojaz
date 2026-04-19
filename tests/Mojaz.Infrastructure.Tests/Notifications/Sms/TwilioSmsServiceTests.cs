@@ -2,12 +2,12 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Mojaz.Application.Interfaces.Infrastructure;
-using Mojaz.Infrastructure.Services;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure;
+using DrivingLicenseIssuanceSystem.Infrastructure.Services;
 using Moq;
 using Xunit;
 
-namespace Mojaz.Infrastructure.Tests.Notifications.Sms
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Tests.Notifications.Sms
 {
     /// <summary>
     /// Unit tests for TwilioSmsService.
@@ -114,9 +114,17 @@ namespace Mojaz.Infrastructure.Tests.Notifications.Sms
         /// Integration test - only run when valid Twilio credentials are available.
         /// Set ENABLE_TWILIO_INTEGRATION_TESTS=true to run this test.
         /// </summary>
-        [Fact(Skip = "Requires valid Twilio credentials - run manually when needed")]
+        [Fact]
         public async Task SendAsync_WithValidTwilioAccount_SendsSmsSuccessfully()
         {
+            // Skip if integration tests are not enabled
+            var enableIntegration = Environment.GetEnvironmentVariable("ENABLE_TWILIO_INTEGRATION_TESTS");
+            if (enableIntegration?.ToLower() != "true")
+            {
+                // Skip this test - credentials not configured for CI
+                return;
+            }
+
             // Arrange
             var configSection = new Mock<IConfigurationSection>();
             var accountSid = Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID");
@@ -139,7 +147,7 @@ namespace Mojaz.Infrastructure.Tests.Notifications.Sms
             var service = new TwilioSmsService(_configurationMock.Object, _loggerMock.Object);
 
             // Act
-            await service.SendAsync(toNumber ?? "+966501234567", "Test message from Mojaz SMS integration test");
+            await service.SendAsync(toNumber ?? "+966501234567", "Test message from DrivingLicenseIssuanceSystem SMS integration test");
 
             // Assert - If we reach here, SMS was sent successfully
             // (Twilio would throw if there was an error)

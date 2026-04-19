@@ -1,12 +1,12 @@
-# Mojaz Project Constitution
+# DrivingLicenseIssuanceSystem Project Constitution
 
 > **Status:** To be generated via `/speckit.constitution`
 
 ## Project Identity
-- **Name:** Mojaz (مُجاز) meaning "Licensed/Authorized" in Arabic
+- **Name:** DrivingLicenseIssuanceSystem (نظام إصدار رخص القيادة) meaning "Licensed/Authorized" in Arabic
 - **Type:** Full-Stack Web Application
 - **Domain:** Government / GovTech / Driving License Management
-- **Primary Color:** #006C35 (Royal Green)
+- **Primary Color:** #006C35 (Royal King blue)
 - **Design System:** Absher-Inspired, government official style
 
 ## Tech Stack
@@ -21,7 +21,7 @@
 
 ### Frontend
 - Next.js 15 (App Router) + TypeScript 5
-- Tailwind CSS 4 + shadcn/ui (Mojaz-themed)
+- Tailwind CSS 4 + shadcn/ui (DrivingLicenseIssuanceSystem-themed)
 - React Query 5 (server state) + Zustand 5 (client state)
 - React Hook Form 7 + Zod 3 (forms/validation)
 - next-intl 3 (i18n) + next-themes (dark/light)
@@ -92,6 +92,6 @@
 - Minimum 80% coverage for business logic
 
 ## Git
-- Branches: feature/MOJAZ-XXX-description, bugfix/, hotfix/, release/
+- Branches: feature/DrivingLicenseIssuanceSystem-XXX-description, bugfix/, hotfix/, release/
 - Commits: feat(scope):, fix(scope):, docs():, test():, refactor():
 - PR required for main and develop branches

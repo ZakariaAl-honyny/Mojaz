@@ -34,6 +34,12 @@ const initialState = {
     specialNeedsDeclaration: false,
     specialNeedsNote: '',
   },
+  step5: {
+    documents: [],
+  },
+  medicalVerified: false,
+  theoryTestPassed: false,
+  theoryTestScore: null,
   declarationAccepted: false,
 };
 
@@ -46,30 +52,33 @@ export const useWizardStore = create<WizardState>()(
       setStep2: (data) => set((state) => ({ step2: { ...state.step2, ...data } })),
       setStep3: (data) => set((state) => ({ step3: { ...state.step3, ...data } })),
       setStep4: (data) => set((state) => ({ step4: { ...state.step4, ...data } })),
+      setStep5: (data) => set((state) => ({ step5: { ...state.step5, ...data } })),
       setDeclaration: (accepted) => set({ declarationAccepted: accepted }),
-      
+      setMedicalVerified: (verified) => set({ medicalVerified: verified }),
+      setTheoryTestResult: (passed, score) => set({ theoryTestPassed: passed, theoryTestScore: score }),
+
       goTo: (step) => set({ currentStep: step }),
-      
-      markCompleted: (step) => 
-        set((state) => ({ 
-          completedSteps: state.completedSteps.includes(step) 
-            ? state.completedSteps 
-            : [...state.completedSteps, step] 
+
+      markCompleted: (step) =>
+        set((state) => ({
+          completedSteps: state.completedSteps.includes(step)
+            ? state.completedSteps
+            : [...state.completedSteps, step]
         })),
-        
+
       setApplicationId: (id) => set({ applicationId: id }),
       setLastSavedAt: (date) => set({ lastSavedAt: date }),
       setSaving: (saving: boolean) => set({ isSaving: saving }),
-      
-      incrementSaveFailures: () => 
+
+      incrementSaveFailures: () =>
         set((state) => ({ consecutiveSaveFailures: state.consecutiveSaveFailures + 1 })),
-        
+
       resetSaveFailures: () => set({ consecutiveSaveFailures: 0 }),
-      
+
       resetWizard: () => set(initialState),
     }),
     {
-      name: 'mojaz-wizard-draft',
+      name: 'DrivingLicenseIssuanceSystem-wizard-draft',
       storage: createJSONStorage(() => sessionStorage),
       partialize: (state) => ({
         applicationId: state.applicationId,
@@ -79,7 +88,12 @@ export const useWizardStore = create<WizardState>()(
         step2: state.step2,
         step3: state.step3,
         step4: state.step4,
+        step5: state.step5,
+        medicalVerified: state.medicalVerified,
+        theoryTestPassed: state.theoryTestPassed,
+        theoryTestScore: state.theoryTestScore,
       }),
     }
   )
 );
+

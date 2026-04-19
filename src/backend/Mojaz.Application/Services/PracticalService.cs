@@ -1,18 +1,18 @@
 using AutoMapper;
-using Mojaz.Application.DTOs.Practical;
-using Mojaz.Application.Interfaces;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
-using Mojaz.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Practical;
+using DrivingLicenseIssuanceSystem.Application.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Services;
 
 /// <summary>
 /// Service for managing practical test operations
@@ -20,7 +20,7 @@ namespace Mojaz.Application.Services;
 public class PracticalService : IPracticalService
 {
     private readonly IPracticalRepository _practicalRepository;
-    private readonly IRepository<global::Mojaz.Domain.Entities.Application> _applicationRepository;
+    private readonly IRepository<global::DrivingLicenseIssuanceSystem.Domain.Entities.Application> _applicationRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IAuditService _auditService;
@@ -30,7 +30,7 @@ public class PracticalService : IPracticalService
 
     public PracticalService(
         IPracticalRepository practicalRepository,
-        IRepository<global::Mojaz.Domain.Entities.Application> applicationRepository,
+        IRepository<global::DrivingLicenseIssuanceSystem.Domain.Entities.Application> applicationRepository,
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IAuditService auditService,

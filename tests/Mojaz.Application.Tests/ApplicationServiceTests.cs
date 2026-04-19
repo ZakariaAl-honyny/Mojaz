@@ -3,19 +3,19 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FluentAssertions;
 using Moq;
-using Mojaz.Application.DTOs.Application;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Application;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Xunit;
 using Hangfire;
 
-namespace Mojaz.Application.Tests;
+namespace DrivingLicenseIssuanceSystem.Application.Tests;
 
 public class ApplicationServiceTests
 {
@@ -38,16 +38,10 @@ public class ApplicationServiceTests
         _userRepo.Object,
         _categoryRepo.Object,
         _settingsRepo.Object,
-        _licenseRepo.Object,
         _unitOfWork.Object,
         _mapper.Object,
         _auditService.Object,
-        _notificationService.Object,
-        _emailService.Object,
-        Mock.Of<IBackgroundJobClient>(),
-        _historyRepo.Object,
-        _replacementRepo.Object,
-        _categoryUpgradeService.Object
+        _notificationService.Object
     );
 
     [Fact]

@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { 
-  Calendar, 
-  Clock, 
-  MapPin, 
-  ChevronRight, 
-  Stethoscope, 
-  GraduationCap, 
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  ChevronRight,
+  Stethoscope,
+  GraduationCap,
   Car,
   Plus,
   CalendarCheck
@@ -83,7 +83,7 @@ const getTypeColor = (type: string) => {
     case 'theory':
       return 'bg-purple-500/10 text-purple-600';
     case 'practical':
-      return 'bg-green-500/10 text-green-600';
+      return 'bg-King blue-500/10 text-King blue-600';
     default:
       return 'bg-neutral-500/10 text-neutral-600';
   }

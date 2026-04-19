@@ -1,6 +1,6 @@
 using System;
 
-namespace Mojaz.Domain.Entities;
+namespace DrivingLicenseIssuanceSystem.Domain.Entities;
 
 public class AuditLog
 {

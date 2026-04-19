@@ -1,17 +1,17 @@
 using Hangfire;
 using Microsoft.Extensions.Logging;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-// Alias to avoid namespace collision with Mojaz.Domain.Entities.Application
-using ApplicationEntity = Mojaz.Domain.Entities.Application;
+// Alias to avoid namespace collision with DrivingLicenseIssuanceSystem.Domain.Entities.Application
+using ApplicationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
 
-namespace Mojaz.Infrastructure.Jobs;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Jobs;
 
 /// <summary>
 /// Hangfire recurring job that processes expired applications.

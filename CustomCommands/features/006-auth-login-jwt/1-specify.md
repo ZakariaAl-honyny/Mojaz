@@ -24,7 +24,7 @@ Logic:
 ### 2. JWT Configuration:
 - Algorithm: HMAC-SHA256, Expiry: 60 minutes
 - Claims: sub, email, phone, role, fullName, language, jti
-- Issuer: "MojazAPI", Audience: "MojazClient"
+- Issuer: "DrivingLicenseIssuanceSystemAPI", Audience: "DrivingLicenseIssuanceSystemClient"
 
 ### 3. Refresh Token Endpoint:
 POST /api/v1/auth/refresh-token — Extract claims from expired token, validate refresh token, generate new tokens, revoke old

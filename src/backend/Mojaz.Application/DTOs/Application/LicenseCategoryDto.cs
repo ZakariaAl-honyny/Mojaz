@@ -1,4 +1,4 @@
-namespace Mojaz.Application.DTOs.Application;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Application;
 
 public class LicenseCategoryDto
 {

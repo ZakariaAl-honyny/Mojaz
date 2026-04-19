@@ -1,8 +1,8 @@
-using Mojaz.Domain.Enums;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 
-namespace Mojaz.Application.DTOs.LicenseReplacement;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.LicenseReplacement;
 
 /// <summary>
 /// DTO for replacement eligibility check response

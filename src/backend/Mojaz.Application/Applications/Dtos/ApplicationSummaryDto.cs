@@ -1,6 +1,6 @@
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Application.Applications.Dtos;
+namespace DrivingLicenseIssuanceSystem.Application.Applications.Dtos;
 
 public class ApplicationSummaryDto
 {

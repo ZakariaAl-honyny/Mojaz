@@ -1,7 +1,7 @@
 using FluentValidation;
-using Mojaz.Application.DTOs.Practical;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Practical;
 
-namespace Mojaz.Application.Validators.Practical
+namespace DrivingLicenseIssuanceSystem.Application.Validators.Practical
 {
     public class SubmitPracticalResultRequestValidator : AbstractValidator<SubmitPracticalResultRequest>
     {

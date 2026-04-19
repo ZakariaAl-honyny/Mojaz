@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Mojaz.Application.Interfaces.Infrastructure;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Infrastructure.Authentication;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Infrastructure.Authentication;
 using System;
 using System.Threading.Tasks;
 using Twilio;
@@ -11,7 +11,7 @@ using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 using Hangfire;
 
-namespace Mojaz.Infrastructure.Services
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Services
 {
     [AutomaticRetry(Attempts = 3)]
     public class TwilioSmsService : ISmsService

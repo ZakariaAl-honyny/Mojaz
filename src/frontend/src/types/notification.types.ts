@@ -15,6 +15,24 @@ export interface NotificationDto {
   applicationId?: number;
 }
 
+export type Notification = NotificationDto;
+
+export type NotificationType = 'payment' | 'appointment' | 'status' | 'system';
+
+export interface NotificationPreferences {
+  email: boolean;
+  sms: boolean;
+  push: boolean;
+  marketing: boolean;
+}
+
+export interface DeviceInfo {
+  id: string;
+  name: string;
+  type: 'android' | 'ios' | 'web';
+  fcmToken?: string;
+}
+
 export enum NotificationEventType {
   ApplicationStatusChanged = 'ApplicationStatusChanged',
   PaymentReceived = 'PaymentReceived',

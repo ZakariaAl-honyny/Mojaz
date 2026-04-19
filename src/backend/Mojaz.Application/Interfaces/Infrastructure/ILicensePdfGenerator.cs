@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Mojaz.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
 
-namespace Mojaz.Application.Interfaces.Infrastructure
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure
 {
     public interface ILicensePdfGenerator
     {

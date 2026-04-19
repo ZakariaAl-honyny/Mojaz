@@ -1,6 +1,6 @@
-# Mojaz Deployment Runbook
+# DrivingLicenseIssuanceSystem Deployment Runbook
 
-This document provides instructions for deploying and managing the Mojaz platform in a production environment.
+This document provides instructions for deploying and managing the DrivingLicenseIssuanceSystem platform in a production environment.
 
 ## 1. Prerequisites
 - Docker and Docker Compose installed.
@@ -25,7 +25,7 @@ This document provides instructions for deploying and managing the Mojaz platfor
 - **Manual Migration:** Migaions run automatically on startup in production.
 - **Backup:**
     ```bash
-    docker exec mojaz-db-prod /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $DB_PASSWORD -Q "BACKUP DATABASE [MojazDb] TO DISK = N'/var/opt/mssql/data/MojazDb.bak' WITH NOFORMAT, NOINIT, NAME = 'MojazDb-Full', SKIP, NOREWIND, NOUNLOAD, STATS = 10"
+    docker exec DrivingLicenseIssuanceSystem-db-prod /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $DB_PASSWORD -Q "BACKUP DATABASE [DrivingLicenseIssuanceSystemDb] TO DISK = N'/var/opt/mssql/data/DrivingLicenseIssuanceSystemDb.bak' WITH NOFORMAT, NOINIT, NAME = 'DrivingLicenseIssuanceSystemDb-Full', SKIP, NOREWIND, NOUNLOAD, STATS = 10"
     ```
 
 ## 4. Monitoring
@@ -35,9 +35,9 @@ This document provides instructions for deploying and managing the Mojaz platfor
 
 ## 5. Troubleshooting
 - **Logs:**
-    - Backend: `docker logs mojaz-backend-prod`
-    - Frontend: `docker logs mojaz-frontend-prod`
-    - Nginx: `docker logs mojaz-nginx-prod`
+    - Backend: `docker logs DrivingLicenseIssuanceSystem-backend-prod`
+    - Frontend: `docker logs DrivingLicenseIssuanceSystem-frontend-prod`
+    - Nginx: `docker logs DrivingLicenseIssuanceSystem-nginx-prod`
 - **Rebuilding Service:**
     ```bash
     docker-compose -f docker-compose.prod.yml up -d --build <service-name>

@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
+import {
   FileKey2,
   TrendingUp,
   TrendingDown,
@@ -16,7 +16,7 @@ import {
   Users,
   AlertTriangle
 } from "lucide-react";
-import { useTranslations } from 'next-intl';
+import { useTranslations, useFormatter } from 'next-intl';
 import { useParams } from 'next/navigation';
 
 interface LicenseStats {
@@ -41,7 +41,8 @@ interface MonthlyData {
 }
 
 export default function LicenseReportsPage() {
-  const t = useTranslations('license');
+  const t = useTranslations('admin');
+  const format = useFormatter();
   const { locale } = useParams();
 
   // Mock statistics
@@ -64,12 +65,12 @@ export default function LicenseReportsPage() {
   ];
 
   const monthlyData: MonthlyData[] = [
-    { month: 'يناير', issued: 320, renewed: 280 },
-    { month: 'فبراير', issued: 290, renewed: 310 },
-    { month: 'مارس', issued: 350, renewed: 290 },
-    { month: 'ابريل', issued: 310, renewed: 330 },
-    { month: 'مايو', issued: 280, renewed: 270 },
-    { month: 'يونيو', issued: 340, renewed: 300 }
+    { month: t('months.jan'), issued: 320, renewed: 280 },
+    { month: t('months.feb'), issued: 290, renewed: 310 },
+    { month: t('months.mar'), issued: 350, renewed: 290 },
+    { month: t('months.apr'), issued: 310, renewed: 330 },
+    { month: t('months.may'), issued: 280, renewed: 270 },
+    { month: t('months.jun'), issued: 340, renewed: 300 }
   ];
 
   const getMaxCount = () => Math.max(...classBreakdown.map(c => c.count));
@@ -79,12 +80,12 @@ export default function LicenseReportsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-primary-950">{t('employee.reports.title')}</h1>
-          <p className="text-neutral-500 mt-1">{t('employee.reports.subtitle')}</p>
+          <h1 className="text-3xl font-bold text-primary-950">{t('reports.licenses.title')}</h1>
+          <p className="text-neutral-500 mt-1">{t('reports.licenses.subtitle')}</p>
         </div>
         <Button variant="outline" className="gap-2">
           <Download className="w-4 h-4" />
-          {t('employee.manage.export')}
+          {t('reports.common.exportExcel')}
         </Button>
       </div>
 
@@ -94,42 +95,42 @@ export default function LicenseReportsPage() {
           <CardContent className="p-4 text-center">
             <FileKey2 className="w-6 h-6 text-primary-500 mx-auto mb-2" />
             <p className="text-2xl font-bold text-neutral-900">{stats.totalIssued.toLocaleString()}</p>
-            <p className="text-xs text-neutral-500">{t('employee.reports.totalIssued')}</p>
+            <p className="text-xs text-neutral-500">{t('reports.licenses.totalIssued')}</p>
           </CardContent>
         </Card>
         <Card className="border-0 shadow-sm">
           <CardContent className="p-4 text-center">
-            <div className="w-2 h-2 bg-green-500 rounded-full mx-auto mb-2"></div>
-            <p className="text-2xl font-bold text-green-600">{stats.active.toLocaleString()}</p>
-            <p className="text-xs text-neutral-500">{t('employee.reports.active')}</p>
+            <div className="w-2 h-2 bg-primary-500 rounded-full mx-auto mb-2"></div>
+            <p className="text-2xl font-bold text-primary-600">{stats.active.toLocaleString()}</p>
+            <p className="text-xs text-neutral-500">{t('reports.licenses.active')}</p>
           </CardContent>
         </Card>
         <Card className="border-0 shadow-sm">
           <CardContent className="p-4 text-center">
             <div className="w-2 h-2 bg-red-500 rounded-full mx-auto mb-2"></div>
             <p className="text-2xl font-bold text-red-600">{stats.expired.toLocaleString()}</p>
-            <p className="text-xs text-neutral-500">{t('employee.reports.expired')}</p>
+            <p className="text-xs text-neutral-500">{t('reports.licenses.expired')}</p>
           </CardContent>
         </Card>
         <Card className="border-0 shadow-sm">
           <CardContent className="p-4 text-center">
             <div className="w-2 h-2 bg-yellow-500 rounded-full mx-auto mb-2"></div>
             <p className="text-2xl font-bold text-yellow-600">{stats.suspended.toLocaleString()}</p>
-            <p className="text-xs text-neutral-500">{t('suspended')}</p>
+            <p className="text-xs text-neutral-500">{t('reports.licenses.suspended')}</p>
           </CardContent>
         </Card>
         <Card className="border-0 shadow-sm">
           <CardContent className="p-4 text-center">
             <AlertTriangle className="w-6 h-6 text-orange-500 mx-auto mb-2" />
             <p className="text-2xl font-bold text-orange-600">{stats.expiredSoon}</p>
-            <p className="text-xs text-neutral-500">{t('employee.reports.expiredSoon')}</p>
+            <p className="text-xs text-neutral-500">{t('reports.licenses.expiringSoon')}</p>
           </CardContent>
         </Card>
         <Card className="border-0 shadow-sm">
           <CardContent className="p-4 text-center">
             <RefreshCw className="w-6 h-6 text-blue-500 mx-auto mb-2" />
             <p className="text-2xl font-bold text-blue-600">{stats.renewalRate}%</p>
-            <p className="text-xs text-neutral-500">{t('employee.reports.renewalRates')}</p>
+            <p className="text-xs text-neutral-500">{t('reports.licenses.renewalRate')}</p>
           </CardContent>
         </Card>
       </div>
@@ -141,7 +142,7 @@ export default function LicenseReportsPage() {
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <PieChart className="w-5 h-5 text-primary-500" />
-              {t('employee.reports.byClass')}
+              {t('reports.licenses.byClass')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -149,11 +150,13 @@ export default function LicenseReportsPage() {
               {classBreakdown.map((item) => (
                 <div key={item.class}>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm font-medium text-neutral-700">فئة {item.class}</span>
+                    <span className="text-sm font-medium text-neutral-700">
+                      {t('reports.common.category')} {item.class}
+                    </span>
                     <span className="text-sm text-neutral-500">{item.count.toLocaleString()} ({item.percentage}%)</span>
                   </div>
                   <div className="w-full bg-neutral-100 rounded-full h-3 overflow-hidden">
-                    <div 
+                    <div
                       className="bg-primary-500 h-full rounded-full transition-all duration-500"
                       style={{ width: `${(item.count / getMaxCount()) * 100}%` }}
                     ></div>
@@ -169,7 +172,7 @@ export default function LicenseReportsPage() {
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <BarChart3 className="w-5 h-5 text-primary-500" />
-              {t('employee.reports.byMonth')}
+              {t('reports.licenses.monthlyTrend')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -179,9 +182,9 @@ export default function LicenseReportsPage() {
                   <span className="w-12 text-sm text-neutral-600">{item.month}</span>
                   <div className="flex-1 grid grid-cols-2 gap-2">
                     <div className="flex items-center gap-2">
-                      <div className="w-16 text-xs text-neutral-500">جديد</div>
+                      <div className="w-16 text-xs text-neutral-500">{t('reports.licenses.new')}</div>
                       <div className="flex-1 bg-primary-100 rounded h-2">
-                        <div 
+                        <div
                           className="bg-primary-500 h-full rounded"
                           style={{ width: `${(item.issued / 400) * 100}%` }}
                         ></div>
@@ -189,10 +192,10 @@ export default function LicenseReportsPage() {
                       <span className="text-xs font-medium text-neutral-700 w-8">{item.issued}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-16 text-xs text-neutral-500">تجديد</div>
-                      <div className="flex-1 bg-green-100 rounded h-2">
-                        <div 
-                          className="bg-green-500 h-full rounded"
+                      <div className="w-16 text-xs text-neutral-500">{t('reports.licenses.renewal')}</div>
+                      <div className="flex-1 bg-blue-100 rounded h-2">
+                        <div
+                          className="bg-blue-500 h-full rounded"
                           style={{ width: `${(item.renewed / 400) * 100}%` }}
                         ></div>
                       </div>
@@ -211,7 +214,7 @@ export default function LicenseReportsPage() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <AlertTriangle className="w-5 h-5 text-orange-500" />
-            {t('employee.reports.expiredSoon')}
+            {t('reports.licenses.expiringSoon')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -219,18 +222,18 @@ export default function LicenseReportsPage() {
             <table className="w-full">
               <thead className="bg-neutral-50 border-b border-neutral-100">
                 <tr>
-                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('number')}</th>
-                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">الحامل</th>
-                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('class')}</th>
-                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('expiryDate')}</th>
-                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">الأيام المتبقية</th>
+                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('reports.licenses.licenseNumber')}</th>
+                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('reports.licenses.holder')}</th>
+                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('reports.common.category')}</th>
+                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('reports.licenses.expiryDate')}</th>
+                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('reports.licenses.daysLeft')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100">
                 {[
-                  { number: 'MOJ-2023-12345678', holder: 'أحمد علي', category: 'B', expiry: '2025-02-15', days: 34 },
-                  { number: 'MOJ-2023-87654321', holder: 'سعيد محمد', category: 'A', expiry: '2025-02-20', days: 39 },
-                  { number: 'MOJ-2023-11223344', holder: 'خالد عبدالله', category: 'C', expiry: '2025-02-28', days: 47 }
+                  { number: 'MOJ-2026-12345678', holder: 'أحمد علي', category: 'B', expiry: '2026-02-15', days: 34 },
+                  { number: 'MOJ-2026-87654321', holder: 'سعيد محمد', category: 'A', expiry: '2026-02-20', days: 39 },
+                  { number: 'MOJ-2026-11223344', holder: 'خالد عبدالله', category: 'C', expiry: '2026-02-28', days: 47 }
                 ].map((item, index) => (
                   <tr key={index} className="hover:bg-orange-50/50">
                     <td className="px-4 py-3 text-neutral-900 font-medium">{item.number}</td>
@@ -240,9 +243,13 @@ export default function LicenseReportsPage() {
                         {item.category}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-neutral-600">{item.expiry}</td>
+                    <td className="px-4 py-3 text-neutral-600">
+                      {format.dateTime(new Date(item.expiry), { dateStyle: 'medium' })}
+                    </td>
                     <td className="px-4 py-3">
-                      <span className="text-orange-600 font-medium">{item.days} يوم</span>
+                      <span className="text-orange-600 font-medium">
+                        {item.days} {t('common.units.days')}
+                      </span>
                     </td>
                   </tr>
                 ))}

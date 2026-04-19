@@ -1,13 +1,13 @@
-using Mojaz.Application.DTOs.Application;
-using Mojaz.Application.Applications.Dtos;
-using Mojaz.Application.DTOs.LicenseReplacement;
-using Mojaz.Domain.Enums;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Application;
+using DrivingLicenseIssuanceSystem.Application.Applications.Dtos;
+using DrivingLicenseIssuanceSystem.Application.DTOs.LicenseReplacement;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
 public interface IApplicationService
 {
@@ -19,7 +19,7 @@ public interface IApplicationService
     Task<ApiResponse<ApplicationDto>> SubmitAsync(Guid id, SubmitApplicationRequest request, Guid userId);
     Task<ApiResponse<bool>> UpdateStatusAsync(Guid id, ApplicationStatus status, string reason, Guid userId);
     Task<ApiResponse<bool>> CancelAsync(Guid id, string reason, Guid userId, string role);
-    Task<ApiResponse<List<Mojaz.Application.DTOs.Application.ApplicationTimelineDto>>> GetTimelineAsync(Guid id, Guid userId, string role);
+    Task<ApiResponse<List<DrivingLicenseIssuanceSystem.Application.DTOs.Application.ApplicationTimelineDto>>> GetTimelineAsync(Guid id, Guid userId, string role);
     Task<ApiResponse<ApplicationWorkflowTimelineDto>> GetWorkflowTimelineAsync(Guid id, Guid userId, string role);
     Task<ApiResponse<EligibilityCheckResult>> CheckEligibilityAsync(Guid userId, EligibilityCheckRequest request);
     Task<ApiResponse<ApplicationDto>> UpgradeAsync(UpgradeApplicationRequest request, Guid userId);

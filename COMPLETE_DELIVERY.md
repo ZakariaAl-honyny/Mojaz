@@ -1,4 +1,4 @@
-# ?? **MOJAZ BACKEND SCAFFOLD — COMPLETE DELIVERY**
+# ?? **DrivingLicenseIssuanceSystem BACKEND SCAFFOLD ï¿½ COMPLETE DELIVERY**
 
 **Status**: ? **PRODUCTION-READY**  
 **Date**: 2026-04-04  
@@ -57,12 +57,12 @@
 ```
 src/
 ??? backend/                        ? Flattened structure
-?   ??? Mojaz.sln
-?   ??? Mojaz.Domain/
-?   ??? Mojaz.Shared/
-?   ??? Mojaz.Application/
-?   ??? Mojaz.Infrastructure/
-?   ??? Mojaz.API/
+?   ??? DrivingLicenseIssuanceSystem.sln
+?   ??? DrivingLicenseIssuanceSystem.Domain/
+?   ??? DrivingLicenseIssuanceSystem.Shared/
+?   ??? DrivingLicenseIssuanceSystem.Application/
+?   ??? DrivingLicenseIssuanceSystem.Infrastructure/
+?   ??? DrivingLicenseIssuanceSystem.API/
 ?   ??? Directory.Build.props
 ?   ??? Directory.Packages.props
 ?   ??? Dockerfile
@@ -72,10 +72,10 @@ src/
     ??? [frontend projects]
 
 tests/                             ? Test projects at repo root
-??? Mojaz.Domain.Tests/
-??? Mojaz.Application.Tests/
-??? Mojaz.Infrastructure.Tests/
-??? Mojaz.API.Tests/
+??? DrivingLicenseIssuanceSystem.Domain.Tests/
+??? DrivingLicenseIssuanceSystem.Application.Tests/
+??? DrivingLicenseIssuanceSystem.Infrastructure.Tests/
+??? DrivingLicenseIssuanceSystem.API.Tests/
 ```
 
 **Why this structure**:
@@ -105,8 +105,8 @@ tests/                             ? Test projects at repo root
 ### **1. Start the API**
 ```bash
 cd src/backend
-dotnet build Mojaz.sln
-dotnet run --project Mojaz.API
+dotnet build DrivingLicenseIssuanceSystem.sln
+dotnet run --project DrivingLicenseIssuanceSystem.API
 ```
 
 ### **2. Access the Platform**
@@ -118,7 +118,7 @@ dotnet run --project Mojaz.API
 ```bash
 docker compose up -d
 cd src/backend
-dotnet ef database update -p Mojaz.Infrastructure -s Mojaz.API
+dotnet ef database update -p DrivingLicenseIssuanceSystem.Infrastructure -s DrivingLicenseIssuanceSystem.API
 ```
 
 ---
@@ -206,7 +206,7 @@ git merge --no-ff origin/003-backend-scaffold
 - ? 2 build configuration files (Directory.Build.props, Directory.Packages.props)
 
 ### **Files Modified**
-- ? Mojaz.sln (test paths updated)
+- ? DrivingLicenseIssuanceSystem.sln (test paths updated)
 - ? .gitignore (environment patterns added)
 - ? tasks.md (paths updated)
 - ? README.md (API URLs consistent)

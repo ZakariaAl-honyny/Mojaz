@@ -1,10 +1,10 @@
-# Mojaz API Local Testing Report
+# DrivingLicenseIssuanceSystem API Local Testing Report
 **Date**: 2026-04-17
 **Environment**: Local Development
 
 ## Database Configuration
 ```json
-ConnectionString: "Server=.;Database=MojazDb;Trusted_Connection=True;TrustServerCertificate=True"
+ConnectionString: "Server=.;Database=DrivingLicenseIssuanceSystemDb;Trusted_Connection=True;TrustServerCertificate=True"
 ```
 ✅ Database connection working correctly
 
@@ -50,7 +50,7 @@ ConnectionString: "Server=.;Database=MojazDb;Trusted_Connection=True;TrustServer
 
 ## Conclusion
 
-The Mojaz API is running successfully on your local machine with:
+The DrivingLicenseIssuanceSystem API is running successfully on your local machine with:
 - Local SQL Server database connected
 - All core infrastructure working
 - Registration working

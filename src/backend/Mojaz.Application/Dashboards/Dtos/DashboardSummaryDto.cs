@@ -1,6 +1,6 @@
-using Mojaz.Application.Applications.Dtos;
+using DrivingLicenseIssuanceSystem.Application.Applications.Dtos;
 
-namespace Mojaz.Application.Dashboards.Dtos;
+namespace DrivingLicenseIssuanceSystem.Application.Dashboards.Dtos;
 
 public class DashboardSummaryDto
 {

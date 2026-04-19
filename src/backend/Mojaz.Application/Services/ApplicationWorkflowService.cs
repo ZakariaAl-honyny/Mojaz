@@ -1,17 +1,17 @@
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.DTOs.Email;
-using Mojaz.Application.DTOs.Email.Templates;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Email;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Email.Templates;
 using Hangfire;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Threading.Tasks;
 
-using ApplicationEntity = Mojaz.Domain.Entities.Application;
+using ApplicationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
 
-namespace Mojaz.Application.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Services;
 
 public class ApplicationWorkflowService : IApplicationWorkflowService
 {

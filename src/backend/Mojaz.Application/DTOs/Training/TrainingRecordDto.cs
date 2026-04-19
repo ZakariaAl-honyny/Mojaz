@@ -1,7 +1,7 @@
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 using System;
 
-namespace Mojaz.Application.DTOs.Training
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Training
 {
     public class TrainingRecordDto
     {

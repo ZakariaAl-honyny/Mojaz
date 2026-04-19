@@ -1,4 +1,4 @@
-namespace Mojaz.Application.DTOs.Email
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Email
 {
     public class EmailMessage
     {

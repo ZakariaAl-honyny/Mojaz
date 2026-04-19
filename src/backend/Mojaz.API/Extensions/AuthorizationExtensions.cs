@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
-using Mojaz.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
 
-namespace Mojaz.API.Extensions
+namespace DrivingLicenseIssuanceSystem.API.Extensions
 {
     public static class AuthorizationExtensions
     {

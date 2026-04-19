@@ -1,11 +1,11 @@
 skills:
 
-  mojaz-architecture-check:
-    name: "Mojaz Architecture Validator"
+  DrivingLicenseIssuanceSystem-architecture-check:
+    name: "DrivingLicenseIssuanceSystem Architecture Validator"
     trigger: "on_save"
     file_patterns: ["src/backend/**/*.cs"]
     instructions: |
-      Validate the saved file follows Mojaz architecture rules:
+      Validate the saved file follows DrivingLicenseIssuanceSystem architecture rules:
       
       CHECK 1: Layer Dependencies
       - Domain/ must NOT reference any other project
@@ -34,8 +34,8 @@ skills:
       
       Report violations as warnings in the IDE.
 
-  mojaz-rtl-check:
-    name: "Mojaz RTL Validator"
+  DrivingLicenseIssuanceSystem-rtl-check:
+    name: "DrivingLicenseIssuanceSystem RTL Validator"
     trigger: "on_save"
     file_patterns: ["src/frontend/**/*.tsx"]
     instructions: |
@@ -56,12 +56,12 @@ skills:
       
       Report violations as warnings.
 
-  mojaz-api-contract:
+  DrivingLicenseIssuanceSystem-api-contract:
     name: "API Contract Validator"
     trigger: "on_save"
-    file_patterns: ["src/backend/Mojaz.API/Controllers/**/*.cs"]
+    file_patterns: ["src/backend/DrivingLicenseIssuanceSystem.API/Controllers/**/*.cs"]
     instructions: |
-      Validate API controller follows Mojaz contract:
+      Validate API controller follows DrivingLicenseIssuanceSystem contract:
       
       1. All methods return ApiResponse<T> or ApiResponse<PagedResult<T>>
       2. All methods are async
@@ -71,7 +71,7 @@ skills:
       6. Swagger attributes present ([ProducesResponseType])
       7. CancellationToken parameter in async methods
 
-  mojaz-gate-validator:
+  DrivingLicenseIssuanceSystem-gate-validator:
     name: "Gate Validation Checker"
     trigger: "manual"
     instructions: |

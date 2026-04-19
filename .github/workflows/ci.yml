@@ -25,13 +25,13 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore dependencies
-        run: dotnet restore src/backend/Mojaz.sln
+        run: dotnet restore src/backend/DrivingLicenseIssuanceSystem.sln
 
       - name: Build solution
-        run: dotnet build src/backend/Mojaz.sln --configuration Release --no-restore
+        run: dotnet build src/backend/DrivingLicenseIssuanceSystem.sln --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test src/backend/Mojaz.sln --configuration Release --no-build --verbosity minimal
+        run: dotnet test src/backend/DrivingLicenseIssuanceSystem.sln --configuration Release --no-build --verbosity minimal
 
   build-frontend:
     name: Build Frontend

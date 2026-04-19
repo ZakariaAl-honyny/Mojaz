@@ -1,10 +1,10 @@
 using FluentValidation;
-using Mojaz.Application.DTOs.Application;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Domain.Entities;
-using Mojaz.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Application;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
-namespace Mojaz.Application.Validators;
+namespace DrivingLicenseIssuanceSystem.Application.Validators;
 
 public class CreateApplicationValidator : AbstractValidator<CreateApplicationRequest>
 {

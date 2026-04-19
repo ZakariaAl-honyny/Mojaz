@@ -1,4 +1,4 @@
-using Mojaz.Application.Interfaces.Security;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Security;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -8,21 +8,21 @@ using AutoMapper;
 using FluentAssertions;
 using Moq;
 using Microsoft.AspNetCore.Http;
-using Mojaz.Application.DTOs.Document;
-using Mojaz.Application.Interfaces.Infrastructure;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Document;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using Hangfire;
 using Xunit;
 
-using ApplicationEntity = Mojaz.Domain.Entities.Application;
-using IEmailService = Mojaz.Application.Interfaces.Services.IEmailService;
+using ApplicationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
+using IEmailService = DrivingLicenseIssuanceSystem.Application.Interfaces.Services.IEmailService;
 
-namespace Mojaz.Application.Tests;
+namespace DrivingLicenseIssuanceSystem.Application.Tests;
 
 public class DocumentServiceTests
 {

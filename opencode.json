@@ -32,7 +32,7 @@
         "npx",
         "-y",
         "@modelcontextprotocol/server-sqlserver",
-        "${SQLSERVER_CONNECTION_STRING}"
+        "Server=localhost;Database=DrivingLicenseIssuanceSystemDb;User Id=sa;Password=sa123456;TrustServerCertificate=True;MultipleActiveResultSets=true"
       ]
     }
   }

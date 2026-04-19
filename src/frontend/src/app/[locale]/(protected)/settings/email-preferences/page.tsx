@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { 
-  Mail, 
-  Bell, 
-  CreditCard, 
-  Calendar, 
-  FileText, 
+import {
+  Mail,
+  Bell,
+  CreditCard,
+  Calendar,
+  FileText,
   Check,
   AlertCircle
 } from 'lucide-react';
@@ -81,8 +81,8 @@ export default function EmailPreferencesPage() {
                 All email notifications will be sent to this address
               </p>
             </div>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => setShowEmailChange(!showEmailChange)}
             >
@@ -131,8 +131,8 @@ export default function EmailPreferencesPage() {
             <div>
               <p className="font-semibold text-neutral-900">{t('settings.emailNotifications')}</p>
               <p className="text-sm text-neutral-500">
-                {emailEnabled 
-                  ? 'You will receive email notifications' 
+                {emailEnabled
+                  ? 'You will receive email notifications'
                   : 'Email notifications are disabled'}
               </p>
             </div>
@@ -176,8 +176,8 @@ export default function EmailPreferencesPage() {
             {/* Payment Reminders */}
             <div className="flex items-center justify-between p-4 border border-neutral-100 rounded-xl hover:bg-neutral-50 transition-colors">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <CreditCard className="w-5 h-5 text-green-600" />
+                <div className="w-10 h-10 bg-King blue-100 rounded-lg flex items-center justify-center">
+                  <CreditCard className="w-5 h-5 text-King blue-600" />
                 </div>
                 <div>
                   <p className="font-semibold text-neutral-900">{t('settings.paymentReminders')}</p>

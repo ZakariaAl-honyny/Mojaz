@@ -1,7 +1,7 @@
 
 
 
-# Mojaz — Spec-Kit Sprint Execution Guide
+# DrivingLicenseIssuanceSystem — Spec-Kit Sprint Execution Guide
 
 ## Complete Sprint-by-Sprint Workflow Using Spec-Kit Commands
 
@@ -46,7 +46,7 @@ For EACH sprint/phase, you will follow this exact sequence:
 ## Project Directory Structure for Spec-Kit
 
 ```
-mojaz/
+DrivingLicenseIssuanceSystem/
 ├── .speckit/                          ← Spec-Kit config (auto-generated)
 │
 ├── features/                          ← All sprint features live here
@@ -134,14 +134,14 @@ specify init
 **Prompt to use with `/speckit.constitution`:**
 
 ```
-Create the constitution for the Mojaz (مُجاز) platform — a government digital
+Create the constitution for the DrivingLicenseIssuanceSystem (نظام إصدار رخص القيادة) platform — a government digital
 platform for managing driving license lifecycle.
 
 PROJECT IDENTITY:
-- Name: Mojaz (مُجاز) meaning "Licensed/Authorized" in Arabic
+- Name: DrivingLicenseIssuanceSystem (نظام إصدار رخص القيادة) meaning "Licensed/Authorized" in Arabic
 - Type: Full-Stack Web Application
 - Domain: Government / GovTech / Driving License Management
-- Primary Color: #006C35 (Royal Green)
+- Primary Color: #006C35 (Royal King blue)
 - Design System: Absher-Inspired, government official style
 
 TECH STACK:
@@ -155,7 +155,7 @@ Backend:
 
 Frontend:
 - Next.js 15 (App Router) + TypeScript 5
-- Tailwind CSS 4 + shadcn/ui (Mojaz-themed)
+- Tailwind CSS 4 + shadcn/ui (DrivingLicenseIssuanceSystem-themed)
 - React Query 5 (server state) + Zustand 5 (client state)
 - React Hook Form 7 + Zod 3 (forms/validation)
 - next-intl 3 (i18n) + next-themes (dark/light)
@@ -226,7 +226,7 @@ TESTING:
 - Minimum 80% coverage for business logic
 
 GIT:
-- Branches: feature/MOJAZ-XXX-description, bugfix/, hotfix/, release/
+- Branches: feature/DrivingLicenseIssuanceSystem-XXX-description, bugfix/, hotfix/, release/
 - Commits: feat(scope):, fix(scope):, docs():, test():, refactor():
 - PR required for main and develop branches
 ```
@@ -251,7 +251,7 @@ export SPECIFY_FEATURE=001-project-scaffold
 #### `/speckit.specify`
 
 ```
-Feature: Backend Solution Scaffold for Mojaz Platform
+Feature: Backend Solution Scaffold for DrivingLicenseIssuanceSystem Platform
 
 WHAT WE'RE BUILDING:
 A .NET 8 solution following Clean Architecture with 5 projects that serves as
@@ -260,7 +260,7 @@ the foundation for all backend development.
 REQUIREMENTS:
  
 1. Solution Structure:
-   - Mojaz.Domain: Entities, Enums, Value Objects, Domain Interfaces
+   - DrivingLicenseIssuanceSystem.Domain: Entities, Enums, Value Objects, Domain Interfaces
      - NO external NuGet packages (zero dependencies)
      - Base entity classes: BaseEntity (Id, CreatedAt, UpdatedAt),
        AuditableEntity (CreatedBy, UpdatedBy), SoftDeletableEntity (IsDeleted)
@@ -270,7 +270,7 @@ REQUIREMENTS:
        PaymentStatus, TestResult, MedicalFitnessResult,
        UserRole, RegistrationMethod
 
-   - Mojaz.Shared: Cross-cutting shared types
+   - DrivingLicenseIssuanceSystem.Shared: Cross-cutting shared types
      - ApiResponse<T> with Success, Message, Data, Errors, StatusCode
      - PagedResult<T> with Items, TotalCount, Page, PageSize,
        TotalPages, HasPreviousPage, HasNextPage
@@ -280,7 +280,7 @@ REQUIREMENTS:
      - Constants: Roles, Policies, CacheKeys
      - Extension methods
 
-   - Mojaz.Application: Business logic layer
+   - DrivingLicenseIssuanceSystem.Application: Business logic layer
      - References: Domain, Shared only
      - Services interfaces and implementations
      - DTOs (Request/Response/Dto suffix)
@@ -288,9 +288,9 @@ REQUIREMENTS:
      - AutoMapper profiles
      - Service registration extension method
 
-   - Mojaz.Infrastructure: External concerns
+   - DrivingLicenseIssuanceSystem.Infrastructure: External concerns
      - References: Domain, Shared, Application
-     - EF Core DbContext (MojazDbContext)
+     - EF Core DbContext (DrivingLicenseIssuanceSystemDbContext)
      - Repository<T> implementation
      - UnitOfWork implementation
      - External service implementations (Email, SMS, Push)
@@ -298,7 +298,7 @@ REQUIREMENTS:
      - Migrations
      - Infrastructure registration extension method
 
-   - Mojaz.API: Composition root
+   - DrivingLicenseIssuanceSystem.API: Composition root
      - References: All layers
      - Controllers (thin, delegate to services)
      - Middleware: GlobalExceptionHandler, RequestLogging, AuditLog
@@ -318,8 +318,8 @@ REQUIREMENTS:
    - API: JwtBearer, Swashbuckle, AspNetCoreRateLimit
 
 3. Test Projects (4):
-   - Mojaz.Domain.Tests, Mojaz.Application.Tests,
-     Mojaz.Infrastructure.Tests, Mojaz.API.Tests
+   - DrivingLicenseIssuanceSystem.Domain.Tests, DrivingLicenseIssuanceSystem.Application.Tests,
+     DrivingLicenseIssuanceSystem.Infrastructure.Tests, DrivingLicenseIssuanceSystem.API.Tests
    - Using: xUnit, Moq, FluentAssertions
 
 4. Global Exception Handler:
@@ -382,8 +382,8 @@ Clarify the following areas for the backend solution scaffold:
    Decision: Yes, HasQueryFilter(x => !x.IsDeleted) on all entities.
 
 4. What's the connection string format for Docker SQL Server?
-   Format: Server=localhost,1433;Database=MojazDB;User Id=sa;
-   Password=MojazDev@2025!;TrustServerCertificate=True
+   Format: Server=localhost,1433;Database=DrivingLicenseIssuanceSystemDB;User Id=sa;
+   Password=DrivingLicenseIssuanceSystemDev@2025!;TrustServerCertificate=True
 
 5. Should IRepository be generic or entity-specific?
    Decision: Generic IRepository<T> with option for entity-specific
@@ -446,7 +446,7 @@ export SPECIFY_FEATURE=002-frontend-foundation
 #### `/speckit.specify`
 
 ```
-Feature: Frontend Foundation for Mojaz Platform
+Feature: Frontend Foundation for DrivingLicenseIssuanceSystem Platform
 
 WHAT WE'RE BUILDING:
 A Next.js 15 application with App Router that serves as the foundation
@@ -461,12 +461,12 @@ REQUIREMENTS:
    - @/* import alias
 
 2. Tailwind CSS 4 + shadcn/ui:
-   - Custom Mojaz theme colors:
-     Primary: #006C35 (Royal Green) with full shade scale (50-900)
+   - Custom DrivingLicenseIssuanceSystem theme colors:
+     Primary: #006C35 (Royal King blue) with full shade scale (50-900)
      Secondary: #D4A017 (Government Gold) with full scale
      Status: success=#10B981, warning=#F59E0B, error=#EF4444, info=#3B82F6
      Neutral: standard gray scale
-   - shadcn/ui initialized with Mojaz theme
+   - shadcn/ui initialized with DrivingLicenseIssuanceSystem theme
    - Components installed: Button, Card, Input, Label, Select, Textarea,
      Checkbox, Dialog, Sheet, DropdownMenu, Table, Badge, Avatar,
      Toast/Sonner, Alert, Form, Calendar, Accordion, Progress,
@@ -564,7 +564,7 @@ ACCEPTANCE CRITERIA:
 - [ ] Language switches instantly between AR and EN
 - [ ] Layout direction flips correctly (sidebar, text alignment)
 - [ ] Dark/Light mode toggles correctly
-- [ ] All shadcn components render in Mojaz theme colors
+- [ ] All shadcn components render in DrivingLicenseIssuanceSystem theme colors
 - [ ] Public layout renders for unauthenticated pages
 - [ ] Applicant layout renders with sidebar and header
 - [ ] Employee layout renders with role-appropriate sidebar
@@ -595,13 +595,13 @@ export SPECIFY_FEATURE=003-database-foundation
 Feature: Database Foundation with 21 Tables and Seed Data
 
 WHAT WE'RE BUILDING:
-Complete database schema for the Mojaz platform with EF Core configurations,
+Complete database schema for the DrivingLicenseIssuanceSystem platform with EF Core configurations,
 migrations, indexes, constraints, and seed data.
 
 REQUIREMENTS:
 
 1. Entity Framework Core Configuration:
-   - MojazDbContext with all 21 DbSets
+   - DrivingLicenseIssuanceSystemDbContext with all 21 DbSets
    - Fluent API configurations (one file per entity in
      Infrastructure/Persistence/Configurations/)
    - Global query filter for soft delete on applicable entities
@@ -741,18 +741,18 @@ REQUIREMENTS:
 4. Seed Data:
    a) Default Admin User:
       - FullName: "مدير النظام" / "System Admin"
-      - Email: admin@mojaz.gov.sa
-      - Password: Admin@Mojaz2025 (BCrypt hashed)
+      - Email: admin@DrivingLicenseIssuanceSystem.gov.sa
+      - Password: Admin@DrivingLicenseIssuanceSystem2025 (BCrypt hashed)
       - Role: Admin
       - IsEmailVerified: true, IsActive: true
 
    b) Sample Users (one per role for testing):
       - Applicant: applicant@test.com / Test@1234
-      - Receptionist: receptionist@mojaz.gov.sa / Test@1234
-      - Doctor: doctor@mojaz.gov.sa / Test@1234
-      - Examiner: examiner@mojaz.gov.sa / Test@1234
-      - Manager: manager@mojaz.gov.sa / Test@1234
-      - Security: security@mojaz.gov.sa / Test@1234
+      - Receptionist: receptionist@DrivingLicenseIssuanceSystem.gov.sa / Test@1234
+      - Doctor: doctor@DrivingLicenseIssuanceSystem.gov.sa / Test@1234
+      - Examiner: examiner@DrivingLicenseIssuanceSystem.gov.sa / Test@1234
+      - Manager: manager@DrivingLicenseIssuanceSystem.gov.sa / Test@1234
+      - Security: security@DrivingLicenseIssuanceSystem.gov.sa / Test@1234
 
    c) 6 License Categories:
       - A: Motorcycle, دراجة نارية, MinAge=16
@@ -935,12 +935,12 @@ REQUIREMENTS:
    - Bilingual (Arabic section + English section)
    - Contains: Logo, greeting with name, OTP code (large font),
      expiry notice, "Do not share" warning, footer
-   - Subject AR: "مُجاز — رمز التحقق من حسابك"
-   - Subject EN: "Mojaz — Your Verification Code"
+   - Subject AR: "نظام إصدار رخص القيادة — رمز التحقق من حسابك"
+   - Subject EN: "DrivingLicenseIssuanceSystem — Your Verification Code"
 
 7. SMS Template:
    - Max 160 characters
-   - Bilingual: "Mojaz verification code: 123456 — Valid 5 min.
+   - Bilingual: "DrivingLicenseIssuanceSystem verification code: 123456 — Valid 5 min.
      رمز التحقق: 123456 — صالح 5 دقائق"
 
 ACCEPTANCE CRITERIA:
@@ -1147,8 +1147,8 @@ REQUIREMENTS:
    - Algorithm: HMAC-SHA256
    - Access token expiry: 60 minutes (from SystemSettings)
    - Claims: sub (UserId), email, phone, role, fullName, language, jti
-   - Issuer: "MojazAPI"
-   - Audience: "MojazClient"
+   - Issuer: "DrivingLicenseIssuanceSystemAPI"
+   - Audience: "DrivingLicenseIssuanceSystemClient"
    - Secret: from configuration (min 32 chars)
 
 3. Refresh Token Endpoint:
@@ -1253,7 +1253,7 @@ REQUIREMENTS:
 
 3. 10 HTML Email Templates:
    Each template must:
-   - Have professional government design (green header with logo)
+   - Have professional government design (King blue header with logo)
    - Support both Arabic and English (single template, dual sections)
    - Be responsive (mobile-friendly)
    - Include: header with logo, body content, footer with disclaimer
@@ -1272,9 +1272,9 @@ REQUIREMENTS:
    10. payment-confirmed: Amount, reference, fee type, receipt link
 
 4. Sender Configuration:
-   - From: no-reply@mojaz.gov.sa
-   - From Name AR: "منصة مُجاز"
-   - From Name EN: "Mojaz Platform"
+   - From: no-reply@DrivingLicenseIssuanceSystem.gov.sa
+   - From Name AR: "منصة نظام إصدار رخص القيادة"
+   - From Name EN: "DrivingLicenseIssuanceSystem Platform"
 
 ACCEPTANCE CRITERIA:
 - [ ] Email sent successfully via SendGrid API
@@ -1321,17 +1321,17 @@ REQUIREMENTS:
 
 3. 6 SMS Templates (bilingual, max 160 chars):
    01. registration-otp:
-       "Mojaz code: {code} - Valid {min} min. رمز مُجاز: {code} - صالح {min} د"
+       "DrivingLicenseIssuanceSystem code: {code} - Valid {min} min. رمز نظام إصدار رخص القيادة: {code} - صالح {min} د"
    02. recovery-otp:
-       "Mojaz reset: {code} - Valid {min} min. إعادة تعيين: {code} - صالح {min} د"
+       "DrivingLicenseIssuanceSystem reset: {code} - Valid {min} min. إعادة تعيين: {code} - صالح {min} د"
    03. appointment-confirmed:
-       "Mojaz: Appointment {date} {time}. مُجاز: موعدك {date} {time}"
+       "DrivingLicenseIssuanceSystem: Appointment {date} {time}. نظام إصدار رخص القيادة: موعدك {date} {time}"
    04. appointment-reminder:
-       "Mojaz: Reminder tomorrow {time}. مُجاز: تذكير غداً {time}"
+       "DrivingLicenseIssuanceSystem: Reminder tomorrow {time}. نظام إصدار رخص القيادة: تذكير غداً {time}"
    05. test-result:
-       "Mojaz: Your {type} result is ready. مُجاز: نتيجة {type} جاهزة"
+       "DrivingLicenseIssuanceSystem: Your {type} result is ready. نظام إصدار رخص القيادة: نتيجة {type} جاهزة"
    06. license-ready:
-       "Mojaz: License ready! Download now. مُجاز: رخصتك جاهزة! حمّلها الآن"
+       "DrivingLicenseIssuanceSystem: License ready! Download now. نظام إصدار رخص القيادة: رخصتك جاهزة! حمّلها الآن"
 
 ACCEPTANCE CRITERIA:
 - [ ] SMS sent successfully via Twilio API
@@ -1421,7 +1421,7 @@ ACCEPTANCE CRITERIA:
 - [ ] Push permission requested after login (not before)
 - [ ] Token registered in PushTokens table on approval
 - [ ] Push notification appears in browser
-- [ ] Notification appears even when not on Mojaz site
+- [ ] Notification appears even when not on DrivingLicenseIssuanceSystem site
 - [ ] Clicking notification navigates to correct page
 - [ ] Token cleaned up on logout
 - [ ] Invalid tokens removed on FCM error response
@@ -1830,7 +1830,7 @@ REQUIREMENTS:
 8. Progress Indicator:
    - Horizontal step bar at top
    - Step number + label for each step
-   - Completed steps: green checkmark
+   - Completed steps: King blue checkmark
    - Current step: primary color, active
    - Future steps: gray
    - Completion percentage text
@@ -1978,7 +1978,7 @@ REQUIREMENTS:
 1. Application Timeline (10 stages):
    - Vertical timeline component
    - Each stage shows: number, name (AR/EN), status icon, timestamp
-   - Completed: green checkmark + completion date
+   - Completed: King blue checkmark + completion date
    - Current: highlighted primary color + pulsing dot
    - Failed: red X + failure reason
    - Future: gray circle + grayed text
@@ -1989,12 +1989,12 @@ REQUIREMENTS:
    - Draft: gray
    - Submitted: blue
    - InReview: yellow
-   - Approved: green
+   - Approved: King blue
    - Rejected: red
    - Cancelled: gray (strikethrough)
    - Expired: orange
    - Pending: yellow
-   - Complete: green (with checkmark)
+   - Complete: King blue (with checkmark)
 
 3. Applicant Dashboard:
    - Welcome card: "مرحباً {name}" with user avatar

@@ -1,7 +1,7 @@
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 using System;
 
-namespace Mojaz.Application.DTOs.Theory
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Theory
 {
     public class TheoryTestDto
     {

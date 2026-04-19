@@ -54,7 +54,7 @@ export default function ApplicationReviewPage() {
               Return to Queue
            </Link>
            <div className="flex items-center gap-4">
-              <h1 className="text-5xl font-black text-neutral-900 tracking-tight leading-none uppercase">
+              <h1 className="text-4xl font-black text-neutral-900 tracking-tight leading-none uppercase">
                 {t("title")}
               </h1>
               <StatusBadge status={app.status} className="h-8 font-black uppercase tracking-widest" />

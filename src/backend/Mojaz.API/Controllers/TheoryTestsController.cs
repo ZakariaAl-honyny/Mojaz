@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mojaz.Application.DTOs.Theory;
-using Mojaz.Application.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Theory;
+using DrivingLicenseIssuanceSystem.Application.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Mojaz.API.Controllers
+namespace DrivingLicenseIssuanceSystem.API.Controllers
 {
     [ApiController]
     [Route("api/v1/theory-tests")]

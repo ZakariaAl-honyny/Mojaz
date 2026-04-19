@@ -47,7 +47,7 @@ export default function FinalApprovalPage() {
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">
               Stage 08 • Quality Assurance
             </span>
-            <h1 className="text-5xl font-black text-neutral-900 tracking-tighter leading-none uppercase mt-1">
+            <h1 className="text-4xl font-black text-neutral-900 tracking-tighter leading-none uppercase mt-1">
               {t("title")}
             </h1>
           </div>

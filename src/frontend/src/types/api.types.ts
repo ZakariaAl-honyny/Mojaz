@@ -19,7 +19,7 @@ export interface ApiResponse<T> {
   statusCode: number;
 }
 
-export interface PaginatedResult<T> {
+export interface PagedResult<T> {
   items: T[];
   totalCount: number;
   page: number;

@@ -1,23 +1,23 @@
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Interfaces.Repositories;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Repositories;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
 
-namespace Mojaz.Application.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Services;
 
 public class CategoryUpgradeService : ICategoryUpgradeService
 {
     private readonly ISystemSettingsService _settingsService;
     private readonly IFeeStructureRepository _feeRepository;
     private readonly ILicenseRepository _licenseRepository;
-    private readonly IRepository<Mojaz.Domain.Entities.LicenseCategory> _categoryRepository;
+    private readonly IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.LicenseCategory> _categoryRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public CategoryUpgradeService(
         ISystemSettingsService settingsService,
         IFeeStructureRepository feeRepository,
         ILicenseRepository licenseRepository,
-        IRepository<Mojaz.Domain.Entities.LicenseCategory> categoryRepository,
+        IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.LicenseCategory> categoryRepository,
         IUnitOfWork unitOfWork)
     {
         _settingsService = settingsService;

@@ -1,4 +1,4 @@
-namespace Mojaz.Domain.Enums;
+namespace DrivingLicenseIssuanceSystem.Domain.Enums;
 
 public enum NotificationEventType
 {
@@ -16,5 +16,9 @@ public enum NotificationEventType
     DocumentRejected,
     FinalApprovalApproved,
     FinalApprovalRejected,
-    FinalApprovalReturned
+    FinalApprovalReturned,
+    OtpSent,
+    OtpResent,
+    OtpVerified,
+    PasswordReset
 }

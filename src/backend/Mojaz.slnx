@@ -1,7 +1,7 @@
 <Solution>
-  <Project Path="Mojaz.API/Mojaz.API.csproj" />
-  <Project Path="Mojaz.Application/Mojaz.Application.csproj" />
-  <Project Path="Mojaz.Domain/Mojaz.Domain.csproj" />
-  <Project Path="Mojaz.Infrastructure/Mojaz.Infrastructure.csproj" />
-  <Project Path="Mojaz.Shared/Mojaz.Shared.csproj" />
+  <Project Path="DrivingLicenseIssuanceSystem.API/DrivingLicenseIssuanceSystem.API.csproj" />
+  <Project Path="DrivingLicenseIssuanceSystem.Application/DrivingLicenseIssuanceSystem.Application.csproj" />
+  <Project Path="DrivingLicenseIssuanceSystem.Domain/DrivingLicenseIssuanceSystem.Domain.csproj" />
+  <Project Path="DrivingLicenseIssuanceSystem.Infrastructure/DrivingLicenseIssuanceSystem.Infrastructure.csproj" />
+  <Project Path="DrivingLicenseIssuanceSystem.Shared/DrivingLicenseIssuanceSystem.Shared.csproj" />
 </Solution>

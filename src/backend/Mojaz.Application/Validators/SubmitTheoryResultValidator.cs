@@ -1,7 +1,7 @@
 using FluentValidation;
-using Mojaz.Application.DTOs.Theory;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Theory;
 
-namespace Mojaz.Application.Validators
+namespace DrivingLicenseIssuanceSystem.Application.Validators
 {
     public class SubmitTheoryResultValidator : AbstractValidator<SubmitTheoryResultRequest>
     {

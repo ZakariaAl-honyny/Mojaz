@@ -10,7 +10,7 @@ import {
   HardHat, 
   Tractor 
 } from "lucide-react";
-import { StaggeredFade, StaggeredItem } from "@/components/ui/StaggeredFade";
+import { StaggeredFade, StaggeredItem } from "@/components/ui/staggered-fade";
 
 export function CategoryCards() {
   const t = useTranslations("landing.categories");
@@ -42,7 +42,7 @@ export function CategoryCards() {
                   <div className="w-16 h-16 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center text-primary-500 group-hover:bg-primary-500 group-hover:text-white transition-all transform group-hover:rotate-6 shadow-sm">
                     <category.icon className="w-8 h-8" />
                   </div>
-                  <span className="text-5xl font-black text-neutral-200 dark:text-neutral-800 group-hover:text-primary-500/10 transition-colors">
+                  <span className="text-4xl font-black text-neutral-200 dark:text-neutral-800 group-hover:text-primary-500/10 transition-colors">
                     {category.code}
                   </span>
                 </div>

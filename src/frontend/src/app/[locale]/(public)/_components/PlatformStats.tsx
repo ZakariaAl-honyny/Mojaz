@@ -57,7 +57,7 @@ export function PlatformStats() {
                 <stat.icon className="w-8 h-8" />
               </div>
               <div className="space-y-1">
-                <div className="text-4xl md:text-5xl font-black text-neutral-900 dark:text-white tracking-tighter">
+                <div className="text-4xl md:text-4xl font-black text-neutral-900 dark:text-white tracking-tighter">
                   <Counter value={stat.value} suffix={stat.suffix} />
                 </div>
                 <div className="text-xs md:text-sm font-bold uppercase tracking-widest text-neutral-400 group-hover:text-secondary-500 transition-colors">

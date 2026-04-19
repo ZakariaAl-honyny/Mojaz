@@ -1,5 +1,5 @@
 import api from "@/lib/api-client";
-import { ApiResponse, PaginatedResult } from "@/types/api.types";
+import { ApiResponse, PagedResult } from "@/types/api.types";
 
 export interface PaymentInitiateRequest {
   feeType: number;
@@ -60,6 +60,8 @@ export const paymentService = {
    * Download payment receipt as PDF
    */
   downloadReceipt: async (paymentId: string) => {
+    if (typeof window === 'undefined') return;
+
     const response = await api.get(`/api/v1/payments/${paymentId}/receipt`, {
       responseType: "blob",
     });

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces.Security;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Security;
 
 public interface ISecurityAlertService
 {

@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { 
-  Bell, 
-  CreditCard, 
-  Calendar, 
-  FileText, 
-  Settings, 
+import { useTranslations, useLocale } from 'next-intl';
+import {
+  Bell,
+  CreditCard,
+  Calendar,
+  FileText,
+  Settings,
   Check,
   Trash2,
   Filter,
@@ -45,7 +45,7 @@ const getNotificationIcon = (type: NotificationType, className?: string) => {
 const getIconBgColor = (type: NotificationType) => {
   switch (type) {
     case 'payment':
-      return "bg-green-100 text-green-600";
+      return "bg-King blue-100 text-King blue-600";
     case 'appointment':
       return "bg-blue-100 text-blue-600";
     case 'status':
@@ -119,25 +119,53 @@ type FilterType = 'all' | 'unread' | 'payment' | 'appointment' | 'status' | 'sys
 
 export default function NotificationsPage() {
   const t = useTranslations('notification');
+  const locale = useLocale();
   const [filter, setFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   const { notifications, unreadCount, markAsRead, markAllAsRead, removeNotification } = useNotificationStore();
-  
+
   const displayNotifications = notifications.length > 0 ? notifications : mockNotifications;
   const actualUnreadCount = unreadCount > 0 ? unreadCount : displayNotifications.filter(n => !n.isRead).length;
 
+  const getUINotificationType = (n: any): NotificationType => {
+    if (n.type) return n.type;
+    // Map eventType to UI type
+    switch (n.eventType) {
+      case 'PaymentReceived':
+        return 'payment';
+      case 'MedicalExamScheduled':
+      case 'MedicalExamCompleted':
+      case 'TheoryTestScheduled':
+      case 'TheoryTestCompleted':
+      case 'PracticalTestScheduled':
+      case 'PracticalTestCompleted':
+      case 'AppointmentReminder':
+        return 'appointment';
+      case 'ApplicationStatusChanged':
+      case 'DocumentRequired':
+      case 'LicenseIssued':
+        return 'status';
+      default:
+        return 'system';
+    }
+  };
+
   const filteredNotifications = displayNotifications.filter(n => {
+    const uiType = getUINotificationType(n);
     // Apply type filter
     if (filter === 'unread' && n.isRead) return false;
-    if (filter !== 'all' && filter !== 'unread' && n.type !== filter) return false;
-    
+    if (filter !== 'all' && filter !== 'unread' && uiType !== filter) return false;
+
     // Apply search
     if (searchQuery) {
-      return n.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-             n.message.toLowerCase().includes(searchQuery.toLowerCase());
+      const title = (n as any).titleAr || (n as any).titleEn || (n as any).title || "";
+      const message = (n as any).messageAr || (n as any).messageEn || (n as any).message || "";
+
+      return title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        message.toLowerCase().includes(searchQuery.toLowerCase());
     }
-    
+
     return true;
   });
 
@@ -172,8 +200,8 @@ export default function NotificationsPage() {
           <p className="text-neutral-500 mt-1">{t('subtitle')}</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             onClick={() => markAllAsRead()}
             disabled={actualUnreadCount === 0}
@@ -181,8 +209,8 @@ export default function NotificationsPage() {
             <Check className="w-4 h-4 me-2" />
             {t('markAllRead')}
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             className="text-error hover:bg-error/10"
           >
@@ -206,7 +234,7 @@ export default function NotificationsPage() {
                 className="ps-10"
               />
             </div>
-            
+
             {/* Filter Tabs */}
             <div className="flex items-center gap-2 flex-wrap">
               <Button
@@ -268,22 +296,22 @@ export default function NotificationsPage() {
           </Card>
         ) : (
           filteredNotifications.map((notification) => (
-            <Card 
+            <Card
               key={notification.id}
               className={cn(
                 "transition-all hover:shadow-md cursor-pointer",
                 !notification.isRead && "border-primary-200 bg-primary-50/30"
               )}
-              onClick={() => markAsRead(notification.id)}
+              onClick={() => markAsRead(String(notification.id))}
             >
               <CardContent className="p-4 sm:p-5">
                 <div className="flex items-start gap-4">
                   {/* Icon */}
                   <div className={cn(
                     "w-12 h-12 rounded-xl flex items-center justify-center shrink-0",
-                    getIconBgColor(notification.type)
+                    getIconBgColor(getUINotificationType(notification))
                   )}>
-                    {getNotificationIcon(notification.type)}
+                    {getNotificationIcon(getUINotificationType(notification))}
                   </div>
 
                   {/* Content */}
@@ -294,22 +322,22 @@ export default function NotificationsPage() {
                         !notification.isRead && "text-neutral-900",
                         notification.isRead && "text-neutral-500"
                       )}>
-                        {notification.title}
+                        {locale === 'ar' ? ((notification as any).titleAr || (notification as any).title) : ((notification as any).titleEn || (notification as any).title)}
                       </h3>
-                      <Badge 
-                        variant={notification.type === 'payment' ? 'default' : 
-                                notification.type === 'appointment' ? 'secondary' : 
-                                'outline'}
+                      <Badge
+                        variant={getUINotificationType(notification) === 'payment' ? 'default' :
+                          getUINotificationType(notification) === 'appointment' ? 'secondary' :
+                            'outline'}
                         className="text-xs"
                       >
-                        {t(`types.${notification.type}`)}
+                        {t(`types.${getUINotificationType(notification)}`)}
                       </Badge>
                     </div>
                     <p className={cn(
                       "text-sm mt-2",
                       notification.isRead ? "text-neutral-400" : "text-neutral-600"
                     )}>
-                      {notification.message}
+                      {locale === 'ar' ? ((notification as any).messageAr || (notification as any).message) : ((notification as any).messageEn || (notification as any).message)}
                     </p>
                     <p className="text-xs text-neutral-300 mt-3 flex items-center gap-2">
                       <span>{formatTime(notification.createdAt)}</span>
@@ -326,11 +354,11 @@ export default function NotificationsPage() {
                     )}
                     <Button
                       variant="ghost"
-                      size="icon-xs"
+                      size="icon-sm"
                       className="text-neutral-400 hover:text-error"
                       onClick={(e) => {
                         e.stopPropagation();
-                        removeNotification(notification.id);
+                        removeNotification(String(notification.id));
                       }}
                     >
                       <Trash2 className="w-4 h-4" />

@@ -1,10 +1,10 @@
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
-using Mojaz.Infrastructure.Jobs;
+using DrivingLicenseIssuanceSystem.Infrastructure.Jobs;
 using Serilog;
 using WebApplication = Microsoft.AspNetCore.Builder.WebApplication;
 
-namespace Mojaz.API.Extensions;
+namespace DrivingLicenseIssuanceSystem.API.Extensions;
 
 /// <summary>
 /// Hangfire job registration extensions.

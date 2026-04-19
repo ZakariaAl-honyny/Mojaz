@@ -4,9 +4,10 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CreditCard } from "lucide-react";
-import { PaymentSimModal } from "./PaymentSimModal";
+import { CreditCard, Landmark, ShieldCheck } from "lucide-react";
+import { PaymentGatewaySimulator } from "../application/PaymentGatewaySimulator";
 import { PaymentHistoryList } from "./PaymentHistoryList";
+import { AnimatePresence } from "framer-motion";
 
 interface PaymentSectionProps {
   applicationId: string;
@@ -33,49 +34,48 @@ export function PaymentSection({
   };
 
   return (
-    <div className="space-y-6">
-      <Card className="shadow-sm border-neutral-200">
-        <CardHeader className="pb-3 border-b border-neutral-100">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <CreditCard className="w-5 h-5 text-neutral-500" />
+    <div className="space-y-10">
+      <Card className="border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] bg-white/5 backdrop-blur-3xl rounded-[2.5rem] overflow-hidden group">
+        <CardHeader className="p-8 pb-4">
+          <CardTitle className="text-xl font-black flex items-center gap-4 text-white uppercase tracking-tight">
+            <Landmark className="w-6 h-6 text-primary-500" />
             {t("paymentsTitle")}
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-4 flex flex-col gap-3">
+        <CardContent className="p-8 pt-4 space-y-6">
+          <div className="p-6 bg-white/5 rounded-3xl border border-white/5 flex flex-col items-center text-center gap-2">
+             <p className="text-[10px] font-black text-primary-400 uppercase tracking-[0.2em] mb-1">Outstanding Balance</p>
+             <p className="text-4xl font-black text-white">{amount} <span className="text-lg text-neutral-500 ml-1">SAR</span></p>
+          </div>
+
           <Button 
-            className="w-full bg-secondary-500 hover:bg-secondary-600 text-white border-0 shadow py-6"
+            className="w-full h-16 rounded-[1.2rem] bg-primary-600 hover:bg-primary-500 text-white font-black uppercase tracking-widest text-xs shadow-lg shadow-primary-900/40 transition-all active:scale-95"
             onClick={() => {
               setSimulateFailure(false);
               setIsModalOpen(true);
             }}
           >
-            {t("payButton")} ({amount} SAR)
+            Authorize Payment
           </Button>
 
-          {/* Hidden button for developers/testing to simulate failure */}
-          <button 
-            className="text-[10px] text-neutral-300 hover:text-neutral-400 self-center"
-            onClick={() => {
-              setSimulateFailure(true);
-              setIsModalOpen(true);
-            }}
-          >
-            Simulate Failure
-          </button>
+          <div className="flex items-center justify-center gap-2 pt-2 grayscale opacity-40">
+             <ShieldCheck className="w-4 h-4" />
+             <span className="text-[8px] font-black uppercase tracking-widest text-white">Sovereign Encryption Active</span>
+          </div>
         </CardContent>
       </Card>
 
       <PaymentHistoryList applicationId={applicationId} />
 
-      <PaymentSimModal
-        isOpen={isModalOpen}
-        onClose={handlePaymentSuccess}
-        applicationId={applicationId}
-        feeType={0} // Default to ApplicationFee for now
-        licenseCategoryId={licenseCategoryId}
-        amount={amount}
-        shouldSimulateFailure={simulateFailure}
-      />
+      <AnimatePresence>
+        {isModalOpen && (
+          <PaymentGatewaySimulator 
+            amount={amount}
+            onSuccess={() => handlePaymentSuccess(true)}
+            onCancel={() => setIsModalOpen(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

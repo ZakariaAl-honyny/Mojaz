@@ -1,14 +1,14 @@
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
 /// <summary>
-/// Unified notification service interface for Mojaz platform.
+/// Unified notification service interface for DrivingLicenseIssuanceSystem platform.
 /// </summary>
 public interface INotificationService
 {

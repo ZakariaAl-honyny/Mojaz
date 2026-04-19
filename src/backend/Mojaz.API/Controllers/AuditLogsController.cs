@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mojaz.Application.DTOs.Audit;
-using Mojaz.Application.Services;
-using Mojaz.Shared.Constants;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Audit;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Shared;
 
-namespace Mojaz.API.Controllers;
+namespace DrivingLicenseIssuanceSystem.API.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]

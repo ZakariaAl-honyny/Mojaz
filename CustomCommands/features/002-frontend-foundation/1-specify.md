@@ -1,4 +1,4 @@
-# Feature 002: Frontend Foundation for Mojaz Platform
+# Feature 002: Frontend Foundation for DrivingLicenseIssuanceSystem Platform
 
 > **Status:** To be generated via `/speckit.clarify`
 
@@ -13,12 +13,12 @@ A Next.js 15 application with App Router that serves as the foundation for all f
 - @/* import alias
 
 ### 2. Tailwind CSS 4 + shadcn/ui:
-- Custom Mojaz theme colors:
-  - Primary: #006C35 (Royal Green) with full shade scale (50-900)
+- Custom DrivingLicenseIssuanceSystem theme colors:
+  - Primary: #006C35 (Royal King blue) with full shade scale (50-900)
   - Secondary: #D4A017 (Government Gold) with full scale
   - Status: success=#10B981, warning=#F59E0B, error=#EF4444, info=#3B82F6
   - Neutral: standard gray scale
-- shadcn/ui initialized with Mojaz theme
+- shadcn/ui initialized with DrivingLicenseIssuanceSystem theme
 - Components installed: Button, Card, Input, Label, Select, Textarea, Checkbox, Dialog, Sheet, DropdownMenu, Table, Badge, Avatar, Toast/Sonner, Alert, Form, Calendar, Accordion, Progress, Skeleton, Breadcrumb, Pagination, NavigationMenu, Sidebar, Tabs, RadioGroup, Switch, Popover, Tooltip, ScrollArea, Separator, Command, AlertDialog, DatePicker
 
 ### 3. Internationalization (next-intl 3):
@@ -75,7 +75,7 @@ A Next.js 15 application with App Router that serves as the foundation for all f
 - [ ] Language switches instantly between AR and EN
 - [ ] Layout direction flips correctly (sidebar, text alignment)
 - [ ] Dark/Light mode toggles correctly
-- [ ] All shadcn components render in Mojaz theme colors
+- [ ] All shadcn components render in DrivingLicenseIssuanceSystem theme colors
 - [ ] Public layout renders for unauthenticated pages
 - [ ] Applicant/Employee/Admin layouts render correctly
 - [ ] API client configured with interceptors

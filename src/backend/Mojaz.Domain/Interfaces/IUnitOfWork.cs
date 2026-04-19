@@ -1,9 +1,9 @@
-using Mojaz.Domain.Common;
+using DrivingLicenseIssuanceSystem.Domain.Common;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mojaz.Domain.Interfaces;
+namespace DrivingLicenseIssuanceSystem.Domain.Interfaces;
 
 public interface IUnitOfWork : IDisposable
 {

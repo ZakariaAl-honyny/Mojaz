@@ -1,16 +1,16 @@
 using FirebaseAdmin.Messaging;
 using Microsoft.EntityFrameworkCore;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 
-namespace Mojaz.Infrastructure.Services;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Services;
 
 /// <summary>
 /// Implementation of push notification service using Firebase FCM.
@@ -20,9 +20,9 @@ public class FirebasePushService : IPushNotificationService
 {
     private readonly IRepository<PushToken> _pushTokenRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly MojazDbContext _context;
+    private readonly DrivingLicenseIssuanceSystemDbContext _context;
 
-    public FirebasePushService(IRepository<PushToken> pushTokenRepository, IUnitOfWork unitOfWork, MojazDbContext context)
+    public FirebasePushService(IRepository<PushToken> pushTokenRepository, IUnitOfWork unitOfWork, DrivingLicenseIssuanceSystemDbContext context)
     {
         _pushTokenRepository = pushTokenRepository;
         _unitOfWork = unitOfWork;

@@ -3,7 +3,7 @@
 > **Status:** To be generated via `/speckit.clarify`
 
 ## WHAT WE'RE BUILDING:
-The complete SQL Server database schema for the Mojaz platform with all 21 tables, relationships, constraints, indexes, and seed data for development and testing.
+The complete SQL Server database schema for the DrivingLicenseIssuanceSystem platform with all 21 tables, relationships, constraints, indexes, and seed data for development and testing.
 
 ## DATABASE OVERVIEW:
 - **Engine:** SQL Server 2022 (via Docker)

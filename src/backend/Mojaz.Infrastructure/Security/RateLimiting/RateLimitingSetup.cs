@@ -2,15 +2,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.DependencyInjection;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
 using System.Threading.RateLimiting;
 
-namespace Mojaz.Infrastructure.Security.RateLimiting;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Security.RateLimiting;
 
 public static class RateLimitingSetup
 {
-    public static IServiceCollection AddMojazRateLimiting(this IServiceCollection services)
+    public static IServiceCollection AddDrivingLicenseIssuanceSystemRateLimiting(this IServiceCollection services)
     {
         services.AddRateLimiter(options =>
         {

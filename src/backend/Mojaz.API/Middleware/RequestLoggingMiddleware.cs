@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Builder;
 using System.Diagnostics;
 
-namespace Mojaz.API.Middleware;
+namespace DrivingLicenseIssuanceSystem.API.Middleware;
 
 public class RequestLoggingMiddleware
 {
@@ -44,7 +44,7 @@ public class RequestLoggingMiddleware
 
 public static class RequestLoggingExtensions
 {
-    public static IApplicationBuilder UseMojazRequestLogging(this IApplicationBuilder app)
+    public static IApplicationBuilder UseDrivingLicenseIssuanceSystemRequestLogging(this IApplicationBuilder app)
     {
         return app.UseMiddleware<RequestLoggingMiddleware>();
     }

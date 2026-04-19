@@ -1,7 +1,7 @@
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mojaz.Application.DTOs.User;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.User;
 
 public class CreateUserRequest
 {

@@ -54,6 +54,11 @@ export default function Step1ServiceSelection() {
       return;
     }
 
+    if (data.serviceType === ServiceType.Renewal) {
+      router.push('/applications/renewal');
+      return;
+    }
+
     goTo(2);
   };
 

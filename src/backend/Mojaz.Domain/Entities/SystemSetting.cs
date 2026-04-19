@@ -1,6 +1,6 @@
-using Mojaz.Domain.Common;
+using DrivingLicenseIssuanceSystem.Domain.Common;
 
-namespace Mojaz.Domain.Entities;
+namespace DrivingLicenseIssuanceSystem.Domain.Entities;
 
 public class SystemSetting : AuditableEntity
 {

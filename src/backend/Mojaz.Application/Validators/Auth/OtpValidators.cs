@@ -1,7 +1,7 @@
 using FluentValidation;
-using Mojaz.Application.DTOs.Auth;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Auth;
 
-namespace Mojaz.Application.Validators.Auth;
+namespace DrivingLicenseIssuanceSystem.Application.Validators.Auth;
 
 public class VerifyOtpRequestValidator : AbstractValidator<VerifyOtpRequest>
 {

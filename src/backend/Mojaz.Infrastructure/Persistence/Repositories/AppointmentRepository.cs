@@ -1,7 +1,7 @@
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,11 +10,11 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Persistence.Repositories;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Repositories;
 
 public class AppointmentRepository : Repository<Appointment>, IAppointmentRepository
 {
-    public AppointmentRepository(MojazDbContext context) : base(context)
+    public AppointmentRepository(DrivingLicenseIssuanceSystemDbContext context) : base(context)
     {
     }
 

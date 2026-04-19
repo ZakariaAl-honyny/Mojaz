@@ -1,8 +1,8 @@
 using FluentValidation;
-using Mojaz.Application.DTOs.Application;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Application;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Application.Validators.Application;
+namespace DrivingLicenseIssuanceSystem.Application.Validators.Application;
 
 public class FinalizeApplicationRequestValidator : AbstractValidator<FinalizeApplicationRequest>
 {

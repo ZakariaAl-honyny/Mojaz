@@ -1,4 +1,4 @@
-namespace Mojaz.Application.DTOs.Theory
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Theory
 {
     public class SubmitTheoryResultRequest
     {

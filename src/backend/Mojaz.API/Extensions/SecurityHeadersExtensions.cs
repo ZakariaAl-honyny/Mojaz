@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Builder;
-using Mojaz.Infrastructure.Security.Middleware;
+using DrivingLicenseIssuanceSystem.Infrastructure.Security.Middleware;
 
-namespace Mojaz.API.Extensions;
+namespace DrivingLicenseIssuanceSystem.API.Extensions;
 
 public static class SecurityHeadersExtensions
 {
-    public static IApplicationBuilder UseMojazSecurityHeaders(this IApplicationBuilder app)
+    public static IApplicationBuilder UseDrivingLicenseIssuanceSystemSecurityHeaders(this IApplicationBuilder app)
     {
         return app.UseMiddleware<SecurityHeadersMiddleware>();
     }

@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mojaz.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Push;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 using System.Security.Claims;
 
-namespace Mojaz.API.Controllers
+namespace DrivingLicenseIssuanceSystem.API.Controllers
 {
     /// <summary>
     /// Endpoints for push notification token registration and management.
@@ -57,21 +58,5 @@ namespace Mojaz.API.Controllers
             await _pushNotificationService.RegisterTokenAsync(userId, token, ""); // Mark as revoked in service
             return Ok(new { Success = true });
         }
-    }
-
-    /// <summary>
-    /// Request payload for registering a push notification token.
-    /// </summary>
-    public class RegisterPushTokenRequest
-    {
-        /// <summary>
-        /// The FCM device token to register.
-        /// </summary>
-        public string Token { get; set; } = string.Empty;
-
-        /// <summary>
-        /// The device type (e.g., "web", "android", "ios").
-        /// </summary>
-        public string DeviceType { get; set; } = string.Empty;
     }
 }

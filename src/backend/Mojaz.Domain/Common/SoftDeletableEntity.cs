@@ -1,6 +1,6 @@
 using System;
 
-namespace Mojaz.Domain.Common;
+namespace DrivingLicenseIssuanceSystem.Domain.Common;
 
 public abstract class SoftDeletableEntity : AuditableEntity
 {

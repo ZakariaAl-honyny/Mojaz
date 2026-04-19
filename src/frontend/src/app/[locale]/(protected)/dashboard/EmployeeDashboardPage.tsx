@@ -18,7 +18,7 @@ export default function EmployeeDashboardPage({ data }: EmployeeDashboardPagePro
   const isManager = user?.role === 'Manager' || user?.role === 'Admin';
 
   return (
-    <DashboardSurface className="pt-10 pb-20">
+    <div className="pt-6 pb-20">
       <div className="max-w-7xl mx-auto space-y-16 px-4">
         {isManager && data && (
           <section className="animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -30,6 +30,6 @@ export default function EmployeeDashboardPage({ data }: EmployeeDashboardPagePro
           <EmployeeApplicationQueue />
         </section>
       </div>
-    </DashboardSurface>
+    </div>
   );
 }

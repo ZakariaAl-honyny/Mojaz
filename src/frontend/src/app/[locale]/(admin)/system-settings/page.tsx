@@ -6,13 +6,14 @@ import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useTranslations } from 'next-intl';
 
 export default function SettingsPage() {
+  const t = useTranslations('admin');
   const [settings, setSettings] = useState<SystemSettingDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
-  const [locale, setLocale] = useState<'ar' | 'en'>('ar');
 
   useEffect(() => {
     loadSettings();
@@ -50,21 +51,6 @@ export default function SettingsPage() {
     setEditValue('');
   };
 
-  const t = (key: string) => {
-    const translations: Record<string, string> = {
-      'settings.title': locale === 'ar' ? 'إعدادات النظام' : 'System Settings',
-      'settings.key': locale === 'ar' ? 'المفتاح' : 'Key',
-      'settings.value': locale === 'ar' ? 'القيمة' : 'Value',
-      'settings.description': locale === 'ar' ? 'الوصف' : 'Description',
-      'settings.actions': locale === 'ar' ? 'الإجراءات' : 'Actions',
-      'settings.save': locale === 'ar' ? 'حفظ' : 'Save',
-      'settings.cancel': locale === 'ar' ? 'إلغاء' : 'Cancel',
-      'settings.edit': locale === 'ar' ? 'تعديل' : 'Edit',
-      'settings.noSettings': locale === 'ar' ? 'لا توجد إعدادات' : 'No settings found',
-    };
-    return translations[key] || key;
-  };
-
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -73,7 +59,7 @@ export default function SettingsPage() {
         <Card>
           <CardContent className="pt-6">
             {loading ? (
-              <div className="text-center py-8 text-gray-500">Loading...</div>
+              <div className="text-center py-8 text-gray-500">{t('common.loading')}</div>
             ) : settings.length === 0 ? (
               <div className="text-center py-8 text-gray-500">{t('settings.noSettings')}</div>
             ) : (

@@ -1,7 +1,7 @@
-# Quick Test Reference for Mojaz API
+# Quick Test Reference for DrivingLicenseIssuanceSystem API
 
 ## Start API
-cd C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\backend\Mojaz.API
+cd C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\backend\DrivingLicenseIssuanceSystem.API
 dotnet run
 
 ## Access Points
@@ -13,7 +13,7 @@ Invoke-RestMethod -Uri "http://localhost:5013/api/v1/health" -Method Get
 Invoke-RestMethod -Uri "http://localhost:5013/api/v1/testing/ping" -Method Get
 
 ## Database Query
-$conn = New-Object System.Data.SqlClient.SqlConnection("Server=.;Database=MojazDb;Trusted_Connection=True;TrustServerCertificate=True")
+$conn = New-Object System.Data.SqlClient.SqlConnection("Server=.;Database=DrivingLicenseIssuanceSystemDb;Trusted_Connection=True;TrustServerCertificate=True")
 $conn.Open()
 $cmd = $conn.CreateCommand()
 $cmd.CommandText = "SELECT COUNT(*) FROM Users"

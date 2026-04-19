@@ -1,11 +1,11 @@
-# README.md for Mojaz GitHub Repository
+# README.md for DrivingLicenseIssuanceSystem GitHub Repository
 
 ```markdown
 <div align="center">
 
-<img src="docs/assets/mojaz-logo.png" alt="Mojaz Logo" width="120" height="120" />
+<img src="docs/assets/DrivingLicenseIssuanceSystem-logo.png" alt="DrivingLicenseIssuanceSystem Logo" width="120" height="120" />
 
-# مُجاز — Mojaz Platform
+# نظام إصدار رخص القيادة — DrivingLicenseIssuanceSystem Platform
 
 ### Government Driving License Management System
 ### منصة إدارة رخص القيادة الحكومية
@@ -24,7 +24,7 @@
 
 ![Version](https://img.shields.io/badge/version-1.0.0--mvp-006C35?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-006C35?style=flat-square)
-![Build](https://img.shields.io/github/actions/workflow/status/your-org/mojaz/ci.yml?style=flat-square&color=006C35)
+![Build](https://img.shields.io/github/actions/workflow/status/your-org/DrivingLicenseIssuanceSystem/ci.yml?style=flat-square&color=006C35)
 ![Tests](https://img.shields.io/badge/tests-500%2B-006C35?style=flat-square)
 ![Coverage](https://img.shields.io/badge/coverage-80%25%2B-006C35?style=flat-square)
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=flat-square&logo=dotnet)
@@ -34,7 +34,7 @@
 
 <br/>
 
-> **مُجاز** (*Mojaz*) — Arabic for *"Licensed"* / *"Authorized"*
+> **نظام إصدار رخص القيادة** (*DrivingLicenseIssuanceSystem*) — Arabic for *"Licensed"* / *"Authorized"*
 >
 > A comprehensive government digital platform for managing the complete
 > driving license lifecycle — from application to issuance — fully online.
@@ -78,11 +78,11 @@
 
 ## 🌟 Overview
 
-Mojaz is a **production-grade government digital platform** that digitizes and automates the complete driving license lifecycle in Saudi Arabia. Inspired by the Absher Design System, it provides a modern, official government experience with full **Arabic RTL** and **English LTR** support.
+DrivingLicenseIssuanceSystem is a **production-grade government digital platform** that digitizes and automates the complete driving license lifecycle in Saudi Arabia. Inspired by the Absher Design System, it provides a modern, official government experience with full **Arabic RTL** and **English LTR** support.
 
-### What Mojaz Solves
+### What DrivingLicenseIssuanceSystem Solves
 
-| Current Problem | Mojaz Solution |
+| Current Problem | DrivingLicenseIssuanceSystem Solution |
 |----------------|----------------|
 | Manual paper-based applications | Fully digital online process |
 | Multiple in-person visits required | Single visit for tests only |
@@ -236,17 +236,17 @@ Official  ·  Accessible  ·  Bilingual  ·  Secure  ·  Modern
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                         Mojaz.API                           │
+│                         DrivingLicenseIssuanceSystem.API                           │
 │              Controllers · Middleware · Program.cs           │
 ├─────────────────────────────────────────────────────────────┤
-│                    Mojaz.Infrastructure                      │
+│                    DrivingLicenseIssuanceSystem.Infrastructure                      │
 │        EF Core · Repositories · External Services           │
 │         SendGrid · Twilio · Firebase · Hangfire              │
 ├─────────────────────────────────────────────────────────────┤
-│                    Mojaz.Application                         │
+│                    DrivingLicenseIssuanceSystem.Application                         │
 │          Services · DTOs · Validators · AutoMapper           │
 ├───────────────────────┬─────────────────────────────────────┤
-│      Mojaz.Domain     │         Mojaz.Shared                │
+│      DrivingLicenseIssuanceSystem.Domain     │         DrivingLicenseIssuanceSystem.Shared                │
 │  Entities · Enums     │   ApiResponse<T> · PagedResult<T>   │
 │  Domain Interfaces    │   Exceptions · Constants            │
 └───────────────────────┴─────────────────────────────────────┘
@@ -300,7 +300,7 @@ Event Occurs (e.g., Test Result Recorded)
 ## 📁 Project Structure
 
 ```
-mojaz/
+DrivingLicenseIssuanceSystem/
 ├── 📄 AGENTS.md                    ← AI coding agent rules
 ├── 📄 README.md                    ← This file
 ├── 📄 docker-compose.yml           ← Development environment
@@ -309,29 +309,29 @@ mojaz/
 │
 ├── 📁 src/
 │   ├── 📁 backend/                 ← ASP.NET Core 8
-│   │   ├── Mojaz.sln
-│   │   ├── Mojaz.Domain/
+│   │   ├── DrivingLicenseIssuanceSystem.sln
+│   │   ├── DrivingLicenseIssuanceSystem.Domain/
 │   │   │   ├── Entities/           ← 21 entity classes
 │   │   │   ├── Enums/
 │   │   │   └── Interfaces/
-│   │   ├── Mojaz.Shared/
+│   │   ├── DrivingLicenseIssuanceSystem.Shared/
 │   │   │   ├── ApiResponse.cs
 │   │   │   ├── PagedResult.cs
 │   │   │   └── Exceptions/
-│   │   ├── Mojaz.Application/
+│   │   ├── DrivingLicenseIssuanceSystem.Application/
 │   │   │   ├── Services/
 │   │   │   ├── DTOs/
 │   │   │   ├── Validators/
 │   │   │   └── Profiles/           ← AutoMapper profiles
-│   │   ├── Mojaz.Infrastructure/
+│   │   ├── DrivingLicenseIssuanceSystem.Infrastructure/
 │   │   │   ├── Persistence/
-│   │   │   │   ├── MojazDbContext.cs
+│   │   │   │   ├── DrivingLicenseIssuanceSystemDbContext.cs
 │   │   │   │   ├── Configurations/ ← EF Fluent API configs
 │   │   │   │   ├── Migrations/
 │   │   │   │   └── Seed/
 │   │   │   ├── Repositories/
 │   │   │   └── Services/           ← Email, SMS, Push
-│   │   └── Mojaz.API/
+│   │   └── DrivingLicenseIssuanceSystem.API/
 │   │       ├── Controllers/
 │   │       ├── Middleware/
 │   │       └── Program.cs
@@ -352,11 +352,11 @@ mojaz/
 │           └── types/
 │
 ├── 📁 tests/
-│   ├── Mojaz.Domain.Tests/
-│   ├── Mojaz.Application.Tests/
-│   ├── Mojaz.Infrastructure.Tests/
-│   ├── Mojaz.API.Tests/
-│   └── Mojaz.E2E.Tests/            ← Playwright E2E tests
+│   ├── DrivingLicenseIssuanceSystem.Domain.Tests/
+│   ├── DrivingLicenseIssuanceSystem.Application.Tests/
+│   ├── DrivingLicenseIssuanceSystem.Infrastructure.Tests/
+│   ├── DrivingLicenseIssuanceSystem.API.Tests/
+│   └── DrivingLicenseIssuanceSystem.E2E.Tests/            ← Playwright E2E tests
 │
 ├── 📁 specs/                       ← Spec-Kit specifications
 │   ├── spec.config.yml
@@ -409,8 +409,8 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/mojaz.git
-cd mojaz
+git clone https://github.com/your-org/DrivingLicenseIssuanceSystem.git
+cd DrivingLicenseIssuanceSystem
 ```
 
 ### 2. Configure Environment Variables
@@ -442,15 +442,15 @@ docker-compose logs -f sqlserver
 cd src/backend
 
 # Restore NuGet packages
-dotnet restore Mojaz.sln
+dotnet restore DrivingLicenseIssuanceSystem.sln
 
 # Run database migrations and seed data
 dotnet ef database update \
-  --project Mojaz.Infrastructure \
-  --startup-project Mojaz.API
+  --project DrivingLicenseIssuanceSystem.Infrastructure \
+  --startup-project DrivingLicenseIssuanceSystem.API
 
 # Start the API
-cd Mojaz.API
+cd DrivingLicenseIssuanceSystem.API
 dotnet run
 # API available at: https://localhost:7127
 # Swagger UI at:    https://localhost:7127/swagger
@@ -475,13 +475,13 @@ npm run dev
 |--------|-----|---------------------|
 | **Landing Page** | http://localhost:3000 | — |
 | **Applicant Portal** | http://localhost:3000/ar/dashboard | applicant@test.com / Test@1234 |
-| **Employee Portal** | http://localhost:3000/ar/employee | receptionist@mojaz.gov.sa / Test@1234 |
-| **Admin Portal** | http://localhost:3000/ar/admin | admin@mojaz.gov.sa / Admin@Mojaz2025 |
+| **Employee Portal** | http://localhost:3000/ar/employee | receptionist@DrivingLicenseIssuanceSystem.gov.sa / Test@1234 |
+| **Admin Portal** | http://localhost:3000/ar/admin | admin@DrivingLicenseIssuanceSystem.gov.sa / Admin@DrivingLicenseIssuanceSystem2025 |
 | **API Base** | https://localhost:7127/api/v1 | — |
 | **Swagger UI** | https://localhost:7127/swagger | — |
 | **Hangfire Dashboard** | https://localhost:7127/hangfire | Admin credentials |
 
-> 🎉 **You're ready!** Navigate to the landing page and explore Mojaz.
+> 🎉 **You're ready!** Navigate to the landing page and explore DrivingLicenseIssuanceSystem.
 
 ---
 
@@ -495,7 +495,7 @@ Create `.env.local` in the project root (never commit this file):
 # ════════════════════════════════════════
 MSSQL_SA_PASSWORD=
 DATABASE_NAME=
-CONNECTION_STRING=Server=localhost,1433;Database=MojazDB;User Id=sa;Password=;TrustServerCertificate=True
+CONNECTION_STRING=Server=localhost,1433;Database=DrivingLicenseIssuanceSystemDB;User Id=sa;Password=;TrustServerCertificate=True
 
 # ════════════════════════════════════════
 # JWT AUTHENTICATION
@@ -511,7 +511,7 @@ JWT_REFRESH_TOKEN_DAYS=7
 # ════════════════════════════════════════
 SENDGRID_API_KEY=
 SENDGRID_FROM_EMAIL=
-SENDGRID_FROM_NAME=مُجاز — Mojaz Platform
+SENDGRID_FROM_NAME=نظام إصدار رخص القيادة — DrivingLicenseIssuanceSystem Platform
 
 # ════════════════════════════════════════
 # SMS — Twilio (Real Integration ✅)
@@ -531,8 +531,8 @@ FIREBASE_CREDENTIAL_PATH=
 # ════════════════════════════════════════
 NEXT_PUBLIC_API_URL=https://localhost:7127/api/v1
 NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyBasslXEjiTU9I6jry1ezlmcp1bzhIIsWc
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=mojaz-659bb.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=mojaz-659bb
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=DrivingLicenseIssuanceSystem-659bb.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=DrivingLicenseIssuanceSystem-659bb
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=1037227934375
 NEXT_PUBLIC_FIREBASE_APP_ID=1:1037227934375:web:071a411b37dad7fee75182
 
@@ -600,23 +600,23 @@ Logging:
 # Create new migration
 cd src/backend
 dotnet ef migrations add MigrationName \
-  --project Mojaz.Infrastructure \
-  --startup-project Mojaz.API
+  --project DrivingLicenseIssuanceSystem.Infrastructure \
+  --startup-project DrivingLicenseIssuanceSystem.API
 
 # Apply migrations
 dotnet ef database update \
-  --project Mojaz.Infrastructure \
-  --startup-project Mojaz.API
+  --project DrivingLicenseIssuanceSystem.Infrastructure \
+  --startup-project DrivingLicenseIssuanceSystem.API
 
 # Rollback to previous migration
 dotnet ef database update PreviousMigrationName \
-  --project Mojaz.Infrastructure \
-  --startup-project Mojaz.API
+  --project DrivingLicenseIssuanceSystem.Infrastructure \
+  --startup-project DrivingLicenseIssuanceSystem.API
 
 # View pending migrations
 dotnet ef migrations list \
-  --project Mojaz.Infrastructure \
-  --startup-project Mojaz.API
+  --project DrivingLicenseIssuanceSystem.Infrastructure \
+  --startup-project DrivingLicenseIssuanceSystem.API
 ```
 
 ### Seed Data
@@ -624,7 +624,7 @@ dotnet ef migrations list \
 The following seed data is automatically applied:
 
 ```
-✅ Admin user account (admin@mojaz.gov.sa)
+✅ Admin user account (admin@DrivingLicenseIssuanceSystem.gov.sa)
 ✅ Sample users — one per role (7 accounts)
 ✅ 6 license categories (A, B, C, D, E, F)
 ✅ 45+ system settings (ages, limits, periods)
@@ -647,7 +647,7 @@ docker-compose up -d
 docker-compose up -d sqlserver
 
 # 2. Backend API (in new terminal)
-cd src/backend/Mojaz.API
+cd src/backend/DrivingLicenseIssuanceSystem.API
 dotnet watch run
 
 # 3. Frontend (in new terminal)
@@ -680,10 +680,10 @@ docker-compose down -v
 ```bash
 cd src/backend
 
-dotnet build Mojaz.sln                  # Build all projects
+dotnet build DrivingLicenseIssuanceSystem.sln                  # Build all projects
 dotnet test                             # Run all tests
 dotnet test --coverage                  # Run tests with coverage
-dotnet watch run --project Mojaz.API    # Hot reload development
+dotnet watch run --project DrivingLicenseIssuanceSystem.API    # Hot reload development
 ```
 
 #### Frontend
@@ -710,7 +710,7 @@ npm run test:e2e:ui  # Playwright with interactive UI
 - **Swagger UI**: [https://localhost:7127/swagger](https://localhost:7127/swagger)
 - **OpenAPI JSON**: [https://localhost:7127/swagger/v1/swagger.json](https://localhost:7127/swagger/v1/swagger.json)
 - **Base URL (Development)**: `https://localhost:7127/api/v1`
-- **Base URL (Production)**: `https://api.mojaz.gov.sa/api/v1`
+- **Base URL (Production)**: `https://api.DrivingLicenseIssuanceSystem.gov.sa/api/v1`
 
 ### API Structure
 
@@ -798,7 +798,7 @@ cd src/backend
 dotnet test
 
 # Specific test project
-dotnet test tests/Mojaz.Application.Tests/
+dotnet test tests/DrivingLicenseIssuanceSystem.Application.Tests/
 
 # With coverage report
 dotnet test --collect:"XPlat Code Coverage"
@@ -930,7 +930,7 @@ The New License Issuance follows a **10-stage workflow** with **4 quality gates*
 
 ## 🌍 Internationalization
 
-Mojaz supports **full bidirectional layout switching**:
+DrivingLicenseIssuanceSystem supports **full bidirectional layout switching**:
 
 ### Languages
 
@@ -966,7 +966,7 @@ When language switches:
 
 ## 🔔 Notifications
 
-Mojaz sends **real notifications** via 4 channels:
+DrivingLicenseIssuanceSystem sends **real notifications** via 4 channels:
 
 | Channel | Type | Provider |
 |---------|------|---------|
@@ -1001,8 +1001,8 @@ Mojaz sends **real notifications** via 4 channels:
 
 ```bash
 # Build production images
-docker build -t mojaz-api:latest -f src/backend/Mojaz.API/Dockerfile .
-docker build -t mojaz-frontend:latest -f src/frontend/Dockerfile .
+docker build -t DrivingLicenseIssuanceSystem-api:latest -f src/backend/DrivingLicenseIssuanceSystem.API/Dockerfile .
+docker build -t DrivingLicenseIssuanceSystem-frontend:latest -f src/frontend/Dockerfile .
 
 # Start production stack
 docker-compose -f docker-compose.prod.yml up -d
@@ -1010,11 +1010,11 @@ docker-compose -f docker-compose.prod.yml up -d
 # Run migrations on production database
 docker-compose -f docker-compose.prod.yml exec api \
   dotnet ef database update \
-  --project Mojaz.Infrastructure \
-  --startup-project Mojaz.API
+  --project DrivingLicenseIssuanceSystem.Infrastructure \
+  --startup-project DrivingLicenseIssuanceSystem.API
 
 # Verify health
-curl https://api.mojaz.gov.sa/health
+curl https://api.DrivingLicenseIssuanceSystem.gov.sa/health
 ```
 
 ### Health Checks
@@ -1051,10 +1051,10 @@ Before contributing, read:
 
 ```bash
 # Feature branches
-git checkout -b feature/MOJAZ-XXX-description
+git checkout -b feature/DrivingLicenseIssuanceSystem-XXX-description
 
 # Bug fixes
-git checkout -b bugfix/MOJAZ-XXX-description
+git checkout -b bugfix/DrivingLicenseIssuanceSystem-XXX-description
 
 # Hotfixes (production)
 git checkout -b hotfix/description
@@ -1195,7 +1195,7 @@ See [`AGENTS.md`](AGENTS.md) for the complete AI development guide.
 ```
 MIT License
 
-Copyright (c) 2025 Mojaz Platform
+Copyright (c) 2025 DrivingLicenseIssuanceSystem Platform
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -1222,10 +1222,10 @@ SOFTWARE.
 
 | Channel | Link |
 |---------|------|
-| 🐛 **Bug Reports** | [GitHub Issues](https://github.com/your-org/mojaz/issues) |
-| 💡 **Feature Requests** | [GitHub Discussions](https://github.com/your-org/mojaz/discussions) |
+| 🐛 **Bug Reports** | [GitHub Issues](https://github.com/your-org/DrivingLicenseIssuanceSystem/issues) |
+| 💡 **Feature Requests** | [GitHub Discussions](https://github.com/your-org/DrivingLicenseIssuanceSystem/discussions) |
 | 📖 **Documentation** | [docs/](./docs/) |
-| 📧 **Security Issues** | security@mojaz.gov.sa |
+| 📧 **Security Issues** | security@DrivingLicenseIssuanceSystem.gov.sa |
 
 ---
 
@@ -1235,9 +1235,9 @@ SOFTWARE.
 
 ### Built with ❤️ for Saudi Arabia 🇸🇦
 
-**مُجاز — تجربة حكومية رقمية من الجيل القادم**
+**نظام إصدار رخص القيادة — تجربة حكومية رقمية من الجيل القادم**
 
-*Mojaz — A Next-Generation Government Digital Experience*
+*DrivingLicenseIssuanceSystem — A Next-Generation Government Digital Experience*
 
 ---
 

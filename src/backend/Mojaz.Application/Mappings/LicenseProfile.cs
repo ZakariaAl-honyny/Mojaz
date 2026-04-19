@@ -1,8 +1,8 @@
 using AutoMapper;
-using Mojaz.Application.DTOs.License;
-using Mojaz.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Application.DTOs.License;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
 
-namespace Mojaz.Application.Mappings
+namespace DrivingLicenseIssuanceSystem.Application.Mappings
 {
     public class LicenseProfile : Profile
     {

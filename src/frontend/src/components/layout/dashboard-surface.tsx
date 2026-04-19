@@ -11,20 +11,20 @@ interface DashboardSurfaceProps {
 
 export const DashboardSurface = ({ children, className, withGrain = true }: DashboardSurfaceProps) => {
   return (
-    <div className={cn("relative min-h-screen w-full overflow-hidden bg-[#F9FAFB]", className)}>
+    <div className={cn("relative min-h-screen w-full overflow-hidden bg-slate-950", className)}>
       {/* Background Mesh Gradients */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div 
-          className="absolute -top-[20%] -right-[10%] w-[70%] h-[70%] rounded-full blur-[120px] opacity-20"
-          style={{ background: 'radial-gradient(circle, #006C35 0%, transparent 70%)' }}
+          className="absolute -top-[20%] -right-[10%] w-[70%] h-[70%] rounded-full blur-[120px] opacity-30"
+          style={{ background: 'radial-gradient(circle, rgba(37,99,235,0.4) 0%, transparent 70%)' }}
         />
         <div 
-          className="absolute top-[40%] -left-[10%] w-[60%] h-[60%] rounded-full blur-[100px] opacity-10"
-          style={{ background: 'radial-gradient(circle, #D4A017 0%, transparent 70%)' }}
+          className="absolute top-[40%] -left-[10%] w-[60%] h-[60%] rounded-full blur-[120px] opacity-20"
+          style={{ background: 'radial-gradient(circle, rgba(26,58,143,0.4) 0%, transparent 70%)' }}
         />
         <div 
-          className="absolute -bottom-[10%] right-[20%] w-[50%] h-[50%] rounded-full blur-[110px] opacity-15"
-          style={{ background: 'radial-gradient(circle, #004C25 0%, transparent 70%)' }}
+          className="absolute -bottom-[10%] right-[20%] w-[50%] h-[50%] rounded-full blur-[120px] opacity-30"
+          style={{ background: 'radial-gradient(circle, rgba(37,99,235,0.3) 0%, transparent 70%)' }}
         />
       </div>
 

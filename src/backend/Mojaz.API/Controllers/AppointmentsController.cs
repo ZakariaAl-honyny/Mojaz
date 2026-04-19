@@ -1,18 +1,18 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mojaz.Application.DTOs.Appointments;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Enums;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Appointments;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Mojaz.API.Controllers;
+namespace DrivingLicenseIssuanceSystem.API.Controllers;
 
 /// <summary>
-/// Manage appointments for the Mojaz platform.
+/// Manage appointments for the DrivingLicenseIssuanceSystem platform.
 /// Handles booking, rescheduling, and cancellation of appointments.
 /// </summary>
 [ApiController]

@@ -1,7 +1,7 @@
 using FluentValidation;
-using Mojaz.Application.DTOs.Payment;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Payment;
 
-namespace Mojaz.Application.Validators.Payments;
+namespace DrivingLicenseIssuanceSystem.Application.Validators.Payments;
 
 public class PaymentConfirmRequestValidator : AbstractValidator<PaymentConfirmRequest>
 {

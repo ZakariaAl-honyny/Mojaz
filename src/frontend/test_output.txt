@@ -438,9 +438,9 @@ FAIL src/__tests__/components/Step2LicenseCategory.test.tsx (5.074 s)
           at div
           at WizardStepHeader
           at div
-          at Step2LicenseCategory (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step2LicenseCategory.tsx:23:126)
-          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step2LicenseCategory.test.tsx:22:30)
-          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+          at Step2LicenseCategory (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\components\domain\application\wizard\steps\Step2LicenseCategory.tsx:23:126)
+          at children (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\__tests__\components\Step2LicenseCategory.test.tsx:22:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
 
     [0m [90m 54 |[39m
      [90m 55 |[39m [36mconst[39m renderWithProviders [33m=[39m (component[33m:[39m [33mReact[39m[33m.[39m[33mReactNode[39m) [33m=>[39m {
@@ -476,9 +476,9 @@ FAIL src/__tests__/components/Step2LicenseCategory.test.tsx (5.074 s)
           at div
           at WizardStepHeader
           at div
-          at Step2LicenseCategory (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step2LicenseCategory.tsx:23:126)
-          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step2LicenseCategory.test.tsx:22:30)
-          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+          at Step2LicenseCategory (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\components\domain\application\wizard\steps\Step2LicenseCategory.tsx:23:126)
+          at children (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\__tests__\components\Step2LicenseCategory.test.tsx:22:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
 
     [0m [90m 54 |[39m
      [90m 55 |[39m [36mconst[39m renderWithProviders [33m=[39m (component[33m:[39m [33mReact[39m[33m.[39m[33mReactNode[39m) [33m=>[39m {
@@ -512,9 +512,9 @@ FAIL src/__tests__/components/Step2LicenseCategory.test.tsx (5.074 s)
       Warning: Functions are not valid as a React child. This may happen if you return a Component instead of <Component /> from render. Or maybe you meant to call this function rather than return it.
           at div
           at div
-          at Step2LicenseCategory (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step2LicenseCategory.tsx:23:126)
-          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step2LicenseCategory.test.tsx:22:30)
-          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+          at Step2LicenseCategory (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\components\domain\application\wizard\steps\Step2LicenseCategory.tsx:23:126)
+          at children (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\__tests__\components\Step2LicenseCategory.test.tsx:22:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
 
     [0m [90m 54 |[39m
      [90m 55 |[39m [36mconst[39m renderWithProviders [33m=[39m (component[33m:[39m [33mReact[39m[33m.[39m[33mReactNode[39m) [33m=>[39m {
@@ -838,9 +838,9 @@ FAIL src/__tests__/components/Step4ApplicationDetails.test.tsx (6.259 s)
           at div
           at WizardStepHeader
           at div
-          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
-          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
-          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
+          at children (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
 
     [0m [90m 66 |[39m
      [90m 67 |[39m [36mconst[39m renderWithProviders [33m=[39m (component[33m:[39m [33mReact[39m[33m.[39m[33mReactNode[39m) [33m=>[39m {
@@ -876,9 +876,9 @@ FAIL src/__tests__/components/Step4ApplicationDetails.test.tsx (6.259 s)
           at div
           at WizardStepHeader
           at div
-          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
-          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
-          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
+          at children (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
 
     [0m [90m 66 |[39m
      [90m 67 |[39m [36mconst[39m renderWithProviders [33m=[39m (component[33m:[39m [33mReact[39m[33m.[39m[33mReactNode[39m) [33m=>[39m {
@@ -911,15 +911,15 @@ FAIL src/__tests__/components/Step4ApplicationDetails.test.tsx (6.259 s)
     console.error
       Warning: Functions are not valid as a React child. This may happen if you return a Component instead of <Component /> from render. Or maybe you meant to call this function rather than return it.
           at label
-          at C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@radix-ui\react-primitive\src\primitive.tsx:40:13
+          at C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\node_modules\@radix-ui\react-primitive\src\primitive.tsx:40:13
           at Label
-          at className (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\ui\label.tsx:17:6)
+          at className (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\components\ui\label.tsx:17:6)
           at div
           at div
           at div
-          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
-          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
-          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
+          at children (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
 
       at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
       at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
@@ -942,12 +942,12 @@ FAIL src/__tests__/components/Step4ApplicationDetails.test.tsx (6.259 s)
       Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
       
       Check the render method of `Step4ApplicationDetails`.
-          at label (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\shared\FormField.tsx:73:3)
+          at label (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\components\domain\application\wizard\shared\FormField.tsx:73:3)
           at div
           at div
-          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
-          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
-          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
+          at children (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
 
       at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
       at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
@@ -970,13 +970,13 @@ FAIL src/__tests__/components/Step4ApplicationDetails.test.tsx (6.259 s)
           at select
           at div
           at div
-          at label (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\shared\FormField.tsx:17:3)
-          at label (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\shared\FormField.tsx:73:3)
+          at label (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\components\domain\application\wizard\shared\FormField.tsx:17:3)
+          at label (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\components\domain\application\wizard\shared\FormField.tsx:73:3)
           at div
           at div
-          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
-          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
-          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
+          at children (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
 
       at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
       at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
@@ -1002,9 +1002,9 @@ FAIL src/__tests__/components/Step4ApplicationDetails.test.tsx (6.259 s)
           at div
           at div
           at div
-          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
-          at children (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
-          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
+          at Step4ApplicationDetails (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\components\domain\application\wizard\steps\Step4ApplicationDetails.tsx:42:114)
+          at children (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\src\__tests__\components\Step4ApplicationDetails.test.tsx:18:30)
+          at QueryClientProvider (C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem\src\frontend\node_modules\@tanstack\react-query\src\QueryClientProvider.tsx:30:3)
 
       at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
       at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)

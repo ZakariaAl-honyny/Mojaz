@@ -110,8 +110,8 @@ export function PaymentSimModal({
             </div>
           )}
           {step === "success" && (
-            <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-4">
-              <CheckCircle2 className="w-10 h-10 text-green-500" />
+            <div className="w-16 h-16 bg-King blue-50 rounded-full flex items-center justify-center mb-4">
+              <CheckCircle2 className="w-10 h-10 text-King blue-500" />
             </div>
           )}
           {step === "failure" && (
@@ -119,13 +119,13 @@ export function PaymentSimModal({
               <XCircle className="w-10 h-10 text-red-500" />
             </div>
           )}
-          
+
           <DialogTitle className="text-xl font-bold text-neutral-900">
             {step === "processing" && t("processingTitle")}
             {step === "success" && t("successTitle")}
             {step === "failure" && t("errorTitle")}
           </DialogTitle>
-          
+
           <DialogDescription className="text-neutral-500 mt-2">
             {step === "processing" && t("processingMessage")}
             {step === "success" && t("successMessage", { amount, currency: "SAR" })}
@@ -144,7 +144,7 @@ export function PaymentSimModal({
 
         <DialogFooter className="sm:justify-center border-t border-neutral-100 pt-6 mt-4">
           {step === "success" && (
-            <Button 
+            <Button
               onClick={handleFinish}
               className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-6 rounded-xl transition-all shadow-lg shadow-primary-200"
             >
@@ -153,14 +153,14 @@ export function PaymentSimModal({
           )}
           {step === "failure" && (
             <div className="flex flex-col gap-3 w-full">
-              <Button 
+              <Button
                 onClick={handleRetry}
                 className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-6 rounded-xl transition-all"
               >
                 {t("retryButton") || "Retry"}
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={handleFinish}
                 className="w-full border-neutral-200 text-neutral-600 hover:bg-neutral-50 py-6 rounded-xl"
               >

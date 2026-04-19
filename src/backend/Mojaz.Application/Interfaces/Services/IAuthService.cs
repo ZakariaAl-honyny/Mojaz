@@ -1,9 +1,9 @@
-using Mojaz.Application.DTOs.Auth;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Auth;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
 public interface IAuthService
 {

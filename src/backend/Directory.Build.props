@@ -10,10 +10,10 @@
     <WarningLevel>4</WarningLevel>
     
     <!-- Assembly Info -->
-    <Company>Mojaz</Company>
-    <Product>Mojaz — Government Driving License Platform</Product>
-    <Authors>Mojaz Team</Authors>
-    <PackageProjectUrl>https://github.com/ZakariaAl-honyny/Mojaz</PackageProjectUrl>
+    <Company>DrivingLicenseIssuanceSystem</Company>
+    <Product>DrivingLicenseIssuanceSystem ï¿½ Government Driving License Platform</Product>
+    <Authors>DrivingLicenseIssuanceSystem Team</Authors>
+    <PackageProjectUrl>https://github.com/ZakariaAl-honyny/DrivingLicenseIssuanceSystem</PackageProjectUrl>
     <PackageLicenseExpression>UNLICENSED</PackageLicenseExpression>
     
     <!-- Versioning -->
@@ -26,7 +26,7 @@
   </PropertyGroup>
 
   <!-- API Project Specific -->
-  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Mojaz.API'">
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'DrivingLicenseIssuanceSystem.API'">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 </Project>

@@ -6,16 +6,16 @@ using Hangfire;
 using Hangfire.Dashboard;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Mojaz.API.Extensions;
-using Mojaz.API.Filters;
-using Mojaz.API.Middleware;
-using Mojaz.Application;
-using Mojaz.Infrastructure;
-using Mojaz.Infrastructure.Persistence;
-using Mojaz.Infrastructure.Data.Seeding;
-using Mojaz.Infrastructure.Extensions;
+using DrivingLicenseIssuanceSystem.API.Extensions;
+using DrivingLicenseIssuanceSystem.API.Filters;
+using DrivingLicenseIssuanceSystem.API.Middleware;
+using DrivingLicenseIssuanceSystem.Application;
+using DrivingLicenseIssuanceSystem.Infrastructure;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Infrastructure.Data.Seeding;
+using DrivingLicenseIssuanceSystem.Infrastructure.Extensions;
 using Serilog;
-using Mojaz.Infrastructure.Security.RateLimiting;
+using DrivingLicenseIssuanceSystem.Infrastructure.Security.RateLimiting;
 using QuestPDF.Infrastructure;
 using QuestPDF.Helpers;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -59,10 +59,10 @@ builder.Host.UseSerilog((context, config) =>
     config
         .ReadFrom.Configuration(context.Configuration)
         .Enrich.FromLogContext()
-        .Enrich.With<Mojaz.Infrastructure.Logging.LogMaskingEnricher>()
+        .Enrich.With<DrivingLicenseIssuanceSystem.Infrastructure.Logging.LogMaskingEnricher>()
         .WriteTo.Console()
         .WriteTo.File(
-            "logs/mojaz_.log",
+            "logs/DrivingLicenseIssuanceSystem_.log",
             rollingInterval: RollingInterval.Day,
             retainedFileCountLimit: 30);
 });
@@ -77,7 +77,7 @@ builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
 // ─── Global Error Handling ───
-builder.Services.AddExceptionHandler<Mojaz.Infrastructure.Security.Middleware.GlobalExceptionHandler>();
+builder.Services.AddExceptionHandler<DrivingLicenseIssuanceSystem.Infrastructure.Security.Middleware.GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 // ─── Controllers & Filters ───
@@ -100,8 +100,8 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(optio
 builder.Services.AddHttpContextAccessor();
 
 // ─── Modular Extensions (Phase 3 Fix) ───
-builder.Services.AddMojazCors(builder.Configuration);
-builder.Services.AddMojazSwagger();
+builder.Services.AddDrivingLicenseIssuanceSystemCors(builder.Configuration);
+builder.Services.AddDrivingLicenseIssuanceSystemSwagger();
 
 // ─── Authorization Policies ───
 builder.Services.AddAuthorization(options =>
@@ -122,29 +122,29 @@ builder.Services.AddHealthChecks()
     }, name: "DiskStorage", tags: new[] { "storage" });
 
 // ─── Rate Limiting ───
-builder.Services.AddMojazRateLimiting();
+builder.Services.AddDrivingLicenseIssuanceSystemRateLimiting();
 
 // ─── Email Services Registration ───
-builder.Services.AddMojazEmail(builder.Configuration);
+builder.Services.AddDrivingLicenseIssuanceSystemEmail(builder.Configuration);
 
 var app = builder.Build();
 
 // ─── Middleware Pipeline (Modularized) ───
 
-app.UseMojazSecurityHeaders();
+app.UseDrivingLicenseIssuanceSystemSecurityHeaders();
 app.UseExceptionHandler(); // Enable global exception handler
 
 if (app.Environment.IsDevelopment())
 {
     // app.UseDeveloperExceptionPage(); // Disabled in favor of our consistent error handler
-    app.UseMojazSwagger();
+    app.UseDrivingLicenseIssuanceSystemSwagger();
 }
 
-app.UseMojazExceptionHandler();
-app.UseMojazRequestLogging();
+app.UseDrivingLicenseIssuanceSystemExceptionHandler();
+app.UseDrivingLicenseIssuanceSystemRequestLogging();
 
 app.UseHttpsRedirection();
-app.UseMojazCors();
+app.UseDrivingLicenseIssuanceSystemCors();
 
 // ─── Monitoring Middleware ───
 app.UseHttpMetrics();
@@ -152,7 +152,7 @@ app.UseHttpMetrics();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMojazAuditLogging();
+app.UseDrivingLicenseIssuanceSystemAuditLogging();
 
 app.UseRateLimiter();
 
@@ -168,7 +168,7 @@ if (app.Environment.IsProduction() || app.Configuration.GetValue<bool>("AutoMigr
         var services = scope.ServiceProvider;
         try
         {
-            var context = services.GetRequiredService<MojazDbContext>();
+            var context = services.GetRequiredService<DrivingLicenseIssuanceSystemDbContext>();
             if (context.Database.GetPendingMigrations().Any())
             {
                 Log.Information("Applying pending migrations...");
@@ -207,13 +207,13 @@ try
     using (var scope = app.Services.CreateScope())
     {
         var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
-        recurringJobManager.AddOrUpdate<Mojaz.Infrastructure.Jobs.ProcessExpiredApplicationsJob>(
-            "mojaz-expire-applications",
+        recurringJobManager.AddOrUpdate<DrivingLicenseIssuanceSystem.Infrastructure.Jobs.ProcessExpiredApplicationsJob>(
+            "DrivingLicenseIssuanceSystem-expire-applications",
             job => job.ExecuteAsync(),
             Cron.Daily(2));
 
-        recurringJobManager.AddOrUpdate<Mojaz.Infrastructure.Security.Background.AuditLogCleanupJob>(
-            "mojaz-auditlog-cleanup",
+        recurringJobManager.AddOrUpdate<DrivingLicenseIssuanceSystem.Infrastructure.Security.Background.AuditLogCleanupJob>(
+            "DrivingLicenseIssuanceSystem-auditlog-cleanup",
             job => job.ExecuteAsync(),
             Cron.Daily(3));
     }

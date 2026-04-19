@@ -2,11 +2,11 @@
 
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { 
-  Facebook, 
-  Twitter, 
-  Instagram, 
-  Linkedin, 
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
   ExternalLink,
   ShieldCheck,
   Globe,
@@ -16,37 +16,45 @@ import {
 import { motion } from 'framer-motion';
 
 export default function Footer() {
-  const t = useTranslations('landing.footer');
   const commonT = useTranslations('common');
-  
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="bg-neutral-950 text-neutral-400 py-24 px-6 border-t border-white/5 relative overflow-hidden">
-      {/* Decorative Gradient */}
+    <footer className="bg-neutral-50 dark:bg-site-bg text-neutral-400 py-32 px-6 border-t border-white/5 relative overflow-hidden transition-colors duration-500">
+      {/* Dynamic Background Effects */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[300px] bg-primary-600/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-px bg-gradient-to-r from-transparent via-primary-500/50 to-transparent" />
-      
-      <div className="container mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-16 mb-20">
+
+      <div className="container mx-auto max-w-7xl relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-20 mb-24">
           {/* Brand Column */}
-          <div className="lg:col-span-2 space-y-8">
-            <div className="flex items-center gap-3 text-white">
-              <div className="w-12 h-12 bg-primary-600 rounded-2xl flex items-center justify-center font-black text-2xl shadow-xl shadow-primary-900/40">M</div>
-              <div className="leading-tight">
-                <span className="font-black text-2xl tracking-tighter block">{commonT('title').split(' - ')[0]}</span>
-                <span className="text-[10px] text-primary-500 font-bold uppercase tracking-[0.2em]">Gov Digital Platform</span>
+          <div className="lg:col-span-2 space-y-10">
+            <Link href="/" className="flex items-center gap-4 group">
+              <div className="relative flex-shrink-0">
+                <img
+                  src="/images/logo.png"
+                  alt={commonT('brand.name')}
+                  className="h-14 w-14 object-contain group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute -inset-2 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               </div>
-            </div>
-            <p className="text-sm leading-relaxed max-w-sm font-medium">
-              مُجاز هي المنصة الحكومية الموحدة لخدمات رخص القيادة في المملكة، تهدف إلى أتمتة كافة الإجراءات وتقديم تجربة مستخدم رقمية بمعايير عالمية.
+              <div className="leading-tight">
+                <span className="font-black text-3xl tracking-tighter block text-white">{commonT('brand.name')}</span>
+                <span className="text-[10px] text-primary-500 font-black uppercase tracking-[0.3em]">{commonT('brand.subtitle')}</span>
+              </div>
+            </Link>
+            <p className="text-base leading-relaxed max-w-sm font-medium text-neutral-500">
+              {commonT('footer.description')}
             </p>
             <div className="flex gap-4">
               {[Twitter, Facebook, Instagram, Linkedin].map((Icon, i) => (
                 <motion.a
                   key={i}
                   href="#"
-                  whileHover={{ y: -5, color: '#006C35' }}
-                  className="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center transition-all cursor-pointer group hover:bg-white"
+                  whileHover={{ y: -8, scale: 1.1 }}
+                  className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center transition-all cursor-pointer group hover:bg-primary-600 hover:border-primary-500"
                 >
-                  <Icon className="w-5 h-5 group-hover:text-primary-600" />
+                  <Icon className="w-5 h-5 group-hover:text-white" />
                 </motion.a>
               ))}
             </div>
@@ -54,56 +62,81 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-black uppercase tracking-widest text-xs mb-8">الخدمات</h4>
-            <ul className="space-y-4 text-sm font-bold">
-              <li><Link href="/services/new" className="hover:text-primary-400 transition-colors flex items-center gap-2 group">إصدار رخصة جديدة <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
-              <li><Link href="/services/renewal" className="hover:text-primary-400 transition-colors flex items-center gap-2 group">تجديد رخصة <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
-              <li><Link href="/services/replacement" className="hover:text-primary-400 transition-colors flex items-center gap-2 group">بدل فاقد/تالف <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
-              <li><Link href="/services/upgrade" className="hover:text-primary-400 transition-colors flex items-center gap-2 group">ترقية فئة الرخصة <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
+            <h4 className="text-white font-black uppercase tracking-[0.2em] text-[11px] mb-10 opacity-50">{commonT('footer.services_title')}</h4>
+            <ul className="space-y-5 text-sm font-bold">
+              {[
+                { href: '/register', key: 'new_license' },
+                { href: '/services', key: 'renewal' },
+                { href: '/services', key: 'replacement' },
+                { href: '/services', key: 'upgrade' },
+                { href: '/violations', key: 'violations_check' }
+              ].map((link) => (
+                <li key={link.key}>
+                  <Link href={link.href} className="hover:text-primary-400 transition-all flex items-center gap-2 group whitespace-nowrap">
+                    {commonT(`footer.links.${link.key}`)}
+                    <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h4 className="text-white font-black uppercase tracking-widest text-xs mb-8">عن المنصة</h4>
-            <ul className="space-y-4 text-sm font-bold">
-              <li><Link href="/about" className="hover:text-primary-400 transition-colors">عن مُجاز</Link></li>
-              <li><Link href="/manuals" className="hover:text-primary-400 transition-colors">دليل الاستخدام</Link></li>
-              <li><Link href="/centers" className="hover:text-primary-400 transition-colors">مراكز الفحص</Link></li>
-              <li><Link href="/faqs" className="hover:text-primary-400 transition-colors">الأسئلة الشائعة</Link></li>
+            <h4 className="text-white font-black uppercase tracking-[0.2em] text-[11px] mb-10 opacity-50">{commonT('footer.about_title')}</h4>
+            <ul className="space-y-5 text-sm font-bold">
+              {['who_we_are', 'manuals', 'centers', 'faqs'].map((key) => (
+                <li key={key}>
+                  <Link href={`/${key.replace('_', '-')}`} className="hover:text-primary-400 transition-all">
+                    {commonT(`footer.links.${key}`)}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <h4 className="text-white font-black uppercase tracking-widest text-xs mb-8">الدعم والقانون</h4>
-            <ul className="space-y-4 text-sm font-bold">
-              <li><Link href="/contact" className="hover:text-primary-400 transition-colors">اتصل بنا</Link></li>
-              <li><Link href="/privacy" className="hover:text-primary-400 transition-colors">سياسة الخصوصية</Link></li>
-              <li><Link href="/terms" className="hover:text-primary-400 transition-colors">الشروط والأحكام</Link></li>
-              <li><Link href="/accessibility" className="hover:text-primary-400 transition-colors">إمكانية الوصول</Link></li>
+            <h4 className="text-white font-black uppercase tracking-[0.2em] text-[11px] mb-10 opacity-50">{commonT('footer.support_title')}</h4>
+            <ul className="space-y-5 text-sm font-bold">
+              {['traffic_laws', 'safety_guide', 'contact', 'privacy', 'terms'].map((key) => (
+                <li key={key}>
+                  <Link href={`/${key.replace('_', '-')}`} className="hover:text-primary-400 transition-all">
+                    {commonT(`footer.links.${key}`)}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
         {/* Awards/Trust Area */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-12 border-y border-white/5 mb-12">
-           {[
-             { icon: ShieldCheck, label: 'Secure Framework' },
-             { icon: Globe, label: 'Digital Excellence 2025' },
-             { icon: Award, label: 'Gov Award Winner' },
-             { icon: Sparkles, label: 'Zero Paper Initiative' }
-           ].map((item, i) => (
-             <div key={i} className="flex items-center gap-4 grayscale opacity-30 hover:grayscale-0 hover:opacity-100 transition-all cursor-default">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-10 py-16 border-y border-white/5 mb-16">
+          {[
+            { icon: ShieldCheck, key: 'secure' },
+            { icon: Globe, key: 'excellence' },
+            { icon: Award, key: 'award' },
+            { icon: Sparkles, key: 'zero_paper' }
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ opacity: 1, scale: 1.02 }}
+              className="flex items-center gap-5 grayscale opacity-30 hover:grayscale-0 hover:opacity-100 transition-all cursor-default"
+            >
+              <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/5 group-hover:border-primary-500/30">
                 <item.icon className="w-6 h-6 text-primary-500" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-white leading-tight">{item.label}</span>
-             </div>
-           ))}
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white leading-tight max-w-[120px]">{commonT(`footer.trust.${item.key}`)}</span>
+            </motion.div>
+          ))}
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] font-black uppercase tracking-[0.2em]">
-          <p>© {new Date().getFullYear()} {commonT('title').split(' - ')[0]}. جميع الحقوق محفوظة لوزارة الداخلية.</p>
-          <div className="flex items-center gap-8">
-             <span className="text-primary-500">Vision 2030</span>
-             <span>Powered by Gaea System</span>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 text-[10px] font-black uppercase tracking-[0.3em]">
+          <p className="opacity-40">{commonT('footer.rightsReserved', { year: currentYear })}</p>
+          <div className="flex items-center gap-12">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
+              <span className="text-primary-500">صنعاء، اليمن</span>
+            </div>
+            <span className="opacity-40">{commonT('footer.poweredBy')}</span>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useFormatter } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -51,6 +51,7 @@ type PaymentState = 'selecting' | 'processing' | 'success' | 'failed';
 
 export default function PaymentProcessingPage() {
   const t = useTranslations('payment');
+  const format = useFormatter();
   const router = useRouter();
   const params = useParams();
   const [paymentState, setPaymentState] = useState<PaymentState>('selecting');
@@ -114,8 +115,8 @@ export default function PaymentProcessingPage() {
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Back Button */}
       <Button variant="ghost" onClick={handleCancel} className="me-auto">
-        <ChevronLeft className="w-4 h-4 me-1" />
-        {t('continueButton')}
+        <ChevronLeft className="w-4 h-4 me-1 rtl:rotate-180" />
+        {t('cancel')}
       </Button>
 
       {/* Header */}
@@ -144,10 +145,9 @@ export default function PaymentProcessingPage() {
               {t('payAmount')}
             </p>
             <p className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-              {payment.amount.toLocaleString('en-SA', {
+              {format.number(payment.amount, {
                 style: 'currency',
-                currency: 'SAR',
-                minimumFractionDigits: 0,
+                currency: 'YER',
               })}
             </p>
           </div>
@@ -278,7 +278,7 @@ export default function PaymentProcessingPage() {
       {/* Security Note */}
       <div className="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
         <Lock className="w-4 h-4" />
-        <span>Your payment information is secure and encrypted</span>
+        <span>{t('securityNote')}</span>
       </div>
 
       {/* Action Buttons */}

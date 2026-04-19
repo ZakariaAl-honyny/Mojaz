@@ -1,7 +1,7 @@
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 using System;
 
-namespace Mojaz.Application.DTOs.Payment;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Payment;
 
 public class PaymentDto
 {

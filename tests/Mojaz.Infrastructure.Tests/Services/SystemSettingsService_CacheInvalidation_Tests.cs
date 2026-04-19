@@ -3,16 +3,16 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Mojaz.Application.DTOs.SystemSettings;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Infrastructure.Services;
+using DrivingLicenseIssuanceSystem.Application.DTOs.SystemSettings;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Infrastructure.Services;
 using Moq;
 using Xunit;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
-namespace Mojaz.Infrastructure.Tests.Services;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Tests.Services;
 
 public class SystemSettingsService_CacheInvalidation_Tests
 {

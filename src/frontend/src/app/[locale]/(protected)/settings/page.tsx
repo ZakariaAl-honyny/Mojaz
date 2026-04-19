@@ -32,10 +32,10 @@ export default function SettingsPage() {
       // Simulate API call - in production, this would call the backend
       // await userService.updateNotificationPreferences(newPreferences)
       await new Promise(resolve => setTimeout(resolve, 500))
-      
+
       setPreferences(newPreferences)
       setSaveSuccess(true)
-      
+
       // Clear success message after 3 seconds
       setTimeout(() => setSaveSuccess(false), 3000)
     } catch (error) {
@@ -58,9 +58,9 @@ export default function SettingsPage() {
             {t('subtitle')}
           </p>
         </div>
-        
+
         {saveSuccess && (
-          <div className="flex items-center gap-2 px-4 py-2 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-lg animate-fadeIn">
+          <div className="flex items-center gap-2 px-4 py-2 bg-King blue-50 dark:bg-King blue-900/20 text-King blue-700 dark:text-King blue-400 rounded-lg animate-fadeIn">
             <CheckCircle2 className="w-4 h-4" />
             <span className="text-sm font-medium">{t('notifications.success')}</span>
           </div>
@@ -68,7 +68,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Notification Preferences */}
-      <PreferencesForm 
+      <PreferencesForm
         initialPreferences={preferences}
         onSave={handleSavePreferences}
       />

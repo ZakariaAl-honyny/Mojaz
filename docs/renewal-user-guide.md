@@ -1,8 +1,8 @@
-# Mojaz License Renewal User Guide / دليل تجديد رخصة القيادة
+# DrivingLicenseIssuanceSystem License Renewal User Guide / دليل تجديد رخصة القيادة
 
 > **Version**: 1.0  
 > **Last Updated**: April 2026  
-> **Platform**: Mojaz Government Driving License Platform
+> **Platform**: DrivingLicenseIssuanceSystem Government Driving License Platform
 
 ---
 
@@ -10,7 +10,7 @@
 
 ### Welcome to the License Renewal Service
 
-This guide explains how to renew your driving license through the Mojaz platform. The renewal process is simplified for holders of valid or recently expired licenses — you can skip the training and testing stages and only complete a medical examination.
+This guide explains how to renew your driving license through the DrivingLicenseIssuanceSystem platform. The renewal process is simplified for holders of valid or recently expired licenses — you can skip the training and testing stages and only complete a medical examination.
 
 #### Who This Guide Is For
 
@@ -24,7 +24,7 @@ This guide explains how to renew your driving license through the Mojaz platform
 
 #### What Is License Renewal?
 
-License renewal is the process of obtaining a new driving license when your current license is about to expire or has recently expired. The Mojaz platform provides a simplified renewal workflow that:
+License renewal is the process of obtaining a new driving license when your current license is about to expire or has recently expired. The DrivingLicenseIssuanceSystem platform provides a simplified renewal workflow that:
 
 - **Skips training sessions** — You don't need to attend driving school
 - **Skips theory and practical tests** — Your existing driving skills are recognized
@@ -70,7 +70,7 @@ The renewal process consists of **4 main stages**:
 
 **How to Check**:
 
-1. Log in to your Mojaz account
+1. Log in to your DrivingLicenseIssuanceSystem account
 2. Go to **My Licenses**
 3. Click **Renew** next to the license you want to renew
 4. The system will automatically check your eligibility
@@ -125,7 +125,7 @@ Medical examination is mandatory for all license renewals to ensure driver safet
 
 **How to Complete**:
 
-1. Book a medical appointment through Mojaz
+1. Book a medical appointment through DrivingLicenseIssuanceSystem
 2. Visit an authorized medical center
 3. Complete the required medical tests:
    - Vision test (visual acuity and color vision)
@@ -165,7 +165,7 @@ Medical examination is mandatory for all license renewals to ensure driver safet
 - **Mada Card** — Direct debit from your bank account
 - **Visa / MasterCard** — Credit or debit cards
 - **Apple Pay / Samsung Pay** — Mobile payment options
-- **Bank Transfer** — Transfer to Mojaz bank account
+- **Bank Transfer** — Transfer to DrivingLicenseIssuanceSystem bank account
 
 **What Happens After Payment**:
 
@@ -183,7 +183,7 @@ Medical examination is mandatory for all license renewals to ensure driver safet
 
 **Downloading Your License**:
 
-- Log in to Mojaz
+- Log in to DrivingLicenseIssuanceSystem
 - Go to **My Licenses**
 - Click **Download PDF** next to your new license
 - Optionally request a **physical card** delivery
@@ -253,7 +253,7 @@ When you receive your new license, the following happens to your old license:
 **Q7: Can I check my eligibility without starting an application?**
 
 > **A**: Yes! You can check your eligibility anytime:
-> 1. Log in to Mojaz
+> 1. Log in to DrivingLicenseIssuanceSystem
 > 2. Go to **My Licenses**
 > 3. Click **Check Eligibility** next to your license
 > 
@@ -293,7 +293,7 @@ When you receive your new license, the following happens to your old license:
 **Q11: How do I download my license PDF?**
 
 > **A**: To download your license PDF:
-> 1. Log in to Mojaz
+> 1. Log in to DrivingLicenseIssuanceSystem
 > 2. Go to **My Licenses**
 > 3. Find your new license
 > 4. Click **Download PDF**
@@ -303,7 +303,7 @@ When you receive your new license, the following happens to your old license:
 **Q12: How do I track my application status?**
 
 > **A**: To track your application:
-> 1. Log in to Mojaz
+> 1. Log in to DrivingLicenseIssuanceSystem
 > 2. Go to **My Applications**
 > 3. Find your renewal application
 > 4. View the status and timeline
@@ -311,7 +311,7 @@ When you receive your new license, the following happens to your old license:
 **Q13: What notification channels will I receive?**
 
 > **A**: You will receive notifications through:
-> - **In-App**: Mojaz mobile/web app notifications
+> - **In-App**: DrivingLicenseIssuanceSystem mobile/web app notifications
 > - **SMS**: Text message to your registered phone number
 > - **Email**: Email to your registered email address
 > - **Push**: Push notification (if enabled on mobile app)
@@ -325,7 +325,7 @@ When you receive your new license, the following happens to your old license:
 | Issue | Solution |
 |-------|----------|
 | **"Not Eligible" error** | Check if your license is within the grace period. If expired > 1 year, apply for new license. |
-| **Medical exam booking issues** | Contact authorized medical centers directly or use the Mojaz appointment system |
+| **Medical exam booking issues** | Contact authorized medical centers directly or use the DrivingLicenseIssuanceSystem appointment system |
 | **Payment not going through** | Verify your card is valid, has sufficient funds, and is enabled for online purchases |
 | **Old license still showing as active** | Wait 24 hours for system to update, or contact support |
 | **Did not receive notification** | Check spam folder, verify contact details in your profile |
@@ -338,8 +338,8 @@ When you receive your new license, the following happens to your old license:
 If you need help with your renewal:
 
 - **Phone**: 920000000 (Saudi Arabia)
-- **Email**: support@mojaz.gov.sa
-- **In-App**: Chat with Mojaz Support
+- **Email**: support@DrivingLicenseIssuanceSystem.gov.sa
+- **In-App**: Chat with DrivingLicenseIssuanceSystem Support
 - **Hours**: Sunday — Thursday, 8:00 AM — 4:00 PM
 
 ---
@@ -361,7 +361,7 @@ If you need help with your renewal:
 
 ### أهلاً بك في خدمة تجديد الرخصة
 
-يشرح هذا الدليل كيفية تجديد رخصة القيادة الخاصة بك من خلال منصة مُجاز. عملية التجديد مبسّطة لحاملي الرخص السارية أو التي انتهت صلاحيتها حديثاً — يمكنك تخطي مراحل التدريب والاختبار وإجراء الفحص الطبي فقط.
+يشرح هذا الدليل كيفية تجديد رخصة القيادة الخاصة بك من خلال منصة نظام إصدار رخص القيادة. عملية التجديد مبسّطة لحاملي الرخص السارية أو التي انتهت صلاحيتها حديثاً — يمكنك تخطي مراحل التدريب والاختبار وإجراء الفحص الطبي فقط.
 
 #### لمن هذا الدليل
 
@@ -375,7 +375,7 @@ If you need help with your renewal:
 
 #### ما هو تجديد الرخصة؟
 
-تجديد الرخصة هو عملية الحصول على رخصة قيادة جديدة عندما تقترب رخصتك الحالية من انتهاء صلاحيتها أو انتهت مؤخراً. توفر منصة مُجاز عملية تجديد مبسّطة تشمل:
+تجديد الرخصة هو عملية الحصول على رخصة قيادة جديدة عندما تقترب رخصتك الحالية من انتهاء صلاحيتها أو انتهت مؤخراً. توفر منصة نظام إصدار رخص القيادة عملية تجديد مبسّطة تشمل:
 
 - **تخطي التدريب** — لست بحاجة إلى حضور مدرسة القيادة
 - **تخطي الاختبارات النظرية والعملية** — مهارات قيادتك الموجودة معترف بها
@@ -421,7 +421,7 @@ If you need help with your renewal:
 
 **كيفية التحقق**:
 
-1. سجّل الدخول إلى حسابك في مُجاز
+1. سجّل الدخول إلى حسابك في نظام إصدار رخص القيادة
 2. انتقل إلى **رخصاتي**
 3. انقر فوق **تجديد** بجانب الرخصة التي تريد تجديدها
 4. سيتحقق النظام تلقائياً من أهليتك
@@ -475,7 +475,7 @@ If you need help with your renewal:
 
 **كيفية الإكمال**:
 
-1. احجز موعد طبي من خلال مُجاز
+1. احجز موعد طبي من خلال نظام إصدار رخص القيادة
 2. زُر مركز طبي معتمد
 3. أكمل الفحوصات الطبية المطلوبة:
    - فحص النظر (حدة البصر ولون البصر)
@@ -515,7 +515,7 @@ If you need help with your renewal:
 - **بطاقة مدى** — خصم مباشر من حسابك البنكي
 - **فيزا / ماستركارد** — بطاقات ائتمان أو خصم
 - **Apple Pay / Samsung Pay** — خيارات الدفع عبر الهاتف
-- **تحويل بنكي** — تحويل إلى حساب مصرفي لمُجاز
+- **تحويل بنكي** — تحويل إلى حساب مصرفي لنظام إصدار رخص القيادة
 
 **ما يحدث بعد الدفع**:
 
@@ -533,7 +533,7 @@ If you need help with your renewal:
 
 **تحميل رخصتك**:
 
-- سجّل الدخول إلى مُجاز
+- سجّل الدخول إلى نظام إصدار رخص القيادة
 - انتقل إلى **رخصاتي**
 - انقر فوق **تحميل PDF** بجانب رخصتك الجديدة
 - يمكنك طلب **بطاقة فيزيائية** للتوصيل
@@ -603,7 +603,7 @@ If you need help with your renewal:
 **س7: هل يمكنني провер أهليتي دون بدء التقديم؟**
 
 > **A**: نعم! يمكنك فحص أهليتك في أي وقت:
-> 1. سجّل الدخول إلى مُجاز
+> 1. سجّل الدخول إلى نظام إصدار رخص القيادة
 > 2. انتقل إلى **رخصاتي**
 > 3. انقر فوق **فحص الأهلية** بجانب رخصتك
 > 
@@ -643,7 +643,7 @@ If you need help with your renewal:
 **س11: كيف أحمل PDF رخصتي؟**
 
 > **A**: لتحميل PDF رخصتك:
-> 1. سجّل الدخول إلى مُجاز
+> 1. سجّل الدخول إلى نظام إصدار رخص القيادة
 > 2. انتقل إلى **رخصاتي**
 > 3. ابحث عن رخصتك الجديدة
 > 4. انقر فوق **تحميل PDF**
@@ -653,7 +653,7 @@ If you need help with your renewal:
 **س12: كيف أتتبع حالة طلبي؟**
 
 > **A**: لتتبع طلبك:
-> 1. سجّل الدخول إلى مُجاز
+> 1. سجّل الدخول إلى نظام إصدار رخص القيادة
 > 2. انتقل إلى **طلباتي**
 > 3. ابحث عن طلب التجديد
 > 4. اعرض الحالة والجدول الزمني
@@ -661,7 +661,7 @@ If you need help with your renewal:
 **س13: ما قنوات الإشعارات التي Receiveها؟**
 
 > **A**: ست Receive إشعارات عبر:
-> - **داخل التطبيق**: إشعارات تطبيق مُجاز للهاتف/الويب
+> - **داخل التطبيق**: إشعارات تطبيق نظام إصدار رخص القيادة للهاتف/الويب
 > - **SMS**: رسالة نصية لرقم هاتفك المسجل
 > - **بريد إلكتروني**: بريد إلكتروني لبريدك المسجل
 > - **Push**: إشعار فوري (إذا مفعل على تطبيق الهاتف)
@@ -675,7 +675,7 @@ If you need help with your renewal:
 | المشكلة | الحل |
 |-------|----------|
 | خطأ **"غير أهل"** | تحقق مما إذا كانت رخصتك ضمن فترة السماح. إذا انتهت > 1 سنة، قدم على رخصة جديدة. |
-| مشاكل حجز الفحص الطبي | اتصل بمراكز طبية معتمدة مباشرة أو استخدم نظام مواعيد مُجاز |
+| مشاكل حجز الفحص الطبي | اتصل بمراكز طبية معتمدة مباشرة أو استخدم نظام مواعيد نظام إصدار رخص القيادة |
 | الدفع لا يمر | تحقق من صلاحية بطاقتك، لديها رصيد كافٍ، ومفعلة للشراء عبر الإنترنت |
 | رخصتي القديمة لا تزال تظهر كسارية | انتظر 24 ساعة للتحديث، أو اتصل بالدعم |
 | لم Receive إشعار | تحقق من مجلد الرسائل غير المرغوب، تحقق من تفاصيل الاتصال في ملفك الشخصي |
@@ -688,8 +688,8 @@ If you need help with your renewal:
 إذا كنت تحتاج المساعدة في التجديد:
 
 - **الهاتف**: 920000000 (المملكة العربية السعودية)
-- **البريد الإلكتروني**: support@mojaz.gov.sa
-- **داخل التطبيق**: محادثة مع دعم مُجاز
+- **البريد الإلكتروني**: support@DrivingLicenseIssuanceSystem.gov.sa
+- **داخل التطبيق**: محادثة مع دعم نظام إصدار رخص القيادة
 - **الساعات**: الأحد — الخميس، 8:00 صباحاً — 4:00 مساءً
 
 ---

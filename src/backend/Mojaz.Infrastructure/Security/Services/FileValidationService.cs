@@ -1,13 +1,13 @@
 using FileSignatures;
 using FileSignatures.Formats;
-using Mojaz.Application.Interfaces.Security;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Security;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Security.Services;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Security.Services;
 
 public class FileValidationService : IFileValidationService
 {

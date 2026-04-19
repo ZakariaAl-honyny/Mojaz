@@ -1,17 +1,17 @@
 using Hangfire;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-using ApplicationEntity = Mojaz.Domain.Entities.Application;
-using ISmsService = Mojaz.Application.Interfaces.Infrastructure.ISmsService;
+using ApplicationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
+using ISmsService = DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure.ISmsService;
 
-namespace Mojaz.Application.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Services;
 
 /// <summary>
 /// Orchestrator for sending multi-channel notifications (Email, SMS, Push).
@@ -69,8 +69,8 @@ public class NotificationService : INotificationService
 
         await _notificationRepository.AddAsync(notification);
 
-        // 2. Dispatch via Email (Hangfire async job) - only if user enabled email notifications
-        if (request.Email && !string.IsNullOrEmpty(user.Email) && user.EnableEmail)
+        // 2. Dispatch via Email (Hangfire async job) - only if user has email (assuming all users want email by default)
+        if (request.Email && !string.IsNullOrEmpty(user.Email))
         {
             var subject = user.PreferredLanguage == "ar" ? request.TitleAr : request.TitleEn;
             var body = user.PreferredLanguage == "ar" ? request.MessageAr : request.MessageEn;
@@ -78,16 +78,16 @@ public class NotificationService : INotificationService
             _backgroundJobClient.Enqueue(() => _emailService.SendEmailAsync(user.Email, subject, body));
         }
 
-        // 3. Dispatch via SMS (Hangfire async job) - only if user enabled SMS notifications
-        if (request.Sms && !string.IsNullOrEmpty(user.PhoneNumber) && user.EnableSms)
+        // 3. Dispatch via SMS (Hangfire async job) - only if user has phone number
+        if (request.Sms && !string.IsNullOrEmpty(user.PhoneNumber))
         {
             var body = user.PreferredLanguage == "ar" ? request.MessageAr : request.MessageEn;
             // Enqueue SMS job - service method has [AutomaticRetry] attribute
             _backgroundJobClient.Enqueue(() => _smsService.SendAsync(user.PhoneNumber, body));
         }
 
-        // 4. Dispatch via Push (Hangfire async job) - only if user enabled push notifications
-        if (request.Push && user.EnablePush)
+        // 4. Dispatch via Push (Hangfire async job) - only if user has a push token (assuming all users want push by default)
+        if (request.Push)
         {
             // Enqueue push notification job - service method has [AutomaticRetry] attribute
             var pushMessage = new PushMessage

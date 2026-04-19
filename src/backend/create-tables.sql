@@ -1,4 +1,4 @@
--- Create all missing tables for Mojaz
+-- Create all missing tables for DrivingLicenseIssuanceSystem
 
 -- AuditLogs table
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'AuditLogs')

@@ -1,7 +1,7 @@
 using FluentValidation;
-using Mojaz.Application.DTOs.Training;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Training;
 
-namespace Mojaz.Application.Validators
+namespace DrivingLicenseIssuanceSystem.Application.Validators
 {
     public class CreateTrainingRecordValidator : AbstractValidator<CreateTrainingRecordRequest>
     {

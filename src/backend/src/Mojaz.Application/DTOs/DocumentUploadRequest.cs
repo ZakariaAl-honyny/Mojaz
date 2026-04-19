@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace Mojaz.Application.DTOs
+namespace DrivingLicenseIssuanceSystem.Application.DTOs
 {
     public class DocumentUploadRequest
     {

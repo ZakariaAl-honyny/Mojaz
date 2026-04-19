@@ -18,7 +18,7 @@ import {
   XCircle,
   CheckCircle
 } from "lucide-react";
-import { useTranslations } from 'next-intl';
+import { useTranslations, useFormatter } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { 
@@ -60,7 +60,8 @@ interface FilterState {
 const CATEGORY_COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'];
 
 export default function ApplicationsReportPage() {
-  const t = useTranslations('reports');
+  const t = useTranslations('admin');
+  const format = useFormatter();
   const { locale } = useParams();
   const isRTL = locale === 'ar';
 
@@ -76,61 +77,62 @@ export default function ApplicationsReportPage() {
 
   // Mock data
   const applicationsData: ApplicationData[] = [
-    { id: '1', number: 'MOJ-2025-84729163', applicant: 'أحمد محمد علي', category: 'B', status: 'Completed', stage: 'License Issued', submittedDate: '2025-01-15', completedDate: '2025-02-10' },
-    { id: '2', number: 'MOJ-2025-92837465', applicant: 'سعيد خالد', category: 'A', status: 'InReview', stage: 'Medical Exam', submittedDate: '2025-01-18', completedDate: null },
-    { id: '3', number: 'MOJ-2025-73829104', applicant: 'عبدالله عمر', category: 'C', status: 'Rejected', stage: 'Theory Test', submittedDate: '2025-01-10', completedDate: '2025-02-01', rejectionReason: 'رسب في الاختبار النظري' },
-    { id: '4', number: 'MOJ-2025-19283746', applicant: 'فاطمة علي', category: 'B', status: 'Submitted', stage: 'Pending Review', submittedDate: '2025-01-20', completedDate: null },
-    { id: '5', number: 'MOJ-2025-56473829', applicant: 'خالد إبراهيم', category: 'D', status: 'Completed', stage: 'License Issued', submittedDate: '2025-01-05', completedDate: '2025-01-25' },
+    { id: '1', number: 'MOJ-2026-84729163', applicant: locale === 'ar' ? 'أحمد محمد علي' : 'Ahmed Mohammed Ali', category: 'B', status: 'Completed', stage: t('reports.applications.stages.licenseIssuance'), submittedDate: '2026-01-15', completedDate: '2026-02-10' },
+    { id: '2', number: 'MOJ-2026-92837465', applicant: locale === 'ar' ? 'سعيد خالد' : 'Said Khalid', category: 'A', status: 'InReview', stage: t('reports.applications.stages.medicalExam'), submittedDate: '2026-01-18', completedDate: null },
+    { id: '3', number: 'MOJ-2026-73829104', applicant: locale === 'ar' ? 'عبدالله عمر' : 'Abdullah Omar', category: 'C', status: 'Rejected', stage: t('reports.applications.stages.theoryTest'), submittedDate: '2026-01-10', completedDate: '2026-02-01', rejectionReason: t('reports.reasons.failedTest') },
+    { id: '4', number: 'MOJ-2026-19283746', applicant: locale === 'ar' ? 'فاطمة علي' : 'Fatima Ali', category: 'B', status: 'Submitted', stage: t('reports.applications.stages.pendingReview'), submittedDate: '2026-01-20', completedDate: null },
+    { id: '5', number: 'MOJ-2026-56473829', applicant: locale === 'ar' ? 'خالد إبراهيم' : 'Khalid Ibrahim', category: 'D', status: 'Completed', stage: t('reports.applications.stages.licenseIssuance'), submittedDate: '2026-01-05', completedDate: '2026-01-25' },
   ];
 
   const statusData = [
-    { name: locale === 'ar' ? 'مكتمل' : 'Completed', value: 245, color: '#10B981' },
-    { name: locale === 'ar' ? 'قيد المراجعة' : 'In Review', value: 89, color: '#F59E0B' },
-    { name: locale === 'ar' ? 'مستقدم' : 'Submitted', value: 56, color: '#3B82F6' },
-    { name: locale === 'ar' ? 'مرفوض' : 'Rejected', value: 23, color: '#EF4444' },
-    { name: locale === 'ar' ? 'مسودة' : 'Draft', value: 18, color: '#8B5CF6' },
+    { name: t('status.completed'), value: 245, color: '#10B981' },
+    { name: t('status.inReview'), value: 89, color: '#F59E0B' },
+    { name: t('status.submitted'), value: 56, color: '#3B82F6' },
+    { name: t('status.rejected'), value: 23, color: '#EF4444' },
+    { name: t('status.draft'), value: 18, color: '#8B5CF6' },
   ];
 
   const categoryData = [
-    { name: 'فئة A', value: 120 },
-    { name: 'فئة B', value: 280 },
-    { name: 'فئة C', value: 85 },
-    { name: 'فئة D', value: 45 },
-    { name: 'فئة E', value: 25 },
-    { name: 'فئة F', value: 15 },
+    { name: `${t('reports.common.category')} A`, value: 120 },
+    { name: `${t('reports.common.category')} B`, value: 280 },
+    { name: `${t('reports.common.category')} C`, value: 85 },
+    { name: `${t('reports.common.category')} D`, value: 45 },
+    { name: `${t('reports.common.category')} E`, value: 25 },
+    { name: `${t('reports.common.category')} F`, value: 15 },
   ];
 
   const trendData = [
-    { month: locale === 'ar' ? 'يناير' : 'Jan', applications: 45, completed: 38 },
-    { month: locale === 'ar' ? 'فبراير' : 'Feb', applications: 52, completed: 45 },
-    { month: locale === 'ar' ? 'مارس' : 'Mar', applications: 48, completed: 42 },
-    { month: locale === 'ar' ? 'ابريل' : 'Apr', applications: 61, completed: 55 },
+    { month: t('months.jan'), applications: 45, completed: 38 },
+    { month: t('months.feb'), applications: 52, completed: 45 },
+    { month: t('months.mar'), applications: 48, completed: 42 },
+    { month: t('months.apr'), applications: 61, completed: 55 },
   ];
 
   const completionTimeData = [
-    { stage: locale === 'ar' ? 'الفحص الطبي' : 'Medical Exam', days: 3 },
-    { stage: locale === 'ar' ? 'الاختبار النظري' : 'Theory Test', days: 5 },
-    { stage: locale === 'ar' ? 'الاختبار العملي' : 'Practical Test', days: 7 },
-    { stage: locale === 'ar' ? 'إصدار الرخصة' : 'License Issuance', days: 2 },
+    { stage: t('reports.applications.stages.medicalExam'), days: 3 },
+    { stage: t('reports.applications.stages.theoryTest'), days: 5 },
+    { stage: t('reports.applications.stages.practicalTest'), days: 7 },
+    { stage: t('reports.applications.stages.licenseIssuance'), days: 2 },
   ];
 
   const rejectionReasons = [
-    { reason: locale === 'ar' ? 'رسب في الاختبار' : 'Failed Test', count: 12 },
-    { reason: locale === 'ar' ? 'فشل الفحص الطبي' : 'Medical Failure', count: 5 },
-    { reason: locale === 'ar' ? 'توثيق غير مكتمل' : 'Incomplete Documents', count: 4 },
-    { reason: locale === 'ar' ? 'عمر أقل من المطلوب' : 'Age Below Required', count: 2 },
+    { reason: t('reports.reasons.failedTest'), count: 12 },
+    { reason: t('reports.reasons.medicalFailure'), count: 5 },
+    { reason: t('reports.reasons.incompleteDocuments'), count: 4 },
+    { reason: t('reports.reasons.ageBelowRequired'), count: 2 },
   ];
 
   const getStatusBadge = (status: string) => {
-    const statusMap: Record<string, { variant: any; label: string }> = {
-      Completed: { variant: 'default', label: locale === 'ar' ? 'مكتمل' : 'Completed' },
-      InReview: { variant: 'secondary', label: locale === 'ar' ? 'قيد المراجعة' : 'In Review' },
-      Submitted: { variant: 'outline', label: locale === 'ar' ? 'مستقدم' : 'Submitted' },
-      Rejected: { variant: 'destructive', label: locale === 'ar' ? 'مرفوض' : 'Rejected' },
-      Draft: { variant: 'outline', label: locale === 'ar' ? 'مسودة' : 'Draft' },
+    const statusKey = status.charAt(0).toLowerCase() + status.slice(1);
+    const statusMap: Record<string, { variant: any }> = {
+      Completed: { variant: 'default' },
+      InReview: { variant: 'secondary' },
+      Submitted: { variant: 'outline' },
+      Rejected: { variant: 'destructive' },
+      Draft: { variant: 'outline' },
     };
-    const config = statusMap[status] || { variant: 'outline', label: status };
-    return <Badge variant={config.variant as any}>{config.label}</Badge>;
+    const config = statusMap[status] || { variant: 'outline' };
+    return <Badge variant={config.variant as any}>{t(`status.${statusKey}`)}</Badge>;
   };
 
   return (
@@ -138,21 +140,21 @@ export default function ApplicationsReportPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-neutral-900">{t('applications.title')}</h1>
-          <p className="text-neutral-500 mt-1">{t('applications.subtitle')}</p>
+          <h1 className="text-3xl font-bold text-neutral-900">{t('reports.applications.title')}</h1>
+          <p className="text-neutral-500 mt-1">{t('reports.applications.subtitle')}</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" className="gap-2">
             <Download className="w-4 h-4" />
-            {t('export.csv')}
+            {t('reports.common.exportCSV')}
           </Button>
           <Button variant="outline" className="gap-2">
             <Download className="w-4 h-4" />
-            {t('export.excel')}
+            {t('reports.common.exportExcel')}
           </Button>
           <Button variant="outline" className="gap-2">
             <Download className="w-4 h-4" />
-            {t('export.pdf')}
+            {t('reports.common.exportPDF')}
           </Button>
         </div>
       </div>
@@ -162,7 +164,7 @@ export default function ApplicationsReportPage() {
         <CardContent className="p-5">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-neutral-700">{t('filters.fromDate')}</label>
+              <label className="text-sm font-medium text-neutral-700">{t('reports.common.fromDate')}</label>
               <Input 
                 type="date" 
                 value={filters.fromDate}
@@ -170,7 +172,7 @@ export default function ApplicationsReportPage() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-neutral-700">{t('filters.toDate')}</label>
+              <label className="text-sm font-medium text-neutral-700">{t('reports.common.toDate')}</label>
               <Input 
                 type="date" 
                 value={filters.toDate}
@@ -178,48 +180,48 @@ export default function ApplicationsReportPage() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-neutral-700">{t('filters.status')}</label>
+              <label className="text-sm font-medium text-neutral-700">{t('reports.common.status')}</label>
               <Select value={filters.status} onValueChange={(v) => setFilters({...filters, status: v})}>
                 <SelectTrigger>
-                  <SelectValue placeholder={t('filters.status')} />
+                  <SelectValue placeholder={t('reports.common.status')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('common.all') || 'All'}</SelectItem>
-                  <SelectItem value="Submitted">{locale === 'ar' ? 'مستقدم' : 'Submitted'}</SelectItem>
-                  <SelectItem value="InReview">{locale === 'ar' ? 'قيد المراجعة' : 'In Review'}</SelectItem>
-                  <SelectItem value="Completed">{locale === 'ar' ? 'مكتمل' : 'Completed'}</SelectItem>
-                  <SelectItem value="Rejected">{locale === 'ar' ? 'مرفوض' : 'Rejected'}</SelectItem>
+                  <SelectItem value="all">{t('reports.common.all')}</SelectItem>
+                  <SelectItem value="Submitted">{t('status.submitted')}</SelectItem>
+                  <SelectItem value="InReview">{t('status.inReview')}</SelectItem>
+                  <SelectItem value="Completed">{t('status.completed')}</SelectItem>
+                  <SelectItem value="Rejected">{t('status.rejected')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-neutral-700">{t('filters.category')}</label>
+              <label className="text-sm font-medium text-neutral-700">{t('reports.common.category')}</label>
               <Select value={filters.category} onValueChange={(v) => setFilters({...filters, category: v})}>
                 <SelectTrigger>
-                  <SelectValue placeholder={t('filters.category')} />
+                  <SelectValue placeholder={t('reports.common.category')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('common.all') || 'All'}</SelectItem>
-                  <SelectItem value="A">فئة A</SelectItem>
-                  <SelectItem value="B">فئة B</SelectItem>
-                  <SelectItem value="C">فئة C</SelectItem>
-                  <SelectItem value="D">فئة D</SelectItem>
-                  <SelectItem value="E">فئة E</SelectItem>
-                  <SelectItem value="F">فئة F</SelectItem>
+                  <SelectItem value="all">{t('reports.common.all')}</SelectItem>
+                  <SelectItem value="A">{t('reports.common.category')} A</SelectItem>
+                  <SelectItem value="B">{t('reports.common.category')} B</SelectItem>
+                  <SelectItem value="C">{t('reports.common.category')} C</SelectItem>
+                  <SelectItem value="D">{t('reports.common.category')} D</SelectItem>
+                  <SelectItem value="E">{t('reports.common.category')} E</SelectItem>
+                  <SelectItem value="F">{t('reports.common.category')} F</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-neutral-700">{t('filters.serviceType')}</label>
+              <label className="text-sm font-medium text-neutral-700">{t('reports.common.serviceType')}</label>
               <Select value={filters.serviceType} onValueChange={(v) => setFilters({...filters, serviceType: v})}>
                 <SelectTrigger>
-                  <SelectValue placeholder={t('filters.serviceType')} />
+                  <SelectValue placeholder={t('reports.common.serviceType')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('common.all') || 'All'}</SelectItem>
-                  <SelectItem value="new">{locale === 'ar' ? 'جديد' : 'New'}</SelectItem>
-                  <SelectItem value="renewal">{locale === 'ar' ? 'تجديد' : 'Renewal'}</SelectItem>
-                  <SelectItem value="upgrade">{locale === 'ar' ? 'ترقية' : 'Upgrade'}</SelectItem>
+                  <SelectItem value="all">{t('reports.common.all')}</SelectItem>
+                  <SelectItem value="new">{t('reports.common.new')}</SelectItem>
+                  <SelectItem value="renewal">{t('reports.common.renewal')}</SelectItem>
+                  <SelectItem value="upgrade">{t('reports.common.upgrade')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -228,7 +230,7 @@ export default function ApplicationsReportPage() {
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
               <Input 
-                placeholder={t('filters.search') || 'Search...'}
+                placeholder={t('reports.common.search')}
                 className="ps-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -236,7 +238,7 @@ export default function ApplicationsReportPage() {
             </div>
             <Button variant="outline" className="gap-2">
               <Filter className="w-4 h-4" />
-              {t('filters.apply') || 'Apply'}
+              {t('reports.common.apply')}
             </Button>
           </div>
         </CardContent>
@@ -248,7 +250,7 @@ export default function ApplicationsReportPage() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-neutral-500 flex items-center gap-2">
               <PieChart className="w-4 h-4" />
-              {t('applications.byStatus')}
+              {t('reports.applications.byStatus')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -279,7 +281,7 @@ export default function ApplicationsReportPage() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-neutral-500 flex items-center gap-2">
               <BarChart3 className="w-4 h-4" />
-              {t('applications.byCategory')}
+              {t('reports.applications.byCategory')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -289,7 +291,7 @@ export default function ApplicationsReportPage() {
                   <XAxis type="number" hide />
                   <YAxis type="category" dataKey="name" width={40} tick={{ fontSize: 11 }} />
                   <Tooltip />
-                  <Bar dataKey="value" fill="#006C35" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="value" fill="#6366F1" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -300,7 +302,7 @@ export default function ApplicationsReportPage() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-neutral-500 flex items-center gap-2">
               <TrendingUp className="w-4 h-4" />
-              {t('applications.trend')}
+              {t('reports.applications.trend')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -321,7 +323,7 @@ export default function ApplicationsReportPage() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-neutral-500 flex items-center gap-2">
               <Clock className="w-4 h-4" />
-              {t('applications.avgTime')}
+              {t('reports.applications.avgTime')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -344,7 +346,7 @@ export default function ApplicationsReportPage() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <XCircle className="w-5 h-5 text-red-500" />
-            {t('applications.rejectionReasons')}
+            {t('reports.applications.rejectionReasons')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -364,7 +366,7 @@ export default function ApplicationsReportPage() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <FileText className="w-5 h-5 text-primary-500" />
-            {t('applications.table')}
+            {t('reports.applications.table')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -372,13 +374,13 @@ export default function ApplicationsReportPage() {
             <table className="w-full">
               <thead className="bg-neutral-50 border-b border-neutral-100">
                 <tr>
-                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('applications.number')}</th>
-                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('applications.applicant')}</th>
-                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('applications.category')}</th>
-                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('applications.status')}</th>
-                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('applications.stage')}</th>
-                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('applications.submittedDate')}</th>
-                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('applications.completedDate')}</th>
+                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('reports.applications.number')}</th>
+                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('reports.applications.applicant')}</th>
+                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('reports.applications.category')}</th>
+                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('reports.applications.status')}</th>
+                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('reports.applications.stage')}</th>
+                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('reports.applications.submittedDate')}</th>
+                  <th className="text-start px-4 py-3 text-sm font-medium text-neutral-500">{t('reports.applications.completedDate')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100">
@@ -393,9 +395,11 @@ export default function ApplicationsReportPage() {
                     </td>
                     <td className="px-4 py-3">{getStatusBadge(app.status)}</td>
                     <td className="px-4 py-3 text-neutral-600 text-sm">{app.stage}</td>
-                    <td className="px-4 py-3 text-neutral-600 text-sm">{app.submittedDate}</td>
                     <td className="px-4 py-3 text-neutral-600 text-sm">
-                      {app.completedDate || '-'}
+                      {format.dateTime(new Date(app.submittedDate), { dateStyle: 'medium' })}
+                    </td>
+                    <td className="px-4 py-3 text-neutral-600 text-sm">
+                      {app.completedDate ? format.dateTime(new Date(app.completedDate), { dateStyle: 'medium' }) : '-'}
                     </td>
                   </tr>
                 ))}

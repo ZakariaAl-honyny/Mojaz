@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus, HelpCircle } from "lucide-react";
-import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export function FAQSection() {
   const t = useTranslations("landing.faq");
@@ -21,7 +21,7 @@ export function FAQSection() {
       <div className="container mx-auto px-4 md:px-6 max-w-4xl">
         <ScrollReveal>
           <div className="text-center mb-16 space-y-4">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-neutral-900 dark:text-white font-arabic ltr:font-english">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 dark:text-white font-arabic ltr:font-english">
               {t("title")}
             </h2>
             <div className="flex justify-center">

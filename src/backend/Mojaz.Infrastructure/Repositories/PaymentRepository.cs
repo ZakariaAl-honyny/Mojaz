@@ -1,12 +1,12 @@
-using Mojaz.Application.Interfaces.Repositories;
-using Mojaz.Domain.Entities;
-using Mojaz.Infrastructure.Persistence.Repositories;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Repositories;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Repositories;
 
-namespace Mojaz.Infrastructure.Persistence.Repositories
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Repositories
 {
     public class PaymentRepository : Repository<PaymentTransaction>, IPaymentRepository
     {
-        public PaymentRepository(MojazDbContext context) : base(context)
+        public PaymentRepository(DrivingLicenseIssuanceSystemDbContext context) : base(context)
         {
         }
 

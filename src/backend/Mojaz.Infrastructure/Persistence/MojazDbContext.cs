@@ -1,17 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Mojaz.Domain.Entities;
-using Mojaz.Infrastructure.Persistence.Interceptors;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Interceptors;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using DomainApplication = Mojaz.Domain.Entities.Application;
+using DomainApplication = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
 
-namespace Mojaz.Infrastructure.Persistence
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Persistence
 {
-    public class MojazDbContext : DbContext
+    public class DrivingLicenseIssuanceSystemDbContext : DbContext
     {
-        public MojazDbContext(DbContextOptions<MojazDbContext> options) : base(options) { }
+        public DrivingLicenseIssuanceSystemDbContext(DbContextOptions<DrivingLicenseIssuanceSystemDbContext> options) : base(options) { }
 
         // DbSets for all 21 entities
         public DbSet<User> Users { get; set; }
@@ -43,7 +43,7 @@ namespace Mojaz.Infrastructure.Persistence
         {
             foreach (var entry in ChangeTracker.Entries())
             {
-                if (entry.Entity is Mojaz.Domain.Common.BaseEntity baseEntity)
+                if (entry.Entity is DrivingLicenseIssuanceSystem.Domain.Common.BaseEntity baseEntity)
                 {
                     if (entry.State == EntityState.Added)
                     {
@@ -64,7 +64,7 @@ namespace Mojaz.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Register all IEntityTypeConfiguration<T> from this assembly
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(MojazDbContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DrivingLicenseIssuanceSystemDbContext).Assembly);
 
             base.OnModelCreating(modelBuilder);
         }

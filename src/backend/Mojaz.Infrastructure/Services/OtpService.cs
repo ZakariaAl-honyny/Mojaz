@@ -1,16 +1,16 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Mojaz.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
-namespace Mojaz.Infrastructure.Services;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Services;
 
 public class OtpService : IOtpService
 {
     public async Task<string> GenerateOtpAsync(string destination, string purpose)
     {
         // For testing purposes
-        if (destination.EndsWith("@mojaz.gov.sa") || destination == "0500000001")
+        if (destination.EndsWith("@DrivingLicenseIssuanceSystem.gov.sa") || destination == "0500000001")
         {
             return "123456";
         }

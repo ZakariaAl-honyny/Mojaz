@@ -26,7 +26,7 @@ Implementation of the SMS service using the Twilio REST API. This service reside
 
 ### 3. SMS Templates
 - **Max length**: 160 characters (Standard SMS).
-- **Location**: `src/Mojaz.Infrastructure/Templates/Sms/`.
+- **Location**: `src/DrivingLicenseIssuanceSystem.Infrastructure/Templates/Sms/`.
 - **Templates**:
     1. Registration OTP (6 digits)
     2. Recovery OTP (6 digits)

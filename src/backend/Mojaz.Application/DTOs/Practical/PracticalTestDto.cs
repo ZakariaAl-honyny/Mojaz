@@ -1,6 +1,6 @@
 using System;
 
-namespace Mojaz.Application.DTOs.Practical;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Practical;
 
 /// <summary>
 /// Response DTO for practical test data

@@ -23,7 +23,7 @@ export function DocumentStatusBadge({ status, className = '' }: DocumentStatusBa
       case DocumentStatus.Approved:
         return {
           label: t('approved'),
-          className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+          className: 'bg-King blue-100 text-King blue-800 dark:bg-King blue-900/30 dark:text-King blue-400',
         };
       case DocumentStatus.Rejected:
         return {

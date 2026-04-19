@@ -3,11 +3,11 @@ using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Mojaz.Application.DTOs.Document;
-using Mojaz.Application.Validators;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Document;
+using DrivingLicenseIssuanceSystem.Application.Validators;
 using Xunit;
 
-namespace Mojaz.Application.Tests.Validators;
+namespace DrivingLicenseIssuanceSystem.Application.Tests.Validators;
 
 public class UploadDocumentValidatorTests
 {

@@ -2,10 +2,10 @@
   - banner [ref=e3]:
     - generic [ref=e4]:
       - generic [ref=e5]:
-        - link "M Mojaz ." [ref=e6] [cursor=pointer]:
+        - link "M DrivingLicenseIssuanceSystem ." [ref=e6] [cursor=pointer]:
           - /url: /
           - generic [ref=e7]: M
-          - generic [ref=e8]: Mojaz .
+          - generic [ref=e8]: DrivingLicenseIssuanceSystem .
         - navigation
       - generic [ref=e9]:
         - generic [ref=e10]:
@@ -23,10 +23,10 @@
     - generic [ref=e19]:
       - navigation [ref=e20]:
         - generic [ref=e21]:
-          - link "M مُجاز" [ref=e22] [cursor=pointer]:
+          - link "M نظام إصدار رخص القيادة" [ref=e22] [cursor=pointer]:
             - /url: /ar
             - generic [ref=e23]: M
-            - generic [ref=e24]: مُجاز
+            - generic [ref=e24]: نظام إصدار رخص القيادة
           - generic [ref=e25]:
             - link "English" [ref=e26] [cursor=pointer]:
               - /url: /en/login
@@ -44,7 +44,7 @@
           - generic [ref=e40]:
             - generic [ref=e41]:
               - heading "تسجيل الدخول" [level=2] [ref=e42]
-              - paragraph [ref=e43]: الوصول إلى حسابك في منصة مُجاز
+              - paragraph [ref=e43]: الوصول إلى حسابك في منصة نظام إصدار رخص القيادة
             - generic [ref=e44]:
               - generic [ref=e45]:
                 - text: auth.login.identifier
@@ -69,7 +69,7 @@
           - generic [ref=e65]:
             - generic [ref=e66]:
               - generic [ref=e67]: M
-              - generic [ref=e68]: مُجاز
+              - generic [ref=e68]: نظام إصدار رخص القيادة
             - paragraph [ref=e69]: نظام إصدار رخص القيادة الإلكتروني الرسمي. بوابتكم المتكاملة لخدمات الرخص بكل سهولة وأمان.
           - generic [ref=e70]:
             - heading "الخدمات" [level=4] [ref=e71]
@@ -90,7 +90,7 @@
             - heading "المنصة" [level=4] [ref=e82]
             - list [ref=e83]:
               - listitem [ref=e84]:
-                - link "عن مُجاز" [ref=e85] [cursor=pointer]:
+                - link "عن نظام إصدار رخص القيادة" [ref=e85] [cursor=pointer]:
                   - /url: /ar/about
               - listitem [ref=e86]:
                 - link "اتصل بنا" [ref=e87] [cursor=pointer]:
@@ -107,10 +107,10 @@
               - generic [ref=e95] [cursor=pointer]: X
               - generic [ref=e96] [cursor=pointer]: FB
               - generic [ref=e97] [cursor=pointer]: IN
-        - paragraph [ref=e99]: © 2026 مُجاز. جميع الحقوق محفوظة لوزارة الداخلية.
+        - paragraph [ref=e99]: © 2026 نظام إصدار رخص القيادة. جميع الحقوق محفوظة لوزارة الداخلية.
   - contentinfo [ref=e100]:
     - generic [ref=e101]:
       - generic [ref=e102]:
         - generic [ref=e103]: M
-        - generic [ref=e104]: Mojaz
-      - paragraph [ref=e105]: © 2026 Mojaz Platform. All rights reserved.
+        - generic [ref=e104]: DrivingLicenseIssuanceSystem
+      - paragraph [ref=e105]: © 2026 DrivingLicenseIssuanceSystem Platform. All rights reserved.

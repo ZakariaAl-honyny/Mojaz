@@ -1,10 +1,10 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Mojaz.Application.DTOs.Email;
-using Mojaz.Application.Interfaces.Repositories;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Email;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Repositories;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -12,26 +12,26 @@ using RazorLight;
 using PreMailer.Net;
 using Polly;
 using Polly.Retry;
-using Mojaz.Infrastructure.Authentication;
-using Mojaz.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Infrastructure.Authentication;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
 
-namespace Mojaz.Infrastructure.Services
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Services
 {
     public class SendGridEmailService : IEmailService
     {
         private readonly SendGridSettings _settings;
         private readonly IEmailLogRepository _emailLogRepository;
-        private readonly MojazDbContext _dbContext;
+        private readonly DrivingLicenseIssuanceSystemDbContext _dbContext;
         private readonly IRazorLightEngine _razorEngine;
-        private readonly SendGridClient _sendGridClient;
+        private readonly ISendGridClient _sendGridClient;
         private readonly AsyncRetryPolicy _retryPolicy;
 
         public SendGridEmailService(
             IOptions<SendGridSettings> settings,
             IEmailLogRepository emailLogRepository,
-            MojazDbContext dbContext,
+            DrivingLicenseIssuanceSystemDbContext dbContext,
             IRazorLightEngine razorEngine,
-            SendGridClient sendGridClient)
+            ISendGridClient sendGridClient)
         {
             _settings = settings.Value;
             _emailLogRepository = emailLogRepository;
@@ -39,8 +39,8 @@ namespace Mojaz.Infrastructure.Services
             _razorEngine = razorEngine;
             _sendGridClient = sendGridClient;
             _retryPolicy = Policy
-                .Handle<Exception>(ex => ex is HttpRequestException)
-                .WaitAndRetryAsync(new[] { TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(4) });
+                .Handle<Exception>()
+                .WaitAndRetryAsync(new[] { TimeSpan.FromMilliseconds(10), TimeSpan.FromMilliseconds(20), TimeSpan.FromMilliseconds(40) });
         }
 
         public async Task SendEmailAsync(string to, string subject, string body)
@@ -56,7 +56,7 @@ namespace Mojaz.Infrastructure.Services
             await _retryPolicy.ExecuteAsync(async () =>
             {
                 var response = await _sendGridClient.SendEmailAsync(msg);
-                if (response.StatusCode >= HttpStatusCode.InternalServerError)
+                if ((int)response.StatusCode >= 500)
                 {
                     throw new Exception($"SendGrid 5xx error: {response.StatusCode}");
                 }

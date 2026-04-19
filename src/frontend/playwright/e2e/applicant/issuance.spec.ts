@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { mojazUtils } from '../../utils';
+import { DrivingLicenseIssuanceSystemUtils } from '../../utils';
 
 test.describe('US1: New License Issuance Journey', () => {
   // Use pre-authenticated applicant state (Phase 2 requirement)
@@ -8,7 +8,7 @@ test.describe('US1: New License Issuance Journey', () => {
   test('create new license application via wizard', async ({ page }) => {
     // 1. Visit Dashboard and ensure we are logged in as Applicant
     await page.goto('/ar/dashboard');
-    await mojazUtils.waitForDashboardLoad(page);
+    await DrivingLicenseIssuanceSystemUtils.waitForDashboardLoad(page);
 
     // 2. Trigger "New Application" flow
     await page.getByTestId('new-application-btn').click();
@@ -40,21 +40,21 @@ test.describe('US1: New License Issuance Journey', () => {
     // Verify visibility of selected data summary
     await expect(page.getByText('1000000001')).toBeVisible();
     await page.getByTestId('checkbox-accuracy').check();
-    
+
     // Measure submission performance (SLA observation)
-    await mojazUtils.measurePerformance(page, 'Issuance Application Submit', async () => {
+    await DrivingLicenseIssuanceSystemUtils.measurePerformance(page, 'Issuance Application Submit', async () => {
       await page.getByTestId('wizard-submit').click();
     });
 
     // 8. Redirect Verification
-    // Success submission leads back to dashboard in Mojaz flow
+    // Success submission leads back to dashboard in DrivingLicenseIssuanceSystem flow
     await expect(page).toHaveURL(/.*dashboard/);
-    await mojazUtils.waitForDashboardLoad(page);
+    await DrivingLicenseIssuanceSystemUtils.waitForDashboardLoad(page);
 
     // 9. Verify record presence in recent applications list
     const applicationList = page.locator('[data-testid="application-card"]');
     await expect(applicationList.first()).toBeVisible();
-    
+
     // Visual snapshot check for the dashboard state (Phase 5 precursor)
     // await expect(page).toHaveScreenshot('dashboard-after-submit.png');
   });

@@ -80,7 +80,7 @@ export function FinalDecisionModal({
   const getDecisionIcon = () => {
     switch (decision) {
       case FinalDecisionType.Approved:
-        return <CheckCircle className="w-16 h-16 text-green-500" />;
+        return <CheckCircle className="w-16 h-16 text-King blue-500" />;
       case FinalDecisionType.Rejected:
         return <XCircle className="w-16 h-16 text-red-500" />;
       case FinalDecisionType.Returned:
@@ -116,8 +116,8 @@ export function FinalDecisionModal({
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
         <Card className="w-full max-w-md p-8 text-center animate-in fade-in zoom-in duration-300">
           <div className="flex justify-center mb-4">
-            <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
-              <CheckCircle className="w-10 h-10 text-green-600 dark:text-green-400" />
+            <div className="w-20 h-20 rounded-full bg-King blue-100 dark:bg-King blue-900 flex items-center justify-center">
+              <CheckCircle className="w-10 h-10 text-King blue-600 dark:text-King blue-400" />
             </div>
           </div>
           <h3 className="text-2xl font-bold mb-2">{t("messages.success")}</h3>
@@ -167,23 +167,23 @@ export function FinalDecisionModal({
           <div className="flex justify-center mb-4">{getDecisionIcon()}</div>
           <h3 className="text-2xl font-bold mb-2">{getDecisionTitle()}</h3>
           <p className="text-gray-500 mb-6">{getDecisionMessage()}</p>
-          
+
           {formData.reason && (
             <div className="text-left bg-gray-50 dark:bg-gray-900 p-3 rounded-lg mb-6">
               <p className="text-sm text-gray-500">{t("form.reason")}:</p>
               <p className="font-medium">{formData.reason}</p>
             </div>
           )}
-          
+
           <div className="flex gap-3">
             <Button variant="outline" onClick={() => setStep("form")} className="flex-1">
               {t("common.back")}
             </Button>
-            <Button 
-              onClick={handleConfirm} 
+            <Button
+              onClick={handleConfirm}
               className={cn(
                 "flex-1",
-                decision === FinalDecisionType.Approved && "bg-green-600 hover:bg-green-700",
+                decision === FinalDecisionType.Approved && "bg-King blue-600 hover:bg-King blue-700",
                 decision === FinalDecisionType.Rejected && "bg-red-600 hover:bg-red-700",
                 decision === FinalDecisionType.Returned && "bg-amber-600 hover:bg-amber-700"
               )}
@@ -298,11 +298,11 @@ export function FinalDecisionModal({
           <Button variant="outline" onClick={onClose} className="flex-1">
             {t("common.cancel")}
           </Button>
-          <Button 
+          <Button
             onClick={handleSubmit}
             className={cn(
               "flex-1",
-              decision === FinalDecisionType.Approved && "bg-green-600 hover:bg-green-700",
+              decision === FinalDecisionType.Approved && "bg-King blue-600 hover:bg-King blue-700",
               decision === FinalDecisionType.Rejected && "bg-red-600 hover:bg-red-700",
               decision === FinalDecisionType.Returned && "bg-amber-600 hover:bg-amber-700"
             )}

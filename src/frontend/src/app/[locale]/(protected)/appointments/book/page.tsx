@@ -3,14 +3,14 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
-import { 
-  Calendar, 
-  Clock, 
-  MapPin, 
-  ChevronRight, 
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  ChevronRight,
   ChevronLeft,
-  Stethoscope, 
-  GraduationCap, 
+  Stethoscope,
+  GraduationCap,
   Car,
   Check,
   Loader2
@@ -43,26 +43,26 @@ interface Center {
 
 // Mock data
 const appointmentTypes: AppointmentType[] = [
-  { 
-    id: 'medical', 
-    type: 'medical', 
+  {
+    id: 'medical',
+    type: 'medical',
     icon: <Stethoscope className="w-8 h-8" />,
     color: 'bg-blue-50',
     textColor: 'text-blue-600'
   },
-  { 
-    id: 'theory', 
-    type: 'theory', 
+  {
+    id: 'theory',
+    type: 'theory',
     icon: <GraduationCap className="w-8 h-8" />,
     color: 'bg-purple-50',
     textColor: 'text-purple-600'
   },
-  { 
-    id: 'practical', 
-    type: 'practical', 
+  {
+    id: 'practical',
+    type: 'practical',
     icon: <Car className="w-8 h-8" />,
-    color: 'bg-green-50',
-    textColor: 'text-green-600'
+    color: 'bg-King blue-50',
+    textColor: 'text-King blue-600'
   }
 ];
 
@@ -85,23 +85,23 @@ const timeSlots: TimeSlot[] = [
 ];
 
 const centers: Center[] = [
-  { 
-    id: '1', 
-    name: 'Riyadh Driving Center', 
-    address: 'King Abdullah Road, Riyadh', 
-    hours: '08:00 - 20:00' 
+  {
+    id: '1',
+    name: 'Riyadh Driving Center',
+    address: 'King Abdullah Road, Riyadh',
+    hours: '08:00 - 20:00'
   },
-  { 
-    id: '2', 
-    name: 'Jeddah Driving Center', 
-    address: 'Al-Madinah Road, Jeddah', 
-    hours: '08:00 - 20:00' 
+  {
+    id: '2',
+    name: 'Jeddah Driving Center',
+    address: 'Al-Madinah Road, Jeddah',
+    hours: '08:00 - 20:00'
   },
-  { 
-    id: '3', 
-    name: 'Dammam Driving Center', 
-    address: 'King Faisal Road, Dammam', 
-    hours: '08:00 - 20:00' 
+  {
+    id: '3',
+    name: 'Dammam Driving Center',
+    address: 'King Faisal Road, Dammam',
+    hours: '08:00 - 20:00'
   }
 ];
 
@@ -109,15 +109,15 @@ const centers: Center[] = [
 const generateDates = () => {
   const dates: { date: Date; day: number; weekday: string; available: boolean }[] = [];
   const today = new Date();
-  
+
   for (let i = 0; i < 14; i++) {
     const date = new Date(today);
     date.setDate(today.getDate() + i);
-    
+
     // Skip Fridays (weekend in Saudi Arabia)
     const isFriday = date.getDay() === 5;
     const isPast = date < today;
-    
+
     dates.push({
       date,
       day: date.getDate(),
@@ -125,7 +125,7 @@ const generateDates = () => {
       available: !isFriday && !isPast
     });
   }
-  
+
   return dates;
 };
 
@@ -135,28 +135,28 @@ export default function BookAppointmentPage() {
   const t = useTranslations('appointment');
   const tBook = useTranslations('appointment.book');
   const router = useRouter();
-  
+
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [selectedCenter, setSelectedCenter] = useState<Center | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  
+
   const totalSteps = 5;
-  
+
   const handleNext = () => {
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     }
   };
-  
+
   const handleBack = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
   };
-  
+
   const handleConfirmBooking = async () => {
     setIsProcessing(true);
     // Simulate API call
@@ -164,7 +164,7 @@ export default function BookAppointmentPage() {
     setIsProcessing(false);
     router.push('/appointments');
   };
-  
+
   const canProceed = () => {
     switch (currentStep) {
       case 1:
@@ -212,7 +212,7 @@ export default function BookAppointmentPage() {
             </div>
           </div>
         );
-        
+
       case 2: // Select Date
         return (
           <div className="space-y-4">
@@ -242,7 +242,7 @@ export default function BookAppointmentPage() {
             </p>
           </div>
         );
-        
+
       case 3: // Select Time
         return (
           <div className="space-y-6">
@@ -273,7 +273,7 @@ export default function BookAppointmentPage() {
                 ))}
               </div>
             </div>
-            
+
             {/* Afternoon */}
             <div>
               <h4 className="font-semibold text-neutral-900 mb-3 flex items-center gap-2">
@@ -303,7 +303,7 @@ export default function BookAppointmentPage() {
             </div>
           </div>
         );
-        
+
       case 4: // Select Center
         return (
           <div className="space-y-4">
@@ -333,11 +333,11 @@ export default function BookAppointmentPage() {
             </div>
           </div>
         );
-        
+
       case 5: // Confirmation
         const typeName = selectedType ? tBook(`types.${selectedType}`) : '';
         const dateStr = selectedDate?.toLocaleDateString() || '';
-        
+
         return (
           <div className="space-y-6">
             <Card>
@@ -368,9 +368,9 @@ export default function BookAppointmentPage() {
                 </div>
               </CardContent>
             </Card>
-            
-            <Button 
-              onClick={handleConfirmBooking} 
+
+            <Button
+              onClick={handleConfirmBooking}
               disabled={isProcessing}
               className="w-full"
             >
@@ -395,7 +395,7 @@ export default function BookAppointmentPage() {
         <h1 className="text-2xl font-bold text-neutral-900">{tBook('title')}</h1>
         <p className="text-neutral-500">{tBook('subtitle')}</p>
       </div>
-      
+
       {/* Progress Steps */}
       <div className="flex items-center justify-between">
         {[1, 2, 3, 4, 5].map((step) => (
@@ -419,21 +419,21 @@ export default function BookAppointmentPage() {
           </div>
         ))}
       </div>
-      
+
       {/* Step Title */}
       <div className="flex items-center gap-2">
         <span className="text-sm text-neutral-500">
           {tBook('step')} {currentStep} {tBook('of')} {totalSteps}
         </span>
       </div>
-      
+
       {/* Step Content */}
       <Card>
         <CardContent className="p-6">
           {renderStep()}
         </CardContent>
       </Card>
-      
+
       {/* Navigation */}
       <div className="flex justify-between">
         <Button
@@ -444,7 +444,7 @@ export default function BookAppointmentPage() {
           <ChevronLeft className="w-4 h-4 me-2 rtl:me-0 rtl:ms-2" />
           {tBook('back')}
         </Button>
-        
+
         {currentStep < totalSteps && (
           <Button onClick={handleNext} disabled={!canProceed()}>
             {tBook('next')}

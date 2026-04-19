@@ -1,4 +1,4 @@
-namespace Mojaz.Infrastructure.Authentication
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Authentication
 {
     public class SendGridSettings
     {

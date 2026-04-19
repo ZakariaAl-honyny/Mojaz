@@ -1,9 +1,9 @@
-using Mojaz.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
 public class Gate4ValidationResult
 {

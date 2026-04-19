@@ -1,18 +1,18 @@
 using Microsoft.EntityFrameworkCore;
-using Mojaz.Application.Interfaces;
-using Mojaz.Domain.Entities;
-using Mojaz.Infrastructure.Persistence;
-using Mojaz.Infrastructure.Persistence.Repositories;
+using DrivingLicenseIssuanceSystem.Application.Interfaces;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Repositories;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Repositories
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Repositories
 {
     public class TrainingRepository : Repository<TrainingRecord>, ITrainingRepository
     {
-        public TrainingRepository(MojazDbContext context) : base(context)
+        public TrainingRepository(DrivingLicenseIssuanceSystemDbContext context) : base(context)
         {
         }
 

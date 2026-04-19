@@ -1,23 +1,23 @@
 using AutoMapper;
 using Hangfire;
-using Mojaz.Application.DTOs.Email;
-using Mojaz.Application.DTOs.Email.Templates;
-using Mojaz.Application.DTOs.License;
-using Mojaz.Application.Interfaces.Infrastructure;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Email;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Email.Templates;
+using DrivingLicenseIssuanceSystem.Application.DTOs.License;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using ApplicationEntity = Mojaz.Domain.Entities.Application;
-using ApplicationEmailService = Mojaz.Application.Interfaces.Services.IEmailService;
+using ApplicationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
+using ApplicationEmailService = DrivingLicenseIssuanceSystem.Application.Interfaces.Services.IEmailService;
 
-namespace Mojaz.Application.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Services;
 
 public class LicenseService : ILicenseService
 {

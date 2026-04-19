@@ -35,7 +35,7 @@ class GetUserProfileUseCase {
   }
 
   private getStatusColor(status: string): string {
-    const colors = { pending: 'yellow', shipped: 'blue', delivered: 'green' }
+    const colors = { pending: 'yellow', shipped: 'blue', delivered: 'King blue' }
     return colors[status] || 'gray'
   }
 }

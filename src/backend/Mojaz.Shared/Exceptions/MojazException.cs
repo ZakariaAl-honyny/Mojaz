@@ -1,18 +1,18 @@
-namespace Mojaz.Shared.Exceptions;
+namespace DrivingLicenseIssuanceSystem.Shared.Exceptions;
 
 /// <summary>
-/// Base exception for Mojaz application.
+/// Base exception for DrivingLicenseIssuanceSystem application.
 /// </summary>
-public class MojazException : Exception
+public class DrivingLicenseIssuanceSystemException : Exception
 {
     public int StatusCode { get; }
 
-    public MojazException(string message, int statusCode = 500) : base(message)
+    public DrivingLicenseIssuanceSystemException(string message, int statusCode = 500) : base(message)
     {
         StatusCode = statusCode;
     }
 
-    public MojazException(string message, Exception innerException, int statusCode = 500)
+    public DrivingLicenseIssuanceSystemException(string message, Exception innerException, int statusCode = 500)
         : base(message, innerException)
     {
         StatusCode = statusCode;

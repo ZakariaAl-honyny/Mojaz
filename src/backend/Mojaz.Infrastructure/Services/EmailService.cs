@@ -1,13 +1,13 @@
 using Microsoft.Extensions.Configuration;
-using Mojaz.Application.DTOs.Email;
-using Mojaz.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Email;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
 using System.Threading.Tasks;
 using Hangfire;
 
-namespace Mojaz.Infrastructure.Services;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Services;
 
 [AutomaticRetry(Attempts = 3)]
 public class EmailService : IEmailService
@@ -23,8 +23,8 @@ public class EmailService : IEmailService
 
     public async Task SendEmailAsync(string to, string subject, string body)
     {
-        var fromEmail = _configuration["SendGrid:SenderEmail"] ?? "noreply@mojaz.gov.sa";
-        var fromName = _configuration["SendGrid:SenderName"] ?? "Mojaz Platform";
+        var fromEmail = _configuration["SendGrid:SenderEmail"] ?? "noreply@DrivingLicenseIssuanceSystem.gov.sa";
+        var fromName = _configuration["SendGrid:SenderName"] ?? "DrivingLicenseIssuanceSystem Platform";
         
         var from = new EmailAddress(fromEmail, fromName);
         var toEmail = new EmailAddress(to);

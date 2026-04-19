@@ -1,18 +1,18 @@
 using Microsoft.EntityFrameworkCore;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Data.Seeding
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Data.Seeding
 {
     public static class DbInitializer
     {
-        public static async Task SeedAsync(MojazDbContext context, bool isProduction)
+        public static async Task SeedAsync(DrivingLicenseIssuanceSystemDbContext context, bool isProduction)
         {
             Log.Information("Starting database initialization...");
 
@@ -64,7 +64,8 @@ namespace Mojaz.Infrastructure.Data.Seeding
                     new FeeStructure { FeeType = FeeType.MedicalExamFee, Amount = 150.00m },
                     new FeeStructure { FeeType = FeeType.TheoryTestFee, Amount = 200.00m },
                     new FeeStructure { FeeType = FeeType.PracticalTestFee, Amount = 300.00m },
-                    new FeeStructure { FeeType = FeeType.IssuanceFee, Amount = 400.00m, LicenseCategoryId = categoryB?.Id }
+                    new FeeStructure { FeeType = FeeType.IssuanceFee, Amount = 400.00m, LicenseCategoryId = categoryB?.Id },
+                    new FeeStructure { FeeType = FeeType.ReplacementFee, Amount = 150.00m }
                 };
                 await context.FeeStructures.AddRangeAsync(fees);
             }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Mojaz.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Net.Http;
@@ -12,7 +12,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Net.Http.Headers;
 
-namespace Mojaz.API.Tests;
+namespace DrivingLicenseIssuanceSystem.API.Tests;
 
 public class IntegrationTestBase : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -27,10 +27,10 @@ public class IntegrationTestBase : IClassFixture<WebApplicationFactory<Program>>
             builder.ConfigureServices(services =>
             {
                 // In-memory database for testing
-                var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<MojazDbContext>));
+                var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<DrivingLicenseIssuanceSystemDbContext>));
                 if (descriptor != null) services.Remove(descriptor);
 
-                services.AddDbContext<MojazDbContext>(options =>
+                services.AddDbContext<DrivingLicenseIssuanceSystemDbContext>(options =>
                 {
                     options.UseInMemoryDatabase("TestDb_" + Guid.NewGuid().ToString());
                 });
@@ -54,10 +54,10 @@ public class IntegrationTestBase : IClassFixture<WebApplicationFactory<Program>>
         Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Test", $"{userId}|{role}");
     }
 
-    protected async Task ExecuteInScope(Func<MojazDbContext, Task> action)
+    protected async Task ExecuteInScope(Func<DrivingLicenseIssuanceSystemDbContext, Task> action)
     {
         using var scope = Factory.Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<MojazDbContext>();
+        var context = scope.ServiceProvider.GetRequiredService<DrivingLicenseIssuanceSystemDbContext>();
         await action(context);
     }
 }
@@ -65,8 +65,8 @@ public class IntegrationTestBase : IClassFixture<WebApplicationFactory<Program>>
 public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     public TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
-        ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
-        : base(options, logger, encoder, clock)
+        ILoggerFactory logger, UrlEncoder encoder)
+        : base(options, logger, encoder)
     {
     }
 

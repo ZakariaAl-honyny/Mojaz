@@ -3,8 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Mojaz.Application.Interfaces.Security;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Security;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -12,7 +12,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Security.Middleware;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Security.Middleware;
 
 public class GlobalExceptionHandler : IExceptionHandler
 {

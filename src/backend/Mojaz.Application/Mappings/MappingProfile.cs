@@ -1,9 +1,9 @@
 using AutoMapper;
-using Mojaz.Application.DTOs.Appointments;
-using Mojaz.Application.DTOs.Medical;
-using Mojaz.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Appointments;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Medical;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
 
-namespace Mojaz.Application.Mappings
+namespace DrivingLicenseIssuanceSystem.Application.Mappings
 {
     public class MappingProfile : Profile
     {

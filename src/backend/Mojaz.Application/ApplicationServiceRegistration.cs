@@ -1,10 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
-using Mojaz.Application.Interfaces;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Services;
+using DrivingLicenseIssuanceSystem.Application.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Services;
 using FluentValidation;
 
-namespace Mojaz.Application;
+namespace DrivingLicenseIssuanceSystem.Application;
 
 public static class ApplicationServiceRegistration
 {
@@ -57,6 +57,12 @@ public static class ApplicationServiceRegistration
 
         // ─── License Renewal (Feature 025) ───
         services.AddScoped<IRenewalService, RenewalService>();
+
+        // ─── License Replacement ───
+        services.AddScoped<IReplaceLicenseService, ReplaceLicenseService>();
+
+        // ─── Fee Structure Management ───
+        services.AddScoped<IFeeStructureService, FeeStructureService>();
 
         return services;
     }

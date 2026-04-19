@@ -1,4 +1,4 @@
-namespace Mojaz.Infrastructure.Settings
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Settings
 {
     public class EmailDedupSettings
     {

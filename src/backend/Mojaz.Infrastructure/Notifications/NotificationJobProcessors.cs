@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.Extensions.Logging;
-using Mojaz.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
-namespace Mojaz.Infrastructure.Notifications
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Notifications
 {
     /// <summary>
     /// Base class for notification job processors with common logging and error handling.

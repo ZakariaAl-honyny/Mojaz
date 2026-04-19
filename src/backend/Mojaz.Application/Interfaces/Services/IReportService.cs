@@ -1,9 +1,9 @@
-using Mojaz.Application.Reports.Dtos;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.Reports.Dtos;
+using DrivingLicenseIssuanceSystem.Shared;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 
 public interface IReportService
 {

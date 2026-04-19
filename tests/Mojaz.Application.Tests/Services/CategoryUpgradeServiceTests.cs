@@ -1,16 +1,16 @@
 using Moq;
 using FluentAssertions;
 using Xunit;
-using Mojaz.Application.Services;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Interfaces.Repositories;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Repositories;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
 using System;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Tests.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Tests.Services;
 
 public class CategoryUpgradeServiceTests
 {

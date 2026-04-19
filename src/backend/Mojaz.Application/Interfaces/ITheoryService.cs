@@ -1,9 +1,9 @@
-using Mojaz.Application.DTOs.Theory;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Theory;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces
 {
     public interface ITheoryService
     {

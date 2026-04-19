@@ -1,20 +1,20 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
-using Mojaz.Infrastructure.Data.Seeding;
-using Mojaz.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Infrastructure.Data.Seeding;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
 using System.Threading.Tasks;
 
-namespace Mojaz.API.Controllers
+namespace DrivingLicenseIssuanceSystem.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
     public class TestingController : ControllerBase
     {
-        private readonly MojazDbContext _context;
+        private readonly DrivingLicenseIssuanceSystemDbContext _context;
         private readonly IWebHostEnvironment _env;
 
-        public TestingController(MojazDbContext context, IWebHostEnvironment env)
+        public TestingController(DrivingLicenseIssuanceSystemDbContext context, IWebHostEnvironment env)
         {
             _context = context;
             _env = env;

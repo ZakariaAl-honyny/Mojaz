@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mojaz.Application.DTOs.Practical;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Practical;
 
 /// <summary>
 /// Request DTO for submitting practical test results

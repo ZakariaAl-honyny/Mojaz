@@ -1,10 +1,10 @@
-using Mojaz.Application.DTOs.Document;
-using Mojaz.Application.Interfaces.Infrastructure;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Document;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using Hangfire;
 using System;
 using System.Collections.Generic;
@@ -12,11 +12,11 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Mojaz.Application.Interfaces.Security;
-using ApplicationEntity = Mojaz.Domain.Entities.Application;
-using IEmailService = Mojaz.Application.Interfaces.Services.IEmailService;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Security;
+using ApplicationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
+using IEmailService = DrivingLicenseIssuanceSystem.Application.Interfaces.Services.IEmailService;
 
-namespace Mojaz.Application.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Services;
 
 public class DocumentService : IDocumentService
 {
@@ -170,16 +170,16 @@ public DocumentService(
                     isConditional = true;
                     conditionDescription = "Required for resident applicants";
                     break;
-                case DocumentType.GuardianConsent:
-                    // Required when applicant age < 18
-                    if (applicant != null)
-                    {
-                        var age = DateTime.UtcNow.Year - applicant.DateOfBirth.Year;
-                        isRequired = age < 18;
-                        isConditional = true;
-                        conditionDescription = isRequired ? "Required because applicant is under 18 years old" : "Not applicable (applicant is 18 or older)";
-                    }
-                    break;
+                 case DocumentType.GuardianConsent:
+                     // Required when applicant age < 18
+                     if (applicant != null && applicant.DateOfBirth.HasValue)
+                     {
+                         var age = DateTime.UtcNow.Year - applicant.DateOfBirth.Value.Year;
+                         isRequired = age < 18;
+                         isConditional = true;
+                         conditionDescription = isRequired ? "Required because applicant is under 18 years old" : "Not applicable (applicant is 18 or older)";
+                     }
+                     break;
                 case DocumentType.PreviousLicense:
                     // Required when previous license declared / Renewal / Upgrade service
                     isRequired = false;

@@ -13,7 +13,7 @@ import {
   GraduationCap 
 } from "lucide-react";
 import Link from "next/link";
-import { StaggeredFade, StaggeredItem } from "@/components/ui/StaggeredFade";
+import { StaggeredFade, StaggeredItem } from "@/components/ui/staggered-fade";
 
 export function ServiceGrid() {
   const t = useTranslations("landing.services");
@@ -66,7 +66,7 @@ export function ServiceGrid() {
                   </div>
 
                   <div className="pt-4 flex items-center text-sm font-semibold text-primary-500 group-hover:text-secondary-500 transition-colors">
-                    <span className="ltr:mr-2 rtl:ml-2">استكشف الخدمة</span>
+                    <span className="ltr:mr-2 rtl:ml-2">{t("explore")}</span>
                     <motion.span
                       animate={{ x: [0, 5, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity }}

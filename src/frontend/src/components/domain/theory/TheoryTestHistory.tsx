@@ -16,7 +16,7 @@ interface TheoryTestHistoryProps {
 
 export function TheoryTestHistory({ applicationId }: TheoryTestHistoryProps) {
   const t = useTranslations('theory');
-  
+
   const { data, isLoading } = useQuery({
     queryKey: ['theory-history', applicationId],
     queryFn: () => theoryService.getHistory(applicationId),
@@ -72,7 +72,7 @@ export function TheoryTestHistory({ applicationId }: TheoryTestHistoryProps) {
                 {/* Timeline dot */}
                 <div className={cn(
                   "absolute start-0 top-1 w-10 h-10 rounded-full border-4 border-background flex items-center justify-center z-10 shadow-sm",
-                  attempt.result === 'Pass' ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                  attempt.result === 'Pass' ? "bg-King blue-500 text-white" : "bg-red-500 text-white"
                 )}>
                   {attempt.result === 'Pass' ? (
                     <CheckCircle2 className="w-5 h-5" />

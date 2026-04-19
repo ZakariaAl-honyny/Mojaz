@@ -1,8 +1,8 @@
 using FluentValidation;
-using Mojaz.Application.DTOs.Document;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Document;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Application.Validators;
+namespace DrivingLicenseIssuanceSystem.Application.Validators;
 
 public class UploadDocumentValidator : AbstractValidator<UploadDocumentRequest>
 {

@@ -69,7 +69,7 @@ export default function OTPForm() {
     setIsLoading(true);
     setError(null);
     try {
-      if (!userId) throw new Error('User ID missing');
+      if (!userId) throw new Error(t('verify.invalidSession'));
       
       const response = await authService.verifyOtp({
         userId,
@@ -99,7 +99,7 @@ export default function OTPForm() {
     setIsResending(true);
     setError(null);
     try {
-      if (!userId) throw new Error('User ID missing');
+      if (!userId) throw new Error(t('verify.invalidSession'));
       
       const response = await authService.resendOtp({
         userId,
@@ -122,128 +122,143 @@ export default function OTPForm() {
 
   if (!userId) {
     return (
-      <Card className="border-destructive">
-        <CardContent className="pt-6 text-center">
-          <AlertCircle className="w-12 h-12 text-destructive mx-auto mb-4" />
-          <p className="text-destructive font-semibold">{t('verify.invalidSession')}</p>
-          <Button variant="outline" className="mt-4" onClick={() => router.push('/register')}>
-            {t('verify.backToRegister')}
-          </Button>
-        </CardContent>
-      </Card>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full gov-glass-panel p-12 text-center"
+      >
+        <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-6 shadow-[0_0_30px_rgba(239,68,68,0.2)]" />
+        <p className="text-white font-black uppercase tracking-widest text-sm mb-8">{t('verify.invalidSession')}</p>
+        <Button 
+          variant="outline" 
+          className="h-14 px-8 rounded-2xl border-white/10 hover:bg-white/5 text-white font-black uppercase tracking-widest text-[11px]" 
+          onClick={() => router.push('/register')}
+        >
+          {t('verify.backToRegister')}
+        </Button>
+      </motion.div>
     );
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="w-full"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="w-full space-y-8 gov-glass-panel p-8 md:p-12 rounded-[2.5rem]"
     >
-      <Card className="border-none shadow-2xl bg-white/90 backdrop-blur-xl dark:bg-neutral-900/90 overflow-hidden">
-        <div className="h-2 bg-gradient-to-r from-primary-400 to-primary-600" />
-        <CardHeader className="pt-8 text-center">
-          <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4 dark:bg-primary-900/20">
-            <ShieldCheck className="w-8 h-8 text-primary-500" />
-          </div>
-          <CardTitle className="text-2xl font-bold">{t('verify.title')}</CardTitle>
-          <CardDescription className="text-base px-2">
-            {t('verify.description')} <span className="font-semibold text-neutral-900 dark:text-neutral-100">{destination}</span>
-          </CardDescription>
-        </CardHeader>
-        
-        <CardContent className="space-y-6 pt-2">
-          <AnimatePresence mode="wait">
-            {error && (
-              <motion.div 
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="p-3 rounded-lg bg-destructive/10 text-destructive text-sm flex items-center gap-2"
-              >
-                <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                {error}
-              </motion.div>
-            )}
-            {success && (
-              <motion.div 
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="p-3 rounded-lg bg-emerald-50 text-emerald-600 text-sm flex items-center gap-2 dark:bg-emerald-950/20"
-              >
-                <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-                {success}
-              </motion.div>
-            )}
-          </AnimatePresence>
+      <div className="text-center space-y-3">
+        <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white font-black text-2xl mx-auto mb-6 shadow-[0_20px_40px_rgba(0,108,53,0.3)]">
+          <ShieldCheck className="w-8 h-8" />
+        </div>
+        <h2 className="text-3xl md:text-3xl font-black tracking-tighter text-white font-arabic leading-none">
+          {t('verify.title')}
+        </h2>
+        <p className="text-neutral-400 font-medium text-sm">
+          {t('verify.description')} <span className="text-primary font-bold">{destination}</span>
+        </p>
+      </div>
 
-          <div className="flex justify-between gap-2 dir-ltr">
-            {otp.map((digit, idx) => (
-              <input
-                key={idx}
-                ref={(el) => { inputsRef.current[idx] = el; }}
-                type="text"
-                inputMode="numeric"
-                maxLength={1}
-                value={digit}
-                onChange={(e) => handleChange(idx, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(idx, e)}
-                onFocus={() => setActiveInput(idx)}
-                data-testid={`otp-input-${idx}`}
-                className={cn(
-                  "w-12 h-14 text-center text-2xl font-bold rounded-lg border-2 bg-neutral-50 transition-all focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none dark:bg-neutral-800",
-                  activeInput === idx ? "border-primary-500 shadow-sm" : "border-neutral-200 dark:border-neutral-700",
-                  digit && "border-primary-500"
-                )}
-              />
-            ))}
-          </div>
+      <AnimatePresence mode="wait">
+        {error && (
+          <motion.div 
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 10 }}
+            className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-2xl font-medium text-center"
+          >
+            {error}
+          </motion.div>
+        )}
+        {success && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="p-4 bg-primary/10 border border-primary/20 text-primary-400 text-sm rounded-2xl font-medium text-center"
+          >
+            {success}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
+      <div className="space-y-10">
+        <div className="flex justify-between gap-3 md:gap-4 dir-ltr">
+          {otp.map((digit, idx) => (
+            <motion.input
+              key={idx}
+              whileFocus={{ scale: 1.05, y: -4 }}
+              ref={(el) => { inputsRef.current[idx] = el; }}
+              type="text"
+              inputMode="numeric"
+              maxLength={1}
+              value={digit}
+              onChange={(e) => handleChange(idx, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(idx, e)}
+              onFocus={() => setActiveInput(idx)}
+              data-testid={`otp-input-${idx}`}
+              className={cn(
+                "w-full aspect-[4/5] md:h-20 text-center text-2xl md:text-3xl font-black rounded-2xl bg-white/5 border-2 transition-all outline-none",
+                activeInput === idx 
+                  ? "border-primary text-white shadow-[0_0_20px_rgba(34,197,94,0.2)]" 
+                  : "border-white/10 text-neutral-400",
+                digit && "border-primary/50 text-primary bg-primary/5"
+              )}
+            />
+          ))}
+        </div>
+
+        <div className="space-y-6">
           <Button 
             onClick={handleVerify}
             data-testid="otp-confirm"
-            className="w-full h-12 bg-primary-500 hover:bg-primary-600 text-white font-bold text-lg rounded-gov shadow-lg"
             disabled={isLoading || otp.join('').length < 6}
+            className="w-full h-16 text-xl font-black bg-primary hover:bg-primary/90 transition-all rounded-[1.5rem] shadow-xl shadow-primary/20 active:scale-[0.97] group"
           >
-            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : t('verify.confirm')}
+            {isLoading ? (
+              <div className="flex items-center gap-2 justify-center">
+                <Loader2 className="w-6 h-6 animate-spin" />
+                <span>{t('common.loading')}</span>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center w-full relative">
+                <span>{t('verify.confirm')}</span>
+              </div>
+            )}
           </Button>
 
-          <div className="text-center space-y-4">
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-sm text-neutral-500">{t('verify.didntReceive')}</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleResend}
-                disabled={cooldown > 0 || isResending}
-                className={cn(
-                  "text-primary-500 hover:text-primary-600 font-semibold p-0 h-auto",
-                  cooldown > 0 && "text-neutral-400 opacity-50 cursor-not-allowed"
-                )}
-              >
-                {isResending ? (
-                  <Loader2 className="w-4 h-4 animate-spin mr-1" />
-                ) : (
-                  <RefreshCw className={cn("w-4 h-4 mr-1", cooldown > 0 ? "" : "animate-pulse")} />
-                )}
-                {cooldown > 0 
-                  ? `${t('verify.resendIn')} ${cooldown}${t('verify.seconds')}` 
-                  : t('verify.resendAction')
-                }
-              </Button>
-            </div>
-            
-            <button
-              onClick={() => router.back()}
-              className="text-xs text-neutral-400 hover:text-neutral-600 flex items-center justify-center gap-1 mx-auto transition-colors"
-            >
-              <ArrowLeft className="w-3 h-3 rtl:rotate-180" />
-              {t('verify.changeRegistrationInfo')}
-            </button>
+          <div className="flex flex-col items-center gap-4">
+             <div className="flex items-baseline gap-2">
+                <span className="text-neutral-500 text-sm font-medium">{t('verify.didntReceive')}</span>
+                <button
+                  onClick={handleResend}
+                  disabled={cooldown > 0 || isResending}
+                  className={cn(
+                    "text-[10px] font-black uppercase tracking-widest transition-colors",
+                    cooldown > 0 ? "text-neutral-700 cursor-not-allowed" : "text-primary hover:text-primary-300"
+                  )}
+                >
+                  {isResending ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : cooldown > 0 ? (
+                    `${t('verify.resendIn')} ${cooldown}s`
+                  ) : (
+                    t('verify.resendAction')
+                  )}
+                </button>
+             </div>
+
+             <button
+               onClick={() => router.back()}
+               className="group flex items-center gap-2 text-neutral-500 hover:text-white font-black uppercase tracking-widest text-[10px] transition-all"
+             >
+               <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 group-rtl:rotate-180 transition-transform" />
+               {t('verify.changeRegistrationInfo')}
+             </button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </motion.div>
   );
 }
+
+

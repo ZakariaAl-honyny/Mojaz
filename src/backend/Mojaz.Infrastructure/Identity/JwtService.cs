@@ -4,10 +4,10 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Infrastructure.Identity;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Identity;
 
 public class JwtService : IJwtService
 {

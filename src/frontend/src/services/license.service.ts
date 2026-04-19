@@ -80,6 +80,37 @@ const LicenseService = {
     const response = await apiClient.post('/applications/replacement', data);
     return response.data;
   },
+
+  /**
+   * Check eligibility for license renewal
+   */
+  async checkRenewalEligibility(): Promise<ApiResponse<{
+    isEligible: boolean;
+    license: {
+      id: string;
+      licenseNumber: string;
+      categoryCode: string;
+      categoryNameEn: string;
+      categoryNameAr: string;
+      expiresAt: string;
+      status: string;
+    } | null;
+    message?: string;
+    messageAr?: string;
+    withinGracePeriod: boolean;
+    renewalFee: number;
+  }>> {
+    const response = await apiClient.get('/licenses/renewal/eligibility');
+    return response.data;
+  },
+
+  /**
+   * Submit a renewal application
+   */
+  async submitRenewal(licenseId: string): Promise<ApiResponse<{ id: string }>> {
+    const response = await apiClient.post('/licenses/renewal', { licenseId });
+    return response.data;
+  },
 };
 
 export default LicenseService;

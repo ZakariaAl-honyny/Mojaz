@@ -1,6 +1,6 @@
-using Mojaz.Application.DTOs.Payment;
-using Mojaz.Application.Interfaces.Infrastructure;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Payment;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -8,7 +8,7 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Documents
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Documents
 {
     public class QuestPdfPaymentReceiptGenerator : IPaymentReceiptGenerator
     {
@@ -23,7 +23,7 @@ namespace Mojaz.Infrastructure.Documents
                     {
                         page.Size(PageSizes.A4);
                         page.Margin(2, Unit.Centimetre);
-                        page.Header().Text("Mojaz Payment Receipt").FontSize(20);
+                        page.Header().Text("DrivingLicenseIssuanceSystem Payment Receipt").FontSize(20);
                         
                         page.Content().Column(col =>
                         {

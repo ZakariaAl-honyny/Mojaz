@@ -1,5 +1,5 @@
-using Mojaz.Domain.Interfaces;
-using Mojaz.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,14 +8,14 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Persistence.Repositories
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        protected readonly MojazDbContext _context;
+        protected readonly DrivingLicenseIssuanceSystemDbContext _context;
         protected readonly DbSet<T> _dbSet;
 
-        public Repository(MojazDbContext context)
+        public Repository(DrivingLicenseIssuanceSystemDbContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
@@ -49,7 +49,7 @@ namespace Mojaz.Infrastructure.Persistence.Repositories
 
         public void Remove(T entity)
         {
-            if (entity is Mojaz.Domain.Common.SoftDeletableEntity softDeletable)
+            if (entity is DrivingLicenseIssuanceSystem.Domain.Common.SoftDeletableEntity softDeletable)
             {
                 softDeletable.IsDeleted = true;
                 softDeletable.DeletedAt = DateTime.UtcNow;

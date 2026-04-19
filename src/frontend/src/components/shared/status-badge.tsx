@@ -12,7 +12,7 @@ interface StatusBadgeProps {
   className?: string;
 }
 
-const statusConfig: Record<string, { variant: "success" | "warning" | "destructive" | "info" | "secondary" | "default"; glowColor: string }> = {
+const statusConfig: Record<string, { variant: "success" | "warning" | "destructive" | "info" | "secondary" | "default" | "outline"; glowColor: string }> = {
   [ApplicationStatus.Draft]: { variant: "secondary", glowColor: "rgba(156, 163, 175, 0.2)" },
   [ApplicationStatus.Submitted]: { variant: "info", glowColor: "rgba(59, 130, 246, 0.2)" },
   [ApplicationStatus.Documents]: { variant: "warning", glowColor: "rgba(245, 158, 11, 0.2)" },

@@ -12,9 +12,9 @@
 |------|--------|----------|
 | Remove redundant `src/src/` nesting | ? | Directory structure flattened |
 | Move 5 core projects | ? | All projects moved successfully |
-| Move configuration files | ? | Mojaz.sln, props files, Dockerfile moved |
+| Move configuration files | ? | DrivingLicenseIssuanceSystem.sln, props files, Dockerfile moved |
 | Update solution references | ? | .sln file updated with correct paths |
-| Verify build works | ? | Mojaz.Domain builds successfully |
+| Verify build works | ? | DrivingLicenseIssuanceSystem.Domain builds successfully |
 | Update documentation | ? | tasks.md paths updated |
 
 ---
@@ -22,15 +22,15 @@
 ## ?? **Files Moved**
 
 ### **Projects** (5 total)
-? Mojaz.Domain/
-? Mojaz.Shared/
-? Mojaz.Application/
-? Mojaz.Infrastructure/
-? Mojaz.API/
+? DrivingLicenseIssuanceSystem.Domain/
+? DrivingLicenseIssuanceSystem.Shared/
+? DrivingLicenseIssuanceSystem.Application/
+? DrivingLicenseIssuanceSystem.Infrastructure/
+? DrivingLicenseIssuanceSystem.API/
 
 ### **Configuration** (6 total)
-? Mojaz.sln
-? Mojaz.slnx
+? DrivingLicenseIssuanceSystem.sln
+? DrivingLicenseIssuanceSystem.slnx
 ? Directory.Build.props
 ? Directory.Packages.props
 ? global.json
@@ -45,15 +45,15 @@
 
 ### **Solution File Paths** ?
 ```
-? Mojaz.Domain        ? "Mojaz.Domain\Mojaz.Domain.csproj"
-? Mojaz.Shared        ? "Mojaz.Shared\Mojaz.Shared.csproj"
-? Mojaz.Application   ? "Mojaz.Application\Mojaz.Application.csproj"
-? Mojaz.Infrastructure ? "Mojaz.Infrastructure\Mojaz.Infrastructure.csproj"
-? Mojaz.API           ? "Mojaz.API\Mojaz.API.csproj"
-? Domain.Tests        ? "..\..\tests\Mojaz.Domain.Tests\..."
-? Application.Tests   ? "..\..\tests\Mojaz.Application.Tests\..."
-? Infrastructure.Tests ? "..\..\tests\Mojaz.Infrastructure.Tests\..."
-? API.Tests           ? "..\..\tests\Mojaz.API.Tests\..."
+? DrivingLicenseIssuanceSystem.Domain        ? "DrivingLicenseIssuanceSystem.Domain\DrivingLicenseIssuanceSystem.Domain.csproj"
+? DrivingLicenseIssuanceSystem.Shared        ? "DrivingLicenseIssuanceSystem.Shared\DrivingLicenseIssuanceSystem.Shared.csproj"
+? DrivingLicenseIssuanceSystem.Application   ? "DrivingLicenseIssuanceSystem.Application\DrivingLicenseIssuanceSystem.Application.csproj"
+? DrivingLicenseIssuanceSystem.Infrastructure ? "DrivingLicenseIssuanceSystem.Infrastructure\DrivingLicenseIssuanceSystem.Infrastructure.csproj"
+? DrivingLicenseIssuanceSystem.API           ? "DrivingLicenseIssuanceSystem.API\DrivingLicenseIssuanceSystem.API.csproj"
+? Domain.Tests        ? "..\..\tests\DrivingLicenseIssuanceSystem.Domain.Tests\..."
+? Application.Tests   ? "..\..\tests\DrivingLicenseIssuanceSystem.Application.Tests\..."
+? Infrastructure.Tests ? "..\..\tests\DrivingLicenseIssuanceSystem.Infrastructure.Tests\..."
+? API.Tests           ? "..\..\tests\DrivingLicenseIssuanceSystem.API.Tests\..."
 ```
 
 **Relative Path Calculation**:
@@ -66,15 +66,15 @@
 ## ??? **New Directory Structure**
 
 ```
-Mojaz/
+DrivingLicenseIssuanceSystem/
 ??? src/
 ?   ??? backend/                    ? Solution root moved here
-?   ?   ??? Mojaz.sln              ? Solution file
-?   ?   ??? Mojaz.Domain/
-?   ?   ??? Mojaz.Shared/
-?   ?   ??? Mojaz.Application/
-?   ?   ??? Mojaz.Infrastructure/
-?   ?   ??? Mojaz.API/
+?   ?   ??? DrivingLicenseIssuanceSystem.sln              ? Solution file
+?   ?   ??? DrivingLicenseIssuanceSystem.Domain/
+?   ?   ??? DrivingLicenseIssuanceSystem.Shared/
+?   ?   ??? DrivingLicenseIssuanceSystem.Application/
+?   ?   ??? DrivingLicenseIssuanceSystem.Infrastructure/
+?   ?   ??? DrivingLicenseIssuanceSystem.API/
 ?   ?   ??? Directory.Build.props
 ?   ?   ??? Directory.Packages.props
 ?   ?   ??? Dockerfile
@@ -84,10 +84,10 @@ Mojaz/
 ?       ??? public/
 ?       ??? package.json
 ??? tests/                         ? Unchanged, sibling to src
-?   ??? Mojaz.Domain.Tests/
-?   ??? Mojaz.Application.Tests/
-?   ??? Mojaz.Infrastructure.Tests/
-?   ??? Mojaz.API.Tests/
+?   ??? DrivingLicenseIssuanceSystem.Domain.Tests/
+?   ??? DrivingLicenseIssuanceSystem.Application.Tests/
+?   ??? DrivingLicenseIssuanceSystem.Infrastructure.Tests/
+?   ??? DrivingLicenseIssuanceSystem.API.Tests/
 ??? docker-compose.yml             ? Repo root
 ```
 
@@ -99,7 +99,7 @@ Mojaz/
 ```
 Status: ? SUCCESS
 
-? Mojaz.Domain compiles
+? DrivingLicenseIssuanceSystem.Domain compiles
 ? NuGet paths resolve correctly
 ? Project references valid
 ? No missing dependencies
@@ -107,7 +107,7 @@ Status: ? SUCCESS
 
 ### **Solution Structure**
 ```
-? Mojaz.sln loads correctly
+? DrivingLicenseIssuanceSystem.sln loads correctly
 ? All 9 projects present
 ? Test project references updated
 ? Relative paths resolved
@@ -133,17 +133,17 @@ Only change: File locations (reflected in updated .sln file)
 ### **Before** ?
 ```bash
 cd src/backend/src
-dotnet build Mojaz.sln
-dotnet run --project Mojaz.API/Mojaz.API.csproj
-dotnet ef database update -p Mojaz.Infrastructure -s Mojaz.API
+dotnet build DrivingLicenseIssuanceSystem.sln
+dotnet run --project DrivingLicenseIssuanceSystem.API/DrivingLicenseIssuanceSystem.API.csproj
+dotnet ef database update -p DrivingLicenseIssuanceSystem.Infrastructure -s DrivingLicenseIssuanceSystem.API
 ```
 
 ### **After** ?
 ```bash
 cd src/backend
-dotnet build Mojaz.sln
-dotnet run --project Mojaz.API/Mojaz.API.csproj
-dotnet ef database update -p Mojaz.Infrastructure -s Mojaz.API
+dotnet build DrivingLicenseIssuanceSystem.sln
+dotnet run --project DrivingLicenseIssuanceSystem.API/DrivingLicenseIssuanceSystem.API.csproj
+dotnet ef database update -p DrivingLicenseIssuanceSystem.Infrastructure -s DrivingLicenseIssuanceSystem.API
 ```
 
 **Key Difference**: One less `src/` in the path (shorter, clearer)

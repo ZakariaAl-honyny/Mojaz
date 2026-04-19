@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Infrastructure.Jobs;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Infrastructure.Jobs;
 using Xunit;
 
-using DomainApplication = Mojaz.Domain.Entities.Application;
+using DomainApplication = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
 
-namespace Mojaz.Infrastructure.Tests.Jobs;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Tests.Jobs;
 
 public class ProcessExpiredApplicationsJobTests
 {

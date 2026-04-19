@@ -1,6 +1,6 @@
 - main [ref=e2]:
   - generic [ref=e3]:
-    - heading "مرحباً بكم في منصة مُجاز" [level=1] [ref=e4]
+    - heading "مرحباً بكم في منصة نظام إصدار رخص القيادة" [level=1] [ref=e4]
     - paragraph [ref=e5]: نظام إصدار رخص القيادة الإلكتروني الرسمي. بوابتكم المتكاملة لخدمات الرخص بكل سهولة وأمان.
     - generic [ref=e6]:
       - link "إنشاء حساب جديد" [active] [ref=e7] [cursor=pointer]:

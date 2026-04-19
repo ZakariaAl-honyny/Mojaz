@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Interfaces;
-using Mojaz.Shared;
-using Mojaz.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Mojaz.API.Controllers;
+namespace DrivingLicenseIssuanceSystem.API.Controllers;
 
 /// <summary>
 /// Administrative endpoints for application review and management.
@@ -16,7 +16,7 @@ namespace Mojaz.API.Controllers;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces("application/json")]
-[Authorize(Policy = RolePolicies.AdminOnly)] // Only Admin role
+[Authorize(Policy = RolePolicies.ReceptionistOrAbove)] // Receptionist, Manager, or Admin
 public class AdministrativeController : ControllerBase
 {
     private readonly IReplaceLicenseService _replaceLicenseService;

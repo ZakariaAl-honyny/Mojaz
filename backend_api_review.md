@@ -1,4 +1,4 @@
-# Mojaz Backend API Layer Implementation Review
+# DrivingLicenseIssuanceSystem Backend API Layer Implementation Review
 
 ## Review Summary
 
@@ -6,12 +6,12 @@
 |------------|--------|---------|
 | **1. Program.cs wiring** | PASS | Contains complete wiring for: Serilog (lines 12-23), JWT Authentication (lines 37-58), Hangfire (configured in appsettings.json and referenced in Infrastructure), Swagger (lines 63-64), CORS (line 63), Health checks (lines 66-67, 93) |
 | **2. appsettings.json configuration** | PASS | Contains full configuration structure including: ConnectionStrings, JwtSettings, Cors, SendGrid, Twilio, Firebase, RateLimiting, Hangfire, Serilog sections with appropriate values |
-| **3. HealthController.cs** | PASS | Exists at `/src/backend/Mojaz.API/Controllers/HealthController.cs` with `/health` endpoint (line 26) and `/health/database` endpoint (line 51) returning proper ApiResponse format |
-| **4. GlobalExceptionHandlerMiddleware.cs** | PASS | Exists at `/src/backend/Mojaz.API/Middleware/GlobalExceptionHandler.cs` with proper exception handling and ApiResponse formatting |
-| **5. RequestLoggingMiddleware.cs** | PASS | Exists at `/src/backend/Mojaz.API/Middleware/RequestLoggingMiddleware.cs` with request/response logging and timing |
-| **6. AuditLogMiddleware.cs** | PASS | Exists at `/src/backend/Mojaz.API/Middleware/AuditLogMiddleware.cs` with audit logging for mutating requests (POST, PUT, PATCH, DELETE) |
-| **7. Extension Classes** | PASS | All present:<br>- SwaggerExtensions.cs (`/src/backend/Mojaz.API/Extensions/`)<br>- SecurityHeadersExtensions.cs (`/src/backend/Mojaz.API/Extensions/`)<br>- CorsExtensions.cs (`/src/backend/Mojaz.API/Extensions/`) |
-| **8. ValidationFilter.cs** | FAIL | File exists at `/src/backend/Mojaz.API/Filters/ValidationFilter.cs` but is **NOT properly wired** in Program.cs. The filter should be added globally via `options.Filters.Add<ValidationFilter>()` in the AddControllers configuration, but only a comment exists indicating this should be done via "Application assembly scanning + FluentValidation" without actual implementation. |
+| **3. HealthController.cs** | PASS | Exists at `/src/backend/DrivingLicenseIssuanceSystem.API/Controllers/HealthController.cs` with `/health` endpoint (line 26) and `/health/database` endpoint (line 51) returning proper ApiResponse format |
+| **4. GlobalExceptionHandlerMiddleware.cs** | PASS | Exists at `/src/backend/DrivingLicenseIssuanceSystem.API/Middleware/GlobalExceptionHandler.cs` with proper exception handling and ApiResponse formatting |
+| **5. RequestLoggingMiddleware.cs** | PASS | Exists at `/src/backend/DrivingLicenseIssuanceSystem.API/Middleware/RequestLoggingMiddleware.cs` with request/response logging and timing |
+| **6. AuditLogMiddleware.cs** | PASS | Exists at `/src/backend/DrivingLicenseIssuanceSystem.API/Middleware/AuditLogMiddleware.cs` with audit logging for mutating requests (POST, PUT, PATCH, DELETE) |
+| **7. Extension Classes** | PASS | All present:<br>- SwaggerExtensions.cs (`/src/backend/DrivingLicenseIssuanceSystem.API/Extensions/`)<br>- SecurityHeadersExtensions.cs (`/src/backend/DrivingLicenseIssuanceSystem.API/Extensions/`)<br>- CorsExtensions.cs (`/src/backend/DrivingLicenseIssuanceSystem.API/Extensions/`) |
+| **8. ValidationFilter.cs** | FAIL | File exists at `/src/backend/DrivingLicenseIssuanceSystem.API/Filters/ValidationFilter.cs` but is **NOT properly wired** in Program.cs. The filter should be added globally via `options.Filters.Add<ValidationFilter>()` in the AddControllers configuration, but only a comment exists indicating this should be done via "Application assembly scanning + FluentValidation" without actual implementation. |
 
 ## Critical Issues Found
 

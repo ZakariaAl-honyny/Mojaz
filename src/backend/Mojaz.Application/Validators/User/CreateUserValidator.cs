@@ -1,7 +1,7 @@
 using FluentValidation;
-using Mojaz.Application.DTOs.User;
+using DrivingLicenseIssuanceSystem.Application.DTOs.User;
 
-namespace Mojaz.Application.Validators.User;
+namespace DrivingLicenseIssuanceSystem.Application.Validators.User;
 
 public class CreateUserValidator : AbstractValidator<CreateUserRequest>
 {

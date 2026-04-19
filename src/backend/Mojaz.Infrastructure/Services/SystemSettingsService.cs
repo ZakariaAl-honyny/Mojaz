@@ -1,13 +1,13 @@
 using Microsoft.Extensions.Caching.Memory;
-using Mojaz.Application.DTOs.SystemSettings;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.DTOs.SystemSettings;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Services;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Services;
 
 public class SystemSettingsService : ISystemSettingsService
 {

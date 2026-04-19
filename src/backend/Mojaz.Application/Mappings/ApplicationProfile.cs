@@ -1,10 +1,10 @@
 using AutoMapper;
-using Mojaz.Application.DTOs.Application;
-using Mojaz.Domain.Entities;
-using Mojaz.Shared;
-using DomainApplication = Mojaz.Domain.Entities.Application;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Application;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Shared;
+using DomainApplication = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
 
-namespace Mojaz.Application.Mappings;
+namespace DrivingLicenseIssuanceSystem.Application.Mappings;
 
 public class ApplicationProfile : Profile
 {

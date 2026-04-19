@@ -34,8 +34,8 @@ export const DailyLoadTimeline: React.FC<DailyLoadTimelineProps> = ({ data }) =>
             >
               <defs>
                 <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#006C35" stopOpacity={0.1}/>
-                  <stop offset="95%" stopColor="#006C35" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#6366F1" stopOpacity={0.1}/>
+                  <stop offset="95%" stopColor="#6366F1" stopOpacity={0}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
@@ -58,7 +58,7 @@ export const DailyLoadTimeline: React.FC<DailyLoadTimelineProps> = ({ data }) =>
               <Area 
                 type="monotone" 
                 dataKey="count" 
-                stroke="#006C35" 
+                stroke="#6366F1" 
                 fillOpacity={1} 
                 fill="url(#colorCount)" 
                 strokeWidth={2}

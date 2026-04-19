@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using Mojaz.Application.DTOs.Email.Templates;
-using Mojaz.Application.DTOs.User;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Email.Templates;
+using DrivingLicenseIssuanceSystem.Application.DTOs.User;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Mojaz.API.Controllers;
+namespace DrivingLicenseIssuanceSystem.API.Controllers;
 
 [ApiController]
 [Route("api/v1/dev/[controller]")]
@@ -152,20 +152,20 @@ public class DevController : ControllerBase
             return NotFound("No valid OTP found");
 
         // Get the User repository from services
-        var userRepo = HttpContext.RequestServices.GetRequiredService<Mojaz.Domain.Interfaces.IRepository<Mojaz.Domain.Entities.User>>();
+        var userRepo = HttpContext.RequestServices.GetRequiredService<DrivingLicenseIssuanceSystem.Domain.Interfaces.IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.User>>();
         
         var users = await userRepo.FindAsync(u => u.Id == otp.UserId && !u.IsDeleted);
         var user = users.FirstOrDefault();
         
         if (user != null)
         {
-            if (otp.DestinationType == Mojaz.Domain.Enums.DestinationType.Email)
+            if (otp.DestinationType == DrivingLicenseIssuanceSystem.Domain.Enums.DestinationType.Email)
                 user.IsEmailVerified = true;
             else
                 user.IsPhoneVerified = true;
             
             // If verified via email, activate the account
-            if (otp.DestinationType == Mojaz.Domain.Enums.DestinationType.Email && !user.IsActive)
+            if (otp.DestinationType == DrivingLicenseIssuanceSystem.Domain.Enums.DestinationType.Email && !user.IsActive)
                 user.IsActive = true;
                 
             userRepo.Update(user);
@@ -194,7 +194,7 @@ public class DevController : ControllerBase
         if (!_env.IsDevelopment())
             return NotFound();
 
-        var settingsRepo = HttpContext.RequestServices.GetRequiredService<Mojaz.Domain.Interfaces.IRepository<Mojaz.Domain.Entities.SystemSetting>>();
+        var settingsRepo = HttpContext.RequestServices.GetRequiredService<DrivingLicenseIssuanceSystem.Domain.Interfaces.IRepository<DrivingLicenseIssuanceSystem.Domain.Entities.SystemSetting>>();
         
         // Delete existing settings and re-seed
         var existingSettings = await settingsRepo.FindAsync(s => s.SettingKey.StartsWith("MIN_AGE_") || s.SettingKey.StartsWith("MAX_") || s.SettingKey == "COOLING_PERIOD_DAYS" || s.SettingKey == "MEDICAL_VALIDITY_DAYS" || s.SettingKey == "APPLICATION_VALIDITY_MONTHS");
@@ -202,7 +202,7 @@ public class DevController : ControllerBase
         foreach (var s in existingSettings)
             settingsRepo.Remove(s);
         
-        var settings = new List<Mojaz.Domain.Entities.SystemSetting>
+        var settings = new List<DrivingLicenseIssuanceSystem.Domain.Entities.SystemSetting>
         {
             new() { SettingKey = "MIN_AGE_CATEGORY_A", SettingValue = "16", Description = "Minimum age for Motorcycle license" },
             new() { SettingKey = "MIN_AGE_CATEGORY_B", SettingValue = "18", Description = "Minimum age for Private Car license" },
@@ -308,8 +308,8 @@ public class DevController : ControllerBase
             // Test SendGrid Email
             await _emailService.SendEmailAsync(
                 "z.alhonyny123@auhd.edu.ye",
-                "Test Email - Mojaz",
-                "<h1>Hello from Mojaz API!</h1><p>This is a test email.</p>");
+                "Test Email - DrivingLicenseIssuanceSystem",
+                "<h1>Hello from DrivingLicenseIssuanceSystem API!</h1><p>This is a test email.</p>");
 
             results["Email"] = new { success = true, message = "Email sent" };
         }
@@ -323,7 +323,7 @@ public class DevController : ControllerBase
             // Test Twilio SMS
             // Note: Trial Twilio accounts cannot send to unreverified numbers
             // The FromNumber needs to be verified for production use
-            await _smsService.SendAsync("+967771234567", "Mojaz Test: Your verification code is 123456");
+            await _smsService.SendAsync("+967771234567", "DrivingLicenseIssuanceSystem Test: Your verification code is 123456");
             results["SMS"] = new { success = true, message = "SMS sent" };
         }
         catch (System.Exception ex)

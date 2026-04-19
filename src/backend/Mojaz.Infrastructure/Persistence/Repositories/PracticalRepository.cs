@@ -1,18 +1,18 @@
 using Microsoft.EntityFrameworkCore;
-using Mojaz.Application.Interfaces;
-using Mojaz.Domain.Entities;
-using Mojaz.Infrastructure.Persistence;
-using Mojaz.Infrastructure.Persistence.Repositories;
+using DrivingLicenseIssuanceSystem.Application.Interfaces;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Persistence.Repositories
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Repositories
 {
     public class PracticalRepository : Repository<PracticalTest>, IPracticalRepository
     {
-        public PracticalRepository(MojazDbContext context) : base(context)
+        public PracticalRepository(DrivingLicenseIssuanceSystemDbContext context) : base(context)
         {
         }
 

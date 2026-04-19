@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http;
-using Mojaz.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Security.Middleware;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Security.Middleware;
 
 public class SecurityHeadersMiddleware
 {

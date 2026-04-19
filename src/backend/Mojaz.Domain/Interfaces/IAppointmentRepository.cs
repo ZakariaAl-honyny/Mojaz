@@ -1,11 +1,11 @@
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mojaz.Domain.Interfaces;
+namespace DrivingLicenseIssuanceSystem.Domain.Interfaces;
 
 public interface IAppointmentRepository : IRepository<Appointment>
 {

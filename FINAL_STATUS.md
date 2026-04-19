@@ -1,4 +1,4 @@
-? **MOJAZ BACKEND SCAFFOLD - FINAL STATUS**
+? **DrivingLicenseIssuanceSystem BACKEND SCAFFOLD - FINAL STATUS**
 
 **Date**: 2026-04-04  
 **Status**: ? **PRODUCTION-READY FOR COMMIT & MERGE**
@@ -79,7 +79,7 @@
 ## ?? **READY FOR COMMIT**
 
 ```bash
-cd C:\Users\ALlahabi\Desktop\Mojaz\Mojaz
+cd C:\Users\ALlahabi\Desktop\DrivingLicenseIssuanceSystem\DrivingLicenseIssuanceSystem
 git add .
 git commit -m "feat(003-backend-scaffold): complete backend implementation - 115/115 tasks + architecture fixes
 

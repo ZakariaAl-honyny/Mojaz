@@ -1,11 +1,11 @@
 using Hangfire;
 using Microsoft.Extensions.Logging;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 using System;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Jobs;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Jobs;
 
 /// <summary>
 /// Hangfire background job that sends training-related notifications.

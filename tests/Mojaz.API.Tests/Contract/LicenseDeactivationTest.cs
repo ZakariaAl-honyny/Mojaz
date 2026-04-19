@@ -1,26 +1,26 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 using System.Text.Json;
 using Xunit;
 
-namespace Mojaz.API.Tests.Contract;
+namespace DrivingLicenseIssuanceSystem.API.Tests.Contract;
 
 public class LicenseDeactivationTest
 {
-    [Fact(Skip = "Enum contract test - needs verification")]
+    [Fact]
     public void LicenseStatus_Enum_HasRequiredValues()
     {
-        // Contractual requirement: LicenseStatus must support Renewed/Inactive
+        // Contractual requirement: LicenseStatus must support Renewed/Superseded
         var values = Enum.GetNames<LicenseStatus>();
         
         values.Should().Contain("Active");
         values.Should().Contain("Expired");
         values.Should().Contain("Renewed");
-        values.Should().Contain("Inactive");
+        values.Should().Contain("Superseded");
     }
 
-    [Fact(Skip = "Enum contract test - needs verification")]
+    [Fact]
     public void LicenseStatus_Serializes_Correctly()
     {
         // Contractual requirement: Status must serialize as string value in JSON if configured, 
@@ -28,9 +28,8 @@ public class LicenseDeactivationTest
         var status = LicenseStatus.Renewed;
         var json = JsonSerializer.Serialize(status);
         
-        // This confirms the integer value doesn't change unexpectedly if using default serialization
-        // or confirms string serialization if configured.
-        // Assuming default for now.
-        json.Should().Be("2"); // Renewed = 2
+        // This confirms the integer value is consistent
+        // Renewed = 5 (based on enum definition)
+        json.Should().Be("5");
     }
 }

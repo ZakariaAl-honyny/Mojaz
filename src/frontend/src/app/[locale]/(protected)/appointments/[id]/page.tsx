@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { 
-  Calendar, 
-  Clock, 
-  MapPin, 
+import {
+  Calendar,
+  Clock,
+  MapPin,
   ArrowLeft,
-  Stethoscope, 
-  GraduationCap, 
+  Stethoscope,
+  GraduationCap,
   Car,
   CalendarPlus,
   AlertCircle
@@ -55,7 +55,7 @@ const getTypeColor = (type: string) => {
     case 'theory':
       return 'bg-purple-50 text-purple-600';
     case 'practical':
-      return 'bg-green-50 text-green-600';
+      return 'bg-King blue-50 text-King blue-600';
     default:
       return 'bg-neutral-50 text-neutral-600';
   }
@@ -65,9 +65,9 @@ function AppointmentDetailsPage() {
   const t = useTranslations('appointment');
   const tDetails = useTranslations('appointment.details');
   const [showCancelDialog, setShowCancelDialog] = useState(false);
-  
+
   const appointment = mockAppointment;
-  
+
   const getStatusVariant = (status: string) => {
     switch (status) {
       case 'confirmed':
@@ -88,14 +88,14 @@ function AppointmentDetailsPage() {
     const startDate = new Date(`${appointment.date}T${appointment.time}`);
     const endDate = new Date(startDate);
     endDate.setHours(endDate.getHours() + 1);
-    
+
     const googleUrl = new URL('https://calendar.google.com/calendar/render');
     googleUrl.searchParams.set('action', 'TEMPLATE');
-    googleUrl.searchParams.set('text', `${t(`types.${appointment.type}`)} - Mojaz`);
+    googleUrl.searchParams.set('text', `${t(`types.${appointment.type}`)} - DrivingLicenseIssuanceSystem`);
     googleUrl.searchParams.set('dates', `${startDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z/${endDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z`);
     googleUrl.searchParams.set('details', `Driving License Appointment at ${appointment.center}`);
     googleUrl.searchParams.set('location', appointment.location);
-    
+
     window.open(googleUrl.toString(), '_blank');
   };
 
@@ -110,7 +110,7 @@ function AppointmentDetailsPage() {
           {tDetails('title')}
         </Button>
       </Link>
-      
+
       {/* Main Card */}
       <Card>
         <CardHeader className="pb-4">
@@ -133,7 +133,7 @@ function AppointmentDetailsPage() {
             </Badge>
           </div>
         </CardHeader>
-        
+
         <CardContent className="space-y-6">
           {/* Date & Time */}
           <div className="grid grid-cols-2 gap-4">
@@ -152,7 +152,7 @@ function AppointmentDetailsPage() {
               </div>
             </div>
           </div>
-          
+
           {/* Location */}
           <div className="flex items-start gap-3 p-4 bg-neutral-50 rounded-xl">
             <MapPin className="w-5 h-5 text-neutral-500 mt-0.5" />
@@ -161,28 +161,28 @@ function AppointmentDetailsPage() {
               <p className="font-semibold">{appointment.location}</p>
             </div>
           </div>
-          
+
           {/* Notes */}
           {appointment.notes && (
             <div className="p-4 bg-blue-50 rounded-xl">
               <p className="text-sm text-blue-600">{appointment.notes}</p>
             </div>
           )}
-          
+
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3">
             <Button variant="outline" className="flex-1" onClick={handleAddToCalendar}>
               <CalendarPlus className="w-4 h-4 me-2 rtl:me-0 rtl:ms-2" />
               {tDetails('addToCalendar')}
             </Button>
-            
+
             {isActiveAppointment && (
               <>
                 <Button variant="outline" className="flex-1">
                   {tDetails('reschedule')}
                 </Button>
-                <Button 
-                  variant="destructive" 
+                <Button
+                  variant="destructive"
                   className="flex-1"
                   onClick={() => setShowCancelDialog(true)}
                 >
@@ -193,7 +193,7 @@ function AppointmentDetailsPage() {
           </div>
         </CardContent>
       </Card>
-      
+
       {/* Cancel Dialog */}
       {showCancelDialog && (
         <Card className="border-red-200">

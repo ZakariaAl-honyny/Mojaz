@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { CheckCircle2, ChevronLeft } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import type { StepId } from '@/types/wizard.types';
 
@@ -12,12 +13,13 @@ interface WizardProgressBarProps {
 }
 
 const STEPS: { num: number; key: string }[] = [
-  { num: 1, key: 'steps.step1' },
-  { num: 2, key: 'steps.step2' },
-  { num: 3, key: 'steps.step3' },
-  { num: 4, key: 'steps.step4' },
-  { num: 5, key: 'steps.step5' },
+  { num: 1, key: 'steps.service' },
+  { num: 2, key: 'steps.category' },
+  { num: 3, key: 'steps.personal' },
+  { num: 4, key: 'steps.details' },
+  { num: 5, key: 'steps.review' },
 ];
+
 
 export function WizardProgressBar({ currentStep, onStepClick }: WizardProgressBarProps) {
   const t = useTranslations('wizard');
@@ -37,91 +39,91 @@ export function WizardProgressBar({ currentStep, onStepClick }: WizardProgressBa
 
   return (
     <div className="w-full">
-      {/* Mobile: Vertical stack with cards */}
-      <div className="block lg:hidden space-y-2">
+      {/* Mobile: Vertical stack with glass panels */}
+      <div className="block lg:hidden space-y-3">
         {STEPS.map((step) => {
           const status = getStepStatus(step.num);
           const isClickable = status === 'completed';
 
           return (
-            <Card
+            <motion.div
               key={step.num}
+              initial={false}
+              animate={{
+                scale: status === 'current' ? 1 : 0.98,
+                opacity: status === 'upcoming' ? 0.6 : 1
+              }}
               className={cn(
-                'transition-all duration-200',
-                status === 'completed' && 'cursor-pointer border-neutral-200 dark:border-neutral-700 hover:border-primary-300 dark:hover:border-primary-700',
-                status === 'current' && 'cursor-default border-primary-500 bg-primary-50 dark:bg-primary-900/20',
-                status === 'upcoming' && 'cursor-not-allowed border-neutral-100 dark:border-neutral-800 opacity-60 pointer-events-none'
+                'p-4 rounded-2xl border transition-all duration-300',
+                status === 'completed' && 'bg-white/5 border-white/10 cursor-pointer hover:bg-white/10',
+                status === 'current' && 'bg-primary-600/10 border-primary-500/50 shadow-[0_0_20px_rgba(0,108,53,0.1)]',
+                status === 'upcoming' && 'bg-black/20 border-white/5 cursor-not-allowed grayscale'
               )}
               onClick={isClickable ? () => handleStepClick(step.num) : undefined}
-              aria-disabled={!isClickable}
             >
-              <CardContent className="p-3 flex items-center gap-3">
-                {/* Status icon - universal, no RTL flip */}
-                <div className="flex-shrink-0">
+              <div className="flex items-center gap-4">
+                <div className="relative">
                   {status === 'completed' ? (
-                    <CheckCircle2 className="w-5 h-5 text-primary-500" />
-                  ) : status === 'current' ? (
-                    <div className="w-5 h-5 rounded-full bg-primary-500 text-white text-xs font-bold flex items-center justify-center">
-                      {step.num}
+                    <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center shadow-lg shadow-primary-900/40">
+                      <CheckCircle2 className="w-5 h-5 text-white" />
                     </div>
                   ) : (
-                    <div className="w-5 h-5 rounded-full bg-neutral-200 dark:bg-neutral-700 text-neutral-400 dark:text-neutral-500 text-xs font-bold flex items-center justify-center">
+                    <div className={cn(
+                      "w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm transition-all duration-500",
+                      status === 'current' ? "bg-white text-primary-900 shadow-xl" : "bg-white/10 text-neutral-500"
+                    )}>
                       {step.num}
                     </div>
+                  )}
+                  {status === 'current' && (
+                    <span className="absolute -inset-1 rounded-[1.2rem] border border-primary-400/50 animate-pulse-slow" />
                   )}
                 </div>
 
-                {/* Step title */}
-                <span
-                  className={cn(
-                    'text-sm font-medium',
-                    status === 'current' && 'text-primary-700 dark:text-primary-300',
-                    status === 'completed' && 'text-neutral-700 dark:text-neutral-300',
-                    status === 'upcoming' && 'text-neutral-400 dark:text-neutral-500'
-                  )}
-                >
-                  {t(step.key)}
-                </span>
+                <div className="flex-1">
+                  <span className={cn(
+                    'text-sm font-black uppercase tracking-widest',
+                    status === 'current' ? 'text-white' : 'text-neutral-500'
+                  )}>
+                    {t(step.key)}
+                  </span>
+                </div>
 
-                {/* Arrow indicator for clickable */}
                 {isClickable && (
-                  <ChevronLeft className="w-4 h-4 ms-auto text-neutral-400 rtl:rotate-180" />
+                  <ChevronLeft className="w-4 h-4 text-primary-400 group-hover:translate-x-1 transition-transform rtl:rotate-180" />
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </motion.div>
           );
         })}
       </div>
 
-      {/* Desktop: Horizontal stepper */}
-      <div className="hidden lg:flex items-center justify-between">
+      {/* Desktop: Horizontal glass stepper */}
+      <div className="hidden lg:flex items-center justify-between bg-black/40 backdrop-blur-2xl p-2 rounded-2xl border border-white/5">
         {STEPS.map((step, index) => {
           const status = getStepStatus(step.num);
           const isClickable = status === 'completed';
 
           return (
-            <div key={step.num} className="flex items-center flex-1">
-              {/* Step circle with clickable wrapper */}
+            <div key={step.num} className="flex items-center flex-1 last:flex-none group">
+              {/* Step indicator wrapper */}
               <button
                 type="button"
                 onClick={isClickable ? () => handleStepClick(step.num) : undefined}
-                disabled={!isClickable}
-                aria-disabled={!isClickable}
                 className={cn(
-                  'relative z-10 flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300',
-                  status === 'current' && 'bg-primary-50 dark:bg-primary-900/30 border-2 border-primary-500',
-                  status === 'completed' && 'hover:bg-primary-50 dark:hover:bg-primary-900/20 cursor-pointer',
-                  status === 'upcoming' && 'pointer-events-none cursor-not-allowed',
-                  status === 'upcoming' && 'cursor-not-allowed'
+                  'relative z-10 flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-500',
+                  status === 'current' && 'bg-primary-600 shadow-[0_4px_20px_rgba(0,108,53,0.4)]',
+                  isClickable && 'hover:bg-white/5 cursor-pointer',
+                  status === 'upcoming' && 'opacity-40 grayscale cursor-not-allowed'
                 )}
               >
-                {/* Step indicator */}
+                {/* Step circle */}
                 <div
                   className={cn(
-                    'w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300',
-                    status === 'current' && 'bg-primary-500 text-white ring-4 ring-primary-100/50 dark:ring-primary-900/30',
-                    status === 'completed' && 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400',
-                    status === 'upcoming' && 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500'
+                    'w-9 h-9 rounded-lg flex items-center justify-center font-black text-sm transition-all duration-500',
+                    status === 'current' && 'bg-white text-primary-900 shadow-xl',
+                    status === 'completed' && 'bg-primary-600/20 text-primary-400 border border-primary-500/30',
+                    status === 'upcoming' && 'bg-white/10 text-neutral-500 font-medium'
                   )}
                 >
                   {status === 'completed' ? (
@@ -131,29 +133,41 @@ export function WizardProgressBar({ currentStep, onStepClick }: WizardProgressBa
                   )}
                 </div>
 
-                {/* Step label */}
-                <span
-                  className={cn(
-                    'font-medium text-sm whitespace-nowrap',
-                    status === 'current' && 'text-primary-700 dark:text-primary-300 font-semibold',
-                    status === 'completed' && 'text-neutral-700 dark:text-neutral-300',
-                    status === 'upcoming' && 'text-neutral-400 dark:text-neutral-500'
-                  )}
-                >
-                  {t(step.key)}
-                </span>
+                {/* Step labels */}
+                <div className="text-start">
+                   <p className={cn(
+                     'text-[10px] uppercase font-black tracking-widest leading-none mb-1',
+                     status === 'current' ? 'text-primary-100' : 'text-neutral-500'
+                   )}>
+                     {t('step')} {step.num}
+                   </p>
+                   <p className={cn(
+                     'font-black text-sm whitespace-nowrap',
+                     status === 'current' ? 'text-white' : 'text-neutral-400'
+                   )}>
+                     {t(step.key)}
+                   </p>
+                </div>
+                
+                {status === 'current' && (
+                  <span className="absolute -inset-0.5 rounded-[0.9rem] border border-white/20 animate-pulse-slow" />
+                )}
               </button>
 
-              {/* Connector line */}
+              {/* Connector gradient line */}
               {index < STEPS.length - 1 && (
-                <div
-                  className={cn(
-                    'flex-1 h-0.5 mx-2 sm:mx-4 rounded transition-colors duration-300',
-                    status === 'completed' || STEPS[index + 1].num <= currentStep
-                      ? 'bg-primary-200 dark:bg-primary-800'
-                      : 'bg-neutral-200 dark:bg-neutral-700'
-                  )}
-                />
+                <div className="flex-1 px-4">
+                  <div className="h-0.5 w-full bg-white/5 rounded-full relative overflow-hidden">
+                    <motion.div 
+                      initial={false}
+                      animate={{ 
+                        width: status === 'completed' ? '100%' : '0%',
+                        opacity: status === 'completed' ? 1 : 0
+                      }}
+                      className="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-400 shadow-[0_0_8px_rgba(0,108,53,0.5)]"
+                    />
+                  </div>
+                </div>
               )}
             </div>
           );

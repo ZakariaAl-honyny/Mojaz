@@ -1,8 +1,8 @@
 using FluentValidation;
-using Mojaz.Application.DTOs.Payment;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Payment;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Application.Validators.Payments;
+namespace DrivingLicenseIssuanceSystem.Application.Validators.Payments;
 
 public class PaymentInitiateRequestValidator : AbstractValidator<PaymentInitiateRequest>
 {

@@ -3,10 +3,10 @@
     - banner [ref=e3]:
       - generic [ref=e4]:
         - generic [ref=e5]:
-          - link "M Mojaz ." [ref=e6] [cursor=pointer]:
+          - link "M DrivingLicenseIssuanceSystem ." [ref=e6] [cursor=pointer]:
             - /url: /
             - generic [ref=e7]: M
-            - generic [ref=e8]: Mojaz .
+            - generic [ref=e8]: DrivingLicenseIssuanceSystem .
           - navigation
         - generic [ref=e9]:
           - generic [ref=e10]:
@@ -25,7 +25,7 @@
         - generic [ref=e21]:
           - generic [ref=e22]:
             - heading "تسجيل الدخول" [level=2] [ref=e23]
-            - paragraph [ref=e24]: الوصول إلى حسابك في منصة مُجاز
+            - paragraph [ref=e24]: الوصول إلى حسابك في منصة نظام إصدار رخص القيادة
           - generic [ref=e25]:
             - generic [ref=e26]:
               - text: auth.login.identifier
@@ -49,8 +49,8 @@
       - generic [ref=e45]:
         - generic [ref=e46]:
           - generic [ref=e47]: M
-          - generic [ref=e48]: Mojaz
-        - paragraph [ref=e49]: © 2026 Mojaz Platform. All rights reserved.
+          - generic [ref=e48]: DrivingLicenseIssuanceSystem
+        - paragraph [ref=e49]: © 2026 DrivingLicenseIssuanceSystem Platform. All rights reserved.
   - button "Open Next.js Dev Tools" [ref=e55] [cursor=pointer]:
     - img [ref=e56]
   - alert [ref=e59]

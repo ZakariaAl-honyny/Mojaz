@@ -1,8 +1,8 @@
-using Mojaz.Domain.Common;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Common;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 using System;
 
-namespace Mojaz.Domain.Entities;
+namespace DrivingLicenseIssuanceSystem.Domain.Entities;
 
 public class User : SoftDeletableEntity
 {
@@ -30,6 +30,7 @@ public class User : SoftDeletableEntity
     public DateTime? PhoneVerifiedAt { get; set; }
     public bool IsActive { get; set; } = true;
     public bool IsLocked { get; set; }
+    public bool IsSecurityBlocked { get; set; }
     public int FailedLoginAttempts { get; set; }
     public DateTime? LockoutEnd { get; set; }
     public DateTime? LastLoginAt { get; set; }

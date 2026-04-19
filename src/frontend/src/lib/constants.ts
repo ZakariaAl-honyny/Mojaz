@@ -1,6 +1,6 @@
 import { ServiceType } from '@/types/wizard.types';
 
-export const APP_NAME = "مُجاز | Mojaz";
+export const APP_NAME = "نظام إصدار رخص القيادة | DrivingLicenseIssuanceSystem";
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 export const ROUTES = {

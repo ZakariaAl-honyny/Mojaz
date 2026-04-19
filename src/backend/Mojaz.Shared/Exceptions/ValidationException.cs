@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Mojaz.Shared.Exceptions;
+namespace DrivingLicenseIssuanceSystem.Shared.Exceptions;
 
 public class ValidationException : Exception
 {

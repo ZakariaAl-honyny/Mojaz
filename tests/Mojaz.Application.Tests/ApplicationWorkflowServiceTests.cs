@@ -1,14 +1,14 @@
 using Moq;
-using Mojaz.Application.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 using FluentAssertions;
 using System.Threading;
 using Hangfire;
 
-namespace Mojaz.Application.Tests;
+namespace DrivingLicenseIssuanceSystem.Application.Tests;
 
 public class ApplicationWorkflowServiceTests
 {

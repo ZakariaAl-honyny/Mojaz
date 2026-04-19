@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Http;
-using Mojaz.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Builder;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace Mojaz.API.Middleware;
+namespace DrivingLicenseIssuanceSystem.API.Middleware;
 
 public class AuditLogMiddleware
 {
@@ -41,7 +41,7 @@ public class AuditLogMiddleware
 
 public static class AuditLoggingExtensions
 {
-    public static IApplicationBuilder UseMojazAuditLogging(this IApplicationBuilder app)
+    public static IApplicationBuilder UseDrivingLicenseIssuanceSystemAuditLogging(this IApplicationBuilder app)
     {
         return app.UseMiddleware<AuditLogMiddleware>();
     }

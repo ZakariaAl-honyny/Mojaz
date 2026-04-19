@@ -1,4 +1,4 @@
-import { ApiResponse, PaginatedResult } from './api.types';
+import { ApiResponse, PagedResult } from './api.types';
 
 export type TestResultType = 'Pass' | 'Fail' | 'Absent';
 
@@ -25,5 +25,5 @@ export interface SubmitTheoryResultRequest {
   notes?: string;
 }
 
-export type TheoryHistoryResponse = ApiResponse<PaginatedResult<TheoryTestDto>>;
+export type TheoryHistoryResponse = ApiResponse<PagedResult<TheoryTestDto>>;
 export type SubmitTheoryResultResponse = ApiResponse<TheoryTestDto>;

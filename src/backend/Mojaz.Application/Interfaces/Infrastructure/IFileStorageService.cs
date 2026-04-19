@@ -1,7 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces.Infrastructure
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure
 {
     /// <summary>
     /// Interface for file storage abstraction.

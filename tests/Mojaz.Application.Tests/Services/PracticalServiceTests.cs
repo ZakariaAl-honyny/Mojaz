@@ -1,22 +1,22 @@
 using AutoMapper;
 using Moq;
-using Mojaz.Application.DTOs.Practical;
-using Mojaz.Application.Interfaces;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
-using Mojaz.Shared.Constants;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Practical;
+using DrivingLicenseIssuanceSystem.Application.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
+using DrivingLicenseIssuanceSystem.Shared.Constants;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using ApplicationEntity = Mojaz.Domain.Entities.Application;
+using ApplicationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
 
-namespace Mojaz.Application.Tests.Services
+namespace DrivingLicenseIssuanceSystem.Application.Tests.Services
 {
     public class PracticalServiceTests
     {
@@ -113,7 +113,7 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task SubmitResultAsync_ApplicationNotFound_ReturnsNotFound()
         {
-            _appRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), default)).ReturnsAsync((ApplicationEntity)null);
+            _appRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), default)).ReturnsAsync((ApplicationEntity?)null!);
 
             var result = await _sut.SubmitResultAsync(Guid.NewGuid(), new SubmitPracticalResultRequest { Score = 80 }, Guid.NewGuid());
 
@@ -279,7 +279,7 @@ namespace Mojaz.Application.Tests.Services
         public async Task IsInCoolingPeriodAsync_NoPreviousFail_ReturnsFalse()
         {
             var appId = Guid.NewGuid();
-            _practicalRepoMock.Setup(r => r.GetLatestByApplicationIdAsync(appId)).ReturnsAsync((PracticalTest)null);
+            _practicalRepoMock.Setup(r => r.GetLatestByApplicationIdAsync(appId)).ReturnsAsync((PracticalTest?)null!);
 
             var result = await _sut.IsInCoolingPeriodAsync(appId);
 
@@ -301,7 +301,7 @@ namespace Mojaz.Application.Tests.Services
             var result = await _sut.GetHistoryAsync(appId, applicantId, "Applicant");
 
             Assert.True(result.Success);
-            Assert.NotEmpty(result.Data.Items);
+            Assert.NotEmpty(result.Data!.Items);
         }
 
         [Fact]
@@ -329,7 +329,7 @@ namespace Mojaz.Application.Tests.Services
             var result = await _sut.GetHistoryAsync(appId, Guid.NewGuid(), "Manager");
 
             Assert.True(result.Success);
-            Assert.Single(result.Data.Items);
+            Assert.Single(result.Data!.Items);
         }
 
         [Fact]
@@ -343,13 +343,13 @@ namespace Mojaz.Application.Tests.Services
             var result = await _sut.GetHistoryAsync(appId, Guid.NewGuid(), "Manager");
 
             Assert.True(result.Success);
-            Assert.Empty(result.Data.Items);
+            Assert.Empty(result.Data!.Items);
         }
 
         [Fact]
         public async Task GetHistoryAsync_ApplicationNotFound_Returns404()
         {
-            _appRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), default)).ReturnsAsync((ApplicationEntity)null);
+            _appRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), default)).ReturnsAsync((ApplicationEntity?)null!);
 
             var result = await _sut.GetHistoryAsync(Guid.NewGuid(), Guid.NewGuid(), "Applicant");
 

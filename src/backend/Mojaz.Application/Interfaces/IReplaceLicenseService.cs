@@ -1,12 +1,12 @@
-using Mojaz.Application.DTOs.LicenseReplacement;
-using Mojaz.Application.DTOs.Application;
-using Mojaz.Application.DTOs.License;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.LicenseReplacement;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Application;
+using DrivingLicenseIssuanceSystem.Application.DTOs.License;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces;
 
 /// <summary>
 /// Service interface for License Replacement business logic

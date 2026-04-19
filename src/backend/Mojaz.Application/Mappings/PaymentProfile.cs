@@ -1,8 +1,8 @@
 using AutoMapper;
-using Mojaz.Application.DTOs.Payment;
-using Mojaz.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Payment;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
 
-namespace Mojaz.Application.Mappings;
+namespace DrivingLicenseIssuanceSystem.Application.Mappings;
 
 public class PaymentProfile : Profile
 {

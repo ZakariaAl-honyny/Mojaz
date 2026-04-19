@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Mojaz.Shared.Exceptions;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Shared.Exceptions;
+using DrivingLicenseIssuanceSystem.Shared;
 using Microsoft.AspNetCore.Builder;
 using System.Net;
 using System.Text.Json;
 using System.Data;
 
-namespace Mojaz.API.Middleware;
+namespace DrivingLicenseIssuanceSystem.API.Middleware;
 
 public class GlobalExceptionHandler
 {
@@ -115,7 +115,7 @@ public class GlobalExceptionHandler
 
 public static class GlobalExceptionHandlerExtensions
 {
-    public static IApplicationBuilder UseMojazExceptionHandler(this IApplicationBuilder app)
+    public static IApplicationBuilder UseDrivingLicenseIssuanceSystemExceptionHandler(this IApplicationBuilder app)
     {
         return app.UseMiddleware<GlobalExceptionHandler>();
     }

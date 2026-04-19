@@ -1,19 +1,19 @@
 using Microsoft.EntityFrameworkCore;
-using Mojaz.Application.Interfaces;
-using Mojaz.Domain.Entities;
-using Mojaz.Infrastructure.Persistence;
-using Mojaz.Infrastructure.Persistence.Repositories;
+using DrivingLicenseIssuanceSystem.Application.Interfaces;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Repositories
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Repositories
 {
     public class TheoryRepository : Repository<TheoryTest>, ITheoryRepository
     {
-        public TheoryRepository(MojazDbContext context) : base(context)
+        public TheoryRepository(DrivingLicenseIssuanceSystemDbContext context) : base(context)
         {
         }
 

@@ -1,11 +1,11 @@
-using Mojaz.Application.DTOs.Practical;
-using Mojaz.Domain.Entities;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Practical;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Interfaces;
+namespace DrivingLicenseIssuanceSystem.Application.Interfaces;
 
 /// <summary>
 /// Service interface for PracticalTest business logic

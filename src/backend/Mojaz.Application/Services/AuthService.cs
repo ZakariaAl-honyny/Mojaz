@@ -1,15 +1,15 @@
-using Mojaz.Application.DTOs.Auth;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Auth;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Mojaz.Application.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Services;
 
 public class AuthService : IAuthService
 {
@@ -104,8 +104,8 @@ var user = new User
         {
             UserId = user.Id,
             EventType = NotificationEventType.ApplicationSubmitted,
-            TitleAr = "تفعيل الحساب - مُجاز",
-            TitleEn = "Account Activation - Mojaz",
+            TitleAr = "تفعيل الحساب - نظام إصدار رخص القيادة",
+            TitleEn = "Account Activation - DrivingLicenseIssuanceSystem",
             MessageAr = $"رمز التفعيل الخاص بك هو: {otpValue}",
             MessageEn = $"Your activation code is: {otpValue}",
             Email = request.Method == RegistrationMethod.Email,
@@ -333,8 +333,8 @@ public async Task<ApiResponse<bool>> VerifyOtpAsync(VerifyOtpRequest request)
         {
             UserId = user.Id,
             EventType = NotificationEventType.OtpResent,
-            TitleAr = "رمز التحقق الجديد - مُجاز",
-            TitleEn = "New Verification Code - Mojaz",
+            TitleAr = "رمز التحقق الجديد - نظام إصدار رخص القيادة",
+            TitleEn = "New Verification Code - DrivingLicenseIssuanceSystem",
             MessageAr = $"رمز التحقق الجديد: {otpValue}",
             MessageEn = $"Your new verification code is: {otpValue}",
             Email = destinationType == DestinationType.Email,
@@ -399,8 +399,8 @@ return ApiResponse<OtpResponseDto>.Ok(new OtpResponseDto { DestinationMasked = m
         {
             UserId = user.Id,
             EventType = NotificationEventType.ApplicationSubmitted,
-            TitleAr = "استعادة كلمة المرور - مُجاز",
-            TitleEn = "Password Recovery - Mojaz",
+            TitleAr = "استعادة كلمة المرور - نظام إصدار رخص القيادة",
+            TitleEn = "Password Recovery - DrivingLicenseIssuanceSystem",
             MessageAr = $"رمز استعادة كلمة المرور هو: {otpValue}",
             MessageEn = $"Your password recovery code is: {otpValue}",
             Email = request.Method == RegistrationMethod.Email,

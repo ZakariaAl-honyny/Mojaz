@@ -18,7 +18,7 @@ Production email service using SendGrid API with professional bilingual HTML ema
 - Support attachments
 
 ### 3. 10 HTML Email Templates:
-Each: professional government design (green header), bilingual AR/EN, responsive, inline CSS
+Each: professional government design (King blue header), bilingual AR/EN, responsive, inline CSS
 01. account-verification — OTP code, expiry notice
 02. password-recovery — OTP code, security warning
 03. application-received — App number, service type, next steps
@@ -30,7 +30,7 @@ Each: professional government design (green header), bilingual AR/EN, responsive
 09. license-issued — License number, download link
 10. payment-confirmed — Amount, reference, fee type
 
-### 4. Sender: no-reply@mojaz.gov.sa
+### 4. Sender: no-reply@DrivingLicenseIssuanceSystem.gov.sa
 
 ## ACCEPTANCE CRITERIA:
 - [ ] Email sent via SendGrid API

@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace Mojaz.Infrastructure.Authentication;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Authentication;
 
 public static class JwtAuthenticationExtensions
 {
-    public static IServiceCollection AddMojazAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDrivingLicenseIssuanceSystemAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
         if (jwtSettings == null || string.IsNullOrEmpty(jwtSettings.SecretKey))

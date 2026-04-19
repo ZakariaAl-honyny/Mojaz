@@ -1,4 +1,4 @@
-namespace Mojaz.Domain.Enums
+namespace DrivingLicenseIssuanceSystem.Domain.Enums
 {
     public enum EmailStatus
     {

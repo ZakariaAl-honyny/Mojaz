@@ -2,13 +2,13 @@ using FirebaseAdmin;
 using FirebaseAdmin.Messaging;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.Extensions.Configuration;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mojaz.Infrastructure.Services;
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Services;
 
 public class PushNotificationService : IPushNotificationService
 {
@@ -37,6 +37,13 @@ public class PushNotificationService : IPushNotificationService
     public async Task RegisterTokenAsync(Guid userId, string token, string deviceType)
     {
         // Register push token for a user
+        // For now, placeholder implementation
+        await Task.CompletedTask;
+    }
+
+    public async Task UnregisterTokenAsync(Guid userId, string token)
+    {
+        // Unregister push token for a user
         // For now, placeholder implementation
         await Task.CompletedTask;
     }

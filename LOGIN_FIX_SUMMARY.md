@@ -24,16 +24,16 @@ Modified `AuthService.cs` to support three login methods:
 
 | Method | Test Status |
 |--------|-------------|
-| Email (applicant@mojaz.gov.sa) | ✅ Working |
+| Email (applicant@DrivingLicenseIssuanceSystem.gov.sa) | ✅ Working |
 | Phone (0500000001) | ✅ Working |
 | NationalId (1000000001) | ✅ Working |
 
 ### Valid Credentials
 - **NationalId**: 1000000001
-- **Email**: applicant@mojaz.gov.sa  
+- **Email**: applicant@DrivingLicenseIssuanceSystem.gov.sa  
 - **Phone**: 0500000001
 - **Password**: Password123!
 - **Role**: Applicant (0)
 
 ## Files Modified
-- `src/backend/Mojaz.Application/Services/AuthService.cs` - Added NationalId login support
+- `src/backend/DrivingLicenseIssuanceSystem.Application/Services/AuthService.cs` - Added NationalId login support

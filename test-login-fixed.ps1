@@ -1,5 +1,5 @@
 $body = @{
-    identifier = "applicant@mojaz.gov.sa"
+    identifier = "applicant@DrivingLicenseIssuanceSystem.gov.sa"
     password = "Password123!"
     method = 0
 } | ConvertTo-Json

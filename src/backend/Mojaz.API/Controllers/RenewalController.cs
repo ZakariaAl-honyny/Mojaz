@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mojaz.Application.DTOs.Renewal;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Renewal;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Mojaz.API.Controllers;
+namespace DrivingLicenseIssuanceSystem.API.Controllers;
 
 /// <summary>
 /// Controller for license renewal operations.

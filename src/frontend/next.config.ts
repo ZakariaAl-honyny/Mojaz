@@ -5,7 +5,11 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: __dirname,
-  /* config options here */
+  // Disable Jest worker threads to prevent child process exceptions
+  experimental: {
+    workerThreads: false,
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+  },
 };
 
 export default withNextIntl(nextConfig);

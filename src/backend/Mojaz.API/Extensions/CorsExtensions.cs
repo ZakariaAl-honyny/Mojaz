@@ -2,17 +2,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
 
-namespace Mojaz.API.Extensions;
+namespace DrivingLicenseIssuanceSystem.API.Extensions;
 
 public static class CorsExtensions
 {
     private static readonly string[] DefaultAllowedOrigins = { "http://localhost:3000" };
 
-    public static IServiceCollection AddMojazCors(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDrivingLicenseIssuanceSystemCors(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddCors(options =>
         {
-            options.AddPolicy("MojazCors", policy =>
+            options.AddPolicy("DrivingLicenseIssuanceSystemCors", policy =>
             {
                 policy.WithOrigins(
                         configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
@@ -26,9 +26,9 @@ public static class CorsExtensions
         return services;
     }
 
-    public static IApplicationBuilder UseMojazCors(this IApplicationBuilder app)
+    public static IApplicationBuilder UseDrivingLicenseIssuanceSystemCors(this IApplicationBuilder app)
     {
-        app.UseCors("MojazCors");
+        app.UseCors("DrivingLicenseIssuanceSystemCors");
         return app;
     }
 }

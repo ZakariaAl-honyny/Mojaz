@@ -14,7 +14,7 @@ interface TrainingProgressArcProps {
 
 /**
  * TrainingProgressArc - A premium circular progress indicator for training completion.
- * Follows the Mojaz ledger aesthetic with smooth CSS animations.
+ * Follows the DrivingLicenseIssuanceSystem ledger aesthetic with smooth CSS animations.
  */
 export function TrainingProgressArc({
   completedHours,
@@ -25,7 +25,7 @@ export function TrainingProgressArc({
 }: TrainingProgressArcProps) {
   const t = useTranslations("training.arc");
   const [offset, setOffset] = useState(0);
-  
+
   const percentage = Math.min(100, Math.max(0, (completedHours / totalHours) * 100));
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -69,7 +69,7 @@ export function TrainingProgressArc({
           strokeDashoffset={offset}
           strokeLinecap="round"
           className="transition-all duration-1000 ease-out"
-          style={{ 
+          style={{
             filter: "drop-shadow(0 0 8px rgba(0, 108, 53, 0.4))",
             transitionProperty: "stroke-dashoffset"
           }}
@@ -78,12 +78,12 @@ export function TrainingProgressArc({
         {/* Gradient Definition */}
         <defs>
           <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#006C35" />
+            <stop offset="0%" stopColor="#6366F1" />
             <stop offset="100%" stopColor="#10B981" />
           </linearGradient>
         </defs>
       </svg>
-      
+
       {/* Center Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
         <span className="text-3xl font-bold font-mono tracking-tighter text-neutral-900 dark:text-neutral-50">
@@ -95,7 +95,7 @@ export function TrainingProgressArc({
           {t('hoursLabel')}
         </span>
       </div>
-      
+
       {/* Decorative details for ledger look */}
       <div className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-neutral-300"></div>
       <div className="absolute -top-1 -right-1 w-2 h-2 border-t border-r border-neutral-300"></div>

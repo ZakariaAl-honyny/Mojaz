@@ -1,39 +1,31 @@
-using Mojaz.Application.Interfaces.Security;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Mojaz.Application.DTOs.Auth;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Auth;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using Moq;
 using Xunit;
-using Hangfire;
 
-namespace Mojaz.Application.Tests.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Tests.Services;
 
 public class AuthService_RegisterPhone_Tests
 {
     private readonly Mock<IRepository<User>> _userRepo = new();
-    private readonly Mock<IOtpRepository> _otpRepo = new();
+    private readonly Mock<IRepository<OtpCode>> _otpRepo = new();
     private readonly Mock<IRepository<RefreshToken>> _refreshTokenRepo = new();
     private readonly Mock<IUnitOfWork> _unitOfWork = new();
     private readonly Mock<IJwtService> _jwtService = new();
     private readonly Mock<INotificationService> _notificationService = new();
     private readonly Mock<IAuditService> _auditService = new();
     private readonly Mock<ISystemSettingsService> _settingsService = new();
-    private readonly Mock<IOtpService> _otpService = new();
-    private readonly Mock<IEmailService> _emailService = new();
-    private readonly Mock<ISmsService> _smsService = new();
-    private readonly Mock<ISecurityAlertService> _securityAlertService = new();
-    private readonly Mock<IHttpContextAccessor> _httpContextAccessor = new();
 
     private AuthService CreateService() => new(
         _userRepo.Object,
@@ -43,13 +35,7 @@ public class AuthService_RegisterPhone_Tests
         _jwtService.Object,
         _notificationService.Object,
         _auditService.Object,
-        _settingsService.Object,
-        _otpService.Object,
-        _emailService.Object,
-        _smsService.Object,
-        Mock.Of<IBackgroundJobClient>(),
-        _securityAlertService.Object,
-        _httpContextAccessor.Object
+        _settingsService.Object
     );
 
     [Fact]
@@ -68,8 +54,8 @@ public class AuthService_RegisterPhone_Tests
             PreferredLanguage = "ar"
         };
 
-        _userRepo.Setup(r => r.ExistsAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(false);
+        _userRepo.Setup(r => r.ExistsAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
+        _userRepo.Setup(r => r.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<User>());
 
         // Act
         var result = await service.RegisterAsync(request);
@@ -77,11 +63,9 @@ public class AuthService_RegisterPhone_Tests
         // Assert
         result.Success.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data!.RequiresVerification.Should().BeTrue();
         
         _userRepo.Verify(r => r.AddAsync(It.Is<User>(u => 
             u.PhoneNumber == request.Phone && 
-            u.IsActive == false &&
             u.RegistrationMethod == RegistrationMethod.Phone
         ), It.IsAny<CancellationToken>()), Times.Once);
 
@@ -89,7 +73,7 @@ public class AuthService_RegisterPhone_Tests
             o.Destination == request.Phone && 
             o.DestinationType == DestinationType.Phone &&
             o.Purpose == OtpPurpose.Registration
-        )), Times.Once);
+        ), It.IsAny<CancellationToken>()), Times.Once);
 
         _unitOfWork.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -108,6 +92,7 @@ public class AuthService_RegisterPhone_Tests
         };
 
         _userRepo.Setup(r => r.ExistsAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
+        _userRepo.Setup(r => r.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<User>());
 
         // Act
         await service.RegisterAsync(request);

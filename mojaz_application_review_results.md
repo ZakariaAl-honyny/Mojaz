@@ -1,13 +1,13 @@
-# Mojaz Backend Application Layer Implementation Review
+# DrivingLicenseIssuanceSystem Backend Application Layer Implementation Review
 
 ## Review Summary
 
 | Check Item | Status | Details |
 |------------|--------|---------|
-| 1. Infrastructure Service Interfaces (IEmailService.cs, ISmsService.cs, IPushNotificationService.cs) | PASS | Found in `src/backend/Mojaz.Application/Interfaces/Infrastructure/` directory with proper interface definitions |
-| 2. MappingProfile.cs | PASS | Located at `src/backend/Mojaz.Application/Mappings/MappingProfile.cs` - contains AutoMapper profile configuration |
-| 3. ServiceCollectionExtensions.cs (AutoMapper & FluentValidation registration) | PASS | Found at `src/backend/Mojaz.Application/Extensions/ServiceCollectionExtensions.cs` - correctly registers AutoMapper profiles and FluentValidation validators from the assembly |
-| 4. Mojaz.Application.csproj Infrastructure Reference Check | PASS | Project file references ONLY `Mojaz.Domain` and `Mojaz.Shared` - **NO Infrastructure reference** (correctly follows Clean Architecture principles) |
+| 1. Infrastructure Service Interfaces (IEmailService.cs, ISmsService.cs, IPushNotificationService.cs) | PASS | Found in `src/backend/DrivingLicenseIssuanceSystem.Application/Interfaces/Infrastructure/` directory with proper interface definitions |
+| 2. MappingProfile.cs | PASS | Located at `src/backend/DrivingLicenseIssuanceSystem.Application/Mappings/MappingProfile.cs` - contains AutoMapper profile configuration |
+| 3. ServiceCollectionExtensions.cs (AutoMapper & FluentValidation registration) | PASS | Found at `src/backend/DrivingLicenseIssuanceSystem.Application/Extensions/ServiceCollectionExtensions.cs` - correctly registers AutoMapper profiles and FluentValidation validators from the assembly |
+| 4. DrivingLicenseIssuanceSystem.Application.csproj Infrastructure Reference Check | PASS | Project file references ONLY `DrivingLicenseIssuanceSystem.Domain` and `DrivingLicenseIssuanceSystem.Shared` - **NO Infrastructure reference** (correctly follows Clean Architecture principles) |
 
 ## Detailed Findings
 
@@ -30,11 +30,11 @@ The `ServiceCollectionExtensions.cs` file correctly implements:
 This follows the standard pattern for registering these services in ASP.NET Core applications.
 
 ### 4. Architecture Compliance Check
-The `Mojaz.Application.csproj` file demonstrates correct Clean Architecture adherence:
-- References only `Mojaz.Domain` and `Mojaz.Shared` projects
-- **Does NOT** reference `Mojaz.Infrastructure` (which would violate Clean Architecture principles)
+The `DrivingLicenseIssuanceSystem.Application.csproj` file demonstrates correct Clean Architecture adherence:
+- References only `DrivingLicenseIssuanceSystem.Domain` and `DrivingLicenseIssuanceSystem.Shared` projects
+- **Does NOT** reference `DrivingLicenseIssuanceSystem.Infrastructure` (which would violate Clean Architecture principles)
 - Includes necessary NuGet packages for AutoMapper, FluentValidation, BCrypt, and Entity Framework Core
 - Targets .NET 8.0 as required
 
 ## Conclusion
-All checks passed. The Mojaz backend Application layer implementation correctly follows Clean Architecture principles with proper separation of concerns, interface definitions, and service registrations.
+All checks passed. The DrivingLicenseIssuanceSystem backend Application layer implementation correctly follows Clean Architecture principles with proper separation of concerns, interface definitions, and service registrations.

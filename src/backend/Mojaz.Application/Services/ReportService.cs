@@ -1,26 +1,26 @@
 using Microsoft.EntityFrameworkCore;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Reports.Dtos;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Domain.Constants;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Reports.Dtos;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Domain.Constants;
+using DrivingLicenseIssuanceSystem.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 // Type aliases to avoid namespace conflicts
-using ApplicationEntity = Mojaz.Domain.Entities.Application;
-using MedicalExaminationEntity = Mojaz.Domain.Entities.MedicalExamination;
-using TheoryTestEntity = Mojaz.Domain.Entities.TheoryTest;
-using PracticalTestEntity = Mojaz.Domain.Entities.PracticalTest;
-using LicenseEntity = Mojaz.Domain.Entities.License;
-using SystemSettingEntity = Mojaz.Domain.Entities.SystemSetting;
-using UserEntity = Mojaz.Domain.Entities.User;
+using ApplicationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
+using MedicalExaminationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.MedicalExamination;
+using TheoryTestEntity = DrivingLicenseIssuanceSystem.Domain.Entities.TheoryTest;
+using PracticalTestEntity = DrivingLicenseIssuanceSystem.Domain.Entities.PracticalTest;
+using LicenseEntity = DrivingLicenseIssuanceSystem.Domain.Entities.License;
+using SystemSettingEntity = DrivingLicenseIssuanceSystem.Domain.Entities.SystemSetting;
+using UserEntity = DrivingLicenseIssuanceSystem.Domain.Entities.User;
 
-namespace Mojaz.Application.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Services;
 
 public class ReportService : IReportService
 {

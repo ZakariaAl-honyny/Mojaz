@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Shared;
 
-namespace Mojaz.API.Filters;
+namespace DrivingLicenseIssuanceSystem.API.Filters;
 
 /// <summary>
 /// Action filter for validating model state.

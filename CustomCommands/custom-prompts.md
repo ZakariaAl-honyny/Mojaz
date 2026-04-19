@@ -35,7 +35,7 @@ Ok, after you finished the tasks 3.1 and 3.2 update tasks list at
 IMPLEMENTATION_PLAN.md
 and then after done all this choice another task from list tasks to do it and use these skills
 @beautifulMention @beautifulMention
-@mojaz-backend-development-rules and @mojaz-api-design-endpoint-conventions
+@DrivingLicenseIssuanceSystem-backend-development-rules and @DrivingLicenseIssuanceSystem-api-design-endpoint-conventions
 
 //
 

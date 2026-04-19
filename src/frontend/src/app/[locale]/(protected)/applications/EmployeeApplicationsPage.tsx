@@ -146,7 +146,7 @@ export default function EmployeeApplicationsPage() {
     <div className="space-y-12 py-6">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="space-y-2">
-          <h1 className="text-5xl font-black text-neutral-900 tracking-tight leading-none uppercase">{t("title")}</h1>
+          <h1 className="text-4xl font-black text-neutral-900 tracking-tight leading-none uppercase">{t("title")}</h1>
           <p className="text-lg text-neutral-500 max-w-xl font-medium leading-relaxed italic">
             {t("subtitle")}
           </p>

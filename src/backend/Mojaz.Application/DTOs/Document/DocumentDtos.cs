@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 using System;
 
-namespace Mojaz.Application.DTOs.Document;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Document;
 
 public class UploadDocumentRequest
 {

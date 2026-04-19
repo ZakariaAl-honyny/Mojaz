@@ -1,8 +1,8 @@
-using Mojaz.Domain.Common;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Common;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 using System;
 
-namespace Mojaz.Domain.Entities;
+namespace DrivingLicenseIssuanceSystem.Domain.Entities;
 
 public class MedicalExamination : SoftDeletableEntity
 {

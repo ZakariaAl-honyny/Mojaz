@@ -1,5 +1,5 @@
 import apiClient from '@/lib/api-client';
-import { ApiResponse, PaginatedResult } from '@/types/api.types';
+import { ApiResponse, PagedResult } from '@/types/api.types';
 
 export interface SubmitPracticalResultRequest {
   score: number;
@@ -43,8 +43,8 @@ export const practicalService = {
     applicationId: string,
     page = 1,
     pageSize = 10
-  ): Promise<ApiResponse<PaginatedResult<PracticalTestDto>>> => {
-    const response = await apiClient.get<ApiResponse<PaginatedResult<PracticalTestDto>>>(
+  ): Promise<ApiResponse<PagedResult<PracticalTestDto>>> => {
+    const response = await apiClient.get<ApiResponse<PagedResult<PracticalTestDto>>>(
       `/practicaltests/applications/${applicationId}/history`,
       { params: { page, pageSize } }
     );

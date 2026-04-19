@@ -7,21 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-
-const roleLabels: Record<string, { ar: string; en: string }> = {
-  Admin: { ar: 'مدير النظام', en: 'Admin' },
-  Receptionist: { ar: 'موظف الاستقبال', en: 'Receptionist' },
-  Doctor: { ar: 'الطبيب', en: 'Doctor' },
-  Examiner: { ar: 'المختبر', en: 'Examiner' },
-  Manager: { ar: 'المدير', en: 'Manager' },
-  Security: { ar: 'الأمن', en: 'Security' },
-};
+import { useTranslations } from 'next-intl';
 
 export default function UsersPage() {
+  const t = useTranslations('admin');
   const [users, setUsers] = useState<UserDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [locale, setLocale] = useState<'ar' | 'en'>('ar');
 
   useEffect(() => {
     loadUsers();
@@ -53,24 +45,6 @@ export default function UsersPage() {
     user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const t = (key: string) => {
-    const translations: Record<string, string> = {
-      'users.title': locale === 'ar' ? 'إدارة المستخدمين' : 'User Management',
-      'users.search': locale === 'ar' ? 'بحث...' : 'Search...',
-      'users.name': locale === 'ar' ? 'الاسم' : 'Name',
-      'users.email': locale === 'ar' ? 'البريد الإلكتروني' : 'Email',
-      'users.phone': locale === 'ar' ? 'رقم الهاتف' : 'Phone',
-      'users.role': locale === 'ar' ? 'الدور' : 'Role',
-      'users.status': locale === 'ar' ? 'الحالة' : 'Status',
-      'users.actions': locale === 'ar' ? 'الإجراءات' : 'Actions',
-      'users.active': locale === 'ar' ? 'نشط' : 'Active',
-      'users.inactive': locale === 'ar' ? 'غير نشط' : 'Inactive',
-      'users.add': locale === 'ar' ? 'إضافة مستخدم' : 'Add User',
-      'users.noUsers': locale === 'ar' ? 'لا يوجد مستخدمين' : 'No users found',
-    };
-    return translations[key] || key;
-  };
-
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -92,7 +66,7 @@ export default function UsersPage() {
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="text-center py-8 text-gray-500">Loading...</div>
+              <div className="text-center py-8 text-gray-500">{t('common.loading')}</div>
             ) : filteredUsers.length === 0 ? (
               <div className="text-center py-8 text-gray-500">{t('users.noUsers')}</div>
             ) : (
@@ -115,7 +89,7 @@ export default function UsersPage() {
                         <td className="p-4">{user.phoneNumber}</td>
                         <td className="p-4">
                           <span className="px-2 py-1 rounded-full text-sm bg-primary-100 text-primary-800">
-                            {roleLabels[user.appRole]?.[locale] || user.appRole}
+                            {t(`users.roles.${user.appRole}`)}
                           </span>
                         </td>
                         <td className="p-4">

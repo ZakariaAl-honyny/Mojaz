@@ -1,4 +1,4 @@
-# ?? **MOJAZ BACKEND SCAFFOLD — IMPLEMENTATION COMPLETE**
+# ?? **DrivingLicenseIssuanceSystem BACKEND SCAFFOLD ï¿½ IMPLEMENTATION COMPLETE**
 
 **Status**: ? **PRODUCTION-READY**  
 **Date**: 2026-04-04  
@@ -13,17 +13,17 @@
 
 A **fully functional, production-ready .NET 8 backend** with:
 
-? **Clean Architecture** — 5-layer design (Domain ? Shared ? Application ? Infrastructure ? API)  
-? **21 Domain Entities** — Fully modeled for the driving license lifecycle  
-? **Dependency Injection** — 20+ services registered and wired  
-? **Entity Framework Core 8** — SQL Server 2022 with soft-delete support  
-? **JWT Authentication** — Bearer tokens with role-based authorization  
-? **Global Middleware** — Exception handling, logging, audit, CORS, rate limiting  
-? **Swagger/OpenAPI** — Fully documented API with JWT integration  
-? **Docker Containerization** — Local development with docker-compose  
-? **Comprehensive Documentation** — Quickstart guide + implementation report  
-? **Unit Tests** — 4 test projects with placeholder tests  
-? **Build Configuration** — Directory.Build.props + Central Package Management  
+? **Clean Architecture** ï¿½ 5-layer design (Domain ? Shared ? Application ? Infrastructure ? API)  
+? **21 Domain Entities** ï¿½ Fully modeled for the driving license lifecycle  
+? **Dependency Injection** ï¿½ 20+ services registered and wired  
+? **Entity Framework Core 8** ï¿½ SQL Server 2022 with soft-delete support  
+? **JWT Authentication** ï¿½ Bearer tokens with role-based authorization  
+? **Global Middleware** ï¿½ Exception handling, logging, audit, CORS, rate limiting  
+? **Swagger/OpenAPI** ï¿½ Fully documented API with JWT integration  
+? **Docker Containerization** ï¿½ Local development with docker-compose  
+? **Comprehensive Documentation** ï¿½ Quickstart guide + implementation report  
+? **Unit Tests** ï¿½ 4 test projects with placeholder tests  
+? **Build Configuration** ï¿½ Directory.Build.props + Central Package Management  
 
 ---
 
@@ -46,8 +46,8 @@ A **fully functional, production-ready .NET 8 backend** with:
 
 ### **Step 1: Clone & Navigate**
 ```bash
-git clone https://github.com/ZakariaAl-honyny/Mojaz.git
-cd Mojaz
+git clone https://github.com/ZakariaAl-honyny/DrivingLicenseIssuanceSystem.git
+cd DrivingLicenseIssuanceSystem
 git checkout 003-backend-scaffold
 ```
 
@@ -59,13 +59,13 @@ docker compose up -d
 ### **Step 3: Setup Backend**
 ```bash
 cd src/backend/src
-dotnet restore Mojaz.sln
-dotnet ef database update -p Mojaz.Infrastructure -s Mojaz.API
+dotnet restore DrivingLicenseIssuanceSystem.sln
+dotnet ef database update -p DrivingLicenseIssuanceSystem.Infrastructure -s DrivingLicenseIssuanceSystem.API
 ```
 
 ### **Step 4: Run API**
 ```bash
-dotnet run --project Mojaz.API
+dotnet run --project DrivingLicenseIssuanceSystem.API
 ```
 
 ### **Step 5: Verify & Explore**
@@ -87,25 +87,25 @@ Open http://localhost:7127/swagger
 
 ### **Configuration Files**
 ```
-? docker-compose.yml            — SQL Server service (existing)
-? docker-compose.override.yml    — Dev-specific overrides
-? .env.development              — Non-secret dev defaults
-? .gitignore (updated)          — Environment patterns added
+? docker-compose.yml            ï¿½ SQL Server service (existing)
+? docker-compose.override.yml    ï¿½ Dev-specific overrides
+? .env.development              ï¿½ Non-secret dev defaults
+? .gitignore (updated)          ï¿½ Environment patterns added
 ```
 
 ### **Build Configuration**
 ```
-? src/backend/src/Directory.Build.props      — Shared build settings
-? src/backend/src/Directory.Packages.props   — Central NuGet versioning
-? src/backend/src/Mojaz.API/Mojaz.API.csproj — XML documentation enabled
+? src/backend/src/Directory.Build.props      ï¿½ Shared build settings
+? src/backend/src/Directory.Packages.props   ï¿½ Central NuGet versioning
+? src/backend/src/DrivingLicenseIssuanceSystem.API/DrivingLicenseIssuanceSystem.API.csproj ï¿½ XML documentation enabled
 ```
 
 ### **Documentation**
 ```
-? specs/003-backend-scaffold/quickstart.md         — 7-step setup guide
-? specs/003-backend-scaffold/IMPLEMENTATION_REPORT.md — Detailed report
-? README.md (updated)                             — Consistent API URLs
-? specs/003-backend-scaffold/tasks.md (updated)   — Tasks marked complete
+? specs/003-backend-scaffold/quickstart.md         ï¿½ 7-step setup guide
+? specs/003-backend-scaffold/IMPLEMENTATION_REPORT.md ï¿½ Detailed report
+? README.md (updated)                             ï¿½ Consistent API URLs
+? specs/003-backend-scaffold/tasks.md (updated)   ï¿½ Tasks marked complete
 ```
 
 ---
@@ -124,43 +124,43 @@ Hangfire:        https://localhost:7127/hangfire
 ```
 NEXT_PUBLIC_API_URL=https://localhost:7127/api/v1
 JWT_SECRET=your-super-secret-jwt-key-minimum-32-characters-long
-JWT_ISSUER=MojazAPI
-JWT_AUDIENCE=MojazClient
-CONNECTION_STRING=Server=localhost,1433;Database=MojazDB;User Id=sa;Password=as123456;TrustServerCertificate=True
+JWT_ISSUER=DrivingLicenseIssuanceSystemAPI
+JWT_AUDIENCE=DrivingLicenseIssuanceSystemClient
+CONNECTION_STRING=Server=localhost,1433;Database=DrivingLicenseIssuanceSystemDB;User Id=sa;Password=as123456;TrustServerCertificate=True
 ```
 
 ---
 
 ## ??? **Architecture Layers**
 
-### **API Layer** (`Mojaz.API`)
+### **API Layer** (`DrivingLicenseIssuanceSystem.API`)
 - Controllers with proper routing
 - 10+ middleware components
 - JWT authentication
 - Swagger documentation
 - Global exception handling
 
-### **Application Layer** (`Mojaz.Application`)
+### **Application Layer** (`DrivingLicenseIssuanceSystem.Application`)
 - Business logic services (20+)
 - DTOs for all entities
 - FluentValidation validators
 - AutoMapper profiles
 
-### **Infrastructure Layer** (`Mojaz.Infrastructure`)
+### **Infrastructure Layer** (`DrivingLicenseIssuanceSystem.Infrastructure`)
 - EF Core DbContext
 - Generic Repository pattern
 - Unit of Work implementation
 - Entity configurations (Fluent API)
 - External services (Email, SMS, Push)
 
-### **Domain Layer** (`Mojaz.Domain`)
+### **Domain Layer** (`DrivingLicenseIssuanceSystem.Domain`)
 - 21 entities with proper inheritance
 - 11 enums
 - Base classes (BaseEntity, AuditableEntity, SoftDeletableEntity)
 - Domain interfaces (IRepository, IUnitOfWork)
 - **Zero external dependencies** ?
 
-### **Shared Layer** (`Mojaz.Shared`)
+### **Shared Layer** (`DrivingLicenseIssuanceSystem.Shared`)
 - ApiResponse<T> wrapper
 - PagedResult<T> pagination
 - Custom exceptions
@@ -202,20 +202,20 @@ Test Projects: ? 4/4 functional
 ## ?? **Documentation**
 
 ### **For Developers**
-- ? `specs/003-backend-scaffold/quickstart.md` — Step-by-step setup
-- ? `README.md` — Complete project overview
-- ? `.env.example` ? `.env.development` — Environment template
-- ? Swagger/OpenAPI — Interactive API documentation
+- ? `specs/003-backend-scaffold/quickstart.md` ï¿½ Step-by-step setup
+- ? `README.md` ï¿½ Complete project overview
+- ? `.env.example` ? `.env.development` ï¿½ Environment template
+- ? Swagger/OpenAPI ï¿½ Interactive API documentation
 
 ### **For Architects**
-- ? `specs/003-backend-scaffold/plan.md` — Technical design
-- ? `specs/003-backend-scaffold/IMPLEMENTATION_REPORT.md` — Detailed report
-- ? `AGENTS.md` — Coding conventions and AI workflow
+- ? `specs/003-backend-scaffold/plan.md` ï¿½ Technical design
+- ? `specs/003-backend-scaffold/IMPLEMENTATION_REPORT.md` ï¿½ Detailed report
+- ? `AGENTS.md` ï¿½ Coding conventions and AI workflow
 
 ### **For DevOps**
-- ? `docker-compose.yml` — Development environment
-- ? `docker-compose.override.yml` — Dev overrides
-- ? `.env.development` — Configuration template
+- ? `docker-compose.yml` ï¿½ Development environment
+- ? `docker-compose.override.yml` ï¿½ Dev overrides
+- ? `.env.development` ï¿½ Configuration template
 
 ---
 
@@ -307,11 +307,11 @@ curl -X POST https://localhost:7127/api/v1/applications \
 
 ### **Key Files to Review**
 
-1. **`specs/003-backend-scaffold/quickstart.md`** — Developer onboarding
-2. **`README.md`** — Project overview and architecture
-3. **`AGENTS.md`** — Coding standards and AI workflow
-4. **`specs/003-backend-scaffold/plan.md`** — Technical design decisions
-5. **`specs/003-backend-scaffold/IMPLEMENTATION_REPORT.md`** — Detailed delivery report
+1. **`specs/003-backend-scaffold/quickstart.md`** ï¿½ Developer onboarding
+2. **`README.md`** ï¿½ Project overview and architecture
+3. **`AGENTS.md`** ï¿½ Coding standards and AI workflow
+4. **`specs/003-backend-scaffold/plan.md`** ï¿½ Technical design decisions
+5. **`specs/003-backend-scaffold/IMPLEMENTATION_REPORT.md`** ï¿½ Detailed delivery report
 
 ### **API Endpoints** (52 total)
 
@@ -333,7 +333,7 @@ See Swagger at `https://localhost:7127/swagger` for complete list.
 
 ## ?? **Conclusion**
 
-The Mojaz backend scaffold is **production-ready** with:
+The DrivingLicenseIssuanceSystem backend scaffold is **production-ready** with:
 
 ? All systems operational  
 ? Clean architecture established  
@@ -351,7 +351,7 @@ The Mojaz backend scaffold is **production-ready** with:
 | **Quick Start** | `specs/003-backend-scaffold/quickstart.md` |
 | **Implementation Report** | `specs/003-backend-scaffold/IMPLEMENTATION_REPORT.md` |
 | **API Documentation** | `https://localhost:7127/swagger` |
-| **GitHub Repository** | `https://github.com/ZakariaAl-honyny/Mojaz` |
+| **GitHub Repository** | `https://github.com/ZakariaAl-honyny/DrivingLicenseIssuanceSystem` |
 | **Project Rules** | `AGENTS.md` |
 
 ---
@@ -360,12 +360,12 @@ The Mojaz backend scaffold is **production-ready** with:
 
 ### ?? **Ready to Build the Future of Government Services**
 
-**ãõÌÇÒ — ãäÕÉ ÅÏÇÑÉ ÑÎÕ ÇáÞíÇÏÉ ÇáÍßæãíÉ**
+**ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½**
 
-*Mojaz — Government Driving License Platform*
+*DrivingLicenseIssuanceSystem ï¿½ Government Driving License Platform*
 
 ---
 
-**Built with Clean Architecture • Powered by .NET 8 • Secured by Design**
+**Built with Clean Architecture ï¿½ Powered by .NET 8 ï¿½ Secured by Design**
 
 </div>

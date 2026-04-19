@@ -1,7 +1,7 @@
-using Mojaz.Domain.Common;
+using DrivingLicenseIssuanceSystem.Domain.Common;
 using System;
 
-namespace Mojaz.Domain.Entities;
+namespace DrivingLicenseIssuanceSystem.Domain.Entities;
 
 public class LicenseRenewal : AuditableEntity
 {

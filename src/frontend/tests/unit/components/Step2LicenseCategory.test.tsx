@@ -19,6 +19,7 @@ jest.mock("@/lib/utils", () => ({
 // Mock useWizardStore
 jest.mock("@/stores/wizard-store", () => ({
   useWizardStore: () => ({
+    step1: { serviceType: null },
     step2: { categoryCode: null },
     step3: { dateOfBirth: "2009-01-15" }, // 17 years old in 2026
     setStep2: jest.fn(),

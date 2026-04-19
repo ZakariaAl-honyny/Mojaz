@@ -1,8 +1,8 @@
 using FluentValidation;
-using Mojaz.Application.DTOs.LicenseReplacement;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Application.DTOs.LicenseReplacement;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Application.Validators;
+namespace DrivingLicenseIssuanceSystem.Application.Validators;
 
 /// <summary>
 /// Validator for CreateReplacementRequest

@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
+import {
   ArrowRight,
   Download,
   Share2,
@@ -22,7 +22,7 @@ import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 
 export default function DigitalLicensePage() {
-  const t = useTranslations('license');
+  const t = useTranslations('licenses');
   const { locale, id } = useParams();
 
   // Mock data for MVP - would be fetched from API
@@ -49,7 +49,7 @@ export default function DigitalLicensePage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-King blue-100 text-King blue-800 border-King blue-200';
       case 'expired':
         return 'bg-red-100 text-red-800 border-red-200';
       case 'suspended':
@@ -85,167 +85,183 @@ export default function DigitalLicensePage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 space-y-6">
       {/* Back Link */}
-      <Link 
+      <Link
         href={`/${locale}/licenses`}
-        className="inline-flex items-center gap-2 text-neutral-600 hover:text-primary-500 transition-colors"
+        className="inline-flex items-center gap-2 text-neutral-600 hover:text-primary transition-colors group"
       >
-        <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-        <span className="text-sm font-medium">{t('myLicenses')}</span>
+        <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:-translate-x-1 transition-transform" />
+        <span className="text-sm font-black font-arabic uppercase tracking-widest">{t('myLicenses')}</span>
       </Link>
 
       {/* Digital License Card - Official Look */}
-      <Card className="overflow-hidden border-0 shadow-2xl">
+      <Card className="overflow-hidden border-0 shadow-2xl rounded-[2.5rem] gov-glass-panel border-white/5">
         {/* License Header */}
-        <div className="bg-gradient-to-br from-primary-800 via-primary-600 to-primary-700 p-8 text-white relative overflow-hidden">
+        <div className="bg-gradient-to-br from-primary via-primary-700 to-primary-800 p-10 text-white relative overflow-hidden">
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>
           </div>
-          
+
           <div className="relative z-10">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <Shield className="w-10 h-10" />
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-4">
+                <Shield className="w-12 h-12 text-white/90" />
                 <div>
-                  <h2 className="text-xl font-bold">مُجاز</h2>
-                  <p className="text-white/80 text-sm">Mojaz Platform</p>
+                  <h2 className="text-2xl font-black font-arabic tracking-tight">{t('digitalLicensePlatform')}</h2>
+                  <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.2em]">Driving License Issuance System</p>
                 </div>
               </div>
-              <Badge className={`${getStatusColor(license.status)} border`}>
+              <Badge className={cn(
+                "px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl",
+                license.status === 'active' ? "bg-emerald-500 text-white" : "bg-red-500 text-white"
+              )}>
                 {t(license.status)}
               </Badge>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-8 items-start">
+            <div className="flex flex-col md:flex-row gap-10 items-start">
               {/* Photo */}
-              <div className="w-32 h-40 bg-white/10 rounded-lg border-2 border-white/30 flex items-center justify-center overflow-hidden">
-                <User className="w-16 h-16 text-white/50" />
+              <div className="w-32 h-40 bg-white/10 rounded-2xl border-2 border-white/20 flex items-center justify-center overflow-hidden backdrop-blur-md">
+                <User className="w-16 h-16 text-white/30" />
               </div>
 
               {/* License Details */}
-              <div className="flex-1 space-y-4">
+              <div className="flex-1 space-y-6">
                 <div>
-                  <p className="text-white/70 text-xs uppercase tracking-wider">{t('number')}</p>
-                  <p className="text-2xl font-bold tracking-widest">{license.number}</p>
+                  <p className="text-white/50 text-[10px] uppercase font-black tracking-widest mb-1">{t('number')}</p>
+                  <p className="text-3xl font-black tracking-[0.2em] font-english">{license.number}</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-8">
                   <div>
-                    <p className="text-white/70 text-xs">{t('class')}</p>
-                    <p className="text-xl font-bold">{license.class}</p>
+                    <p className="text-white/50 text-[10px] font-black uppercase tracking-widest mb-1">{t('class')}</p>
+                    <p className="text-2xl font-black font-english">{license.class}</p>
                   </div>
                   <div>
-                    <p className="text-white/70 text-xs">{t('status')}</p>
-                    <p className="text-sm font-semibold">{t(license.status)}</p>
+                    <p className="text-white/50 text-[10px] font-black uppercase tracking-widest mb-1">{t('status')}</p>
+                    <p className="text-sm font-black font-arabic uppercase tracking-wider">{t(license.status)}</p>
                   </div>
                 </div>
               </div>
 
               {/* QR Code */}
-              <div className="bg-white p-2 rounded-lg">
-                <QrCode className="w-24 h-24 text-primary-700" />
+              <div className="bg-white p-3 rounded-2xl shadow-2xl">
+                <QrCode className="w-24 h-24 text-primary" />
               </div>
             </div>
           </div>
         </div>
 
         {/* License Body */}
-        <CardContent className="p-8 bg-neutral-50">
+        <CardContent className="p-10 bg-black/20 backdrop-blur-3xl">
           {/* Holder Information */}
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="space-y-4">
-              <h3 className="font-bold text-lg text-neutral-800 flex items-center gap-2">
-                <User className="w-5 h-5 text-primary-500" />
+          <div className="grid md:grid-cols-2 gap-10 mb-10">
+            <div className="space-y-6">
+              <h3 className="font-black text-xl text-white font-arabic flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20">
+                  <User className="w-4 h-4 text-primary" />
+                </div>
                 {license.holder.name}
               </h3>
-              <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="grid grid-cols-2 gap-6 text-[11px]">
                 <div>
-                  <p className="text-neutral-500">{t('application.create.fields.nationalId')}</p>
-                  <p className="font-semibold text-neutral-800">{license.holder.nationalId}</p>
+                  <p className="text-neutral-500 font-black uppercase tracking-widest mb-1">{t('fields.nationalId')}</p>
+                  <p className="font-black text-white text-base font-english">{license.holder.nationalId}</p>
                 </div>
                 <div>
-                  <p className="text-neutral-500">{t('application.create.fields.dateOfBirth')}</p>
-                  <p className="font-semibold text-neutral-800">{license.holder.dateOfBirth}</p>
+                  <p className="text-neutral-500 font-black uppercase tracking-widest mb-1">{t('fields.dateOfBirth')}</p>
+                  <p className="font-black text-white text-base font-english">{license.holder.dateOfBirth}</p>
                 </div>
                 <div>
-                  <p className="text-neutral-500">{t('application.create.fields.nationality')}</p>
-                  <p className="font-semibold text-neutral-800">{license.holder.nationality}</p>
+                  <p className="text-neutral-500 font-black uppercase tracking-widest mb-1">{t('fields.nationality')}</p>
+                  <p className="font-black text-white text-base font-arabic">{license.holder.nationality}</p>
                 </div>
                 <div>
-                  <p className="text-neutral-500">{t('application.create.fields.gender')}</p>
-                  <p className="font-semibold text-neutral-800">{license.holder.gender}</p>
+                  <p className="text-neutral-500 font-black uppercase tracking-widest mb-1">{t('fields.gender')}</p>
+                  <p className="font-black text-white text-base font-arabic">{license.holder.gender}</p>
                 </div>
               </div>
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-neutral-100">
-                <Calendar className="w-5 h-5 text-primary-500" />
+              <div className="flex items-center gap-4 p-5 bg-white/5 rounded-2xl border border-white/10 group hover:border-primary/30 transition-all">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                   <Calendar className="w-5 h-5 text-primary" />
+                </div>
                 <div>
-                  <p className="text-neutral-500 text-xs">{t('issueDate')}</p>
-                  <p className="font-semibold text-neutral-800">{license.issueDate}</p>
+                  <p className="text-neutral-500 text-[10px] font-black uppercase tracking-widest mb-1">{t('issueDate')}</p>
+                  <p className="font-black text-white text-sm font-english">{license.issueDate}</p>
                 </div>
               </div>
-              <div className={`flex items-center gap-3 p-4 rounded-xl border ${isExpiringSoon(license.expiryDate) ? 'bg-orange-50 border-orange-200' : 'bg-white border-neutral-100'}`}>
-                <Clock className={`w-5 h-5 ${isExpiringSoon(license.expiryDate) ? 'text-orange-600' : 'text-primary-500'}`} />
+              <div className={cn(
+                "flex items-center gap-4 p-5 rounded-2xl border transition-all",
+                isExpiringSoon(license.expiryDate) ? 'bg-orange-500/10 border-orange-500/30' : 'bg-white/5 border-white/10 group hover:border-primary/30'
+              )}>
+                <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", isExpiringSoon(license.expiryDate) ? 'bg-orange-500/20' : 'bg-primary/10')}>
+                   <Clock className={cn("w-5 h-5", isExpiringSoon(license.expiryDate) ? 'text-orange-400' : 'text-primary')} />
+                </div>
                 <div>
-                  <p className="text-neutral-500 text-xs">{t('expiryDate')}</p>
-                  <p className={`font-semibold ${isExpiringSoon(license.expiryDate) ? 'text-orange-700' : 'text-neutral-800'}`}>
+                  <p className="text-neutral-500 text-[10px] font-black uppercase tracking-widest mb-1">{t('expiryDate')}</p>
+                  <p className={cn("font-black text-sm font-english", isExpiringSoon(license.expiryDate) ? 'text-orange-400' : 'text-white')}>
                     {license.expiryDate}
                     {isExpiringSoon(license.expiryDate) && (
-                      <AlertTriangle className="w-3 h-3 inline-block ms-1 text-orange-500" />
+                      <AlertTriangle className="w-3 h-3 inline-block ms-2 text-orange-500 animate-pulse" />
                     )}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-neutral-100">
-                <MapPin className="w-5 h-5 text-primary-500" />
+              <div className="flex items-center gap-4 p-5 bg-white/5 rounded-2xl border border-white/10 group hover:border-primary/30 transition-all">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                   <MapPin className="w-5 h-5 text-primary" />
+                </div>
                 <div>
-                  <p className="text-neutral-500 text-xs">مركز الإصدار</p>
-                  <p className="font-semibold text-neutral-800">{license.center}</p>
+                  <p className="text-neutral-500 text-[10px] font-black uppercase tracking-widest mb-1">{t('center')}</p>
+                  <p className="font-black text-white text-sm font-arabic">{license.center}</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Restrictions */}
-          <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
-            <div className="flex items-center gap-2 text-amber-800">
-              <AlertTriangle className="w-4 h-4" />
-              <span className="font-medium text-sm">القيود: {license.restrictions || "لا توجد"}</span>
+          <div className="p-5 bg-white/5 border border-white/10 rounded-2xl">
+            <div className="flex items-center gap-3 text-white">
+              <div className="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center">
+                <AlertTriangle className="w-4 h-4 text-orange-400" />
+              </div>
+            <span className="font-bold text-sm font-arabic">{t('restrictions')}: <span className="text-neutral-400 px-2 font-medium">{license.restrictions || t('none')}</span></span>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Action Buttons */}
-      <div className="flex flex-wrap gap-3 justify-center">
-        <Button 
+      <div className="flex flex-wrap gap-4 justify-center py-4">
+        <Button
           onClick={handleDownloadPdf}
-          className="gap-2 bg-primary-500 hover:bg-primary-600"
+          className="h-14 px-8 gap-3 bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-xl shadow-primary/20 transition-all active:scale-[0.98] font-black text-[10px] uppercase tracking-widest"
         >
           <Download className="w-4 h-4" />
           {t('downloadPdf')}
         </Button>
-        <Button 
+        <Button
           onClick={handleShare}
           variant="outline"
-          className="gap-2 border-primary-200 text-primary-700 hover:bg-primary-50"
+          className="h-14 px-8 gap-3 border-white/10 bg-white/5 text-primary hover:bg-white/10 rounded-2xl transition-all font-black text-[10px] uppercase tracking-widest"
         >
           <Share2 className="w-4 h-4" />
           {t('shareLicense')}
         </Button>
-        <Button 
+        <Button
           variant="outline"
-          className="gap-2 border-neutral-200"
+          className="h-14 px-8 gap-3 border-white/10 bg-white/5 text-neutral-400 hover:text-white rounded-2xl transition-all font-black text-[10px] uppercase tracking-widest"
         >
           <Printer className="w-4 h-4" />
           {t('employee.manage.actions.print')}
         </Button>
-        <Button 
+        <Button
           variant="outline"
-          className="gap-2 border-red-200 text-red-600 hover:bg-red-50"
+          className="h-14 px-8 gap-3 border-red-500/20 bg-red-500/5 text-red-500 hover:bg-red-500/10 rounded-2xl transition-all font-black text-[10px] uppercase tracking-widest"
         >
           <AlertTriangle className="w-4 h-4" />
           {t('reportLost')}

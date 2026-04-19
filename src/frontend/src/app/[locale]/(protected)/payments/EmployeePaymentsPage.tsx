@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useFormatter } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -23,58 +23,58 @@ const mockPayments: PaymentDto[] = [
   {
     id: '1',
     applicationId: 'app-001',
-    applicationNumber: 'MOJ-2025-12345678',
+    applicationNumber: 'MOJ-2026-12345678',
     applicantFullName: 'أحمد محمد',
     feeType: 'ApplicationFee',
     amount: 200,
     status: 'Paid',
-    dueDate: '2025-04-15',
-    paidAt: '2025-04-14',
+    dueDate: '2026-04-15',
+    paidAt: '2026-04-14',
     paymentMethod: 'Mada',
     transactionId: 'TXN-001',
   },
   {
     id: '2',
     applicationId: 'app-001',
-    applicationNumber: 'MOJ-2025-12345678',
+    applicationNumber: 'MOJ-2026-12345678',
     applicantFullName: 'أحمد محمد',
     feeType: 'MedicalFee',
     amount: 150,
     status: 'Paid',
-    dueDate: '2025-04-20',
-    paidAt: '2025-04-18',
+    dueDate: '2026-04-20',
+    paidAt: '2026-04-18',
     paymentMethod: 'Visa',
     transactionId: 'TXN-002',
   },
   {
     id: '3',
     applicationId: 'app-002',
-    applicationNumber: 'MOJ-2025-87654321',
+    applicationNumber: 'MOJ-2026-87654321',
     applicantFullName: 'خالد علي',
     feeType: 'ApplicationFee',
     amount: 200,
     status: 'Pending',
-    dueDate: '2025-04-25',
+    dueDate: '2026-04-25',
   },
   {
     id: '4',
     applicationId: 'app-003',
-    applicationNumber: 'MOJ-2025-11223344',
+    applicationNumber: 'MOJ-2026-11223344',
     applicantFullName: 'سارة أحمد',
     feeType: 'ApplicationFee',
     amount: 200,
     status: 'Overdue',
-    dueDate: '2025-04-10',
+    dueDate: '2026-04-10',
   },
   {
     id: '5',
     applicationId: 'app-004',
-    applicationNumber: 'MOJ-2025-55667788',
+    applicationNumber: 'MOJ-2026-55667788',
     applicantFullName: 'علي محمد',
     feeType: 'TheoryFee',
     amount: 100,
     status: 'Failed',
-    dueDate: '2025-04-12',
+    dueDate: '2026-04-12',
   },
 ];
 
@@ -106,6 +106,7 @@ const statusVariants: Record<PaymentStatus, 'success' | 'warning' | 'destructive
 
 export default function EmployeePaymentsPage() {
   const t = useTranslations('payment');
+  const format = useFormatter();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<PaymentStatus | ''>('');
   const [selectedPayment, setSelectedPayment] = useState<PaymentDto | null>(null);
@@ -166,7 +167,7 @@ export default function EmployeePaymentsPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl p-4">
           <p className="text-sm text-neutral-500 dark:text-neutral-400">
-            {t('employee.filters.status')}
+            {t('history.status')}
           </p>
           <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mt-1">
             {stats.total}
@@ -215,7 +216,7 @@ export default function EmployeePaymentsPage() {
           >
             {statusOptions.map((option) => (
               <option key={option.value} value={option.value}>
-                {option.value ? t(`status.${option.labelKey}`) : t(`applications.filters.${option.labelKey}`)}
+                {option.value ? t(`status.${option.labelKey}`) : t('employee.filters.status')}
               </option>
             ))}
           </select>
@@ -286,10 +287,9 @@ export default function EmployeePaymentsPage() {
                     </td>
                     <td className="py-3 px-4">
                       <span className="font-medium text-neutral-900 dark:text-neutral-100">
-                        {payment.amount.toLocaleString('en-SA', {
+                        {format.number(payment.amount, {
                           style: 'currency',
-                          currency: 'SAR',
-                          minimumFractionDigits: 0,
+                          currency: 'YER',
                         })}
                       </span>
                     </td>
@@ -300,7 +300,11 @@ export default function EmployeePaymentsPage() {
                     </td>
                     <td className="py-3 px-4 text-neutral-600 dark:text-neutral-400">
                       {payment.paidAt
-                        ? new Date(payment.paidAt).toLocaleDateString('ar-SA')
+                        ? format.dateTime(new Date(payment.paidAt), {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                          })
                         : '-'}
                     </td>
                     <td className="py-3 px-4">
@@ -366,10 +370,9 @@ export default function EmployeePaymentsPage() {
                 </div>
                 <div className="text-end">
                   <p className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
-                    {selectedPayment.amount.toLocaleString('en-SA', {
+                    {format.number(selectedPayment.amount, {
                       style: 'currency',
-                      currency: 'SAR',
-                      minimumFractionDigits: 0,
+                      currency: 'YER',
                     })}
                   </p>
                 </div>

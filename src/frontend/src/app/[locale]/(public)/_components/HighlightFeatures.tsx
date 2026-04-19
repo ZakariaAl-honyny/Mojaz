@@ -10,7 +10,7 @@ import {
   ShieldCheck,
   CheckCircle2
 } from "lucide-react";
-import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export function HighlightFeatures() {
   const t = useTranslations("landing.features");
@@ -49,7 +49,7 @@ export function HighlightFeatures() {
                 <div className="text-secondary-500 font-bold tracking-widest uppercase text-sm">
                   {t("subtitle")}
                 </div>
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-neutral-900 dark:text-white font-arabic ltr:font-english leading-tight">
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 dark:text-white font-arabic ltr:font-english leading-tight">
                   {t("title")}
                 </h2>
               </div>
@@ -77,30 +77,30 @@ export function HighlightFeatures() {
           </div>
 
           <ScrollReveal direction="right" className="relative group">
-            <div className="aspect-square relative rounded-[40px] overflow-hidden bg-gradient-to-br from-[#006C35] via-[#005C2D] to-neutral-900 p-1 shadow-2xl">
+            <div className="aspect-square relative rounded-[40px] overflow-hidden bg-gradient-to-br from-[#6366F1] via-[#005C2D] to-neutral-900 p-1 shadow-2xl">
                <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/micro-carbon.png')]" />
                
                <div className="relative w-full h-full bg-neutral-900/50 backdrop-blur-3xl rounded-[39px] flex flex-col items-center justify-center p-12 text-center text-white space-y-8">
                   <div className="relative">
                     <div className="absolute inset-0 bg-primary-500 blur-[80px] opacity-20" />
-                    <ShieldCheck className="w-32 h-32 text-[#D4A017] relative z-10" />
+                    <ShieldCheck className="w-32 h-32 text-[#06B6D4] relative z-10" />
                   </div>
                   
                   <div className="space-y-4">
-                    <h3 className="text-3xl font-bold tracking-tight">أعلى معايير الأمان</h3>
+                    <h3 className="text-3xl font-bold tracking-tight">{t("security_highlight.title")}</h3>
                     <p className="text-neutral-400 max-w-sm mx-auto">
-                      نستخدم أحدث تقنيات التشفير والربط المباشر مع مركز المعلومات الوطني لضمان خصوصية بياناتكم.
+                      {t("security_highlight.description")}
                     </p>
                   </div>
 
                   <div className="flex gap-4">
                     <div className="flex items-center gap-2 text-xs font-bold text-primary-400">
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>SSL الموثق</span>
+                      <span>{t("security_highlight.ssl")}</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs font-bold text-primary-400">
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>نفاذ المعتمد</span>
+                      <span>{t("security_highlight.verified")}</span>
                     </div>
                   </div>
                </div>
@@ -109,7 +109,7 @@ export function HighlightFeatures() {
             <motion.div 
                animate={{ y: [0, -15, 0] }}
                transition={{ duration: 4, repeat: Infinity }}
-               className="absolute -top-6 -right-6 w-24 h-24 bg-[#D4A017] rounded-3xl blur-[40px] opacity-20" 
+               className="absolute -top-6 -right-6 w-24 h-24 bg-[#06B6D4] rounded-3xl blur-[40px] opacity-20" 
             />
             <motion.div 
                animate={{ x: [0, 15, 0] }}

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Domain.Interfaces;
+namespace DrivingLicenseIssuanceSystem.Domain.Interfaces;
 
 public interface IOtpRepository
 {

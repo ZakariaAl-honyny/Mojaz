@@ -1,4 +1,4 @@
-namespace Mojaz.Application.DTOs.Audit;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Audit;
 
 public class AuditLogDto
 {

@@ -134,7 +134,7 @@ export function DocumentLightbox({
                 <Button
                   onClick={handleApprove}
                   disabled={isApproving}
-                  className="bg-green-600 hover:bg-green-700"
+                  className="bg-King blue-600 hover:bg-King blue-700"
                 >
                   <Check className="w-4 h-4 me-2" />
                   {isApproving ? t('review.approve') + '...' : t('review.approve')}
@@ -181,8 +181,8 @@ export function DocumentLightbox({
             {document.status === DocumentStatus.Approved
               ? t('status.approved')
               : document.status === DocumentStatus.Rejected
-              ? t('status.rejected')
-              : ''}
+                ? t('status.rejected')
+                : ''}
           </div>
         )}
       </div>

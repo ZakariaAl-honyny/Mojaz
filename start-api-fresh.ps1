@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
-$workingDir = "C:\Users\ALlahabi\Desktop\cmder\Mojaz"
-$projectPath = "$workingDir\src\backend\Mojaz.API\Mojaz.API.csproj"
+$workingDir = "C:\Users\ALlahabi\Desktop\cmder\DrivingLicenseIssuanceSystem"
+$projectPath = "$workingDir\src\backend\DrivingLicenseIssuanceSystem.API\DrivingLicenseIssuanceSystem.API.csproj"
 
 # Kill any existing dotnet processes for this project
 Get-Process dotnet -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue

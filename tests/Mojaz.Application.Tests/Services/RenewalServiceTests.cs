@@ -4,20 +4,20 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using Mojaz.Application.DTOs.Renewal;
-using Mojaz.Application.Interfaces.Infrastructure;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.Services;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Shared;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Renewal;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Infrastructure;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.Services;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Shared;
 using Moq;
 using Xunit;
 
-using ApplicationEntity = Mojaz.Domain.Entities.Application;
+using ApplicationEntity = DrivingLicenseIssuanceSystem.Domain.Entities.Application;
 
-namespace Mojaz.Application.Tests.Services;
+namespace DrivingLicenseIssuanceSystem.Application.Tests.Services;
 
 public class RenewalServiceTests
 {
@@ -74,13 +74,56 @@ public class RenewalServiceTests
             _loggerMock.Object);
     }
 
-    // Skip this test - there's a known service bug where it tries to parse 
-    // "RenewalFee_{categoryId}" as FeeType enum which doesn't exist
-    // The service needs to be fixed to query fees differently
-    [Fact(Skip = "Known service bug: FeeType enum parsing issue")]
+    // Test now passes - the FeeType enum parsing issue has been fixed
+    [Fact]
     public async Task ValidateEligibilityAsync_WithValidActiveLicense_ReturnsEligible()
     {
-        // Test skipped - service has bug with FeeType parsing
+        // Arrange
+        var applicantId = Guid.NewGuid();
+        var categoryId = Guid.NewGuid();
+        var license = new License
+        {
+            Id = Guid.NewGuid(),
+            HolderId = applicantId,
+            LicenseCategoryId = categoryId,
+            Status = LicenseStatus.Active,
+            ExpiresAt = DateTime.UtcNow.AddDays(30)
+        };
+
+        _licenseRepositoryMock
+            .Setup(x => x.FindAsync(
+                It.IsAny<Expression<Func<License, bool>>>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new System.Collections.Generic.List<License> { license });
+
+        _systemSettingsServiceMock
+            .Setup(x => x.GetAsync(It.IsAny<string>()))
+            .ReturnsAsync("90");
+
+        _feeStructureRepositoryMock
+            .Setup(x => x.FindAsync(
+                It.IsAny<Expression<Func<FeeStructure, bool>>>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new System.Collections.Generic.List<FeeStructure>
+            {
+                new FeeStructure
+                {
+                    Id = Guid.NewGuid(),
+                    FeeType = FeeType.RenewalFee,
+                    LicenseCategoryId = categoryId,
+                    Amount = 200m,
+                    IsActive = true
+                }
+            });
+
+        // Act
+        var result = await _service.ValidateEligibilityAsync(applicantId, categoryId);
+
+        // Assert
+        result.Success.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+        result.Data!.IsEligible.Should().BeTrue();
+        result.Data.RenewalFeeAmount.Should().Be(200m);
     }
 
     [Fact]

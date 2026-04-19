@@ -1,9 +1,9 @@
 using AutoMapper;
-using Mojaz.Application.DTOs.Theory;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Theory;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Application.Mappings
+namespace DrivingLicenseIssuanceSystem.Application.Mappings
 {
     public class TheoryMappingProfile : Profile
     {

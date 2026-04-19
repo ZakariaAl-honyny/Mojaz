@@ -1,9 +1,9 @@
 using AutoMapper;
-using Mojaz.Application.DTOs.Practical;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Practical;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Application.Mappings;
+namespace DrivingLicenseIssuanceSystem.Application.Mappings;
 
 /// <summary>
 /// AutoMapper profile for PracticalTest mappings

@@ -1,7 +1,7 @@
 using FluentValidation;
-using Mojaz.Application.DTOs.Document;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Document;
 
-namespace Mojaz.Application.Validators;
+namespace DrivingLicenseIssuanceSystem.Application.Validators;
 
 public class DocumentReviewValidator : AbstractValidator<DocumentReviewRequest>
 {

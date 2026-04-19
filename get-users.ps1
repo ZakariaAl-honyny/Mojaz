@@ -1,7 +1,7 @@
-$conn = New-Object System.Data.SqlClient.SqlConnection("Server=.;Database=MojazDb;Trusted_Connection=True;TrustServerCertificate=True")
+$conn = New-Object System.Data.SqlClient.SqlConnection("Server=.;Database=DrivingLicenseIssuanceSystemDb;Trusted_Connection=True;TrustServerCertificate=True")
 $conn.Open()
 $cmd = $conn.CreateCommand()
-$cmd.CommandText = "SELECT TOP 10 Id, NationalId, Email, PasswordHash, FailedLoginAttempts, LockoutEnd FROM Users WHERE Email = 'applicant@mojaz.gov.sa'"
+$cmd.CommandText = "SELECT TOP 10 Id, NationalId, Email, PasswordHash, FailedLoginAttempts, LockoutEnd FROM Users WHERE Email = 'applicant@DrivingLicenseIssuanceSystem.gov.sa'"
 $reader = $cmd.ExecuteReader()
 while ($reader.Read()) {
     Write-Host "Id: $($reader['Id'])"

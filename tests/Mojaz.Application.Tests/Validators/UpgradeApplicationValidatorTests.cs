@@ -1,12 +1,12 @@
 using Moq;
-using Mojaz.Application.Validators;
-using Mojaz.Application.DTOs.Application;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Validators;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Application;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
 using FluentValidation.TestHelper;
 
-namespace Mojaz.Application.Tests.Validators;
+namespace DrivingLicenseIssuanceSystem.Application.Tests.Validators;
 
 public class UpgradeApplicationValidatorTests
 {

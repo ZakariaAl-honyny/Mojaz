@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { 
-  Send, 
-  Users, 
-  User, 
-  Shield, 
+import {
+  Send,
+  Users,
+  User,
+  Shield,
   Filter,
   Calendar,
   Eye,
@@ -20,7 +20,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -78,11 +78,11 @@ export default function EmployeeNotificationsPage() {
     if (template) {
       setSubject(template.title);
       if (template.category === 'payment') {
-        setMessage('Dear Applicant,\n\nThis is a reminder that you have a pending payment for your driving license application. Please complete the payment to proceed with your application.\n\nBest regards,\nMojaz Team');
+        setMessage('Dear Applicant,\n\nThis is a reminder that you have a pending payment for your driving license application. Please complete the payment to proceed with your application.\n\nBest regards,\nDrivingLicenseIssuanceSystem Team');
       } else if (template.category === 'appointment') {
-        setMessage('Dear Applicant,\n\nThis is a reminder about your upcoming appointment. Please ensure to arrive on time.\n\nBest regards,\nMojaz Team');
+        setMessage('Dear Applicant,\n\nThis is a reminder about your upcoming appointment. Please ensure to arrive on time.\n\nBest regards,\nDrivingLicenseIssuanceSystem Team');
       } else if (template.category === 'status') {
-        setMessage('Dear Applicant,\n\nYour application status has been updated. Please log in to view the details.\n\nBest regards,\nMojaz Team');
+        setMessage('Dear Applicant,\n\nYour application status has been updated. Please log in to view the details.\n\nBest regards,\nDrivingLicenseIssuanceSystem Team');
       }
     }
   };
@@ -352,7 +352,7 @@ export default function EmployeeNotificationsPage() {
                   <Eye className="w-4 h-4 me-2" />
                   {t('employee.preview')}
                 </Button>
-                
+
                 {scheduleEnabled ? (
                   <Button
                     onClick={handleSchedule}
@@ -422,8 +422,8 @@ export default function EmployeeNotificationsPage() {
                       <Send className="w-5 h-5 text-primary-500" />
                     </div>
                     <div>
-                      <p className="font-semibold text-neutral-900">Mojaz Platform</p>
-                      <p className="text-xs text-neutral-400">noreply@mojaz.sa</p>
+                      <p className="font-semibold text-neutral-900">DrivingLicenseIssuanceSystem Platform</p>
+                      <p className="text-xs text-neutral-400">noreply@DrivingLicenseIssuanceSystem.sa</p>
                     </div>
                   </div>
                   <h3 className="text-lg font-bold text-neutral-900 mb-2">
@@ -434,7 +434,7 @@ export default function EmployeeNotificationsPage() {
                   </div>
                   <div className="mt-4 pt-4 border-t border-neutral-200">
                     <p className="text-xs text-neutral-400">
-                      This is an automated notification from the Mojaz Driving License Platform.
+                      This is an automated notification from the DrivingLicenseIssuanceSystem Driving License Platform.
                     </p>
                   </div>
                 </div>

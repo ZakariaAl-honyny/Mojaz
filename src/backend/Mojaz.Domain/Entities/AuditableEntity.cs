@@ -1,4 +1,4 @@
-namespace Mojaz.Domain.Entities;
+namespace DrivingLicenseIssuanceSystem.Domain.Entities;
 
 /// <summary>
 /// Entity with audit tracking (who created/updated).

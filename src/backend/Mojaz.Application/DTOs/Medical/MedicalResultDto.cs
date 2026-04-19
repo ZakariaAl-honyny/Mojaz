@@ -1,7 +1,7 @@
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 using System;
 
-namespace Mojaz.Application.DTOs.Medical;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Medical;
 
 public class MedicalResultDto
 {

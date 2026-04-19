@@ -13,7 +13,7 @@ interface ServiceBarChartProps {
   }[];
 }
 
-const COLORS = ['#006C35', '#D4A017', '#1A8D4C', '#A67C00'];
+const COLORS = ['#6366F1', '#06B6D4', '#1A8D4C', '#A67C00'];
 
 export const ServiceBarChart: React.FC<ServiceBarChartProps> = ({ data }) => {
   const t = useTranslations('reports');
@@ -38,7 +38,7 @@ export const ServiceBarChart: React.FC<ServiceBarChartProps> = ({ data }) => {
                 axisLine={false} 
                 tickLine={false}
                 tick={{ fill: '#6B7280', fontSize: 12 }}
-                formatter={(value: string) => t(`service.${value.toLowerCase()}`)}
+                tickFormatter={(value: string) => t(`service.${value.toLowerCase()}`)}
               />
               <YAxis 
                 axisLine={false} 

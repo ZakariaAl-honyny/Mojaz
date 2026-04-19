@@ -1,4 +1,4 @@
-namespace Mojaz.Shared;
+namespace DrivingLicenseIssuanceSystem.Shared;
 
 /// <summary>
 /// Internal operation result used between service layers.

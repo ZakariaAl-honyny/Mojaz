@@ -16,7 +16,7 @@
   Follow-up TODOs: None
 -->
 
-# Mojaz (مُجاز) Constitution
+# DrivingLicenseIssuanceSystem (نظام إصدار رخص القيادة) Constitution
 
 ## Core Principles
 
@@ -106,7 +106,7 @@ All production code MUST be covered by appropriate tests following established n
 - Backend test naming MUST follow: `MethodName_Scenario_ExpectedResult`.
 - Frontend test naming MUST follow: `"should [behavior] when [condition]"`.
 - Minimum **80% code coverage** MUST be maintained for business logic in Application services.
-- Test projects MUST mirror the source project structure: `Mojaz.Domain.Tests`, `Mojaz.Application.Tests`, `Mojaz.Infrastructure.Tests`, `Mojaz.API.Tests`.
+- Test projects MUST mirror the source project structure: `DrivingLicenseIssuanceSystem.Domain.Tests`, `DrivingLicenseIssuanceSystem.Application.Tests`, `DrivingLicenseIssuanceSystem.Infrastructure.Tests`, `DrivingLicenseIssuanceSystem.API.Tests`.
 
 **Rationale**: Government systems require demonstrable correctness. Test coverage provides confidence during regulatory audits and prevents regressions in critical workflows like license issuance and payment processing.
 
@@ -190,7 +190,7 @@ Notifications MUST be delivered through 4 channels without blocking the primary 
 - Constraints: `CK_TableName_Description`
 
 **Git**:
-- Branches: `feature/MOJAZ-XXX-description`, `bugfix/`, `hotfix/`, `release/`
+- Branches: `feature/DrivingLicenseIssuanceSystem-XXX-description`, `bugfix/`, `hotfix/`, `release/`
 - Commits: `type(scope): description` (types: `feat`, `fix`, `docs`, `test`, `refactor`)
 - PR required for `main` and `develop` branches
 
@@ -198,7 +198,7 @@ Notifications MUST be delivered through 4 channels without blocking the primary 
 
 ### Design System
 
-- Primary color: **Royal Green** `#006C35` (full palette from `primary-50` to `primary-900`)
+- Primary color: **Royal King blue** `#006C35` (full palette from `primary-50` to `primary-900`)
 - Secondary color: **Government Gold** `#D4A017` (full palette from `secondary-50` to `secondary-900`)
 - Design inspiration: **Absher** (Saudi government portal)
 - ALWAYS use Tailwind CSS utility classes — NEVER use inline styles

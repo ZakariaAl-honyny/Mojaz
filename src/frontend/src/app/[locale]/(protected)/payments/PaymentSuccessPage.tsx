@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale, useFormatter } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FeeType, PaymentMethod } from '@/types/payment.types';
-import { 
-  CheckCircle, 
-  Download, 
+import {
+  CheckCircle,
+  Download,
   ChevronRight,
   CreditCard,
   Calendar,
@@ -42,6 +42,8 @@ const feeTypeKeys: Record<FeeType, string> = {
 export default function PaymentSuccessPage() {
   const t = useTranslations('payment');
   const tNav = useTranslations('navigation');
+  const locale = useLocale();
+  const format = useFormatter();
   const router = useRouter();
   const [showAnimation, setShowAnimation] = useState(false);
 
@@ -67,18 +69,18 @@ export default function PaymentSuccessPage() {
     <div className="max-w-md mx-auto space-y-6">
       {/* Success Animation */}
       <div className="flex flex-col items-center py-8">
-        <div 
+        <div
           className={`
-            w-24 h-24 rounded-full bg-green-100 dark:bg-green-900/30 
+            w-24 h-24 rounded-full bg-primary/10 
             flex items-center justify-center
             transition-all duration-700 transform
             ${showAnimation ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}
           `}
         >
-          <CheckCircle className="w-16 h-16 text-green-600 dark:text-green-400" />
+          <CheckCircle className="w-16 h-16 text-success" />
         </div>
-        
-        <h1 
+
+        <h1
           className={`
             mt-6 text-2xl font-bold text-neutral-900 dark:text-neutral-100
             transition-all duration-500 delay-300
@@ -87,8 +89,8 @@ export default function PaymentSuccessPage() {
         >
           {t('success')}
         </h1>
-        
-        <p 
+
+        <p
           className={`
             mt-2 text-center text-neutral-500 dark:text-neutral-400
             transition-all duration-500 delay-500
@@ -100,7 +102,7 @@ export default function PaymentSuccessPage() {
       </div>
 
       {/* Receipt Card */}
-      <div 
+      <div
         className={`
           bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 
           rounded-xl overflow-hidden
@@ -118,7 +120,7 @@ export default function PaymentSuccessPage() {
         <div className="p-6 space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-sm text-neutral-500 dark:text-neutral-400">
-              {t('history.application')}
+              {t('history.transactionId')}
             </span>
             <span className="font-mono text-sm text-neutral-900 dark:text-neutral-100">
               {payment.transactionId}
@@ -136,7 +138,7 @@ export default function PaymentSuccessPage() {
 
           <div className="flex items-center justify-between">
             <span className="text-sm text-neutral-500 dark:text-neutral-400">
-              {t('fees.applicationFee')}
+              {t('employee.columns.feeType')}
             </span>
             <span className="text-neutral-900 dark:text-neutral-100">
               {t(`fees.${feeTypeKeys[payment.feeType]}`)}
@@ -148,10 +150,9 @@ export default function PaymentSuccessPage() {
               {t('history.amount')}
             </span>
             <span className="text-xl font-bold text-primary-600 dark:text-primary-400">
-              {payment.amount.toLocaleString('en-SA', {
+              {format.number(payment.amount, {
                 style: 'currency',
-                currency: 'SAR',
-                minimumFractionDigits: 0,
+                currency: 'YER',
               })}
             </span>
           </div>
@@ -176,7 +177,7 @@ export default function PaymentSuccessPage() {
               <Calendar className="w-4 h-4 text-neutral-400" />
               <span className="text-neutral-900 dark:text-neutral-100">
                 {payment.paidAt
-                  ? new Date(payment.paidAt).toLocaleString('ar-SA', {
+                  ? format.dateTime(new Date(payment.paidAt), {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
@@ -200,7 +201,7 @@ export default function PaymentSuccessPage() {
       </div>
 
       {/* Action Buttons */}
-      <div 
+      <div
         className={`
           space-y-3
           transition-all duration-700 delay-1000

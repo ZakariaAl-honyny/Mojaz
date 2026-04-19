@@ -1,4 +1,4 @@
-namespace Mojaz.Application.DTOs.Email.Templates;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Email.Templates;
 
 public class SecurityAlertEmailData
 {

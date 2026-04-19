@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using Mojaz.Application.Interfaces.Services;
-using Mojaz.Application.DTOs.Application;
-using Mojaz.Shared.Models;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Services;
+using DrivingLicenseIssuanceSystem.Application.DTOs.Application;
+using DrivingLicenseIssuanceSystem.Shared;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mojaz.API.Controllers;
+namespace DrivingLicenseIssuanceSystem.API.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]

@@ -7,7 +7,7 @@ Visual timeline, status badges, applicant dashboard, and employee queue.
 
 ## REQUIREMENTS:
 ### 1. Timeline (10 stages): vertical, completed/current/failed/future states, expandable details
-### 2. Status Badges: Draft=gray, Submitted=blue, InReview=yellow, Approved=green, Rejected=red, etc.
+### 2. Status Badges: Draft=gray, Submitted=blue, InReview=yellow, Approved=King blue, Rejected=red, etc.
 ### 3. Applicant Dashboard: welcome card, quick actions, active apps, appointments, notifications, stats
 ### 4. Employee Dashboard: role-specific (Receptionist=pending docs, Doctor=medical exams, Manager=KPIs)
 ### 5. Employee Queue: TanStack Table, filters, sort, pagination, bulk actions

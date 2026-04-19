@@ -1,31 +1,31 @@
 version: '3.8'
 
 services:
-  mojaz-db:
+  DrivingLicenseIssuanceSystem-db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=MojazStrongPassword2025!
+      - MSSQL_SA_PASSWORD=DrivingLicenseIssuanceSystemStrongPassword2025!
     ports:
       - "1434:1433"
     networks:
-      - mojaz-net
+      - DrivingLicenseIssuanceSystem-net
 
-  mojaz-backend:
+  DrivingLicenseIssuanceSystem-backend:
     build:
       context: ./src/backend
       dockerfile: Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Server=mojaz-db;Database=MojazDb;User Id=sa;Password=MojazStrongPassword2025!;TrustServerCertificate=True
+      - ConnectionStrings__DefaultConnection=Server=DrivingLicenseIssuanceSystem-db;Database=DrivingLicenseIssuanceSystemDb;User Id=sa;Password=DrivingLicenseIssuanceSystemStrongPassword2025!;TrustServerCertificate=True
     ports:
       - "5000:5000"
     depends_on:
-      - mojaz-db
+      - DrivingLicenseIssuanceSystem-db
     networks:
-      - mojaz-net
+      - DrivingLicenseIssuanceSystem-net
 
-  mojaz-frontend:
+  DrivingLicenseIssuanceSystem-frontend:
     build:
       context: ./src/frontend
       dockerfile: Dockerfile
@@ -34,10 +34,10 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - mojaz-backend
+      - DrivingLicenseIssuanceSystem-backend
     networks:
-      - mojaz-net
+      - DrivingLicenseIssuanceSystem-net
 
 networks:
-  mojaz-net:
+  DrivingLicenseIssuanceSystem-net:
     driver: bridge

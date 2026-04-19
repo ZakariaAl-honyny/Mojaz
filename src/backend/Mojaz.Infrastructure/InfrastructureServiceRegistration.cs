@@ -1,21 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Interfaces;
-using Mojaz.Application.Interfaces;
-using Mojaz.Application.Interfaces.Repositories;
-using Mojaz.Infrastructure.Persistence;
-using Mojaz.Infrastructure.Persistence.Repositories;
-using Mojaz.Infrastructure.Persistence.UnitOfWork;
-using Mojaz.Infrastructure.Repositories;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Domain.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Repositories;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence.Repositories;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence.UnitOfWork;
+using DrivingLicenseIssuanceSystem.Infrastructure.Repositories;
+using DrivingLicenseIssuanceSystem.Infrastructure.Services;
 using SendGrid;
 using Hangfire;
 using Hangfire.SqlServer;
-using Mojaz.Infrastructure.Authentication;
-using Mojaz.Infrastructure.Jobs;
+using DrivingLicenseIssuanceSystem.Infrastructure.Authentication;
+using DrivingLicenseIssuanceSystem.Infrastructure.Jobs;
 
-namespace Mojaz.Infrastructure;
+namespace DrivingLicenseIssuanceSystem.Infrastructure;
 
 /// <summary>
 /// DI registration for Infrastructure layer services.
@@ -25,10 +26,10 @@ public static class InfrastructureServiceRegistration
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         // EF Core DbContext
-        services.AddDbContext<MojazDbContext>(options =>
+        services.AddDbContext<DrivingLicenseIssuanceSystemDbContext>(options =>
             options.UseSqlServer(
                 configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly(typeof(MojazDbContext).Assembly.FullName)));
+                b => b.MigrationsAssembly(typeof(DrivingLicenseIssuanceSystemDbContext).Assembly.FullName)));
 
         // Repository & UnitOfWork
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -80,12 +81,12 @@ public static class InfrastructureServiceRegistration
         var sendGridApiKey = configuration["SendGridSettings:ApiKey"];
         if (!string.IsNullOrEmpty(sendGridApiKey))
         {
-            services.AddScoped<ISendGridClient>(_ => new SendGridClient(sendGridApiKey));
+            services.AddScoped<DrivingLicenseIssuanceSystem.Infrastructure.Services.ISendGridClient>(_ => new SendGridClientWrapper(new SendGridClient(sendGridApiKey)));
         }
         else
         {
             // Fallback for development
-            services.AddScoped<ISendGridClient>(_ => new SendGridClient("SG.test-key"));
+            services.AddScoped<DrivingLicenseIssuanceSystem.Infrastructure.Services.ISendGridClient>(_ => new SendGridClientWrapper(new SendGridClient("SG.test-key")));
         }
 
         // Notification & Push
@@ -96,7 +97,7 @@ public static class InfrastructureServiceRegistration
             new Services.FirebasePushService(
                 provider.GetRequiredService<IRepository<PushToken>>(),
                 provider.GetRequiredService<IUnitOfWork>(),
-                provider.GetRequiredService<MojazDbContext>()
+                provider.GetRequiredService<DrivingLicenseIssuanceSystemDbContext>()
             ));
         services.AddScoped<Application.Interfaces.Services.IOtpService, Services.OtpService>();
         services.AddScoped<Application.Interfaces.Services.ISystemSettingsService, Services.SystemSettingsService>();
@@ -116,10 +117,10 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<Application.Interfaces.Services.ICategoryUpgradeService, Application.Services.CategoryUpgradeService>();
 
         // JWT Authentication & Authorization
-        services.AddMojazAuthentication(configuration);
+        services.AddDrivingLicenseIssuanceSystemAuthentication(configuration);
 
         // Background Jobs - Process Expired Applications (FR-005, Phase 8)
-        services.AddScoped<Mojaz.Infrastructure.Jobs.ProcessExpiredApplicationsJob>();
+        services.AddScoped<DrivingLicenseIssuanceSystem.Infrastructure.Jobs.ProcessExpiredApplicationsJob>();
         
         // Background Jobs - Appointment Reminders
         services.AddScoped<ProcessAppointmentRemindersJob>();

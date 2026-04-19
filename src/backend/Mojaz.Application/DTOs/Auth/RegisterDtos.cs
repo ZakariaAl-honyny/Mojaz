@@ -1,6 +1,6 @@
-using Mojaz.Domain.Enums;
+using DrivingLicenseIssuanceSystem.Domain.Enums;
 
-namespace Mojaz.Application.DTOs.Auth;
+namespace DrivingLicenseIssuanceSystem.Application.DTOs.Auth;
 
 public class RegisterRequest
 {

@@ -6,16 +6,16 @@ import { useTranslations } from 'next-intl';
 import { Calendar, Clock, MapPin, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import { AppointmentCalendar } from '@/components/domain/appointment/AppointmentCalendar';
 import { TimeSlotPicker } from '@/components/domain/appointment/TimeSlotPicker';
-import AppointmentService, { 
-  AppointmentType, 
-  AvailableSlotDto, 
+import AppointmentService, {
+  AppointmentType,
+  AvailableSlotDto,
   DaySlotsDto,
-  CreateAppointmentRequest 
+  CreateAppointmentRequest
 } from '@/services/appointment.service';
 import { cn } from '@/lib/utils';
 
 interface PageProps {
-  params: Promise<{ 
+  params: Promise<{
     locale: string;
     id: string;
   }>;
@@ -25,7 +25,7 @@ export default function AppointmentBookingPage({ params }: PageProps) {
   const resolvedParams = use(params);
   const t = useTranslations('appointment');
   const router = useRouter();
-  
+
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<AvailableSlotDto | null>(null);
   const [availableSlots, setAvailableSlots] = useState<DaySlotsDto[]>([]);
@@ -33,7 +33,7 @@ export default function AppointmentBookingPage({ params }: PageProps) {
   const [isBooking, setIsBooking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  
+
   const [appointmentType, setAppointmentType] = useState<AppointmentType>('PracticalTest');
   // Default branch - in a real app this would come from user context or settings
   const branchId = '00000000-0000-0000-0000-000000000001';
@@ -47,10 +47,10 @@ export default function AppointmentBookingPage({ params }: PageProps) {
 
   const loadAvailableSlots = async () => {
     if (!selectedDate) return;
-    
+
     setIsLoadingSlots(true);
     setError(null);
-    
+
     try {
       const dateStr = selectedDate.toISOString().split('T')[0];
       const response = await AppointmentService.getAvailableSlots(
@@ -58,7 +58,7 @@ export default function AppointmentBookingPage({ params }: PageProps) {
         branchId,
         dateStr
       );
-      
+
       if (response.success && response.data) {
         setAvailableSlots(response.data);
       } else {
@@ -77,10 +77,10 @@ export default function AppointmentBookingPage({ params }: PageProps) {
 
   const handleBookAppointment = async () => {
     if (!selectedDate || !selectedSlot) return;
-    
+
     setIsBooking(true);
     setError(null);
-    
+
     try {
       const request: CreateAppointmentRequest = {
         applicationId: resolvedParams.id,
@@ -89,9 +89,9 @@ export default function AppointmentBookingPage({ params }: PageProps) {
         scheduledDate: selectedDate.toISOString().split('T')[0],
         timeSlot: selectedSlot.time
       };
-      
+
       const response = await AppointmentService.createAppointment(request);
-      
+
       if (response.success) {
         setSuccess(true);
         // Redirect to application detail after a short delay
@@ -112,7 +112,7 @@ export default function AppointmentBookingPage({ params }: PageProps) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
         <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg max-w-md w-full text-center">
-          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+          <CheckCircle className="w-16 h-16 text-King blue-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             {t('bookingSuccess')}
           </h2>
@@ -206,7 +206,7 @@ export default function AppointmentBookingPage({ params }: PageProps) {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               {t('confirmBooking')}
             </h3>
-            
+
             <div className="flex flex-wrap gap-4 mb-4">
               <div className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-primary-500" />

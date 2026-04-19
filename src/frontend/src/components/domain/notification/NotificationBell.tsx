@@ -34,9 +34,9 @@ export function NotificationBell({ className }: NotificationBellProps) {
       <button
         type="button"
         className={cn(
-          'relative inline-flex items-center justify-center rounded-lg p-2',
-          'text-neutral-600 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800',
-          'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+          'relative inline-flex items-center justify-center rounded-xl p-2.5',
+          'bg-white/5 border border-white/10 text-white hover:bg-white/10',
+          'transition-all duration-300 active:scale-95 group',
           className
         )}
         onClick={handleOpen}
@@ -47,9 +47,10 @@ export function NotificationBell({ className }: NotificationBellProps) {
         {unreadCount > 0 && (
           <span
             className={cn(
-              'absolute -me-1 -mt-1 flex size-5 items-center justify-center',
-              'rounded-full bg-primary text-[10px] font-bold text-white',
-              'ring-2 ring-background'
+              'absolute -top-1 -right-1 flex size-5 items-center justify-center',
+              'rounded-full bg-primary-600 text-[10px] font-black text-white',
+              'ring-2 ring-neutral-950 shadow-lg shadow-primary-900/50',
+              'animate-in zoom-in duration-300 pulse-glow'
             )}
           >
             {unreadCount > 99 ? '99+' : unreadCount}

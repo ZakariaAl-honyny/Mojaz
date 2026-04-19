@@ -1,11 +1,11 @@
-@model Mojaz.Application.DTOs.Email.Templates.ApplicationReceivedEmailData
+@model DrivingLicenseIssuanceSystem.Application.DTOs.Email.Templates.ApplicationReceivedEmailData
 @{
     ViewBag.Title = "Application Received";
 }
 @section Ar {
-    <h2 style="color:#006C35;">Êã ÇÓÊáÇã ÇáØáÈ</h2>
-    <p>ÑÞã ÇáØáÈ: <b>@Model.ApplicationNumber</b></p>
-    <p>äæÚ ÇáÎÏãÉ: @Model.ServiceTypeAr</p>
+    <h2 style="color:#006C35;">ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½</h2>
+    <p>ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½: <b>@Model.ApplicationNumber</b></p>
+    <p>ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: @Model.ServiceTypeAr</p>
     <ul>
         @foreach (var step in Model.NextStepsAr ?? new List<string>())
         {

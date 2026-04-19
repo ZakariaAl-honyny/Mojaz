@@ -3,18 +3,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Mojaz.Application.Interfaces.Repositories;
-using Mojaz.Domain.Entities;
-using Mojaz.Infrastructure.Persistence;
-using Mojaz.Infrastructure.Settings;
+using DrivingLicenseIssuanceSystem.Application.Interfaces.Repositories;
+using DrivingLicenseIssuanceSystem.Domain.Entities;
+using DrivingLicenseIssuanceSystem.Infrastructure.Persistence;
+using DrivingLicenseIssuanceSystem.Infrastructure.Settings;
 
-namespace Mojaz.Infrastructure.Repositories
+namespace DrivingLicenseIssuanceSystem.Infrastructure.Repositories
 {
     public class EmailLogRepository : IEmailLogRepository
     {
-        private readonly MojazDbContext _dbContext;
+        private readonly DrivingLicenseIssuanceSystemDbContext _dbContext;
         private readonly EmailDedupSettings _dedupSettings;
-        public EmailLogRepository(MojazDbContext dbContext, IOptions<EmailDedupSettings> dedupOptions)
+        public EmailLogRepository(DrivingLicenseIssuanceSystemDbContext dbContext, IOptions<EmailDedupSettings> dedupOptions)
         {
             _dbContext = dbContext;
             _dedupSettings = dedupOptions.Value;
