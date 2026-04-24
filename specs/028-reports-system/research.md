@@ -25,7 +25,7 @@
     - Approved: `#10B981` (Status Success)
     - Rejected: `#EF4444` (Status Error)
     - Warning: `#F59E0B`
-    - Primary: `#006C35`
+    - Primary: `#1a3a8f`
 
 ### 5. Export Strategy
 - **Decision**: Server-side CSV generation + Client-side PDF Print.

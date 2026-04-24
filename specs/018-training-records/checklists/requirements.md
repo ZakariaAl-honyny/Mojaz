@@ -35,7 +35,7 @@
 
 - [x] Distinctive aesthetic direction defined (governmental authority / ledger aesthetic)
 - [x] Typography choices specified (IBM Plex Mono + IBM Plex Sans Arabic)
-- [x] Color usage aligned with Mojaz design system (Royal Green #006C35, Government Gold #D4A017)
+- [x] Color usage aligned with Mojaz design system (King Blue #1a3a8f, Government Gold #D4A017)
 - [x] Progress visualization defined (circular arc, NOT generic progress bar)
 - [x] Status badges specified with distinct color tokens
 

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { StepId, WizardState } from '@/types/wizard.types';
+import { StepId, WizardState, ServiceType, LicenseCategoryCode, Gender } from '@/types/wizard.types';
+import { genderFromNumber } from '@/lib/enum-utils';
 
 const initialState = {
   applicationId: null,
@@ -10,16 +11,16 @@ const initialState = {
   consecutiveSaveFailures: 0,
   isSaving: false,
   step1: {
-    serviceType: null,
+    serviceType: null as ServiceType | null,
   },
   step2: {
-    categoryCode: null,
+    categoryCode: null as string | null, // Backend returns "A", "B", etc. as strings
   },
   step3: {
     nationalId: '',
     dateOfBirth: '',
     nationality: '',
-    gender: 'Male' as const,
+    gender: Gender.Male,
     mobileNumber: '',
     email: '',
     address: '',
@@ -67,6 +68,69 @@ export const useWizardStore = create<WizardState>()(
       resetSaveFailures: () => set({ consecutiveSaveFailures: 0 }),
       
       resetWizard: () => set(initialState),
+
+      // Load wizard data fetched from API (e.g., after page refresh)
+      // Data comes from backend as numeric enum values
+      loadFromApi: (data: {
+        serviceType?: number | null;
+        licenseCategoryCode?: number | string | null;
+        nationalId?: string | null;
+        dateOfBirth?: string | null;
+        nationality?: string | null;
+        gender?: number | string | null;
+        mobileNumber?: string | null;
+        email?: string | null;
+        address?: string | null;
+        city?: string | null;
+        region?: string | null;
+        applicantType?: string | null;
+        preferredCenterId?: string | null;
+        testLanguage?: string | null;
+        appointmentPreference?: string | null;
+        specialNeedsDeclaration?: boolean | null;
+        specialNeedsNote?: string | null;
+      }) => set((state) => {
+        const newStep1 = { ...state.step1 };
+        if (data.serviceType !== undefined) {
+          newStep1.serviceType = serviceTypeFromNumber(data.serviceType);
+        }
+
+        const newStep2 = { ...state.step2 };
+        if (data.licenseCategoryCode !== undefined) {
+          // Backend returns number (0-5), convert to string like "A", "B"
+          if (typeof data.licenseCategoryCode === 'number') {
+            const codes = ['A', 'B', 'C', 'D', 'E', 'F'];
+            newStep2.categoryCode = codes[data.licenseCategoryCode] ?? null;
+          } else {
+            newStep2.categoryCode = String(data.licenseCategoryCode);
+          }
+        }
+
+        const newStep3 = { ...state.step3 };
+        if (data.nationalId !== undefined) newStep3.nationalId = data.nationalId ?? '';
+        if (data.dateOfBirth !== undefined) newStep3.dateOfBirth = data.dateOfBirth ?? '';
+        if (data.nationality !== undefined) newStep3.nationality = data.nationality ?? '';
+        if (data.gender !== undefined) {
+          // Convert numeric gender from API to Gender enum: 0-2
+          const genderNum = typeof data.gender === 'number' ? data.gender : Number(data.gender);
+          newStep3.gender = genderFromNumber(genderNum) ?? Gender.Male;
+        }
+        if (data.mobileNumber !== undefined) newStep3.mobileNumber = data.mobileNumber ?? '';
+        if (data.email !== undefined) newStep3.email = data.email ?? '';
+        if (data.address !== undefined) newStep3.address = data.address ?? '';
+        if (data.city !== undefined) newStep3.city = data.city ?? '';
+        if (data.region !== undefined) newStep3.region = data.region ?? '';
+
+        const newStep4 = { ...state.step4 };
+        if (data.applicantType !== undefined) newStep4.applicantType = (data.applicantType as any) ?? 'Citizen';
+        if (data.preferredCenterId !== undefined) newStep4.preferredCenterId = data.preferredCenterId ?? '';
+        if (data.testLanguage !== undefined) newStep4.testLanguage = (data.testLanguage as any) ?? 'ar';
+        if (data.appointmentPreference !== undefined) newStep4.appointmentPreference = (data.appointmentPreference as any) ?? 'Morning';
+        if (data.specialNeedsDeclaration !== undefined) newStep4.specialNeedsDeclaration = data.specialNeedsDeclaration ?? false;
+        if (data.specialNeedsNote !== undefined) newStep4.specialNeedsNote = data.specialNeedsNote ?? '';
+
+        return { step1: newStep1, step2: newStep2, step3: newStep3, step4: newStep4 };
+      }),
     }),
     {
       name: 'mojaz-wizard-draft',
@@ -83,3 +147,6 @@ export const useWizardStore = create<WizardState>()(
     }
   )
 );
+
+// Import from enum-utils for conversion
+import { serviceTypeFromNumber, licenseCategoryFromNumber } from '@/lib/enum-utils';

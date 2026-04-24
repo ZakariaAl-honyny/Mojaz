@@ -33,26 +33,26 @@ export interface UpdateUserRoleRequest {
 
 export const userService = {
   async getAllUsers(): Promise<UserDto[]> {
-    const response = await axios.get<{ data: UserDto[] }>('/api/v1/users');
+    const response = await axios.get<{ data: UserDto[] }>('/users');
     return response.data.data;
   },
 
   async getUserById(userId: string): Promise<UserDto> {
-    const response = await axios.get<{ data: UserDto }>(`/api/v1/users/${userId}`);
+    const response = await axios.get<{ data: UserDto }>(`/users/${userId}`);
     return response.data.data;
   },
 
   async createUser(request: CreateUserRequest): Promise<CreateUserResponse> {
-    const response = await axios.post<{ data: CreateUserResponse }>('/api/v1/users', request);
+    const response = await axios.post<{ data: CreateUserResponse }>('/users', request);
     return response.data.data;
   },
 
   async updateUserStatus(userId: string, isActive: boolean): Promise<void> {
-    await axios.patch(`/api/v1/users/${userId}/status`, { isActive });
+    await axios.patch(`/users/${userId}/status`, { isActive });
   },
 
   async updateUserRole(userId: string, appRole: string): Promise<void> {
-    await axios.patch(`/api/v1/users/${userId}/role`, { appRole });
+    await axios.patch(`/users/${userId}/role`, { appRole });
   },
 };
 

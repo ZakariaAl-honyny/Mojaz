@@ -13,10 +13,11 @@ public class Appointment : SoftDeletableEntity
     public string TimeSlot { get; set; } = string.Empty;
     public Guid? BranchId { get; set; }
     public Guid? AssignedStaffId { get; set; }
-    public string Status { get; set; } = "Scheduled"; // Scheduled|Completed|Cancelled|NoShow
+    public AppointmentStatus Status { get; set; } = AppointmentStatus.Scheduled;
     public string? Notes { get; set; }
     public DateTime? CancelledAt { get; set; }
     public string? CancellationReason { get; set; }
+    public TimeOnly? CheckInTime { get; set; }
     public int RescheduleCount { get; set; }
     public bool ReminderSent { get; set; }
     

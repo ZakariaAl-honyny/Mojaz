@@ -58,13 +58,32 @@ public DocumentService(
     _notificationService = notificationService;
 }
 
-    public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, UploadDocumentRequest request, Guid userId)
+public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, UploadDocumentRequest request, Guid userId)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null) return ApiResponse<DocumentDto>.Fail(404, "Application not found.");
-         
+          
         if (application.ApplicantId != userId) return ApiResponse<DocumentDto>.Fail(403, "Unauthorized.");
 
+        // Delegate to internal upload logic
+        return await UploadInternalAsync(application, request, userId);
+    }
+
+    public async Task<ApiResponse<DocumentDto>> UploadByApplicationNumberAsync(string applicationNumber, UploadDocumentRequest request, Guid userId)
+    {
+        var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
+        var application = applications.FirstOrDefault();
+        
+        if (application == null) return ApiResponse<DocumentDto>.Fail(404, "Application not found.");
+        
+        if (application.ApplicantId != userId) return ApiResponse<DocumentDto>.Fail(403, "Unauthorized.");
+
+        // Delegate to internal upload logic
+        return await UploadInternalAsync(application, request, userId);
+    }
+
+    private async Task<ApiResponse<DocumentDto>> UploadInternalAsync(ApplicationEntity application, UploadDocumentRequest request, Guid userId)
+    {
         // Validate file
         if (request.File == null) return ApiResponse<DocumentDto>.Fail(400, "File is required.");
         
@@ -88,7 +107,7 @@ public DocumentService(
         
         var document = new ApplicationDocument
         {
-            ApplicationId = applicationId,
+            ApplicationId = application.Id,
             DocumentType = request.DocumentType,
             OriginalFileName = request.File.FileName,
             StoredFileName = storedFileName,
@@ -172,9 +191,10 @@ public DocumentService(
                     break;
                 case DocumentType.GuardianConsent:
                     // Required when applicant age < 18
-                    if (applicant != null)
+                    if (applicant?.DateOfBirth != null)
                     {
-                        var age = DateTime.UtcNow.Year - applicant.DateOfBirth.Year;
+                        var dob = applicant.DateOfBirth.Value;
+                        var age = DateTime.UtcNow.Year - dob.Year;
                         isRequired = age < 18;
                         isConditional = true;
                         conditionDescription = isRequired ? "Required because applicant is under 18 years old" : "Not applicable (applicant is 18 or older)";
@@ -194,6 +214,107 @@ public DocumentService(
                     break;
                 default:
                     // Mandatory documents
+                    isRequired = true;
+                    break;
+            }
+            
+            var existingDoc = existingDocs.FirstOrDefault(d => d.DocumentType == docType);
+            
+            requirements.Add(new DocumentRequirementDto
+            {
+                DocumentType = docType,
+                DocumentTypeName = docType.ToString(),
+                IsRequired = isRequired,
+                IsConditional = isConditional,
+                ConditionDescription = conditionDescription,
+                HasUpload = existingDoc != null,
+                Status = existingDoc?.Status,
+                DocumentId = existingDoc?.Id
+            });
+        }
+        
+        return ApiResponse<IEnumerable<DocumentRequirementDto>>.Ok(requirements);
+    }
+
+    public async Task<ApiResponse<IEnumerable<DocumentDto>>> GetByApplicationNumberAsync(string applicationNumber, Guid userId, string role)
+    {
+        var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
+        var application = applications.FirstOrDefault();
+        
+        if (application == null) return ApiResponse<IEnumerable<DocumentDto>>.Fail(404, "Application not found.");
+        
+        var docs = await _documentRepository.FindAsync(d => d.ApplicationId == application.Id);
+        return ApiResponse<IEnumerable<DocumentDto>>.Ok(docs.Select(d => new DocumentDto 
+        { 
+            Id = d.Id, 
+            Status = d.Status, 
+            ApplicationId = d.ApplicationId, 
+            DocumentType = d.DocumentType,
+            DocumentTypeName = d.DocumentType.ToString(),
+            OriginalFileName = d.OriginalFileName, 
+            FileSizeBytes = d.FileSizeBytes, 
+            ContentType = d.ContentType,
+            ReviewedBy = d.ReviewedBy,
+            ReviewedAt = d.ReviewedAt,
+            RejectionReason = d.RejectionReason,
+            CreatedAt = d.CreatedAt,
+            DownloadUrl = $"/api/v1/applications/{d.ApplicationId}/documents/{d.Id}/download"
+        }));
+    }
+
+    public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequirementsByApplicationNumberAsync(string applicationNumber, Guid userId)
+    {
+        var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
+        var application = applications.FirstOrDefault();
+        
+        if (application == null) return ApiResponse<IEnumerable<DocumentRequirementDto>>.Fail(404, "Application not found.");
+
+        var docs = await _documentRepository.FindAsync(d => d.ApplicationId == application.Id);
+        
+        // Get applicant info for conditional logic
+        var applicant = await _userRepository.GetByIdAsync(application.ApplicantId);
+        
+        // Get existing documents
+        var existingDocs = docs.ToList();
+        
+        var requirements = new List<DocumentRequirementDto>();
+        
+        // Define all 8 document types with their conditional rules
+        foreach (DocumentType docType in Enum.GetValues(typeof(DocumentType)))
+        {
+            var isRequired = false;
+            var isConditional = false;
+            string? conditionDescription = null;
+            
+            // Check conditional requirements
+            switch (docType)
+            {
+                case DocumentType.AddressProof:
+                    isRequired = false;
+                    isConditional = true;
+                    conditionDescription = "Required for resident applicants";
+                    break;
+                case DocumentType.GuardianConsent:
+                    if (applicant?.DateOfBirth != null)
+                    {
+                        var dob = applicant.DateOfBirth.Value;
+                        var age = DateTime.UtcNow.Year - dob.Year;
+                        isRequired = age < 18;
+                        isConditional = true;
+                        conditionDescription = isRequired ? "Required because applicant is under 18 years old" : "Not applicable (applicant is 18 or older)";
+                    }
+                    break;
+                case DocumentType.PreviousLicense:
+                    isRequired = false;
+                    isConditional = true;
+                    conditionDescription = "Required for renewal or upgrade services";
+                    break;
+                case DocumentType.AccessibilityDocuments:
+                    isRequired = false;
+                    isConditional = true;
+                    conditionDescription = "Required for applicants with accessibility needs";
+                    break;
+                default:
                     isRequired = true;
                     break;
             }
@@ -332,10 +453,27 @@ public DocumentService(
         var user = await _userRepository.GetByIdAsync(application.ApplicantId);
         if (user != null && !string.IsNullOrEmpty(user.Email))
         {
-            // TODO: Add email templates and notification service integration
-            // For now, just log the notification
+            // Send notification via notification service (In-App + Email)
+            if (_notificationService != null)
+            {
+                await _notificationService.SendAsync(new NotificationRequest
+                {
+                    UserId = user.Id,
+                    ApplicationId = applicationId,
+                    EventType = NotificationEventType.ApplicationSubmitted,
+                    TitleAr = "توجد وثائق ناقصة تحتاج تقديم",
+                    TitleEn = "Missing documents need to be submitted",
+                    MessageAr = $"يرجى تقديم الوثائق الناقصة قبل {deadline:yyyy-MM-dd}",
+                    MessageEn = $"Please submit missing documents before {deadline:yyyy-MM-dd}",
+                    Email = true,
+                    Sms = false,
+                    Push = false,
+                    InApp = true
+                });
+            }
+            
             await _auditService.LogAsync("NOTIFY_MISSING_DOCUMENTS", "Application", applicationId.ToString(), 
-                $"Missing docs: {string.Join(", ", missingEn)}", "Notification queued");
+                $"Missing docs: {string.Join(", ", missingEn)}", "Notification sent");
         }
 
         return ApiResponse<bool>.Ok(true, "Missing documents notification sent.");
@@ -377,6 +515,101 @@ public DocumentService(
         // Get the application to check ownership
         var application = await _applicationRepository.GetByIdAsync(document.ApplicationId);
         if (application == null) throw new Exception("Application not found.");
+        
+        // Check authorization: owner or employee role
+        var isOwner = application.ApplicantId == userId;
+        var isEmployee = !string.IsNullOrEmpty(role) && (role == "Receptionist" || role == "Manager" || role == "Admin" || role == "Doctor" || role == "Examiner");
+        
+        if (!isOwner && !isEmployee)
+            throw new UnauthorizedAccessException("You are not authorized to access this document.");
+        
+        // Read file from storage
+        var (stream, contentType) = await _fileStorageService.ReadAsync(document.FilePath);
+        
+        return (stream, document.ContentType, document.OriginalFileName);
+    }
+
+    public async Task<ApiResponse<BulkApproveResponse>> BulkApproveByApplicationNumberAsync(string applicationNumber, Guid reviewerId)
+    {
+        var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
+        var application = applications.FirstOrDefault();
+        
+        if (application == null) return ApiResponse<BulkApproveResponse>.Fail(404, "Application not found.");
+
+        var pendingDocs = (await _documentRepository.FindAsync(d => d.ApplicationId == application.Id && d.Status == DocumentStatus.Pending)).ToList();
+        
+        if (!pendingDocs.Any())
+        {
+            return ApiResponse<BulkApproveResponse>.Ok(new BulkApproveResponse { ApprovedCount = 0, ApprovedDocumentIds = new List<Guid>() });
+        }
+
+        var approvedIds = new List<Guid>();
+        foreach (var doc in pendingDocs)
+        {
+            doc.Status = DocumentStatus.Approved;
+            doc.ReviewedBy = reviewerId;
+            doc.ReviewedAt = DateTime.UtcNow;
+            _documentRepository.Update(doc);
+            approvedIds.Add(doc.Id);
+            
+            await _auditService.LogAsync("BULK_APPROVE_DOCUMENT_BY_NUMBER", "Document", doc.Id.ToString(), "Pending", "Approved");
+        }
+
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponse<BulkApproveResponse>.Ok(new BulkApproveResponse 
+        { 
+            ApprovedCount = approvedIds.Count, 
+            ApprovedDocumentIds = approvedIds 
+        });
+    }
+
+    public async Task<ApiResponse<bool>> DeleteByApplicationNumberAsync(string applicationNumber, Guid documentId, Guid userId)
+    {
+        var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
+        var application = applications.FirstOrDefault();
+        
+        if (application == null) return ApiResponse<bool>.Fail(404, "Application not found.");
+
+        var document = await _documentRepository.GetByIdAsync(documentId);
+        if (document == null) return ApiResponse<bool>.Fail(404, "Document not found.");
+        
+        // Verify document belongs to this application
+        if (document.ApplicationId != application.Id)
+            return ApiResponse<bool>.Fail(404, "Document does not belong to this application.");
+        
+        // Only allow deletion if user owns the document and application is in editable state
+        if (application.ApplicantId != userId)
+            return ApiResponse<bool>.Fail(403, "You are not authorized to delete this document.");
+            
+        // Check application status - can only delete if Draft
+        if (application.Status != Domain.Enums.ApplicationStatus.Draft)
+            return ApiResponse<bool>.Fail(403, "Documents cannot be deleted after the application has been submitted for review.");
+
+        // Soft delete
+        document.IsDeleted = true;
+        document.UpdatedAt = DateTime.UtcNow;
+        _documentRepository.Update(document);
+        await _unitOfWork.SaveChangesAsync();
+
+        await _auditService.LogAsync("DELETE_DOCUMENT_BY_NUMBER", "Document", documentId.ToString(), null, "Soft deleted");
+
+        return ApiResponse<bool>.Ok(true, "Document deleted successfully.");
+    }
+
+    public async Task<(Stream content, string contentType, string fileName)> DownloadByApplicationNumberAsync(string applicationNumber, Guid documentId, Guid userId, string role)
+    {
+        var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
+        var application = applications.FirstOrDefault();
+        
+        if (application == null) throw new Exception("Application not found.");
+
+        var document = await _documentRepository.GetByIdAsync(documentId);
+        if (document == null) throw new Exception("Document not found.");
+        
+        // Verify document belongs to this application
+        if (document.ApplicationId != application.Id)
+            throw new UnauthorizedAccessException("Document does not belong to this application.");
         
         // Check authorization: owner or employee role
         var isOwner = application.ApplicantId == userId;

@@ -53,7 +53,7 @@ The driving license issuance system is an integrated government electronic platf
 |------|--------|
 | Platform Name | مُجاز (Mojaz) |
 | Meaning | "Licensed" / "Authorized" in Arabic |
-| Primary Color | #006C35 (Royal Green) |
+| Primary Color | #1a3a8f (King Blue) |
 | Design System | Absher-Inspired |
 | Languages | Arabic (default, RTL) + English (LTR) |
 | Theme | Dark + Light mode |
@@ -1250,6 +1250,9 @@ User can control notification channels from account settings:
 
 ## 21. Database Schema (21 Tables)
 
+> **ملاحظة:** جميع أعمدة الـ Enum مخزنة كـ `TINYINT` في قاعدة البيانات لتحسين الأداء وكفاءة التخزين.
+> يتم التحويل من/إلى نص في طبقة العرض (Frontend) فقط.
+
 ### 21.1 Users — المستخدمون
 
 ```sql
@@ -1258,8 +1261,8 @@ FullName            NVARCHAR(200) NOT NULL
 Email               NVARCHAR(200) UNIQUE NULL
 Phone               NVARCHAR(20) UNIQUE NULL
 PasswordHash        NVARCHAR(500) NOT NULL
-Role                NVARCHAR(50) NOT NULL
-RegistrationMethod  NVARCHAR(10) NOT NULL    -- Email|Phone
+Role                TINYINT NOT NULL            -- 0=Applicant,1=Receptionist,2=Doctor,3=Examiner,4=Manager,5=Security,6=Admin
+RegistrationMethod  TINYINT NOT NULL             -- 0=Email,1=Phone
 IsEmailVerified     BIT DEFAULT 0
 IsPhoneVerified     BIT DEFAULT 0
 EmailVerifiedAt     DATETIME2 NULL
@@ -1268,7 +1271,7 @@ LastLoginAt         DATETIME2 NULL
 FailedLoginAttempts INT DEFAULT 0
 LockedUntil         DATETIME2 NULL
 IsActive            BIT DEFAULT 1
-PreferredLanguage   NVARCHAR(5) DEFAULT 'ar'
+PreferredLanguage   TINYINT DEFAULT 0           -- 0=Arabic,1=English
 CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt           DATETIME2 NULL
 IsDeleted           BIT DEFAULT 0
@@ -1282,13 +1285,13 @@ Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 UserId          UNIQUEIDENTIFIER FK → Users(Id)
 NationalId      NVARCHAR(20) NOT NULL UNIQUE
 DateOfBirth     DATE NOT NULL
-Gender          NVARCHAR(10) NOT NULL
+Gender          TINYINT NOT NULL               -- 0=Male,1=Female
 Nationality     NVARCHAR(100) NOT NULL
-BloodType       NVARCHAR(5) NULL
+BloodType       TINYINT NULL                   -- 0=A+,1=A-,2=B+,3=B-,4=AB+,5=AB-,6=O+,7=O-
 Address         NVARCHAR(500) NULL
 City            NVARCHAR(100) NULL
 Region          NVARCHAR(100) NULL
-ApplicantType   NVARCHAR(20) NOT NULL    -- Citizen|Resident
+ApplicantType   TINYINT NOT NULL               -- 0=Citizen,1=Resident
 CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 ```
 
@@ -1298,12 +1301,12 @@ CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 Id                      UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 ApplicationNumber       NVARCHAR(20) NOT NULL UNIQUE    -- MOJ-2025-XXXXXXXX
 ApplicantId             UNIQUEIDENTIFIER FK → Applicants
-ServiceType             NVARCHAR(50) NOT NULL
+ServiceType             TINYINT NOT NULL          -- 0=NewLicense,1=Renewal,2=LostReplacement,3=DamagedReplacement,4=CategoryUpgrade,5=TestRetake,6=AppointmentBooking,7=Cancellation,8=DocumentDownload
 LicenseCategoryId       INT FK → LicenseCategories
 BranchId                INT NULL
-Status                  NVARCHAR(50) NOT NULL DEFAULT 'Draft'
-CurrentStage            NVARCHAR(50) NULL
-PreferredLanguage       NVARCHAR(5) NULL
+Status                  TINYINT NOT NULL DEFAULT 0  -- 0=Draft,1=Submitted,2=InReview,3=PendingDocuments,4=DocumentsApproved,5=MedicalExamPending,6=MedicalExamPassed,7=TrainingPending,8=TrainingCompleted,9=TheoryTestPending,10=TheoryTestPassed,11=PracticalTestPending,12=PracticalTestPassed,13=FinalApprovalPending,14=Approved,15=Rejected,16=Cancelled,17=Expired,18=IssuancePending,19=Issued
+CurrentStage            TINYINT NULL              -- 0=Application,1=Documents,2=Payment,3=MedicalExam,4=Training,5=TheoryTest,6=PracticalTest,7=FinalApproval,8=IssuancePayment,9=Issuance
+PreferredLanguage       TINYINT NULL             -- 0=Arabic,1=English
 SpecialNeeds            NVARCHAR(500) NULL
 DataAccuracyConfirmed   BIT DEFAULT 0
 ExpiresAt               DATETIME2 NULL
@@ -1331,13 +1334,13 @@ IsActive         BIT DEFAULT 1
 ```sql
 Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 ApplicationId   UNIQUEIDENTIFIER FK → Applications
-DocumentType    NVARCHAR(50) NOT NULL
+DocumentType    TINYINT NOT NULL           -- 0=NationalIdCopy,1=Photo,2=MedicalReport,3=TrainingCertificate,4=ResidenceProof,5=GuardianConsent,6=PreviousLicense,7=AccessibilityDocs
 FileName        NVARCHAR(255) NOT NULL
 FilePath        NVARCHAR(500) NOT NULL
 FileSize        BIGINT NULL
 MimeType        NVARCHAR(100) NULL
 IsRequired      BIT DEFAULT 1
-Status          NVARCHAR(30) DEFAULT 'Uploaded'
+Status          TINYINT DEFAULT 0          -- 0=Uploaded,1=UnderReview,2=Approved,3=Rejected
 ReviewedBy      UNIQUEIDENTIFIER FK → Users NULL
 ReviewedAt      DATETIME2 NULL
 RejectionReason NVARCHAR(500) NULL
@@ -1349,11 +1352,11 @@ UploadedAt      DATETIME2 DEFAULT GETUTCDATE()
 ```sql
 Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 ApplicationId       UNIQUEIDENTIFIER FK → Applications
-AppointmentType     NVARCHAR(50) NOT NULL    -- Medical|Theory|Practical
+AppointmentType     TINYINT NOT NULL          -- 0=Medical,1=Theory,2=Practical
 ScheduledDate       DATE NOT NULL
 TimeSlot            NVARCHAR(20) NOT NULL
 BranchId            INT NULL
-Status              NVARCHAR(30) DEFAULT 'Scheduled'
+Status              TINYINT DEFAULT 0         -- 0=Scheduled,1=Confirmed,2=Completed,3=Cancelled,4=Rescheduled,5=NoShow
 CancelledAt         DATETIME2 NULL
 CancellationReason  NVARCHAR(500) NULL
 CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
@@ -1367,8 +1370,8 @@ Id              INT PK
 ApplicationId   INT FK → Applications
 ExamDate        DATETIME2 NULL
 DoctorId        UNIQUEIDENTIFIER FK → Users NULL
-FitnessResult   NVARCHAR(30) NULL    -- Fit|Unfit|ConditionalFit|RequiresReexam
-BloodType       NVARCHAR(5) NULL
+FitnessResult   TINYINT NULL              -- 0=Fit,1=Unfit,2=ConditionalFit,3=RequiresReexam
+BloodType       TINYINT NULL              -- 0=A+,1=A-,2=B+,3=B-,4=AB+,5=AB-,6=O+,7=O-
 Notes           NVARCHAR(1000) NULL
 ReportReference NVARCHAR(100) NULL
 ValidUntil      DATE NULL
@@ -1387,7 +1390,7 @@ RequiredHours           INT NULL
 IsExempt                BIT DEFAULT 0
 ExemptionReason         NVARCHAR(500) NULL
 ExemptionApprovedBy     INT FK → Users NULL
-Status                  NVARCHAR(30) NULL
+Status                  TINYINT NULL             -- 0=NotRequired,1=PendingRegistration,2=InTraining,3=Completed,4=Absent,5=Exempt
 CompletedAt             DATETIME2 NULL
 CreatedAt               DATETIME2 DEFAULT GETUTCDATE()
 ```
@@ -1402,7 +1405,7 @@ TestDate        DATETIME2 NULL
 ExaminerId      INT FK → Users NULL
 Score           DECIMAL(5,2) NULL
 PassingScore    DECIMAL(5,2) NULL
-Result          NVARCHAR(20) NULL    -- Pass|Fail|Absent
+Result          TINYINT NULL             -- 0=Pass,1=Fail,2=Absent
 Notes           NVARCHAR(1000) NULL
 CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 ```
@@ -1415,7 +1418,7 @@ ApplicationId               INT FK → Applications
 AttemptNumber               INT NOT NULL
 TestDate                    DATETIME2 NULL
 ExaminerId                  INT FK → Users NULL
-Result                      NVARCHAR(20) NULL    -- Pass|Fail|Absent
+Result                      TINYINT NULL            -- 0=Pass,1=Fail,2=Absent
 Notes                       NVARCHAR(1000) NULL
 RequiresAdditionalTraining  BIT DEFAULT 0
 AdditionalHoursRequired     INT NULL
@@ -1427,11 +1430,11 @@ CreatedAt                   DATETIME2 DEFAULT GETUTCDATE()
 ```sql
 Id                      UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 ApplicationId           UNIQUEIDENTIFIER FK → Applications
-FeeType                 NVARCHAR(50) NOT NULL
+FeeType                 TINYINT NOT NULL         -- 0=ApplicationFee,1=MedicalExamFee,2=TheoryTestFee,3=PracticalTestFee,4=IssuanceFee,5=RetakeFee
 Amount                  DECIMAL(10,2) NOT NULL
 Currency                NVARCHAR(5) DEFAULT 'SAR'
-Status                  NVARCHAR(30) DEFAULT 'Pending'
-PaymentMethod           NVARCHAR(50) NULL
+Status                  TINYINT DEFAULT 0       -- 0=Pending,1=Processing,2=Paid,3=Failed,4=Refunded,5=Expired
+PaymentMethod           TINYINT NULL             -- 0=Card,1=BankTransfer,2=Wallet,3=Cash
 TransactionReference    NVARCHAR(100) NULL
 PaidAt                  DATETIME2 NULL
 FailedAt                DATETIME2 NULL
@@ -1464,7 +1467,7 @@ ApplicantId     UNIQUEIDENTIFIER FK → Applicants
 CategoryId      UNIQUEIDENTIFIER FK → LicenseCategories
 IssueDate       DATE NOT NULL
 ExpiryDate      DATE NOT NULL
-Status          NVARCHAR(30) DEFAULT 'Active'
+Status          TINYINT DEFAULT 0           -- 0=Active,1=Expired,2=Suspended,3=Revoked,4=Cancelled
 IssuedBy        UNIQUEIDENTIFIER FK → Users
 PrintedAt       DATETIME2 NULL
 DownloadedAt    DATETIME2 NULL
@@ -1481,7 +1484,7 @@ TitleAr         NVARCHAR(200) NULL
 TitleEn         NVARCHAR(200) NULL
 MessageAr       NVARCHAR(1000) NULL
 MessageEn       NVARCHAR(1000) NULL
-EventType       NVARCHAR(50) NULL
+EventType       TINYINT NULL              -- 0=ApplicationCreated,1=DocumentsRequested,2=ApplicationApproved,3=ApplicationRejected,4=PaymentSuccess,5=PaymentFailed,6=AppointmentBooked,7=AppointmentReminder,8=MedicalExamResult,9=TestResult,10=FinalApproval,11=LicenseIssued,12=ApplicationCancelled
 IsRead          BIT DEFAULT 0
 ReadAt          DATETIME2 NULL
 CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
@@ -1493,7 +1496,7 @@ CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 Id          UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 UserId      UNIQUEIDENTIFIER FK → Users
 Token       NVARCHAR(500) NOT NULL
-DeviceType  NVARCHAR(30) NULL    -- WebChrome|WebFirefox|WebSafari
+DeviceType  TINYINT NULL               -- 0=WebChrome,1=WebFirefox,2=WebSafari,3=WebEdge,4=Android,5=iOS
 IsActive    BIT DEFAULT 1
 CreatedAt   DATETIME2 DEFAULT GETUTCDATE()
 LastUsedAt  DATETIME2 NULL
@@ -1532,9 +1535,9 @@ UpdatedAt       DATETIME2 NULL
 Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 UserId              UNIQUEIDENTIFIER FK → Users NULL
 Destination         NVARCHAR(200) NOT NULL
-DestinationType     NVARCHAR(10) NOT NULL    -- Email|Phone
+DestinationType     TINYINT NOT NULL         -- 0=Email,1=Phone
 CodeHash            NVARCHAR(500) NOT NULL    -- Hashed OTP
-Purpose             NVARCHAR(30) NOT NULL    -- Registration|Login|PasswordReset
+Purpose             TINYINT NOT NULL        -- 0=Registration,1=Login,2=PasswordReset
 ExpiresAt           DATETIME2 NOT NULL
 IsUsed              BIT DEFAULT 0
 UsedAt              DATETIME2 NULL
@@ -1566,7 +1569,7 @@ UserId              UNIQUEIDENTIFIER FK → Users NULL
 ToEmail             NVARCHAR(200) NOT NULL
 Subject             NVARCHAR(500) NULL
 TemplateName        NVARCHAR(100) NULL
-Status              NVARCHAR(20) NOT NULL    -- Sent|Failed|Bounced
+Status              TINYINT NOT NULL         -- 0=Sent,1=Failed,2=Bounced
 ProviderMessageId   NVARCHAR(200) NULL
 FailureReason       NVARCHAR(500) NULL
 SentAt              DATETIME2 NULL
@@ -1579,14 +1582,46 @@ CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
 Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 UserId              UNIQUEIDENTIFIER FK → Users NULL
 ToPhone             NVARCHAR(20) NOT NULL
-MessageType         NVARCHAR(50) NOT NULL    -- OTP|Notification|Reminder
-Status              NVARCHAR(20) NOT NULL
+MessageType         TINYINT NOT NULL         -- 0=OTP,1=Notification,2=Reminder
+Status              TINYINT NOT NULL         -- 0=Pending,1=Sent,2=Delivered,3=Failed,4=Undelivered
 ProviderMessageId   NVARCHAR(200) NULL
 FailureReason       NVARCHAR(500) NULL
 Cost                DECIMAL(8,4) NULL
 SentAt              DATETIME2 NULL
 CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
 ```
+
+### 21.22 Enum Reference Table
+
+| Enum Name | Values |
+|-----------|--------|
+| **UserRole** | 0=Applicant, 1=Receptionist, 2=Doctor, 3=Examiner, 4=Manager, 5=Security, 6=Admin |
+| **RegistrationMethod** | 0=Email, 1=Phone |
+| **PreferredLanguage** | 0=Arabic, 1=English |
+| **Gender** | 0=Male, 1=Female |
+| **BloodType** | 0=A+, 1=A-, 2=B+, 3=B-, 4=AB+, 5=AB-, 6=O+, 7=O- |
+| **ApplicantType** | 0=Citizen, 1=Resident |
+| **ServiceType** | 0=NewLicense, 1=Renewal, 2=LostReplacement, 3=DamagedReplacement, 4=CategoryUpgrade, 5=TestRetake, 6=AppointmentBooking, 7=Cancellation, 8=DocumentDownload |
+| **ApplicationStatus** | 0=Draft, 1=Submitted, 2=InReview, 3=PendingDocuments, 4=DocumentsApproved, 5=MedicalExamPending, 6=MedicalExamPassed, 7=TrainingPending, 8=TrainingCompleted, 9=TheoryTestPending, 10=TheoryTestPassed, 11=PracticalTestPending, 12=PracticalTestPassed, 13=FinalApprovalPending, 14=Approved, 15=Rejected, 16=Cancelled, 17=Expired, 18=IssuancePending, 19=Issued |
+| **ApplicationStage** | 0=Application, 1=Documents, 2=Payment, 3=MedicalExam, 4=Training, 5=TheoryTest, 6=PracticalTest, 7=FinalApproval, 8=IssuancePayment, 9=Issuance |
+| **DocumentType** | 0=NationalIdCopy, 1=Photo, 2=MedicalReport, 3=TrainingCertificate, 4=ResidenceProof, 5=GuardianConsent, 6=PreviousLicense, 7=AccessibilityDocs |
+| **DocumentStatus** | 0=Uploaded, 1=UnderReview, 2=Approved, 3=Rejected |
+| **AppointmentType** | 0=Medical, 1=Theory, 2=Practical |
+| **AppointmentStatus** | 0=Scheduled, 1=Confirmed, 2=Completed, 3=Cancelled, 4=Rescheduled, 5=NoShow |
+| **FitnessResult** | 0=Fit, 1=Unfit, 2=ConditionalFit, 3=RequiresReexam |
+| **TrainingStatus** | 0=NotRequired, 1=PendingRegistration, 2=InTraining, 3=Completed, 4=Absent, 5=Exempt |
+| **TestResult** | 0=Pass, 1=Fail, 2=Absent |
+| **FeeType** | 0=ApplicationFee, 1=MedicalExamFee, 2=TheoryTestFee, 3=PracticalTestFee, 4=IssuanceFee, 5=RetakeFee |
+| **PaymentStatus** | 0=Pending, 1=Processing, 2=Paid, 3=Failed, 4=Refunded, 5=Expired |
+| **PaymentMethod** | 0=Card, 1=BankTransfer, 2=Wallet, 3=Cash |
+| **LicenseStatus** | 0=Active, 1=Expired, 2=Suspended, 3=Revoked, 4=Cancelled |
+| **NotificationEvent** | 0=ApplicationCreated, 1=DocumentsRequested, 2=ApplicationApproved, 3=ApplicationRejected, 4=PaymentSuccess, 5=PaymentFailed, 6=AppointmentBooked, 7=AppointmentReminder, 8=MedicalExamResult, 9=TestResult, 10=FinalApproval, 11=LicenseIssued, 12=ApplicationCancelled |
+| **DeviceType** | 0=WebChrome, 1=WebFirefox, 2=WebSafari, 3=WebEdge, 4=Android, 5=iOS |
+| **OtpDestinationType** | 0=Email, 1=Phone |
+| **OtpPurpose** | 0=Registration, 1=Login, 2=PasswordReset |
+| **EmailStatus** | 0=Sent, 1=Failed, 2=Bounced |
+| **SmsMessageType** | 0=OTP, 1=Notification, 2=Reminder |
+| **SmsStatus** | 0=Pending, 1=Sent, 2=Delivered, 3=Failed, 4=Undelivered |
 
 ### 21.22 Entity Relationships (ERD)
 

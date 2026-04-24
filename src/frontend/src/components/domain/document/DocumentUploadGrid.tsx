@@ -1,13 +1,12 @@
-// Document Upload Grid Component
-
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
 import { UploadCard } from './UploadCard';
 import { useUploadDocument } from '@/hooks/useDocuments';
 import { DocumentRequirementDto, DocumentDto, UploadDocumentRequest } from '@/types/document.types';
 import toast from 'react-hot-toast';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface DocumentUploadGridProps {
   applicationId: string;
@@ -20,7 +19,6 @@ export function DocumentUploadGrid({
   requirements,
   documents,
 }: DocumentUploadGridProps) {
-  const t = useTranslations('document');
   const uploadMutation = useUploadDocument(applicationId);
 
   // Track upload progress per document type
@@ -50,10 +48,10 @@ export function DocumentUploadGrid({
         },
       });
 
-      toast.success(t('upload.success'));
+      toast.success('تم رفع المستند بنجاح');
     } catch (error: any) {
       console.error('Upload failed:', error);
-      toast.error(error?.response?.data?.message || t('upload.error'));
+      toast.error(error?.response?.data?.message || 'عذراً، فشل رفع المستند. يرجى المحاولة مرة أخرى.');
     } finally {
       setUploadingTypes((prev) => {
         const newSet = new Set(prev);
@@ -71,14 +69,13 @@ export function DocumentUploadGrid({
   // Handle delete
   const handleDelete = async (documentId: string) => {
     try {
-      // Note: We need delete mutation - using mutation directly for now
       const { useDeleteDocument } = await import('@/hooks/useDocuments');
       const deleteMutation = useDeleteDocument(applicationId);
       await deleteMutation.mutateAsync(documentId);
-      toast.success(t('upload.remove'));
+      toast.success('تم حذف المستند بنجاح');
     } catch (error) {
       console.error('Delete failed:', error);
-      toast.error(t('errors.notFound'));
+      toast.error('عذراً، المستند غير موجود أو تم حذفه مسبقاً.');
     }
   };
 
@@ -90,22 +87,28 @@ export function DocumentUploadGrid({
   });
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-      {sortedRequirements.map((requirement) => {
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 font-arabic" dir="rtl">
+      {sortedRequirements.map((requirement, index) => {
         const document = getDocumentForType(requirement.documentType);
         const isUploading = uploadingTypes.has(requirement.documentType);
         const progress = uploadProgress[requirement.documentType] || 0;
 
         return (
-          <UploadCard
+          <motion.div
             key={requirement.documentType}
-            requirement={requirement}
-            document={document}
-            onUpload={(file) => handleUpload(requirement.documentType, file)}
-            onDelete={document ? () => handleDelete(document.id) : undefined}
-            isUploading={isUploading}
-            uploadProgress={progress}
-          />
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1, duration: 0.5 }}
+          >
+            <UploadCard
+              requirement={requirement}
+              document={document}
+              onUpload={(file) => handleUpload(requirement.documentType, file)}
+              onDelete={document ? () => handleDelete(document.id) : undefined}
+              isUploading={isUploading}
+              uploadProgress={progress}
+            />
+          </motion.div>
         );
       })}
     </div>

@@ -12,7 +12,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(e => e.RecipientEmail).IsRequired().HasMaxLength(256);
             builder.Property(e => e.TemplateName).IsRequired().HasMaxLength(100);
             builder.Property(e => e.ReferenceId).HasMaxLength(100);
-            builder.Property(e => e.Status).IsRequired();
+            builder.Property(e => e.Status).IsRequired().HasColumnType("tinyint");
             builder.Property(e => e.RetryCount).IsRequired();
             builder.Property(e => e.SentAt);
             builder.Property(e => e.ErrorMessage).HasMaxLength(1000);

@@ -60,5 +60,23 @@ namespace Mojaz.API.Controllers
             var result = await _theoryService.GetHistoryAsync(appId, userId, role, page, pageSize);
             return StatusCode(result.StatusCode, result);
         }
+
+        /// <summary>
+        /// Get all theory test attempts for an application by application number.
+        /// </summary>
+        [HttpGet("by-number/{applicationNumber}/history")]
+        [ProducesResponseType(typeof(ApiResponse<PagedResult<TheoryTestDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetHistoryByApplicationNumber(string applicationNumber, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+        {
+            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!Guid.TryParse(userIdStr, out var userId))
+                return Unauthorized(ApiResponse<object>.Fail(401, "User ID not found in token."));
+
+            var role = User.FindFirstValue(ClaimTypes.Role) ?? "";
+            var result = await _theoryService.GetHistoryByApplicationNumberAsync(applicationNumber, userId, role, page, pageSize);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

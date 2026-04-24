@@ -310,5 +310,17 @@ namespace Mojaz.Application.Services
 
             return ApiResponse<bool>.Ok(trainingRecord.TrainingStatus == TrainingStatus.Completed || trainingRecord.IsExempted);
         }
+
+        public async Task<ApiResponse<List<TrainingRecordDto>>> GetPendingExemptionsAsync()
+        {
+            // Pending exemptions: IsExempted true but ExemptionApprovedAt null
+            var pendingExemptions = await _trainingRepository.FindAsync(x => 
+                x.IsExempted && 
+                x.ExemptionApprovedAt == null &&
+                !x.IsDeleted);
+
+            var dtos = _mapper.Map<List<TrainingRecordDto>>(pendingExemptions);
+            return ApiResponse<List<TrainingRecordDto>>.Ok(dtos, $"Found {dtos.Count} pending exemptions.");
+        }
     }
 }

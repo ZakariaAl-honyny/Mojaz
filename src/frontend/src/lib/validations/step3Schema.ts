@@ -1,5 +1,7 @@
 import { z } from 'zod';
+import { Gender } from '@/types/wizard.types';
 
+// Gender uses numeric enum matching backend: 0=NotSpecified, 1=Male, 2=Female
 export const step3Schema = z.object({
   nationalId: z.string()
     .min(10, 'wizard.validation.step3.nationalIdMin')
@@ -8,9 +10,7 @@ export const step3Schema = z.object({
   dateOfBirth: z.string()
     .refine((v) => !isNaN(Date.parse(v)), 'wizard.validation.step3.dobInvalid'),
   nationality: z.string().min(1, 'wizard.validation.step3.nationalityRequired'),
-  gender: z.enum(['Male', 'Female'], {
-    required_error: 'wizard.validation.step3.genderRequired',
-  }),
+  gender: z.number().min(0).max(2, 'wizard.validation.step3.genderInvalid'),
   mobileNumber: z.string()
     .regex(/^\+?[0-9]{9,15}$/, 'wizard.validation.step3.mobileFormat'),
   email: z.string()

@@ -1,13 +1,13 @@
 namespace Mojaz.Domain.Enums;
 
-public enum DocumentStatus
+public enum DocumentStatus : byte
 {
     Pending = 0,
     Approved = 1,
     Rejected = 2
 }
 
-public enum AppointmentStatus
+public enum AppointmentStatus : byte
 {
     Scheduled,
     Completed,
@@ -15,7 +15,7 @@ public enum AppointmentStatus
     NoShow
 }
 
-public enum LicenseStatus
+public enum LicenseStatus : byte
 {
     Active,
     Expired,
@@ -26,13 +26,13 @@ public enum LicenseStatus
     Superseded
 }
 
-public enum DestinationType
+public enum DestinationType : byte
 {
     Email,
     Phone
 }
 
-public enum NotificationChannel
+public enum NotificationChannel : byte
 {
     InApp,
     Push,
@@ -40,14 +40,14 @@ public enum NotificationChannel
     Sms
 }
 
-public enum EmailLogStatus
+public enum EmailLogStatus : byte
 {
     Sent,
     Failed,
     Bounced
 }
 
-public enum SmsLogStatus
+public enum SmsLogStatus : byte
 {
     Sent,
     Failed,

@@ -15,7 +15,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(e => e.UserId).IsRequired();
             builder.Property(e => e.RecipientNumber).IsRequired().HasMaxLength(20);
             builder.Property(e => e.TemplateType).IsRequired().HasMaxLength(50);
-            builder.Property(e => e.Status).IsRequired();
+            builder.Property(e => e.Status).IsRequired().HasColumnType("tinyint");
             builder.Property(e => e.TwilioMessageId).HasMaxLength(100);
             builder.Property(e => e.Cost).HasColumnType("decimal(18,2)");
             builder.Property(e => e.ErrorMessage).HasMaxLength(1000);

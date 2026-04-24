@@ -110,6 +110,7 @@ public class ReportsController : ControllerBase
         var result = await _reportService.GetIssuanceTimelineAsync(filter);
         return StatusCode(result.StatusCode, result);
     }
+
     /// <summary>
     /// Export reports data to CSV
     /// </summary>

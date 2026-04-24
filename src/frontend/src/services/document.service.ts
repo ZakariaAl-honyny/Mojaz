@@ -10,14 +10,18 @@ import {
   UploadDocumentRequest
 } from '@/types/document.types';
 
-// Base API URL for documents
-const getBaseUrl = (applicationId: string) => `/api/v1/applications/${applicationId}/documents`;
+/**
+ * Get base URL for documents by application number
+ * Uses the new by-number endpoints
+ */
+const getBaseUrl = (applicationNumber: string) => `/applications/by-number/${applicationNumber}/documents`;
 
 /**
  * Upload a document for an application
+ * Uses the upload-by-number endpoint
  */
 export const uploadDocument = async (
-  applicationId: string,
+  applicationNumber: string,
   request: UploadDocumentRequest,
   onUploadProgress?: (progress: number) => void
 ): Promise<ApiResponse<DocumentDto>> => {
@@ -26,7 +30,7 @@ export const uploadDocument = async (
   formData.append('file', request.file);
 
   const response = await axios.post<ApiResponse<DocumentDto>>(
-    `${getBaseUrl(applicationId)}/upload`,
+    `/applications/upload-by-number/${applicationNumber}/documents/upload`,
     formData,
     {
       headers: {
@@ -47,17 +51,18 @@ export const uploadDocument = async (
 /**
  * Get all documents for an application
  */
-export const listDocuments = async (applicationId: string): Promise<ApiResponse<DocumentDto[]>> => {
-  const response = await axios.get<ApiResponse<DocumentDto[]>>(getBaseUrl(applicationId));
+export const listDocuments = async (applicationNumber: string): Promise<ApiResponse<DocumentDto[]>> => {
+  const response = await axios.get<ApiResponse<DocumentDto[]>>(getBaseUrl(applicationNumber));
   return response.data;
 };
 
 /**
  * Get document requirements for an application
+ * Uses the requirements-by-number endpoint
  */
-export const getRequirements = async (applicationId: string): Promise<ApiResponse<DocumentRequirementDto[]>> => {
+export const getRequirements = async (applicationNumber: string): Promise<ApiResponse<DocumentRequirementDto[]>> => {
   const response = await axios.get<ApiResponse<DocumentRequirementDto[]>>(
-    `${getBaseUrl(applicationId)}/requirements`
+    `/applications/requirements-by-number/${applicationNumber}/documents/requirements`
   );
   return response.data;
 };
@@ -66,12 +71,12 @@ export const getRequirements = async (applicationId: string): Promise<ApiRespons
  * Review (approve/reject) a document
  */
 export const reviewDocument = async (
-  applicationId: string,
+  applicationNumber: string,
   documentId: string,
   request: DocumentReviewRequest
 ): Promise<ApiResponse<DocumentDto>> => {
   const response = await axios.patch<ApiResponse<DocumentDto>>(
-    `${getBaseUrl(applicationId)}/${documentId}/review`,
+    `${getBaseUrl(applicationNumber)}/${documentId}/review`,
     request
   );
   return response.data;
@@ -80,9 +85,9 @@ export const reviewDocument = async (
 /**
  * Bulk approve all pending documents for an application
  */
-export const bulkApprove = async (applicationId: string): Promise<ApiResponse<BulkApproveResponse>> => {
+export const bulkApprove = async (applicationNumber: string): Promise<ApiResponse<BulkApproveResponse>> => {
   const response = await axios.patch<ApiResponse<BulkApproveResponse>>(
-    `${getBaseUrl(applicationId)}/bulk-approve`
+    `${getBaseUrl(applicationNumber)}/bulk-approve`
   );
   return response.data;
 };
@@ -91,11 +96,11 @@ export const bulkApprove = async (applicationId: string): Promise<ApiResponse<Bu
  * Delete a document (soft delete)
  */
 export const deleteDocument = async (
-  applicationId: string,
+  applicationNumber: string,
   documentId: string
 ): Promise<ApiResponse<boolean>> => {
   const response = await axios.delete<ApiResponse<boolean>>(
-    `${getBaseUrl(applicationId)}/${documentId}`
+    `${getBaseUrl(applicationNumber)}/${documentId}`
   );
   return response.data;
 };
@@ -103,8 +108,8 @@ export const deleteDocument = async (
 /**
  * Get download URL for a document
  */
-export const getDownloadUrl = (applicationId: string, documentId: string): string => {
-  return `${getBaseUrl(applicationId)}/${documentId}/download`;
+export const getDownloadUrl = (applicationNumber: string, documentId: string): string => {
+  return `${getBaseUrl(applicationNumber)}/${documentId}/download`;
 };
 
 export default {

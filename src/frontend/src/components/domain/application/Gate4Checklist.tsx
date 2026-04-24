@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/static-translations";
 import { Gate4Condition, Gate4ValidationResult } from "@/types/finalApproval.types";
 import { cn } from "@/lib/utils";
 
@@ -30,8 +30,8 @@ export function Gate4Checklist({ result, isLoading }: Gate4ChecklistProps) {
         className={cn(
           "p-4 rounded-lg border-2 transition-all duration-300",
           result.isFullyPassed
-            ? "bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-800"
-            : "bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800"
+            ? "bg-green-50 border-green-200"
+            : "bg-amber-50 border-amber-200"
         )}
       >
         <div className="flex items-center gap-3">
@@ -39,8 +39,8 @@ export function Gate4Checklist({ result, isLoading }: Gate4ChecklistProps) {
             className={cn(
               "w-10 h-10 rounded-full flex items-center justify-center",
               result.isFullyPassed
-                ? "bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-400"
-                : "bg-amber-100 text-amber-600 dark:bg-amber-900 dark:text-amber-400"
+                ? "bg-green-100 text-green-600"
+                : "bg-amber-100 text-amber-600"
             )}
           >
             {result.isFullyPassed ? (
@@ -57,7 +57,7 @@ export function Gate4Checklist({ result, isLoading }: Gate4ChecklistProps) {
             <h3 className="font-semibold text-lg">
               {result.isFullyPassed ? t("gate4.isFullyPassed") : t("gate4.hasFailures")}
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-600">
               {result.conditions.filter((c) => c.isPassed).length} / {result.conditions.length} {t("gate4.passed").toLowerCase()}
             </p>
           </div>
@@ -88,8 +88,8 @@ function ConditionRow({ condition, delay }: { condition: Gate4Condition; delay: 
       className={cn(
         "flex items-center justify-between p-4 rounded-lg border transition-all duration-300",
         condition.isPassed
-          ? "bg-white border-green-200 dark:bg-gray-900 dark:border-green-800"
-          : "bg-red-50 border-red-200 dark:bg-red-950/30 dark:border-red-800"
+          ? "bg-white border-green-200"
+          : "bg-red-50 border-red-200"
       )}
       style={{ animationDelay: `${delay}ms` }}
     >
@@ -98,8 +98,8 @@ function ConditionRow({ condition, delay }: { condition: Gate4Condition; delay: 
           className={cn(
             "w-8 h-8 rounded-full flex items-center justify-center",
             condition.isPassed
-              ? "bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-400"
-              : "bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-400"
+              ? "bg-green-100 text-green-600"
+              : "bg-red-100 text-red-600"
           )}
         >
           {condition.isPassed ? (
@@ -115,7 +115,7 @@ function ConditionRow({ condition, delay }: { condition: Gate4Condition; delay: 
         <div>
           <p className="font-medium">{conditionLabel}</p>
           {!condition.isPassed && (
-            <p className="text-sm text-red-600 dark:text-red-400 mt-1">
+            <p className="text-sm text-red-600 mt-1">
               {condition.failureMessageEn}
             </p>
           )}
@@ -125,8 +125,8 @@ function ConditionRow({ condition, delay }: { condition: Gate4Condition; delay: 
         className={cn(
           "px-3 py-1 rounded-full text-xs font-medium",
           condition.isPassed
-            ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-            : "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
+            ? "bg-green-100 text-green-700"
+            : "bg-red-100 text-red-700"
         )}
       >
         {condition.isPassed ? t("gate4.passed") : t("gate4.failed")}

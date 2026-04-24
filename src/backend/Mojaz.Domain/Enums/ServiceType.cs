@@ -1,6 +1,6 @@
 namespace Mojaz.Domain.Enums;
 
-public enum ServiceType
+public enum ServiceType : byte
 {
     NewLicense,
     Renewal,

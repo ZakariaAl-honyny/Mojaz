@@ -1,0 +1,86 @@
+{
+  "test": "Test Results",
+  "title": "Dashboard",
+  "applicant": {
+    "welcome": "Welcome, <highlight>{name}</highlight>",
+    "activeApplications": "Active Applications",
+    "pendingActions": "Pending Actions",
+    "recentApplications": "Recent Applications",
+    "noApplications": "You don't have any active applications at the moment.",
+    "startNew": "Start New Application"
+  },
+  "employee": {
+    "workQueue": "Work Queue",
+    "stalledAlert": "Stalled Applications ({count})",
+    "searchPlaceholder": "Search by application number or name...",
+    "filters": {
+      "status": "Status",
+      "service": "Service",
+      "category": "Category"
+    }
+  },
+  "manager": {
+    "title": "Systems Overview",
+    "subtitle": "Operational Intelligence & Real-time Analytics",
+    "kpis": {
+      "todayLoad": "Today's Load",
+      "passRate": "Pass Rate",
+      "theory": "Theory",
+      "practical": "Practical",
+      "loadTrend": "+{value}% operational increase",
+      "excellentRate": "Excellent efficiency rate",
+      "stalled": "Stalled Applications",
+      "needsAdmin": "Needs admin intervention",
+      "activityPoints": "Activity Points",
+      "liveInteractions": "Live interactions"
+    },
+    "charts": {
+      "statusDistribution": "Application Status Distribution",
+      "weeklyAnalysis": "Weekly Operations Analysis",
+      "liveData": "Live Data"
+    },
+    "dataReliability": "Data Reliability"
+  },
+  "timeline": {
+    "title": "Application Progress",
+    "stages": {
+      "Draft": "Draft",
+      "Submitted": "Submitted",
+      "InReview": "In Review",
+      "MedicalExamination": "Medical Examination",
+      "TheoryTest": "Theory Test",
+      "PracticalTest": "Practical Test",
+      "Approved": "Approved",
+      "Payment": "Final Payment",
+      "Issuance": "License Issuance",
+      "Active": "License Active"
+    }
+  },
+  "status": {
+    "completed": "Completed",
+    "inReview": "In Review",
+    "submitted": "Submitted",
+    "cancelled": "Cancelled",
+    "draft": "Draft"
+  },
+  "days": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
+  },
+  "activity": {
+    "newApplication": "New Application",
+    "licenseIssued": "License Issued",
+    "paymentReceived": "Payment Received",
+    "newUser": "New User",
+    "applicationRejected": "Application Rejected"
+  },
+  "chart": {
+    "applications": "Applications",
+    "completed": "Completed"
+  }
+}

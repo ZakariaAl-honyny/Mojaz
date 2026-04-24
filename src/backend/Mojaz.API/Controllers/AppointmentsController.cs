@@ -214,4 +214,62 @@ public class AppointmentsController : ControllerBase
             Data = result 
         });
     }
+
+    /// <summary>
+    /// Get all appointments for the current logged-in user (applicant's appointments).
+    /// </summary>
+    [HttpGet("my-appointments")]
+    [Authorize(Roles = "Applicant")]
+    [ProducesResponseType(typeof(ApiResponse<List<AppointmentDto>>), 200)]
+    public async Task<IActionResult> GetMyAppointmentsAsync()
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _appointmentService.GetMyAppointmentsAsync(userId);
+        return Ok(new ApiResponse<List<AppointmentDto>> 
+        { 
+            Success = true, 
+            Data = result,
+            Message = "Appointments retrieved successfully"
+        });
+    }
+
+    /// <summary>
+    /// Get appointments for employee attendance tracking (for a specific date and branch).
+    /// </summary>
+    [HttpGet("attendance")]
+    [Authorize(Roles = "Receptionist,Doctor,Examiner,Manager")]
+    [ProducesResponseType(typeof(ApiResponse<List<AppointmentDto>>), 200)]
+    public async Task<IActionResult> GetAttendanceAsync([FromQuery] DateOnly date)
+    {
+        var branchIdClaim = User.FindFirstValue("BranchId");
+        if (!Guid.TryParse(branchIdClaim, out var branchId))
+        {
+            branchId = Guid.Empty;
+        }
+        
+        var result = await _appointmentService.GetAttendanceAsync(date, branchId);
+        return Ok(new ApiResponse<List<AppointmentDto>> 
+        { 
+            Success = true, 
+            Data = result,
+            Message = "Attendance appointments retrieved successfully"
+        });
+    }
+
+    /// <summary>
+    /// Check in an applicant for their appointment.
+    /// </summary>
+    [HttpPatch("{id}/check-in")]
+    [Authorize(Roles = "Receptionist,Doctor")]
+    [ProducesResponseType(typeof(ApiResponse<AppointmentDto>), 200)]
+    public async Task<IActionResult> CheckInAsync(Guid id)
+    {
+        var result = await _appointmentService.CheckInAsync(id);
+        return Ok(new ApiResponse<AppointmentDto> 
+        { 
+            Success = true, 
+            Data = result,
+            Message = "Applicant checked in successfully"
+        });
+    }
 }

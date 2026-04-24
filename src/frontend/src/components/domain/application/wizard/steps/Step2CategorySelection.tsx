@@ -3,7 +3,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useTranslations } from 'next-intl';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { useWizardStore } from '@/stores/wizard-store';
 import { createStep2Schema, Step2FormValues } from '@/lib/validations/wizard.schema';
@@ -15,14 +14,12 @@ import { LicenseCategoryCode } from '@/types/wizard.types';
 
 export default function Step2CategorySelection() {
   const { step2, step3, setStep2, goTo, markCompleted } = useWizardStore();
-  const t = useTranslations('wizard');
-  const tv = useTranslations('wizard.validation.step2');
   
   const { data: categories, isLoading, error } = useLicenseCategories();
 
   // Prepare minAgeMap for validation
   const minAgeMap = React.useMemo(() => {
-    const map: Record<LicenseCategoryCode, number> = {} as any;
+    const map: Record<string, number> = {};
     categories?.forEach(cat => {
       map[cat.code] = cat.minAge;
     });
@@ -39,57 +36,65 @@ export default function Step2CategorySelection() {
     defaultValues: {
       categoryCode: step2.categoryCode as any,
     },
-    mode: 'onChange' // Validate immediately on selection
+    mode: 'onChange' 
   });
 
   const selectedCategory = watch('categoryCode');
 
   const onNext = (data: Step2FormValues) => {
-    setStep2(data);
+    setStep2({ categoryCode: data.categoryCode });
     markCompleted(2);
     goTo(3);
   };
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20">
-        <Loader2 className="w-10 h-10 text-primary-600 animate-spin mb-4" />
-        <p className="text-neutral-500">{t('loading')}</p>
+      <div className="flex flex-col items-center justify-center py-32 space-y-6">
+        <div className="relative">
+           <Loader2 className="w-16 h-16 text-[#1a3a8f] animate-spin" />
+           <div className="absolute inset-0 bg-[#1a3a8f]/10 rounded-full blur-xl animate-pulse" />
+        </div>
+        <p className="text-neutral-400 font-bold font-arabic">جاري تحميل فئات الرخص المتاحة...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center px-4">
-        <AlertCircle className="w-12 h-12 text-status-error mb-4" />
-        <h3 className="text-lg font-bold text-neutral-900 mb-2">{t('step2.errorLoading')}</h3>
-        <p className="text-neutral-500 mb-6 max-w-sm">
-          {t('step2.errorLoadingMessage')}
-        </p>
+      <div className="flex flex-col items-center justify-center py-32 text-center px-4 space-y-6 font-arabic" dir="rtl">
+        <div className="w-20 h-20 bg-red-50 rounded-3xl flex items-center justify-center text-red-500 shadow-xl shadow-red-500/10">
+          <AlertCircle className="w-10 h-10" />
+        </div>
+        <div className="space-y-2">
+           <h3 className="text-2xl font-black text-neutral-900">عذراً، فشل تحميل البيانات</h3>
+           <p className="text-neutral-500 font-bold max-w-sm mx-auto">
+             حدث خطأ غير متوقع أثناء محاولة استرداد فئات الرخص. يرجى التحقق من اتصالك بالإنترنت.
+           </p>
+        </div>
         <button 
           onClick={() => window.location.reload()}
-          className="text-primary-600 font-bold hover:underline"
+          className="px-8 py-3 bg-[#1a3a8f] text-white rounded-xl font-black shadow-xl shadow-blue-900/20 hover:scale-105 active:scale-95 transition-all"
         >
-          {t('step2.retry')}
+          إعادة المحاولة
         </button>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit(onNext)}>
-      <WizardStepHeader />
+    <form onSubmit={handleSubmit(onNext)} className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 font-arabic" dir="rtl">
+      <WizardStepHeader 
+        title="فئة رخصة القيادة" 
+        subtitle="اختر نوع المركبة التي ترغب في إصدار رخصة لها للمتابعة في الإجراءات القانونية."
+      />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {categories?.map((cat) => (
           <CategoryCard
             key={cat.code}
             code={cat.code as any}
             nameAr={cat.nameAr}
-            nameEn={cat.nameEn}
             descriptionAr={cat.descriptionAr || ''}
-            descriptionEn={cat.descriptionEn || ''}
             minAge={cat.minAge}
             selected={selectedCategory === cat.code}
             onClick={() => setValue('categoryCode', cat.code as any, { shouldValidate: true })}
@@ -98,14 +103,15 @@ export default function Step2CategorySelection() {
       </div>
 
       {errors.categoryCode && (
-        <div className="mt-6 p-4 bg-status-error/10 border border-status-error/20 rounded-lg flex items-center gap-3 text-status-error">
-          <AlertCircle className="w-5 h-5 shrink-0" />
-          <p className="text-sm font-medium">
-             {/* If the error message contains a colon, it's a parameterized key like ageError:18 */}
-             {errors.categoryCode.message?.includes(':') 
-               ? tv('ageError', { age: errors.categoryCode.message.split(':')[1] })
-               : errors.categoryCode.message}
-          </p>
+        <div className="p-6 rounded-[2rem] bg-red-50 border border-red-100 flex items-center gap-4 animate-in shake duration-500">
+           <AlertCircle className="w-6 h-6 text-red-500 shrink-0" />
+           <p className="text-sm font-black text-red-700">
+              {errors.categoryCode.message?.includes('Required') 
+                ? 'يرجى اختيار فئة رخصة للمتابعة' 
+                : errors.categoryCode.message?.includes(':')
+                  ? `عذراً، يجب أن يكون عمرك ${errors.categoryCode.message.split(':')[1]} سنة على الأقل لهذه الفئة`
+                  : errors.categoryCode.message}
+           </p>
         </div>
       )}
 

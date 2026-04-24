@@ -77,12 +77,7 @@ public class ProcessExpiredApplicationsJobTests
             .ReturnsAsync((ApplicationStatusHistory h, CancellationToken _) => h);
 
         _unitOfWork.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
-        _auditService.Setup(a => a.LogAsync(
-            It.IsAny<string>(),
-            It.IsAny<string>(),
-            It.IsAny<string>(),
-            It.IsAny<string>(),
-            It.IsAny<string>())).Returns(Task.CompletedTask);
+        _auditService.Setup(a => a.LogAsync(It.IsAny<string>())).Returns(Task.CompletedTask);
 
         // Act
         await job.ExecuteAsync();
@@ -162,12 +157,7 @@ public class ProcessExpiredApplicationsJobTests
             .ReturnsAsync((ApplicationStatusHistory h, CancellationToken _) => h);
 
         _unitOfWork.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
-        _auditService.Setup(a => a.LogAsync(
-            It.IsAny<string>(),
-            It.IsAny<string>(),
-            It.IsAny<string>(),
-            It.IsAny<string>(),
-            It.IsAny<string>())).Returns(Task.CompletedTask);
+        _auditService.Setup(a => a.LogAsync(It.IsAny<string>())).Returns(Task.CompletedTask);
 
         // Act
         await job.ExecuteAsync();
@@ -177,6 +167,6 @@ public class ProcessExpiredApplicationsJobTests
             It.Is<ApplicationStatusHistory>(h => 
                 h.ApplicationId == appId && 
                 h.ToStatus == ApplicationStatus.Expired),
-            It.IsAny<CancellationToken>()), Times.Once);
+            default(CancellationToken)), Times.Once);
     }
 }

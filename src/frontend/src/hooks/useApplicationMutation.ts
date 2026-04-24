@@ -32,14 +32,35 @@ export function useApplicationMutation(): UseApplicationMutationReturn {
 
   const updateDraftMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: any }) => {
-      const response = await ApplicationService.updateApplication(id, data);
+      const response = await ApplicationService.updateWizardData(id, data);
       if (!response.success) {
         throw new Error(response.message || "Failed to update draft");
       }
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["applications"] });
+      // Sync API response back to wizard store (handles server-applied defaults / computed fields)
+      if (data) {
+        useWizardStore.getState().loadFromApi({
+          serviceType: data.serviceType as any,
+          licenseCategoryCode: data.licenseCategoryCode,
+          nationalId: data.nationalId,
+          dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth).toISOString().split('T')[0] : null,
+          nationality: data.nationality,
+          gender: data.gender,
+          mobileNumber: data.mobileNumber,
+          email: data.email,
+          address: data.address,
+          city: data.city,
+          region: data.region,
+          applicantType: data.applicantType,
+          preferredCenterId: data.branchId,
+          testLanguage: data.preferredLanguage,
+          appointmentPreference: data.appointmentPreference,
+          specialNeedsDeclaration: data.specialNeeds,
+        });
+      }
     },
   });
 

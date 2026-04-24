@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import Step4ApplicationDetails from '@/components/domain/application/wizard/steps/Step4ApplicationDetails';
-import { NextIntlClientProvider } from 'next-intl';
+import { NextIntlClientProvider } from '@/lib/static-translations';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useWizardStore } from '@/stores/wizard-store';
 import ApplicationService from '@/services/application.service';

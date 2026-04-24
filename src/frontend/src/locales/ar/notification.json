@@ -1,0 +1,31 @@
+{
+  "notification": {
+    "title": "الإشعارات",
+    "subtitle": "عرض وتنظيم إشعاراتك",
+    "markAllRead": "تحديد الكل كمقروء",
+    "deleteOld": "حذف القديمة",
+    "noNotifications": "لا توجد إشعارات",
+    "noNotificationsDesc": "ستظهر إشعاراتك هنا عندما تتلقى تحديثات حول طلباتك ومواعيدك.",
+    "search": "البحث في الإشعارات",
+    "all": "الكل",
+    "unread": "غير مقروء",
+    "types": {
+      "payment": "دفع",
+      "appointment": "موعد",
+      "application": "طلب",
+      "license": "رخصة",
+      "test": "اختبار",
+      "document": "مستند",
+      "system": "نظام"
+    },
+    "actions": {
+      "view": "عرض",
+      "markRead": "تحديد كمقروء",
+      "delete": "حذف"
+    },
+    "status": {
+      "read": "مقروء",
+      "unread": "غير مقروء"
+    }
+  }
+}

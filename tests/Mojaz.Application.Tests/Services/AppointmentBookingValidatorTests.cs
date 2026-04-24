@@ -126,7 +126,7 @@ public class AppointmentBookingValidatorTests
             Id = Guid.NewGuid(),
             ApplicationId = applicationId,
             AppointmentType = AppointmentType.PracticalTest,
-            Status = "Scheduled"
+            Status = AppointmentStatus.Scheduled
         };
 
         var request = new CreateAppointmentRequest
@@ -731,7 +731,7 @@ public class AppointmentBookingValidatorTests
             RescheduleCount = 3, // Reached max
             BranchId = Guid.NewGuid(),
             TimeSlot = "09:00",
-            Status = "Scheduled"
+            Status = AppointmentStatus.Scheduled
         };
 
         var request = new RescheduleAppointmentRequest
@@ -767,7 +767,7 @@ public class AppointmentBookingValidatorTests
             RescheduleCount = 0,
             BranchId = Guid.NewGuid(),
             TimeSlot = "09:00",
-            Status = "Cancelled" // Already cancelled
+            Status = AppointmentStatus.Cancelled // Already cancelled
         };
 
         var request = new RescheduleAppointmentRequest
@@ -805,7 +805,7 @@ public class AppointmentBookingValidatorTests
             RescheduleCount = 1,
             BranchId = branchId,
             TimeSlot = "09:00",
-            Status = "Scheduled"
+            Status = AppointmentStatus.Scheduled
         };
 
         var newDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10));

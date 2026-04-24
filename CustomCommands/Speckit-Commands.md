@@ -141,7 +141,7 @@ PROJECT IDENTITY:
 - Name: Mojaz (مُجاز) meaning "Licensed/Authorized" in Arabic
 - Type: Full-Stack Web Application
 - Domain: Government / GovTech / Driving License Management
-- Primary Color: #006C35 (Royal Green)
+- Primary Color: #1a3a8f (King Blue)
 - Design System: Absher-Inspired, government official style
 
 TECH STACK:
@@ -462,7 +462,7 @@ REQUIREMENTS:
 
 2. Tailwind CSS 4 + shadcn/ui:
    - Custom Mojaz theme colors:
-     Primary: #006C35 (Royal Green) with full shade scale (50-900)
+     Primary: #1a3a8f (King Blue) with full shade scale (50-900)
      Secondary: #D4A017 (Government Gold) with full scale
      Status: success=#10B981, warning=#F59E0B, error=#EF4444, info=#3B82F6
      Neutral: standard gray scale

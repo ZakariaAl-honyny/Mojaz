@@ -86,7 +86,7 @@ public class AppointmentServiceTests
                 ScheduledDate = date,
                 TimeSlot = "09:00",
                 AppointmentType = type,
-                Status = "Scheduled"
+                Status = AppointmentStatus.Scheduled
             }
         };
 
@@ -144,8 +144,8 @@ public class AppointmentServiceTests
         // 2 appointments = full capacity
         var bookedAppointments = new List<Appointment>
         {
-            new Appointment { Id = Guid.NewGuid(), BranchId = branchId, ScheduledDate = date, TimeSlot = "09:00", AppointmentType = type, Status = "Scheduled" },
-            new Appointment { Id = Guid.NewGuid(), BranchId = branchId, ScheduledDate = date, TimeSlot = "09:00", AppointmentType = type, Status = "Scheduled" }
+            new Appointment { Id = Guid.NewGuid(), BranchId = branchId, ScheduledDate = date, TimeSlot = "09:00", AppointmentType = type, Status = AppointmentStatus.Scheduled },
+            new Appointment { Id = Guid.NewGuid(), BranchId = branchId, ScheduledDate = date, TimeSlot = "09:00", AppointmentType = type, Status = AppointmentStatus.Scheduled }
         };
 
         _appointmentRepositoryMock
@@ -294,7 +294,7 @@ public class AppointmentServiceTests
             ScheduledDate = scheduledDate,
             TimeSlot = "09:00",
             BranchId = branchId,
-            Status = "Scheduled",
+            Status = AppointmentStatus.Scheduled,
             Application = application,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
@@ -351,7 +351,7 @@ public class AppointmentServiceTests
             RescheduleCount = 3, // At max
             BranchId = Guid.NewGuid(),
             TimeSlot = "09:00",
-            Status = "Scheduled"
+            Status = AppointmentStatus.Scheduled
         };
 
         var request = new RescheduleAppointmentRequest
@@ -389,7 +389,7 @@ public class AppointmentServiceTests
             RescheduleCount = 1,
             BranchId = branchId,
             TimeSlot = "09:00",
-            Status = "Scheduled",
+            Status = AppointmentStatus.Scheduled,
             Application = new ApplicationEntity { Id = Guid.NewGuid(), Status = ApplicationStatus.Submitted },
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
@@ -478,7 +478,7 @@ public class AppointmentServiceTests
         var appointment = new Appointment
         {
             Id = appointmentId,
-            Status = "Cancelled",
+            Status = AppointmentStatus.Cancelled,
             Application = new ApplicationEntity { Id = Guid.NewGuid() }
         };
 
@@ -510,7 +510,7 @@ public class AppointmentServiceTests
             ApplicationId = Guid.NewGuid(),
             BranchId = branchId,
             TimeSlot = "09:00",
-            Status = "Scheduled",
+            Status = AppointmentStatus.Scheduled,
             Application = new ApplicationEntity { Id = Guid.NewGuid(), Status = ApplicationStatus.Submitted },
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
@@ -543,7 +543,7 @@ public class AppointmentServiceTests
         result.Status.Should().Be("Cancelled");
         result.CancellationReason.Should().Be("Family emergency");
         updatedAppointment.Should().NotBeNull();
-        updatedAppointment!.Status.Should().Be("Cancelled");
+        updatedAppointment!.Status.Should().Be(AppointmentStatus.Cancelled);
     }
 
     #endregion

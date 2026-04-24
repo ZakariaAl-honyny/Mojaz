@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useState, useRef } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { toast } from "react-hot-toast";
+import { useCallback, useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useWizardStore } from "@/stores/wizard-store";
 import { useApplicationMutation } from "@/hooks/useApplicationMutation";
+import ApplicationService from "@/services/application.service";
 import type { StepId, Step1Data, Step2Data, Step3Data, Step4Data } from "@/types/wizard.types";
+import { genderToNumber } from "@/lib/enum-utils";
 
 interface UseApplicationWizardReturn {
   currentStep: StepId;
@@ -26,10 +27,6 @@ interface StepFieldMap {
   [key: number]: string[];
 }
 
-/**
- * Maps each wizard step to its form field names for validation.
- * Used by goNext() to know which fields to validate before advancing.
- */
 const STEP_FIELD_MAP: StepFieldMap = {
   1: ["serviceType"],
   2: ["categoryCode"],
@@ -37,22 +34,12 @@ const STEP_FIELD_MAP: StepFieldMap = {
   4: ["applicantType", "preferredCenterId", "testLanguage", "appointmentPreference", "specialNeedsDeclaration"],
 };
 
-/**
- * Custom hook for managing the application wizard state and navigation.
- * Provides methods for step navigation, validation, and submission.
- * 
- * @returns Object containing wizard state and navigation methods
- */
 export function useApplicationWizard(): UseApplicationWizardReturn {
   const router = useRouter();
-  const params = useParams();
-  const locale = (params.locale as string) || "ar";
-  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [direction, setDirection] = useState(1);
   const prevStepRef = useRef<number>(1);
 
-  // Get state and actions from wizard store
   const {
     currentStep,
     completedSteps,
@@ -67,18 +54,16 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
     setStep2,
     setStep3,
     setStep4,
+    loadFromApi,
     resetWizard,
   } = useWizardStore();
 
-  // Get the mutation function from the mutation hook
-  const { submitApplicationAsync } = useApplicationMutation();
+  const { 
+    createDraftAsync, 
+    updateDraftAsync, 
+    submitApplicationAsync 
+  } = useApplicationMutation();
 
-  /**
-   * Navigate to a specific step.
-   * Updates direction based on whether moving forward or backward.
-   * 
-   * @param step - Step number to navigate to (1-5)
-   */
   const goTo = useCallback(
     (step: number) => {
       const validStep = Math.max(1, Math.min(5, step)) as StepId;
@@ -89,43 +74,26 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
     [storeGoTo]
   );
 
-  /**
-   * Navigate to the previous step.
-   */
   const goBack = useCallback(() => {
     const newStep = Math.max(1, currentStep - 1) as StepId;
     setDirection(-1);
     storeGoTo(newStep);
   }, [currentStep, storeGoTo]);
 
-  /**
-   * Navigate to the next step with optional validation.
-   * If trigger function is provided, validates the current step's fields.
-   * On success, marks the current step as completed and advances to the next step.
-   * If validation fails, calls setFocus to focus the first invalid field and scrolls it into view.
-   * 
-   * @param trigger - Optional React Hook Form trigger function for validation
-   * @param setFocus - Optional React Hook Form setFocus function to focus invalid field
-   * @returns Promise<boolean> - true if successful, false if validation failed
-   */
   const goNext = useCallback(
     async (
       trigger?: (fields?: string[]) => Promise<boolean>,
       setFocus?: (field: string) => void
     ): Promise<boolean> => {
-      // Get fields required for current step validation
       const stepFields = STEP_FIELD_MAP[currentStep] || [];
       
-      // Validate current step fields if trigger function is provided
       if (trigger && stepFields.length > 0) {
         const isValid = await trigger(stepFields);
         if (!isValid) {
-          // Focus first invalid field and scroll into view on mobile
           if (setFocus && stepFields.length > 0) {
             const firstField = stepFields[0];
             setFocus(firstField);
             
-            // Scroll field into view on mobile
             const fieldElement = document.getElementById(firstField) || document.querySelector(`[name="${firstField}"]`);
             if (fieldElement) {
               fieldElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -134,104 +102,130 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
           return false;
         }
       }
-      
-      // Mark current step as completed in the store
-      markCompleted(currentStep);
-      
-      // Write current step data to store (ensures persistence)
-      switch (currentStep) {
-        case 1:
-          setStep1(step1);
-          break;
-        case 2:
-          setStep2(step2);
-          break;
-        case 3:
-          setStep3(step3);
-          break;
-        case 4:
-          setStep4(step4);
-          break;
+
+      setIsSubmitting(true);
+      try {
+        // Sync current step data to store before persistence
+        switch (currentStep) {
+          case 1: setStep1(step1); break;
+          case 2: setStep2(step2); break;
+          case 3: setStep3(step3); break;
+          case 4: setStep4(step4); break;
+        }
+
+        // Functional Persistence logic
+        if (currentStep === 1 && step1.serviceType) {
+          // If no ID exists, create the draft, otherwise update it
+          if (!applicationId) {
+            await createDraftAsync(step1.serviceType);
+          } else {
+            await updateDraftAsync(applicationId, { serviceType: step1.serviceType });
+          }
+        } else if (applicationId && currentStep === 2 && step2.categoryCode) {
+          // Need to convert numeric licenseCategoryCode to licenseCategoryId (GUID)
+          // Since we don't have the mapping here, we need to fetch categories first
+          const categoriesResponse = await ApplicationService.getLicenseCategories();
+          if (categoriesResponse.success && categoriesResponse.data) {
+            const category = categoriesResponse.data.find(c => c.code === step2.categoryCode);
+            if (category) {
+              await updateDraftAsync(applicationId, { licenseCategoryId: category.id });
+            }
+          }
+        } else if (applicationId && currentStep < 5) {
+          // Structured for UpdateWizardDataRequest (application + user fields)
+          const patchData = {
+            nationalId: step3.nationalId,
+            dateOfBirth: step3.dateOfBirth ? new Date(step3.dateOfBirth).toISOString() : undefined,
+            nationality: step3.nationality,
+            gender: genderToNumber(step3.gender),
+            mobileNumber: step3.mobileNumber,
+            email: step3.email,
+            address: step3.address,
+            city: step3.city,
+            region: step3.region,
+            applicantType: step4.applicantType,
+            branchId: step4.preferredCenterId,
+            preferredLanguage: step4.testLanguage,
+            specialNeeds: step4.specialNeedsDeclaration,
+            appointmentPreference: step4.appointmentPreference,
+          };
+          await updateDraftAsync(applicationId, patchData);
+        }
+
+        markCompleted(currentStep);
+        const nextStep = Math.min(5, currentStep + 1) as StepId;
+        setDirection(1);
+        storeGoTo(nextStep);
+        return true;
+      } catch (error) {
+        console.error("Workflow progression error:", error);
+        // Toast or Error message should be handled by mutation hook or UI
+        return false;
+      } finally {
+        setIsSubmitting(false);
       }
-      
-      // Advance to next step (maximum step is 5)
-      const nextStep = Math.min(5, currentStep + 1) as StepId;
-      setDirection(1);
-      storeGoTo(nextStep);
-      
-      return true;
     },
-    [currentStep, step1, step2, step3, step4, markCompleted, setStep1, setStep2, setStep3, setStep4, storeGoTo]
+    [currentStep, applicationId, step1, step2, step3, step4, markCompleted, setStep1, setStep2, setStep3, setStep4, loadFromApi, storeGoTo, createDraftAsync, updateDraftAsync]
   );
 
-  /**
-   * Submit the application.
-   * Calls the submitApplication mutation, clears session storage,
-   * and redirects to the application detail page.
-   */
   const submit = useCallback(async () => {
-    if (!applicationId) {
-      const errorMsg = "No application ID to submit";
-      console.error(errorMsg);
-      return;
-    }
+    if (!applicationId) return;
 
     setIsSubmitting(true);
     try {
       await submitApplicationAsync(applicationId);
       
-      // Reset wizard state in store
+      // Cleanup
       resetWizard();
-      
-      // Clear wizard draft from sessionStorage
       sessionStorage.removeItem("mojaz-wizard-draft");
       
-      // Log success (toast implementation pending)
-      console.log("Application submitted successfully!");
-      
-      // Redirect to application detail page with locale
-      router.push(`/${locale}/applicant/applications/${applicationId}`);
+      // Institutional redirect to applications detail view
+      router.push(`/applications/${applicationId}`);
     } catch (error) {
-      console.error("Failed to submit application:", error);
-      
-      // Log error message
-      const errorMessage = error instanceof Error ? error.message : "Failed to submit application. Please try again.";
-      console.error(errorMessage);
-      
+      console.error("Submission error:", error);
       throw error;
     } finally {
       setIsSubmitting(false);
     }
-  }, [applicationId, submitApplicationAsync, resetWizard, router, locale]);
+  }, [applicationId, submitApplicationAsync, resetWizard, router]);
 
-  // Step data setter functions
-  const setStep1Data = useCallback(
-    (data: Step1Data) => {
-      setStep1(data);
-    },
-    [setStep1]
-  );
+  const setStep1Data = useCallback((data: Step1Data) => setStep1(data), [setStep1]);
+  const setStep2Data = useCallback((data: Step2Data) => setStep2(data), [setStep2]);
+  const setStep3Data = useCallback((data: Step3Data) => setStep3(data), [setStep3]);
+  const setStep4Data = useCallback((data: Step4Data) => setStep4(data), [setStep4]);
 
-  const setStep2Data = useCallback(
-    (data: Step2Data) => {
-      setStep2(data);
-    },
-    [setStep2]
-  );
+  // ── Load existing draft from API on mount (handles page refresh / session restore) ──
+  const [hasLoadedDraft, setHasLoadedDraft] = useState(false);
+  useEffect(() => {
+    if (hasLoadedDraft) return;
+    if (!applicationId) { setHasLoadedDraft(true); return; }
 
-  const setStep3Data = useCallback(
-    (data: Step3Data) => {
-      setStep3(data);
-    },
-    [setStep3]
-  );
-
-  const setStep4Data = useCallback(
-    (data: Step4Data) => {
-      setStep4(data);
-    },
-    [setStep4]
-  );
+    ApplicationService.getApplication(applicationId)
+      .then((response) => {
+        if (!response.success || !response.data) return;
+        const d = response.data;
+        loadFromApi({
+          serviceType: d.serviceType as any,
+          licenseCategoryCode: d.licenseCategoryCode,
+          nationalId: d.nationalId,
+          dateOfBirth: d.dateOfBirth ? new Date(d.dateOfBirth).toISOString().split('T')[0] : null,
+          nationality: d.nationality,
+          gender: d.gender,
+          mobileNumber: d.mobileNumber,
+          email: d.email,
+          address: d.address,
+          city: d.city,
+          region: d.region,
+          applicantType: d.applicantType,
+          preferredCenterId: d.branchId,
+          testLanguage: d.preferredLanguage,
+          appointmentPreference: d.appointmentPreference,
+          specialNeedsDeclaration: d.specialNeeds,
+        });
+      })
+      .catch((err) => console.warn("Failed to load wizard draft from API:", err))
+      .finally(() => setHasLoadedDraft(true));
+  }, [applicationId, hasLoadedDraft, loadFromApi]);
 
   return {
     currentStep,

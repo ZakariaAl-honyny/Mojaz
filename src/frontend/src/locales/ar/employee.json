@@ -1,0 +1,18 @@
+{
+  "queue": {
+    "searchPlaceholder": "البحث برقم الطلب أو اسم مقدم الطلب...",
+    "advancedFilter": "فلترة متقدمة",
+    "noResults": "لا توجد نتائج مطابقة لبحثك.",
+    "recordsFound": "سجلات مكتشفة",
+    "total": "إجمالي",
+    "columns": {
+      "applicationNumber": "رقم الطلب",
+      "applicantName": "مقدم الطلب",
+      "category": "الفئة",
+      "categoryPrefix": "فئة ",
+      "stage": "المرحلة",
+      "status": "الحالة",
+      "submittedDate": "تاريخ التقديم"
+    }
+  }
+}

@@ -1,20 +1,52 @@
-import { Badge } from '@/components/ui/badge';
-import { useTranslations } from 'next-intl';
+'use client';
+
+import { cn } from '@/lib/utils';
+import { CheckCircle2, XCircle, Clock } from 'lucide-react';
 
 interface TestAttemptBadgeProps {
   result: 'Pass' | 'Fail' | 'Absent';
 }
 
 export function TestAttemptBadge({ result }: TestAttemptBadgeProps) {
-  const t = useTranslations('practical.result');
-  
-  if (result === 'Pass') {
-    return <Badge className="bg-green-500 hover:bg-green-600 text-white">{t('pass')}</Badge>;
-  }
-  
-  if (result === 'Fail') {
-    return <Badge variant="destructive">{t('fail')}</Badge>;
-  }
-  
-  return <Badge variant="outline" className="text-orange-600 border-orange-200 bg-orange-50">{t('absent')}</Badge>;
+  const getStatusConfig = (res: string) => {
+    switch (res) {
+      case 'Pass':
+        return {
+          label: 'ناجح (اجتيار)',
+          icon: CheckCircle2,
+          styles: 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20',
+        };
+      case 'Fail':
+        return {
+          label: 'راسب (لم يجتز)',
+          icon: XCircle,
+          styles: 'bg-red-500 text-white shadow-lg shadow-red-500/20',
+        };
+      case 'Absent':
+        return {
+          label: 'غائب',
+          icon: Clock,
+          styles: 'bg-amber-500 text-white shadow-lg shadow-amber-500/20',
+        };
+      default:
+        return {
+          label: 'غير معروف',
+          icon: Clock,
+          styles: 'bg-neutral-500 text-white shadow-lg shadow-neutral-500/20',
+        };
+    }
+  };
+
+  const config = getStatusConfig(result);
+  const Icon = config.icon;
+
+  return (
+    <div className={cn(
+      "inline-flex items-center gap-2 px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 font-arabic",
+      config.styles
+    )}>
+      <Icon className="w-3.5 h-3.5" />
+      {config.label}
+    </div>
+  );
 }

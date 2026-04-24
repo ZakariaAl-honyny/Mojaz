@@ -260,7 +260,7 @@ public class ReportService : IReportService
         var grouped = await query.GroupBy(a => a.FinalDecisionBy)
             .Select(g => new
             {
-                EmployeeId = g.Key.Value,
+                EmployeeId = g.Key ?? Guid.Empty,
                 Count = g.Count()
             })
             .ToListAsync();
@@ -287,10 +287,19 @@ public class ReportService : IReportService
 
     public async Task<ApiResponse<List<DailyLoadDto>>> GetIssuanceTimelineAsync(ReportingFilter filter)
     {
-        var query = _applicationRepository.Query().AsNoTracking().Where(a => !a.IsDeleted);
-        query = ApplyFilters(query, filter);
+        // Query Licenses table by IssuedAt date (PRD: "Daily/Monthly Issued Licenses")
+        var query = _licenseRepository.Query().AsNoTracking().Where(l => !l.IsDeleted);
 
-        var grouped = await query.GroupBy(a => a.CreatedAt.Date)
+        if (filter.StartDate.HasValue)
+            query = query.Where(l => l.IssuedAt >= filter.StartDate.Value);
+
+        if (filter.EndDate.HasValue)
+            query = query.Where(l => l.IssuedAt <= filter.EndDate.Value);
+
+        if (filter.LicenseCategoryId.HasValue)
+            query = query.Where(l => l.LicenseCategoryId == filter.LicenseCategoryId.Value);
+
+        var grouped = await query.GroupBy(l => l.IssuedAt.Date)
             .Select(g => new DailyLoadDto
             {
                 Date = g.Key,

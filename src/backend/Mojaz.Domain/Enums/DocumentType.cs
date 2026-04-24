@@ -1,6 +1,6 @@
 ﻿namespace Mojaz.Domain.Enums;
 
-public enum DocumentType
+public enum DocumentType : byte
 {
     // Mandatory (always required for new license issuance)
     IdCopy = 1,

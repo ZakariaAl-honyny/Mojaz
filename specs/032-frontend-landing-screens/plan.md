@@ -8,7 +8,7 @@ Implementing the requirements from PRD Sections 18, 19, and 20:
 - **Landing Page**: 9 sections (Header, Hero, Services, Steps, Categories, Features, Stats, FAQ, Footer) with full AR/EN and Dark/Light support.
 - **Portals**: Distinct paths for Applicants vs. Employees (Receptionist, Doctor, Examiner, Admin).
 - **Security**: RBAC matrix enforcement.
-- **Aesthetic**: Royal Green (#006C35), Premium Government design.
+- **Aesthetic**: King Blue (#1a3a8f), Premium Government design.
 
 ## Technical Context
 
@@ -57,5 +57,5 @@ Implementing the requirements from PRD Sections 18, 19, and 20:
 - Playwright tests for language switching and role redirection.
 
 ### Manual Verification
-- Visual inspection of the "Royal Green" theme consistency.
+- Visual inspection of the "King Blue" theme consistency.
 - Test RTL support on mobile viewports.

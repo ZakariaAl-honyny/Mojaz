@@ -13,6 +13,7 @@ namespace Mojaz.API.Controllers;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces("application/json")]
+[Authorize]
 public class PracticalTestsController : ControllerBase
 {
     private readonly IPracticalService _practicalService;

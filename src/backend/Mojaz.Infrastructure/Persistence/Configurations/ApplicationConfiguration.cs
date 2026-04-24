@@ -37,11 +37,15 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(a => a.CurrentStage).HasMaxLength(50);
             builder.Property(a => a.PreferredLanguage).HasMaxLength(10);
             builder.Property(a => a.SpecialNeeds).HasMaxLength(200);
-            builder.Property(a => a.DataAccuracyConfirmed).IsRequired();
+builder.Property(a => a.DataAccuracyConfirmed).IsRequired();
             builder.Property(a => a.TheoryAttemptCount).HasDefaultValue(0);
             
+            // Enum properties with tinyint
+            builder.Property(a => a.Status).HasColumnType("tinyint");
+            builder.Property(a => a.ServiceType).HasColumnType("tinyint");
+            
             // Final Approval fields
-            builder.Property(a => a.FinalDecision).HasColumnType("int");
+            builder.Property(a => a.FinalDecision).HasColumnType("tinyint");
             builder.Property(a => a.FinalDecisionReason).HasMaxLength(1000);
             builder.Property(a => a.ReturnToStage).HasMaxLength(50);
             builder.Property(a => a.ManagerNotes).HasMaxLength(1000);

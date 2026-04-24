@@ -1,6 +1,6 @@
 namespace Mojaz.Domain.Enums;
 
-public enum ReplacementReason
+public enum ReplacementReason : byte
 {
     Lost = 1,
     Damaged = 2,

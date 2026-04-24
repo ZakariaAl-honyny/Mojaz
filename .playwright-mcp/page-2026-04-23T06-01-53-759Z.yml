@@ -1,0 +1,38 @@
+- generic [active] [ref=e1]:
+  - main [ref=e4]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - img "Mojaz Logo" [ref=e10] [cursor=pointer]
+        - heading "بوابة الدخول الموحدة" [level=2] [ref=e11]
+        - paragraph [ref=e12]: أدخل بيانات الهوية الرقمية للوصول إلى لوحة التحكم السيادية الخاصة بك.
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]:
+            - img [ref=e16]
+            - text: اسم المستخدم / البريد / الهاتف
+          - textbox "user@mojaz.gov.ye" [ref=e20]: zkryaalhnyny0@gmail.com
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - generic [ref=e23]:
+              - img [ref=e24]
+              - text: كلمة المرور
+            - link "نسيت كلمة المرور؟" [ref=e27] [cursor=pointer]:
+              - /url: /forgot-password
+          - textbox "••••••••" [ref=e29]: "12345678"
+        - button "تسجيل الدخول للنظام" [ref=e31]:
+          - generic [ref=e32]:
+            - generic [ref=e53]: تسجيل الدخول للنظام
+            - generic [ref=e54]:
+              - img
+      - paragraph [ref=e36]:
+        - text: ليس لديك حساب في المنصة؟
+        - link "ابدأ إجراءات التسجيل" [ref=e37] [cursor=pointer]:
+          - /url: /register
+      - generic [ref=e38]:
+        - img [ref=e39]
+        - paragraph [ref=e42]: تشفير سيادي موحد • TLS 1.3 المصلد
+  - region "Notifications (F8)":
+    - list
+  - button "Open Next.js Dev Tools" [ref=e48] [cursor=pointer]:
+    - img [ref=e49]
+  - alert [ref=e52]

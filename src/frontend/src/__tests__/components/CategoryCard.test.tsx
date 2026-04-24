@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import CategoryCard from '@/components/domain/application/wizard/shared/CategoryCard';
-import { NextIntlClientProvider } from 'next-intl';
+import { NextIntlClientProvider } from '@/lib/static-translations';
 import { LicenseCategoryCode } from '@/types/wizard.types';
 
 const mockMessages = {

@@ -11,7 +11,7 @@
 - **Alternatives considered**: Pre-inserting daily empty slot records in a dedicated `TimeSlots` table.
 
 ## 3. Frontend UI Aesthetics & Performance (Next.js)
-- **Decision**: Strictly apply `vercel-react-best-practices` to the Calendar UI implementation. Specifically: prevent suspense waterfalls by parallelizing SWR queries for slots and branch details, and use `startTransition` or `useDeferredValue` for smooth date picking. Apply `frontend-design` guidelines using a highly polished, interactive layout based on Absher's "Royal Green" scheme with crisp typography (Cairo/Inter) and bold layout choices, abstaining from generic templates.
+- **Decision**: Strictly apply `vercel-react-best-practices` to the Calendar UI implementation. Specifically: prevent suspense waterfalls by parallelizing SWR queries for slots and branch details, and use `startTransition` or `useDeferredValue` for smooth date picking. Apply `frontend-design` guidelines using a highly polished, interactive layout based on Absher's "King Blue" scheme with crisp typography (Cairo/Inter) and bold layout choices, abstaining from generic templates.
 - **Rationale**: The user explicitly requested leveraging these two skills. This ensures a production-grade, fast, and visually distinct interface.
 
 ## 4. Reminder Engine Architecture (Hangfire)

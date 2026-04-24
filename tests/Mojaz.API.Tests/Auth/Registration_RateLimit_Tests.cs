@@ -50,6 +50,6 @@ public class Registration_RateLimit_Tests : IClassFixture<WebApplicationFactory<
 
     private string GetDebuggerDisplay()
     {
-        return ToString();
+        return ToString()!;
     }
 }

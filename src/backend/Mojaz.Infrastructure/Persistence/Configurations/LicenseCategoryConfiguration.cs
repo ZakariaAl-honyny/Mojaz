@@ -13,8 +13,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Code)
                 .IsRequired()
-                .HasConversion<string>()
-                .HasMaxLength(2);
+                .HasColumnType("tinyint");
             builder.Property(x => x.NameAr).IsRequired().HasMaxLength(64);
             builder.Property(x => x.NameEn).IsRequired().HasMaxLength(64);
             builder.Property(x => x.MinimumAge).IsRequired();

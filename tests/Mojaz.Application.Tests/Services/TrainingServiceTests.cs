@@ -167,7 +167,7 @@ public class TrainingServiceTests
 
         // Assert
         result.Success.Should().BeTrue();
-        result.Data.TotalHoursRequired.Should().Be(15);
+        result.Data!.TotalHoursRequired.Should().Be(15);
         _trainingRepositoryMock.Verify(x => x.AddAsync(It.IsAny<TrainingRecord>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

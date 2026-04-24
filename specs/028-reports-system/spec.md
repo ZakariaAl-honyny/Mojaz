@@ -86,7 +86,7 @@ As a **Manager**, I want to export report data to CSV so that I can perform furt
 - **FR-007**: **Issuance Timeline**: MUST provide a line chart showing daily/monthly trends of issued licenses (Stage 10 completion).
 - **FR-008**: **Global Filtering**: All reports MUST support filtering by Date Range (From/To), Branch, and License Category.
 - **FR-009**: **Export Capabilities**: Users MUST be able to export any report's raw data table to CSV format. PDF export MUST be available for summary dashboards.
-- **FR-010**: **Data Display**: MUST use **Recharts** for visualizations and **TanStack Table** for data grids, following the Mojaz Design System (Royal Green theme).
+- **FR-010**: **Data Display**: MUST use **Recharts** for visualizations and **TanStack Table** for data grids, following the Mojaz Design System (King Blue theme).
 
 ### Key Entities *(include if feature involves data)*
 
@@ -109,4 +109,4 @@ As a **Manager**, I want to export report data to CSV so that I can perform furt
 - **Read-Only Context**: To optimize performance, reports will utilize a read-only DB context or `AsNoTracking()` in EF Core.
 - **Real-Time Data**: Reports reflect live application data from the production database without a separate data warehouse for MVP.
 - **Standard Threshold**: Unless otherwise specified, the default "Delayed" threshold is 14 days in a single stage.
-- **Design Consistency**: Recharts will be styled using the `mojazColors` primary green (`#006C35`).
+- **Design Consistency**: Recharts will be styled using the `mojazColors` primary green (`#1a3a8f`).

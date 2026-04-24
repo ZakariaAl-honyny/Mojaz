@@ -1,0 +1,78 @@
+{
+  "reports": {
+    "title": "Reports & Analytics",
+    "subtitle": "Real-time insights and operational performance tracking",
+    "dashboard": "Management Reports Dashboard",
+    "statusDistribution": "By Status",
+    "serviceDistribution": "By Service",
+    "delayedApplications": "Delayed",
+    "testPerformance": "Test Results",
+    "branchThroughput": "Branch Performance",
+    "employeeActivity": "Employee Activity",
+    "issuanceTimeline": "Issuance Trend",
+    "totalApplications": "Total Applications",
+    "activeApplications": "Active Applications",
+    "completedToday": "Completed Today",
+    "totalRevenue": "Total Revenue",
+    "noData": "No data available",
+    "count": "Count",
+    "export": "Export CSV",
+    "exportPdf": "Export PDF",
+    "reset": "Reset Filters",
+    "search": "Search...",
+    "filters": {
+      "dateRange": "Date Range",
+      "from": "From",
+      "to": "To",
+      "branch": "Branch",
+      "category": "License Category",
+      "examiner": "Examiner",
+      "apply": "Apply",
+      "reset": "Reset"
+    },
+    "status": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "inreview": "In Review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "active": "Active",
+      "cancelled": "Cancelled",
+      "expired": "Expired",
+      "issued": "Issued",
+      "medical": "Medical Exam",
+      "theory": "Theory Test",
+      "practical": "Practical Test"
+    },
+    "service": {
+      "new": "New License",
+      "renewal": "Renewal",
+      "upgrade": "Upgrade",
+      "replacement": "Replacement"
+    },
+    "table": {
+      "applicationNumber": "App Number",
+      "applicant": "Applicant",
+      "daysInStage": "Days Waiting",
+      "branch": "Branch",
+      "currentStatus": "Status",
+      "actions": "Actions",
+      "employee": "Employee",
+      "role": "Role",
+      "processed": "Processed",
+      "details": "View Details",
+      "pass": "Passed",
+      "fail": "Failed"
+    },
+    "branch": {
+      "approvalRate": "Approval Rate",
+      "avgTime": "Avg. Time",
+      "days": "days"
+    },
+    "kpi": {
+      "total": "Total",
+      "delayed": "Delayed",
+      "days": "days"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "tagline": "Government Digital Platform",
+  "description": "Mojaz is the unified government platform for issuing driving licenses",
+  "services": {
+    "title": "Services",
+    "newLicense": "New License",
+    "renewal": "License Renewal",
+    "replacement": "Lost/Damaged License",
+    "upgrade": "Category Upgrade"
+  },
+  "about": {
+    "title": "About",
+    "aboutMojaz": "About Mojaz",
+    "manual": "User Manual",
+    "centers": "Testing Centers",
+    "faqs": "FAQs"
+  },
+  "legal": {
+    "title": "Support & Legal",
+    "contact": "Contact Us",
+    "privacy": "Privacy Policy",
+    "terms": "Terms and Conditions",
+    "accessibility": "Accessibility"
+  },
+  "awards": {
+    "secure": "Secure Framework",
+    "excellence": "Digital Excellence 2025",
+    "govAward": "Gov Award Winner",
+    "zeroPaper": "Zero Paper Initiative"
+  },
+  "copyright": "© {year} Mojaz. All rights reserved Ministry of Interior.",
+  "poweredBy": "Powered by Gaea System"
+}

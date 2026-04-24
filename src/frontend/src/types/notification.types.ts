@@ -15,6 +15,9 @@ export interface NotificationDto {
   applicationId?: number;
 }
 
+// Notification type for UI filtering and display
+export type NotificationType = 'payment' | 'appointment' | 'status' | 'system';
+
 export enum NotificationEventType {
   ApplicationStatusChanged = 'ApplicationStatusChanged',
   PaymentReceived = 'PaymentReceived',
@@ -46,4 +49,45 @@ export interface UnreadCountResponse {
 export interface MarkAllReadResponse {
   success: boolean;
   message: string;
+}
+
+// Notification for local store (used in zustand store)
+export interface Notification {
+  id: string;
+  userId: string;
+  title: string;
+  titleAr: string;
+  message: string;
+  messageAr: string;
+  type: NotificationType;
+  isRead: boolean;
+  createdAt: string;
+  applicationId?: number;
+}
+
+// Notification preferences
+export interface NotificationPreferences {
+  userId: string;
+  emailEnabled: boolean;
+  pushEnabled: boolean;
+  smsEnabled: boolean;
+  inAppEnabled: boolean;
+  events: {
+    applicationStatus: boolean;
+    payment: boolean;
+    appointment: boolean;
+    medicalExam: boolean;
+    theoryTest: boolean;
+    practicalTest: boolean;
+    license: boolean;
+  };
+}
+
+// Device info for push notifications
+export interface DeviceInfo {
+  id: string;
+  userId: string;
+  deviceToken: string;
+  platform: 'web' | 'ios' | 'android';
+  lastActive: string;
 }

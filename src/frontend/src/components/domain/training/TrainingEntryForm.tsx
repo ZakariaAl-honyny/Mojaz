@@ -3,12 +3,11 @@
 import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
 import { trainingEntrySchema, type TrainingEntryFormValues } from "@/lib/validations/training.schema";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Loader2, PlusCircle } from "lucide-react";
+import { Loader2, PlusCircle, History, FileText, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface TrainingEntryFormProps {
@@ -21,7 +20,7 @@ interface TrainingEntryFormProps {
 
 /**
  * TrainingEntryForm - Employee-facing form to record training hours.
- * Designed with a ledger-inspired grid and Royal Green accents.
+ * 100% Arabic, institutional King Blue aesthetic.
  */
 export function TrainingEntryForm({
   applicationId,
@@ -30,8 +29,6 @@ export function TrainingEntryForm({
   onSubmit,
   className,
 }: TrainingEntryFormProps) {
-  const t = useTranslations("training.form");
-  const tv = useTranslations("training.validation");
   const [isPending, startTransition] = useTransition();
 
   const {
@@ -63,26 +60,31 @@ export function TrainingEntryForm({
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
       className={cn(
-        "bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg p-6 shadow-sm relative",
+        "bg-white border-none rounded-[2.5rem] p-10 shadow-2xl shadow-blue-900/5 relative overflow-hidden font-arabic transition-all",
         className
       )}
+      dir="rtl"
     >
-      {/* Decorative corner accents for ledger aesthetic */}
-      <div className="absolute top-0 right-0 w-8 h-8 opacity-10 bg-primary-600 rounded-bl-3xl"></div>
-      
-      <div className="space-y-6">
-        <div className="flex items-center gap-2 mb-2">
-          <PlusCircle className="w-5 h-5 text-primary-600" />
-          <h3 className="text-sm font-bold uppercase tracking-widest text-neutral-500">
-            {t('title')}
-          </h3>
+      {/* Institutional Accent */}
+      <div className="absolute top-0 right-0 w-32 h-32 opacity-5 bg-[#1a3a8f] rounded-bl-[4rem]"></div>
+
+      <div className="space-y-10">
+        <div className="flex items-center gap-4 border-b border-neutral-50 pb-6">
+          <div className="w-12 h-12 rounded-2xl bg-[#1a3a8f]/5 flex items-center justify-center border border-[#1a3a8f]/10">
+            <PlusCircle className="w-6 h-6 text-[#1a3a8f]" />
+          </div>
+          <div>
+            <h3 className="text-xl font-black text-[#1a3a8f] tracking-tight">رصد ساعات التدريب</h3>
+            <p className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">إضافة جلسة تدريبية جديدة للمتقدم</p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 items-start">
           {/* Hours Input */}
-          <div className="md:col-span-1 space-y-2">
-            <Label htmlFor="additionalHours" className="text-xs font-bold text-neutral-400">
-              {t('hoursLabel')}
+          <div className="md:col-span-1 space-y-4">
+            <Label htmlFor="additionalHours" className="text-sm font-black text-[#1a3a8f] mr-2 flex items-center gap-2">
+              <Clock className="w-4 h-4" />
+              عدد الساعات
             </Label>
             <div className="relative">
               <Input
@@ -91,58 +93,65 @@ export function TrainingEntryForm({
                 step="0.5"
                 {...register("additionalHours")}
                 className={cn(
-                  "font-mono text-lg border-2 focus:ring-primary-500",
-                  errors.additionalHours ? "border-status-error" : "border-neutral-100"
+                  "h-16 font-mono font-black text-2xl border-none bg-neutral-50 rounded-2xl px-6 focus:ring-4 focus:ring-[#1a3a8f]/10 transition-all",
+                  errors.additionalHours ? "ring-2 ring-red-500" : ""
                 )}
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-neutral-300">HRS</span>
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 text-xs font-black text-[#1a3a8f]/30">ساعة</span>
             </div>
             {errors.additionalHours && (
-              <p className="text-[10px] text-status-error font-bold leading-tight">
-                {tv(errors.additionalHours.message as any)}
+              <p className="text-xs text-red-500 font-bold px-2">
+                عدد الساعات غير صالح
               </p>
             )}
           </div>
 
           {/* Notes Input */}
-          <div className="md:col-span-2 space-y-2">
-            <Label htmlFor="notes" className="text-xs font-bold text-neutral-400">
-              {t('notesLabel')}
+          <div className="md:col-span-2 space-y-4">
+            <Label htmlFor="notes" className="text-sm font-black text-[#1a3a8f] mr-2 flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              ملاحظات المدرب (اختياري)
             </Label>
             <Input
               id="notes"
               {...register("notes")}
-              placeholder={t('notesPlaceholder')}
-              className="border-2 border-neutral-100 focus:ring-primary-500"
+              placeholder="وصف موجز لأداء المتقدم في الجلسة..."
+              className="h-16 border-none bg-neutral-50 rounded-2xl px-6 font-bold focus:ring-4 focus:ring-[#1a3a8f]/10 transition-all"
             />
             {errors.notes && (
-              <p className="text-[10px] text-status-error font-bold whitespace-nowrap">
-                {tv(errors.notes.message as any)}
+              <p className="text-xs text-red-500 font-bold px-2">
+                الملاحظات طويلة جداً
               </p>
             )}
           </div>
 
           {/* Submit Button */}
-          <div className="md:col-span-1">
+          <div className="md:col-span-1 pt-9">
             <Button
               type="submit"
               disabled={isPending}
-              className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold h-10 shadow-lg shadow-primary-900/10 active:scale-95 transition-all"
+              className="w-full bg-[#1a3a8f] hover:bg-[#00215a] text-white font-black h-16 rounded-2xl shadow-xl shadow-blue-900/30 active:scale-95 transition-all text-lg group"
             >
               {isPending ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-6 h-6 animate-spin text-white" />
               ) : (
-                t('submitButton')
+                <span className="flex items-center gap-3">
+                   إضافة الساعات
+                   <PlusCircle className="w-5 h-5 transition-transform group-hover:rotate-90" />
+                </span>
               )}
             </Button>
           </div>
         </div>
       </div>
-      
-      {/* Visual divider for the bottom of the card */}
-      <div className="mt-6 border-t border-dashed border-neutral-100 dark:border-neutral-800 pt-2 flex justify-between">
-        <span className="text-[9px] font-mono text-neutral-300">MOJAZ-TRN-ENTRY</span>
-        <span className="text-[9px] font-mono text-neutral-300">REF: {applicationId.substring(0,8)}</span>
+
+      {/* Audit Info Footer */}
+      <div className="mt-10 border-t border-neutral-50 pt-6 flex justify-between items-center opacity-30 group hover:opacity-100 transition-opacity">
+        <div className="flex items-center gap-2">
+           <History className="w-3 h-3" />
+           <span className="text-[10px] font-black font-mono">MOJAZ-TRN-ENTRY-CORE</span>
+        </div>
+        <span className="text-[10px] font-black font-mono text-right">رقم الطلب المرجعي: {applicationId.substring(0, 10).toUpperCase()}</span>
       </div>
     </form>
   );

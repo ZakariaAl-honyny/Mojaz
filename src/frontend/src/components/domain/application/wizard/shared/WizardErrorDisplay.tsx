@@ -1,49 +1,62 @@
 'use client';
 
 import React from 'react';
-import { AlertCircle, RefreshCw } from 'lucide-react';
+import { AlertCircle, RefreshCw, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface WizardErrorDisplayProps {
   error: any;
   onRetry: () => void;
-  errorMessage: string;
-  retryLabel: string;
+  errorMessage?: string;
+  retryLabel?: string;
 }
 
 export default function WizardErrorDisplay({
   error,
   onRetry,
-  errorMessage,
-  retryLabel
+  errorMessage = 'حدث خطأ تقني غير متوقع في معالجة البيانات السيادية.',
+  retryLabel = 'إعادة محاولة الاتصال بالنظام المركزي'
 }: WizardErrorDisplayProps) {
   if (!error) return null;
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
       role="alert"
-      className="p-4 rounded-gov bg-status-error/10 border border-status-error/30 dark:bg-status-error/20 mb-6 animate-in zoom-in-95 duration-200"
+      className="p-10 rounded-[3rem] bg-red-500/5 border border-red-500/10 mb-12 font-arabic shadow-2xl shadow-red-500/5 relative overflow-hidden"
+      dir="rtl"
     >
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3 text-status-error">
-          <AlertCircle className="w-5 h-5 flex-shrink-0" />
-          <p className="text-sm font-medium">
-            {errorMessage}
-          </p>
+      {/* Institutional Background Element */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+
+      <div className="flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
+        <div className="flex items-center gap-6">
+          <div className="w-20 h-20 bg-red-500/10 flex items-center justify-center rounded-[1.5rem] shadow-inner">
+             <ShieldAlert className="w-10 h-10 text-red-600" />
+          </div>
+          <div className="space-y-1">
+             <span className="text-[10px] font-black text-red-600/40 uppercase tracking-[0.4em]">تنبيه النظام المركزي</span>
+             <p className="text-xl font-black text-red-900 leading-tight">
+               {errorMessage}
+             </p>
+             <p className="text-xs font-bold text-red-600/60 capitalize">كود الخطأ المرجعي: {error?.code || 'ERR_SOVEREIGN_TIMEOUT'}</p>
+          </div>
         </div>
+
         <Button
           variant="outline"
-          size="sm"
           onClick={(e) => {
             e.preventDefault();
             onRetry();
           }}
-          className="bg-white dark:bg-neutral-800 border-status-error/50 hover:bg-status-error/5 w-full sm:w-auto"
+          className="h-16 px-10 rounded-2xl bg-white border-red-500/20 text-red-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-black transition-all duration-700 w-full md:w-auto shadow-sm group"
         >
-          <RefreshCw className="w-4 h-4 me-2" />
+          <RefreshCw className="w-5 h-5 ml-3 group-hover:rotate-180 transition-transform duration-700" />
           {retryLabel}
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 }

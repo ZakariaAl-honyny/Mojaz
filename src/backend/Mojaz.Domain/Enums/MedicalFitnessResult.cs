@@ -1,6 +1,6 @@
 ﻿namespace Mojaz.Domain.Enums;
 
-public enum MedicalFitnessResult
+public enum MedicalFitnessResult : byte
 {
     Fit,
     Unfit,

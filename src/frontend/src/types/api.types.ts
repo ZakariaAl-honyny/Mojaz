@@ -1,15 +1,72 @@
-export type ApplicationStatus =
-  | "Draft"
-  | "Submitted"
-  | "InReview"
-  | "Paid"
-  | "MedicalDone"
-  | "TheoryDone"
-  | "PracticalDone"
-  | "Approved"
-  | "Issued"
-  | "Rejected"
-  | "Cancelled";
+// ============================================
+ // NUMERIC ENUMS - Matching Backend C# Enums
+ // ============================================
+
+ // AppointmentType enum (backend: AppointmentType)
+ export enum AppointmentType {
+   MedicalExam = 0,
+   TheoryTest = 1,
+   PracticalTest = 2
+ }
+
+ // AppointmentStatus enum (backend: AppointmentStatus)
+ export enum AppointmentStatus {
+   Scheduled = 0,
+   Completed = 1,
+   Cancelled = 2,
+   NoShow = 3
+ }
+
+ // TestResult enum (backend: TestResult)
+ export enum TestResult {
+   Pass = 0,
+   Fail = 1,
+   Absent = 2
+ }
+
+ // LicenseStatus enum (backend: LicenseStatus)
+ export enum LicenseStatus {
+   Draft = 0,
+   Issued = 1,
+   Active = 2,
+   Expired = 3,
+   Cancelled = 4,
+   Suspended = 5
+ }
+
+ // FeeType enum (backend: FeeType)
+ export enum FeeType {
+   ApplicationFee = 0,
+   MedicalExamFee = 1,
+   TheoryTestFee = 2,
+   PracticalTestFee = 3,
+   IssuanceFee = 4,
+   RetakeFee = 5
+ }
+
+ // PaymentStatus enum (backend: PaymentStatus)
+ export enum PaymentStatus {
+   Pending = 0,
+   Completed = 1,
+   Failed = 2,
+   Refunded = 3
+ }
+
+ // ============================================
+ // Type Aliases for backward compatibility
+ // ============================================
+ export type ApplicationStatus =
+   | "Draft"
+   | "Submitted"
+   | "InReview"
+   | "Paid"
+   | "MedicalDone"
+   | "TheoryDone"
+   | "PracticalDone"
+   | "Approved"
+   | "Issued"
+   | "Rejected"
+   | "Cancelled";
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -234,4 +291,88 @@ export interface SystemSettingDto {
   category: string;
   isSecret: boolean;
   updatedAt: string;
+}
+
+// ============================================
+// Enum Conversion Utilities
+// ============================================
+
+/**
+ * Convert AppointmentType number to display string
+ */
+export function getAppointmentTypeName(type: number): string {
+  const names: Record<number, string> = {
+    [AppointmentType.MedicalExam]: 'MedicalExam',
+    [AppointmentType.TheoryTest]: 'TheoryTest',
+    [AppointmentType.PracticalTest]: 'PracticalTest'
+  };
+  return names[type] ?? 'Unknown';
+}
+
+/**
+ * Convert AppointmentStatus number to display string
+ */
+export function getAppointmentStatusName(status: number): string {
+  const names: Record<number, string> = {
+    [AppointmentStatus.Scheduled]: 'Scheduled',
+    [AppointmentStatus.Completed]: 'Completed',
+    [AppointmentStatus.Cancelled]: 'Cancelled',
+    [AppointmentStatus.NoShow]: 'NoShow'
+  };
+  return names[status] ?? 'Unknown';
+}
+
+/**
+ * Convert TestResult number to display string
+ */
+export function getTestResultName(result: number): string {
+  const names: Record<number, string> = {
+    [TestResult.Pass]: 'Pass',
+    [TestResult.Fail]: 'Fail',
+    [TestResult.Absent]: 'Absent'
+  };
+  return names[result] ?? 'Unknown';
+}
+
+/**
+ * Convert LicenseStatus number to display string
+ */
+export function getLicenseStatusName(status: number): string {
+  const names: Record<number, string> = {
+    [LicenseStatus.Draft]: 'Draft',
+    [LicenseStatus.Issued]: 'Issued',
+    [LicenseStatus.Active]: 'Active',
+    [LicenseStatus.Expired]: 'Expired',
+    [LicenseStatus.Cancelled]: 'Cancelled',
+    [LicenseStatus.Suspended]: 'Suspended'
+  };
+  return names[status] ?? 'Unknown';
+}
+
+/**
+ * Convert FeeType number to display string
+ */
+export function getFeeTypeName(feeType: number): string {
+  const names: Record<number, string> = {
+    [FeeType.ApplicationFee]: 'ApplicationFee',
+    [FeeType.MedicalExamFee]: 'MedicalExamFee',
+    [FeeType.TheoryTestFee]: 'TheoryTestFee',
+    [FeeType.PracticalTestFee]: 'PracticalTestFee',
+    [FeeType.IssuanceFee]: 'IssuanceFee',
+    [FeeType.RetakeFee]: 'RetakeFee'
+  };
+  return names[feeType] ?? 'Unknown';
+}
+
+/**
+ * Convert PaymentStatus number to display string
+ */
+export function getPaymentStatusName(status: number): string {
+  const names: Record<number, string> = {
+    [PaymentStatus.Pending]: 'Pending',
+    [PaymentStatus.Completed]: 'Completed',
+    [PaymentStatus.Failed]: 'Failed',
+    [PaymentStatus.Refunded]: 'Refunded'
+  };
+  return names[status] ?? 'Unknown';
 }

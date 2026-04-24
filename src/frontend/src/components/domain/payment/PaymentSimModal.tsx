@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/static-translations";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,7 @@ import { toast } from "react-hot-toast";
 interface PaymentSimModalProps {
   isOpen: boolean;
   onClose: (success: boolean) => void;
-  applicationId: string;
+  applicationNumber: string;
   feeType: number;
   licenseCategoryId?: string;
   amount: number;
@@ -28,7 +28,7 @@ interface PaymentSimModalProps {
 export function PaymentSimModal({
   isOpen,
   onClose,
-  applicationId,
+  applicationNumber,
   feeType,
   licenseCategoryId,
   amount,
@@ -51,7 +51,7 @@ export function PaymentSimModal({
       setStep("processing");
 
       // 1. Initiate basic payment on backend
-      const initiateRes = await paymentService.initiatePayment(applicationId, {
+      const initiateRes = await paymentService.initiatePayment(applicationNumber, {
         feeType,
         licenseCategoryId,
       });

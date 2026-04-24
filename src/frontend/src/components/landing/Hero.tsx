@@ -1,125 +1,118 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useTranslations } from 'next-intl';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Button } from '../ui/button';
-import { ChevronRight, ArrowLeft } from 'lucide-react';
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, FileText, Search, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { motion } from "framer-motion";
+
+const trustBadges = [
+  "معتمد رسمياً من الإدارة العامة للمرور",
+  "تشفير TLS 1.3 الحكومي",
+  "خدمة على مدار الساعة",
+];
 
 export default function Hero() {
-  const t = useTranslations('landing.hero');
-
   return (
-    <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden bg-neutral-950">
-      {/* Background with Parallax Effect */}
-      <motion.div 
-        initial={{ scale: 1.1, opacity: 0 }}
-        animate={{ scale: 1, opacity: 0.4 }}
-        transition={{ duration: 1.5, ease: 'easeOut' }}
-        className="absolute inset-0 z-0"
-      >
-        <Image
-          src="/images/hero-bg.png"
-          alt="Government Hero Background"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-neutral-950/80 via-neutral-950/40 to-neutral-950" />
-      </motion.div>
+    <section
+      className="relative overflow-hidden font-arabic border-b border-white/5"
+      dir="rtl"
+      style={{ background: "linear-gradient(135deg, #0f1e4a 0%, #1a3a8f 55%, #1e4db7 100%)" }}
+    >
+      {/* Grid texture */}
+      <div
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }}
+      />
 
-      <div className="container relative z-10 mx-auto px-6 h-full">
-        <div className="max-w-4xl space-y-8">
-          {/* Badge */}
+      <div className="container mx-auto px-6 md:px-12 py-16 md:py-24 lg:py-32 relative z-10">
+        <div className="max-w-4xl mx-auto md:mx-0">
+          {/* Official badge */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 backdrop-blur-md"
+            className="inline-flex items-center gap-2.5 mb-8 md:mb-10 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md"
           >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
-            </span>
-            <span className="text-xs font-semibold uppercase tracking-wider text-primary-400">
-              {t('badge')}
+            <ShieldCheck className="w-3.5 h-3.5 text-[#D4A017] shrink-0" />
+            <span className="text-white/70 text-[10px] md:text-xs font-bold tracking-wider uppercase">
+              وزارة الداخلية · الإدارة العامة للمرور
             </span>
           </motion.div>
 
-          {/* Title */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-5xl md:text-7xl font-bold text-white leading-[1.1] tracking-tight"
-          >
-            {t('title')}
-          </motion.h1>
+          <div className="space-y-6 md:space-y-8">
+            {/* Main headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.1]"
+            >
+              منصة{" "}
+              <span className="text-[#D4A017] inline-block">مُجاز</span>
+              <br />
+              <span className="text-white/60 font-black text-2xl md:text-4xl lg:text-5xl">
+                بوابة رخص القيادة الإلكترونية
+              </span>
+            </motion.h1>
 
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="text-lg md:text-xl text-neutral-400 max-w-2xl leading-relaxed"
-          >
-            {t('subtitle')}
-          </motion.p>
+            {/* Subtext */}
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-base md:text-lg text-blue-100/60 font-semibold max-w-xl leading-relaxed"
+            >
+              النظام الرسمي الموحد لإصدار وتجديد رخص القيادة. أنجز معاملتك إلكترونياً بأمان تام وسرعة سيادية.
+            </motion.p>
 
-          {/* Actions */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="flex flex-wrap items-center gap-4"
-          >
-            <Link href="/register">
-              <Button size="lg" className="h-14 px-8 bg-primary-600 hover:bg-primary-700 text-white rounded-full text-lg font-semibold group transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(0,108,53,0.3)]">
-                {t('cta')}
-                <ChevronRight className="ms-2 w-5 h-5 group-hover:translate-x-1 group-rtl:rotate-180 transition-transform" />
-              </Button>
-            </Link>
-            
-            <Link href="/about">
-              <Button size="lg" variant="outline" className="h-14 px-8 border-white/10 hover:bg-white/5 text-white rounded-full text-lg font-medium backdrop-blur-sm transition-all duration-300">
-                {t('howItWorks')}
-              </Button>
-            </Link>
-          </motion.div>
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="flex flex-col sm:flex-row items-center sm:items-start gap-4 pt-2"
+            >
+              <Link href="/register" className="w-full sm:w-auto">
+                <Button
+                  className="w-full sm:w-auto h-12 md:h-14 px-8 bg-[#D4A017] hover:bg-[#b88a12] text-white rounded-xl text-base font-black shadow-lg shadow-[#D4A017]/20 transition-all gap-3 group"
+                >
+                  <FileText className="h-5 w-5" />
+                  ابدأ تقديم الطلب
+                  <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+                </Button>
+              </Link>
+              <Link href="/login" className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  className="w-full sm:w-auto h-12 md:h-14 px-8 bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20 rounded-xl text-base font-black transition-all gap-3 backdrop-blur-sm shadow-inner"
+                >
+                  <Search className="h-5 w-5" />
+                  متابعة طلب موجود
+                </Button>
+              </Link>
+            </motion.div>
 
-          {/* Stats Bar (Subtle) */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.2 }}
-            className="pt-12 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/5"
-          >
-            {[
-              { label: 'Active Users', value: '2.4M+' },
-              { label: 'Issued Licenses', value: '1.8M+' },
-              { label: 'Processing Speed', value: '99.9%' },
-              { label: 'Daily Service', value: '24/7' }
-            ].map((stat, i) => (
-              <div key={i} className="space-y-1">
-                <div className="text-xl font-bold text-white">{stat.value}</div>
-                <div className="text-xs text-neutral-500 uppercase tracking-widest">{stat.label}</div>
-              </div>
-            ))}
-          </motion.div>
+            {/* Trust indicators */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="flex flex-wrap items-center justify-center md:justify-start gap-x-6 gap-y-3 pt-6 md:pt-8"
+            >
+              {trustBadges.map((badge, i) => (
+                <div key={i} className="flex items-center gap-2 text-white/40 text-[10px] md:text-xs font-bold uppercase tracking-wider">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500/60 shrink-0" />
+                  {badge}
+                </div>
+              ))}
+            </motion.div>
+          </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1.5 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
-      >
-        <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-semibold">Scroll</span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-primary-500 to-transparent" />
-      </motion.div>
+      {/* Subtle Bottom Wave Accent */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#D4A017]/30 to-transparent" />
     </section>
   );
 }

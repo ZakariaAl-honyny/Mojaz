@@ -1,6 +1,6 @@
 namespace Mojaz.Domain.Enums;
 
-public enum ApplicationStatus
+public enum ApplicationStatus : byte
 {
     Draft,
     Submitted,

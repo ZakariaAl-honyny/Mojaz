@@ -1,64 +1,79 @@
 'use client';
 
 import React, { memo } from 'react';
-import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/ui/badge';
-import { ApplicationStatus } from '@/types/application.types';
+import { ApplicationStatus } from '@/lib/enums';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { ApplicationStatusLabels } from '@/lib/enumMappers';
 
 interface StatusBadgeProps {
-  status: ApplicationStatus;
+  status: ApplicationStatus | number;
   className?: string;
 }
 
-const statusConfig: Record<string, { variant: "success" | "warning" | "destructive" | "info" | "secondary" | "default"; glowColor: string }> = {
-  [ApplicationStatus.Draft]: { variant: "secondary", glowColor: "rgba(156, 163, 175, 0.2)" },
-  [ApplicationStatus.Submitted]: { variant: "info", glowColor: "rgba(59, 130, 246, 0.2)" },
-  [ApplicationStatus.Documents]: { variant: "warning", glowColor: "rgba(245, 158, 11, 0.2)" },
-  [ApplicationStatus.InReview]: { variant: "info", glowColor: "rgba(59, 130, 246, 0.2)" },
-  [ApplicationStatus.Medical]: { variant: "info", glowColor: "rgba(59, 130, 246, 0.2)" },
-  [ApplicationStatus.Training]: { variant: "info", glowColor: "rgba(59, 130, 246, 0.2)" },
-  [ApplicationStatus.Theory]: { variant: "info", glowColor: "rgba(59, 130, 246, 0.2)" },
-  [ApplicationStatus.Practical]: { variant: "info", glowColor: "rgba(59, 130, 246, 0.2)" },
-  [ApplicationStatus.Approved]: { variant: "success", glowColor: "rgba(16, 185, 129, 0.2)" },
-  [ApplicationStatus.Payment]: { variant: "warning", glowColor: "rgba(245, 158, 11, 0.2)" },
-  [ApplicationStatus.Issued]: { variant: "success", glowColor: "rgba(16, 185, 129, 0.3)" },
-  [ApplicationStatus.Active]: { variant: "success", glowColor: "rgba(16, 185, 129, 0.2)" },
-  [ApplicationStatus.Rejected]: { variant: "destructive", glowColor: "rgba(239, 68, 68, 0.2)" },
-  [ApplicationStatus.Cancelled]: { variant: "secondary", glowColor: "rgba(156, 163, 175, 0.2)" },
-  [ApplicationStatus.Expired]: { variant: "destructive", glowColor: "rgba(239, 68, 68, 0.2)" },
-  [ApplicationStatus.Paid]: { variant: "success", glowColor: "rgba(16, 185, 129, 0.2)" },
-  [ApplicationStatus.MedicalDone]: { variant: "success", glowColor: "rgba(16, 185, 129, 0.2)" },
-  [ApplicationStatus.TheoryDone]: { variant: "success", glowColor: "rgba(16, 185, 129, 0.2)" },
-  [ApplicationStatus.PracticalDone]: { variant: "success", glowColor: "rgba(16, 185, 129, 0.2)" },
+const getStatusDotColor = (status: ApplicationStatus | number): string => {
+  const configMap: Record<number, string> = {
+    [ApplicationStatus.Draft]: "bg-neutral-400",
+    [ApplicationStatus.Submitted]: "bg-[#1a3a8f]",
+    [ApplicationStatus.DocumentReview]: "bg-purple-500",
+    [ApplicationStatus.InReview]: "bg-blue-500",
+    [ApplicationStatus.MedicalExam]: "bg-teal-500",
+    [ApplicationStatus.Training]: "bg-orange-500",
+    [ApplicationStatus.TheoryTest]: "bg-sky-500",
+    [ApplicationStatus.PracticalTest]: "bg-indigo-500",
+    [ApplicationStatus.Approved]: "bg-emerald-600",
+    [ApplicationStatus.Payment]: "bg-yellow-500",
+    [ApplicationStatus.Issued]: "bg-emerald-600",
+    [ApplicationStatus.Active]: "bg-emerald-500",
+    [ApplicationStatus.Rejected]: "bg-red-600",
+    [ApplicationStatus.Cancelled]: "bg-neutral-300",
+    [ApplicationStatus.Expired]: "bg-red-800",
+  };
+  return configMap[status] || "bg-neutral-300";
+};
+
+const getStatusVariant = (status: ApplicationStatus | number): string => {
+  const variants: Record<number, string> = {
+    [ApplicationStatus.Draft]: "outline",
+    [ApplicationStatus.Submitted]: "primary",
+    [ApplicationStatus.DocumentReview]: "secondary",
+    [ApplicationStatus.InReview]: "info",
+    [ApplicationStatus.MedicalExam]: "info",
+    [ApplicationStatus.Training]: "warning",
+    [ApplicationStatus.TheoryTest]: "info",
+    [ApplicationStatus.PracticalTest]: "info",
+    [ApplicationStatus.Approved]: "success",
+    [ApplicationStatus.Payment]: "warning",
+    [ApplicationStatus.Issued]: "success",
+    [ApplicationStatus.Active]: "success",
+    [ApplicationStatus.Rejected]: "destructive",
+    [ApplicationStatus.Cancelled]: "outline",
+    [ApplicationStatus.Expired]: "destructive",
+  };
+  return variants[status] || "outline";
 };
 
 export const StatusBadge = memo(({ status, className }: StatusBadgeProps) => {
-  const t = useTranslations('status');
-  const config = statusConfig[status] || { variant: "default", glowColor: "transparent" };
+  const statusNumber = typeof status === 'number' ? status : status;
+  const label = (ApplicationStatusLabels as Record<number, string>)[statusNumber] || String(statusNumber);
+  const dotColor = getStatusDotColor(statusNumber);
+  const variant = getStatusVariant(statusNumber) as any;
 
   return (
     <motion.div
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className="inline-block"
+      whileHover={{ y: -1 }}
+      className="inline-block font-arabic"
     >
       <Badge 
-        variant={config.variant}
+        variant={variant}
         className={cn(
-          "px-3 py-1 rounded-full border-none font-bold text-[10px] uppercase tracking-widest backdrop-blur-md shadow-sm",
-          "bg-white/10 dark:bg-black/10 transition-all duration-300",
+          "px-3 py-1.5 rounded-full font-black text-[9px] uppercase tracking-widest flex items-center gap-2 border shadow-none",
           className
         )}
-        style={{ 
-          boxShadow: `0 0 15px ${config.glowColor}, inset 0 0 1px 1px rgba(255,255,255,0.1)`,
-          border: '1px solid rgba(255,255,255,0.05)'
-        }}
       >
-        <span className="relative z-10">
-          {t(status)}
-        </span>
+        <div className={cn("w-1.5 h-1.5 rounded-full shrink-0", dotColor)} />
+        <span>{label}</span>
       </Badge>
     </motion.div>
   );

@@ -12,5 +12,6 @@ namespace Mojaz.Application.Interfaces
         Task<ApiResponse<TrainingRecordDto>> ApproveExemptionAsync(Guid id, ExemptionActionRequest request);
         Task<ApiResponse<TrainingRecordDto>> RejectExemptionAsync(Guid id, ExemptionActionRequest request);
         Task<ApiResponse<bool>> IsTrainingCompleteAsync(Guid applicationId);
+        Task<ApiResponse<List<TrainingRecordDto>>> GetPendingExemptionsAsync();
     }
 }

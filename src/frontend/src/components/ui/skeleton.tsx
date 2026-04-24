@@ -1,13 +1,13 @@
-// Skeleton component for loading states
+import { cn } from '@/lib/utils'
 
-import { cn } from "@/lib/utils";
-
-interface SkeletonProps {
-  className?: string;
-}
-
-export function Skeleton({ className }: SkeletonProps) {
+function Skeleton({ className, ...props }: React.ComponentProps<'div'>) {
   return (
-    <div className={cn("animate-pulse bg-neutral-200 dark:bg-neutral-700 rounded", className)} />
-  );
+    <div
+      data-slot="skeleton"
+      className={cn('bg-accent animate-pulse rounded-md', className)}
+      {...props}
+    />
+  )
 }
+
+export { Skeleton }

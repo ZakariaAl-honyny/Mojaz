@@ -74,7 +74,7 @@ public class AppointmentBookingValidator
         var existingAppointment = await _appointmentRepository.GetByApplicationIdAsync(request.ApplicationId, request.Type, ct);
         if (existingAppointment != null)
         {
-            if (existingAppointment.Status == "Scheduled")
+            if (existingAppointment.Status == AppointmentStatus.Scheduled)
             {
                 result.IsValid = false;
                 result.Errors.Add($"An active {request.Type} appointment already exists. Please reschedule or cancel it first.");
@@ -224,7 +224,7 @@ public class AppointmentBookingValidator
         }
 
         // Check appointment is not already cancelled or completed
-        if (appointment.Status == "Cancelled" || appointment.Status == "Completed")
+        if (appointment.Status == AppointmentStatus.Cancelled || appointment.Status == AppointmentStatus.Completed)
         {
             result.IsValid = false;
             result.Errors.Add("Cannot reschedule a cancelled or completed appointment");

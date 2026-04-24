@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { WizardProgressBar } from '@/components/domain/application/wizard/WizardProgressBar';
-import { NextIntlClientProvider } from 'next-intl';
+import { NextIntlClientProvider } from '@/lib/static-translations';
 import { useApplicationWizard } from '@/hooks/useApplicationWizard';
 
 // Mock the wizard hook

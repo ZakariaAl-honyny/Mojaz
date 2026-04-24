@@ -12,6 +12,7 @@ public interface IAppointmentRepository : IRepository<Appointment>
     Task<Appointment?> GetByIdWithApplicationAsync(Guid id, CancellationToken ct = default);
     Task<Appointment?> GetByApplicationIdAsync(Guid applicationId, AppointmentType type, CancellationToken ct = default);
     Task<IReadOnlyList<Appointment>> GetByApplicationIdAsync(Guid applicationId, CancellationToken ct = default);
+    Task<IReadOnlyList<Appointment>> GetByApplicationIdsAsync(List<Guid> applicationIds, CancellationToken ct = default);
     Task<IReadOnlyList<Appointment>> GetByBranchAndDateAsync(Guid branchId, DateOnly date, CancellationToken ct = default);
     Task<IReadOnlyList<Appointment>> GetByBranchAndDateRangeAsync(Guid branchId, DateOnly startDate, DateOnly endDate, CancellationToken ct = default);
     Task<int> GetBookedSlotCountAsync(Guid branchId, DateOnly date, string timeSlot, CancellationToken ct = default);

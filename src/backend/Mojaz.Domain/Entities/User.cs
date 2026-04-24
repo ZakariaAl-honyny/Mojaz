@@ -13,15 +13,17 @@ public class User : SoftDeletableEntity
     public string PhoneNumber { get; set; } = string.Empty;
     public string PasswordHash { get; set; } = string.Empty;
     public UserRole Role { get; set; }
+    public AppRole? AppRole { get; set; }
     public DateTime? DateOfBirth { get; set; }
-    public string? Gender { get; set; }
+    public GenderEnum? Gender { get; set; }
     public string? Nationality { get; set; }
-    public string? BloodType { get; set; }
+    public BloodTypeEnum? BloodType { get; set; }
     public string? Address { get; set; }
     public string? City { get; set; }
     public string? Region { get; set; }
-    public string? ApplicantType { get; set; }
+    public ApplicantType? ApplicantType { get; set; }
     public string PreferredLanguage { get; set; } = "ar";
+    public string? AppointmentPreference { get; set; }
     public string? NotificationPreferences { get; set; }
     public RegistrationMethod RegistrationMethod { get; set; }
     public bool IsEmailVerified { get; set; }
@@ -30,6 +32,11 @@ public class User : SoftDeletableEntity
     public DateTime? PhoneVerifiedAt { get; set; }
     public bool IsActive { get; set; } = true;
     public bool IsLocked { get; set; }
+    public bool RequiresPasswordReset { get; set; }
+    public bool EnableEmail { get; set; } = true;
+    public bool EnableSms { get; set; } = true;
+    public bool EnablePush { get; set; } = true;
+    public bool IsSecurityBlocked { get; set; }
     public int FailedLoginAttempts { get; set; }
     public DateTime? LockoutEnd { get; set; }
     public DateTime? LastLoginAt { get; set; }

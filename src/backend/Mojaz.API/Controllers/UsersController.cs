@@ -3,11 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Mojaz.Application.DTOs.User;
 using Mojaz.Application.Services;
+using Mojaz.Domain.Enums;
 using Mojaz.Shared.Constants;
 using Mojaz.Shared;
+using System;
+using System.Threading.Tasks;
 
 namespace Mojaz.API.Controllers;
 
+/// <summary>
+/// Manage users in the Mojaz platform.
+/// </summary>
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces("application/json")]
@@ -23,97 +29,89 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    /// Create a new user (employee)
+    /// List all users (paginated).
+    /// </summary>
+    [HttpGet]
+    [ProducesResponseType(typeof(ApiResponse<PagedResult<UserDto>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetListAsync(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        [FromQuery] string? search = null,
+        [FromQuery] AppRole? role = null)
+    {
+        var result = await _userService.GetUsersAsync(page, pageSize, search, role);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Get a user by ID.
+    /// </summary>
+    [HttpGet("{userId:guid}")]
+    [ProducesResponseType(typeof(ApiResponse<UserDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetByIdAsync(Guid userId)
+    {
+        var result = await _userService.GetUserByIdAsync(userId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Create a new user (admin only).
     /// </summary>
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse<CreateUserResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateAsync([FromBody] CreateUserRequest request)
     {
-        var result = await _userService.CreateUserAsync(request);
-        return StatusCode(StatusCodes.Status201Created, new ApiResponse<CreateUserResponse>
+        try
         {
-            Success = true,
-            Message = "User created successfully",
-            Data = result,
-            StatusCode = StatusCodes.Status201Created
-        });
-    }
-
-    /// <summary>
-    /// Get all users
-    /// </summary>
-    [HttpGet]
-    [ProducesResponseType(typeof(ApiResponse<IEnumerable<UserDto>>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllAsync()
-    {
-        var users = await _userService.GetAllUsersAsync();
-        return Ok(new ApiResponse<IEnumerable<UserDto>>
-        {
-            Success = true,
-            Data = users,
-            StatusCode = StatusCodes.Status200OK
-        });
-    }
-
-    /// <summary>
-    /// Get user by ID
-    /// </summary>
-    [HttpGet("{userId}")]
-    [ProducesResponseType(typeof(ApiResponse<UserDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetByIdAsync(Guid userId)
-    {
-        var user = await _userService.GetUserByIdAsync(userId);
-        if (user == null)
-        {
-            return NotFound(new ApiResponse<object>
-            {
-                Success = false,
-                Message = "User not found",
-                StatusCode = StatusCodes.Status404NotFound
-            });
+            var result = await _userService.CreateUserAsync(request);
+            return StatusCode(StatusCodes.Status201Created, ApiResponse<CreateUserResponse>.Created(result, "تم إنشاء المستخدم بنجاح"));
         }
-
-        return Ok(new ApiResponse<UserDto>
+        catch (InvalidOperationException ex)
         {
-            Success = true,
-            Data = user,
-            StatusCode = StatusCodes.Status200OK
-        });
+            return BadRequest(ApiResponse<object>.Fail(400, ex.Message));
+        }
     }
 
     /// <summary>
-    /// Update user status (activate/deactivate)
+    /// Activate or deactivate a user.
     /// </summary>
-    [HttpPatch("{userId}/status")]
-    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+    [HttpPatch("{userId:guid}/status")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateStatusAsync(Guid userId, [FromBody] UpdateUserStatusRequest request)
     {
-        await _userService.UpdateUserStatusAsync(userId, request.IsActive);
-        return Ok(new ApiResponse<object>
+        try
         {
-            Success = true,
-            Message = "User status updated",
-            StatusCode = StatusCodes.Status200OK
-        });
+            await _userService.UpdateUserStatusAsync(userId, request.IsActive);
+            return Ok(ApiResponse<bool>.Ok(true, request.IsActive ? "تم تفعيل المستخدم بنجاح" : "تم إلغاء تفعيل المستخدم بنجاح"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ApiResponse<object>.NotFound(ex.Message));
+        }
     }
 
     /// <summary>
-    /// Update user role
+    /// Update user role.
     /// </summary>
-    [HttpPatch("{userId}/role")]
-    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+    [HttpPatch("{userId:guid}/role")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateRoleAsync(Guid userId, [FromBody] UpdateUserRoleRequest request)
     {
-        await _userService.UpdateUserRoleAsync(userId, request.AppRole);
-        return Ok(new ApiResponse<object>
+        try
         {
-            Success = true,
-            Message = "User role updated",
-            StatusCode = StatusCodes.Status200OK
-        });
+            await _userService.UpdateUserRoleAsync(userId, request.AppRole);
+            return Ok(ApiResponse<bool>.Ok(true, "تم تحديث دور المستخدم بنجاح"));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ApiResponse<object>.NotFound(ex.Message));
+        }
     }
 }

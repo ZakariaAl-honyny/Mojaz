@@ -1,8 +1,8 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { FeeType, PaymentStatus } from '@/types/payment.types';
+import { Check, Clock, AlertCircle, Receipt } from 'lucide-react';
 
 interface FeeItem {
   type: FeeType;
@@ -19,103 +19,94 @@ interface FeeBreakdownProps {
   className?: string;
 }
 
-const feeTypeKeys: Record<FeeType, string> = {
-  ApplicationFee: 'applicationFee',
-  MedicalFee: 'medicalFee',
-  TheoryFee: 'theoryFee',
-  PracticalFee: 'practicalFee',
-  IssuanceFee: 'issuanceFee',
-  RetakeFee: 'retakeFee',
+const feeTypeLabelsAr: Record<FeeType, string> = {
+  ApplicationFee: 'رسوم تقديم الطلب',
+  MedicalFee: 'رسوم الفحص الطبي',
+  TheoryFee: 'رسوم الاختبار النظري',
+  PracticalFee: 'رسوم الاختبار العملي',
+  IssuanceFee: 'رسوم إصدار الرخصة',
+  RetakeFee: 'رسوم إعادة الاختبار',
 };
 
 export function FeeBreakdown({ fees, total, paid, pending, className }: FeeBreakdownProps) {
-  const t = useTranslations('payment');
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('ar-YE', {
+      style: 'currency',
+      currency: 'YER',
+      minimumFractionDigits: 0,
+    }).format(amount);
+  };
 
   return (
-    <div className={cn('space-y-4', className)}>
+    <div className={cn('space-y-8 font-arabic', className)} dir="rtl">
+      {/* Header */}
+      <div className="flex items-center gap-4 mb-6">
+         <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-[#1a3a8f]">
+            <Receipt className="w-6 h-6" />
+         </div>
+         <div>
+            <h3 className="text-xl font-black text-neutral-900">تفاصيل الرسوم</h3>
+            <p className="text-xs font-bold text-neutral-400 mt-0.5">تفصيل كامل للمستحقات المالية والمدفوعات</p>
+         </div>
+      </div>
+
       {/* Fee Items */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {fees.map((fee) => (
           <div
             key={fee.type}
             className={cn(
-              'flex items-center justify-between py-3 border-b border-neutral-100 last:border-0',
-              fee.isPaid && 'opacity-60'
+              'flex items-center justify-between p-5 rounded-[1.5rem] transition-all duration-300 border border-transparent',
+              fee.isPaid 
+                ? 'bg-emerald-50/30' 
+                : 'bg-neutral-50 hover:bg-white hover:shadow-xl hover:shadow-blue-900/5 hover:border-blue-100'
             )}
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-5">
               {/* Status Icon */}
               <div
                 className={cn(
-                  'w-8 h-8 rounded-full flex items-center justify-center',
+                  'w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-500',
                   fee.isPaid
-                    ? 'bg-green-100 dark:bg-green-900/30'
-                    : 'bg-neutral-100 dark:bg-neutral-800'
+                    ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
+                    : 'bg-white text-neutral-300 shadow-sm'
                 )}
               >
                 {fee.isPaid ? (
-                  <svg
-                    className="w-4 h-4 text-green-600 dark:text-green-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+                  <Check className="w-5 h-5 stroke-[4px]" />
                 ) : (
-                  <svg
-                    className="w-4 h-4 text-neutral-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+                  <Clock className="w-5 h-5" />
                 )}
               </div>
 
               {/* Fee Type Label */}
               <div>
-                <p className="font-medium text-neutral-900 dark:text-neutral-100">
-                  {t(`fees.${feeTypeKeys[fee.type]}`)}
+                <p className={cn(
+                  "text-base font-black tracking-tight",
+                  fee.isPaid ? "text-emerald-700" : "text-neutral-900"
+                )}>
+                  {feeTypeLabelsAr[fee.type]}
                 </p>
                 {fee.status === 'Overdue' && (
-                  <p className="text-xs text-red-500 mt-0.5">
-                    {t('fees.overdue')}
+                  <p className="flex items-center gap-1 text-[10px] font-black text-red-500 mt-1 uppercase tracking-widest">
+                    <AlertCircle className="w-3 h-3" />
+                    تجاوز تاريخ الاستحقاق
                   </p>
                 )}
               </div>
             </div>
 
             {/* Amount */}
-            <div className="text-end">
-              <p
-                className={cn(
-                  'font-semibold',
-                  fee.isPaid
-                    ? 'text-green-600 dark:text-green-400'
-                    : 'text-neutral-900 dark:text-neutral-100'
-                )}
-              >
-                {fee.amount.toLocaleString('en-SA', {
-                  style: 'currency',
-                  currency: 'SAR',
-                  minimumFractionDigits: 0,
-                })}
+            <div className="text-left font-arabic">
+              <p className={cn(
+                'text-lg font-black',
+                fee.isPaid ? 'text-emerald-600' : 'text-[#1a3a8f]'
+              )}>
+                {formatCurrency(fee.amount)}
               </p>
               {fee.isPaid && (
-                <p className="text-xs text-green-600 dark:text-green-400">
-                  {t('fees.paid')}
+                <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mt-1">
+                  تم السداد
                 </p>
               )}
             </div>
@@ -123,42 +114,28 @@ export function FeeBreakdown({ fees, total, paid, pending, className }: FeeBreak
         ))}
       </div>
 
-      {/* Summary */}
-      <div className="pt-4 border-t-2 border-neutral-200 dark:border-neutral-700">
-        <div className="flex items-center justify-between py-2">
-          <span className="text-neutral-600 dark:text-neutral-400">
-            {t('fees.paid')}
-          </span>
-          <span className="font-semibold text-green-600 dark:text-green-400">
-            {paid.toLocaleString('en-SA', {
-              style: 'currency',
-              currency: 'SAR',
-              minimumFractionDigits: 0,
-            })}
+      {/* Summary Section */}
+      <div className="p-8 rounded-[2.5rem] bg-white border border-blue-50/50 shadow-2xl shadow-blue-900/5 space-y-4">
+        <div className="flex items-center justify-between pb-4 border-b border-dashed border-neutral-100">
+          <span className="text-sm font-bold text-neutral-400">الإجمالي المدفوع</span>
+          <span className="text-lg font-black text-emerald-600">
+            {formatCurrency(paid)}
           </span>
         </div>
-        <div className="flex items-center justify-between py-2">
-          <span className="text-neutral-600 dark:text-neutral-400">
-            {t('fees.pending')}
-          </span>
-          <span className="font-semibold text-neutral-900 dark:text-neutral-100">
-            {pending.toLocaleString('en-SA', {
-              style: 'currency',
-              currency: 'SAR',
-              minimumFractionDigits: 0,
-            })}
+        
+        <div className="flex items-center justify-between pb-4 border-b border-dashed border-neutral-100">
+          <span className="text-sm font-bold text-neutral-400">المستحقات المعلقة</span>
+          <span className="text-lg font-black text-amber-600">
+            {formatCurrency(pending)}
           </span>
         </div>
-        <div className="flex items-center justify-between py-3 mt-2 bg-neutral-50 dark:bg-neutral-800/50 rounded-lg px-4">
-          <span className="font-semibold text-neutral-900 dark:text-neutral-100">
-            {t('fees.total')}
-          </span>
-          <span className="text-xl font-bold text-primary-600 dark:text-primary-400">
-            {total.toLocaleString('en-SA', {
-              style: 'currency',
-              currency: 'SAR',
-              minimumFractionDigits: 0,
-            })}
+
+        <div className="flex items-center justify-between pt-4 mt-4 bg-blue-50/50 rounded-2xl px-6 py-5">
+          <div>
+             <span className="text-sm font-black text-[#1a3a8f] uppercase tracking-widest">المبلغ الإجمالي</span>
+          </div>
+          <span className="text-3xl font-black text-[#1a3a8f]">
+            {formatCurrency(total)}
           </span>
         </div>
       </div>

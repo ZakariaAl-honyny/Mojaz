@@ -2,9 +2,8 @@
 
 import React, { memo } from 'react';
 import dynamic from 'next/dynamic';
-import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
-import { TrendingUp, Users, AlertTriangle, CheckCircle2, Award, Zap } from 'lucide-react';
+import { TrendingUp, Users, AlertTriangle, CheckCircle2, Award, Zap, Activity, ShieldCheck } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ManagerKpiDto } from '@/types/application.types';
 import { cn } from '@/lib/utils';
@@ -31,39 +30,33 @@ interface ManagerDashboardProps {
   data: ManagerKpiDto;
 }
 
-const KpiCard = memo(({ title, value, subtext, icon: Icon, colorClass, delay = 0, premium = false }: any) => (
+const KpiCard = memo(({ title, value, subtext, icon: Icon, color, delay = 0, premium = false }: any) => (
   <motion.div
-    initial={{ opacity: 0, y: 30 }}
+    initial={{ opacity: 0, y: 16 }}
     animate={{ opacity: 1, y: 0 }}
-    transition={{ delay, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+    transition={{ delay, duration: 0.4 }}
   >
     <Card className={cn(
-      "border-none shadow-2xl bg-white/60 backdrop-blur-2xl overflow-hidden relative group transition-all duration-500 hover:shadow-primary-900/10 hover:-translate-y-1 rounded-[32px]",
-      premium && "ring-1 ring-secondary-500/20"
+      "border border-neutral-200 shadow-sm bg-white overflow-hidden relative group transition-all duration-300 hover:shadow-md hover:border-primary-500/20 rounded-2xl",
+      premium && "border-amber-200/50"
     )}>
-      <div className={cn(
-        "absolute -right-8 -top-8 w-32 h-32 blur-[60px] opacity-10 rounded-full",
-        colorClass
-      )} />
-      
-      <CardContent className="p-8">
-        <div className="flex justify-between items-start relative z-10">
-          <div className={cn(
-            "p-5 rounded-3xl transition-transform duration-500 group-hover:scale-110",
-            colorClass,
-            premium ? "shadow-[0_10px_30px_rgba(212,160,23,0.3)]" : "shadow-lg"
-          )}>
-            <Icon className="w-8 h-8 text-white" />
-          </div>
-          <div className="text-end">
-            <p className="text-[10px] font-black text-neutral-400 uppercase tracking-[0.25em] mb-3">{title}</p>
-            <h3 className="text-4xl font-black text-neutral-900 tracking-tighter mb-2">{value}</h3>
+      <CardContent className="p-5 md:p-6 lg:p-7">
+        <div className="flex justify-between items-start relative z-10 gap-3 md:gap-4">
+          <div className="space-y-1">
+            <p className="text-[10px] font-black text-neutral-400 uppercase tracking-widest leading-none mb-1.5 md:mb-2">{title}</p>
+            <h3 className="text-2xl md:text-3xl font-black text-neutral-900 tracking-tight mb-1.5 md:mb-2">{value}</h3>
             {subtext && (
-              <div className="flex items-center justify-end gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <p className="text-[11px] text-emerald-600 font-bold tracking-tight">{subtext}</p>
+              <div className="flex items-center gap-1.5 opacity-60">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <p className="text-[10px] text-emerald-700 font-bold tracking-tight uppercase leading-none">{subtext}</p>
               </div>
             )}
+          </div>
+          <div 
+            className="w-12 h-12 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm"
+            style={{ backgroundColor: `${color}10`, color: color }}
+          >
+            <Icon className="w-6 h-6" />
           </div>
         </div>
       </CardContent>
@@ -74,120 +67,131 @@ const KpiCard = memo(({ title, value, subtext, icon: Icon, colorClass, delay = 0
 KpiCard.displayName = 'KpiCard';
 
 export const ManagerDashboard = ({ data }: ManagerDashboardProps) => {
-  const t = useTranslations('dashboard.manager');
-
   return (
-    <div className="max-w-7xl mx-auto space-y-12">
+    <div className="max-w-5xl mx-auto space-y-8 md:space-y-10 font-arabic" dir="rtl">
       {/* Executive Header */}
-      <header className="px-4">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-0 md:px-4">
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-6"
+           initial={{ opacity: 0, x: 20 }}
+           animate={{ opacity: 1, x: 0 }}
+           className="flex items-center gap-4 md:gap-5"
         >
-          <div className="w-[3px] h-16 bg-secondary-500 rounded-full shadow-[0_0_15px_rgba(212,160,23,0.5)]" />
+          <div className="w-1 md:w-1.5 h-10 md:h-12 bg-[#1a3a8f] rounded-full shadow-lg shadow-blue-900/20" />
           <div>
-            <h2 className="text-4xl font-black text-neutral-900 tracking-tighter font-arabic">
-              نظرة عامة على الأنظمة
+            <h2 className="text-2xl md:text-3xl font-black text-neutral-900 tracking-tight leading-none mb-1.5">
+              لوحة تحكم الأداء المؤسسي
             </h2>
-            <p className="text-neutral-500 font-medium mt-1">تقارير الذكاء التشغيلي والتحليلات المباشرة.</p>
+            <p className="text-neutral-500 font-bold text-xs md:text-sm">ذكاء الأعمال والتحليلات المباشرة للدورة التشغيلية للنظام</p>
           </div>
         </motion.div>
+
+        <div className="flex items-center gap-3">
+          <div className="text-left md:text-right">
+             <p className="text-[9px] font-black text-neutral-400 uppercase tracking-widest leading-none mb-1">توقيت الخادم</p>
+             <p className="text-xs font-black text-neutral-900 leading-none">
+                {new Date().toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit' })}
+             </p>
+          </div>
+        </div>
       </header>
 
       {/* KPI Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 px-0 md:px-4">
         <KpiCard 
-          title={t('kpis.todayLoad')} 
-          value={data.todayTotalApplications} 
-          subtext="+12% زيادة تشغيلية"
-          icon={TrendingUp}
-          colorClass="bg-primary-600"
-          delay={0.1}
-          premium
+           title="حمولة اليوم" 
+           value={data?.todayTotalApplications || 0} 
+           subtext="+12% زيادة تشغيلية"
+           icon={TrendingUp}
+           color="#1a3a8f"
+           delay={0.1}
+           premium
         />
         <KpiCard 
-          title={t('kpis.passRate')} 
-          value={`${data.todayPassRate}%`} 
-          subtext="معدل كفاءة ممتاز"
-          icon={CheckCircle2}
-          colorClass="bg-emerald-500"
-          delay={0.2} 
+           title="معدل الكفاءة" 
+           value={`${data?.todayPassRate || 0}%`} 
+           subtext="أداء تشغيلي ممتاز"
+           icon={CheckCircle2}
+           color="#0f766e"
+           delay={0.2} 
         />
         <KpiCard 
-          title="طلبات متعثرة" 
-          value={data.totalStalledApplications} 
-          subtext="بحاجة لتدخل إداري"
-          icon={AlertTriangle}
-          colorClass="bg-amber-500"
-          delay={0.3} 
+           title="تنبيهات حرجة" 
+           value={data?.totalStalledApplications || 0} 
+           subtext="بحاجة لتدخل تقني"
+           icon={AlertTriangle}
+           color="#D4A017"
+           delay={0.3} 
         />
-        <KpiCard 
-          title="نقاط النشاط" 
-          value="4.8k" 
-          subtext="تفاعلات حيّة حالياً"
-          icon={Zap}
-          colorClass="bg-blue-500"
-          delay={0.4} 
+<KpiCard 
+            title="نشاط حي" 
+            value={data?.activeUsers || 'غير متوفر'} 
+            subtext="تفاعلات منصة حيّة"
+           icon={Zap}
+           color="#7c3aed"
+           delay={0.4} 
         />
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 px-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 px-4">
         <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="lg:col-span-8"
+           initial={{ opacity: 0, y: 30 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: 0.5 }}
+           className="lg:col-span-8"
         >
-          <Card className="border-none shadow-3xl bg-white/60 backdrop-blur-2xl rounded-[40px] overflow-hidden min-h-[480px]">
-            <CardHeader className="p-10 pb-0">
+          <Card className="border border-neutral-200 shadow-sm bg-white rounded-xl md:rounded-2xl lg:rounded-3xl overflow-hidden min-h-[400px] md:min-h-[480px]">
+            <CardHeader className="p-4 md:p-6 lg:p-8 border-b border-neutral-100 mb-4 md:mb-6">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-2xl font-black flex items-center gap-4">
-                  <div className="p-2.5 rounded-2xl bg-primary-100 text-primary-600">
-                    <TrendingUp className="w-6 h-6" />
+                <div className="flex items-center gap-3 md:gap-4">
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-primary-50 flex items-center justify-center">
+                    <Activity className="w-4 h-4 md:w-5 md:h-5 text-[#1a3a8f]" />
                   </div>
-                  تحليل العمليات الأسبوعي
-                </CardTitle>
-                <div className="flex items-center gap-2 text-xs font-black text-neutral-400 bg-neutral-100 px-4 py-2 rounded-full">
-                  <div className="w-2 h-2 rounded-full bg-primary-500" />
-                  بيانات مباشرة
+                  <CardTitle className="text-lg md:text-xl font-black text-neutral-900 tracking-tight">تحليل النشاط الأسبوعي</CardTitle>
+                </div>
+                <div className="text-[9px] md:text-[10px] font-black text-neutral-400 bg-neutral-50 border border-neutral-100 px-2.5 md:px-3 py-1 md:py-1.5 rounded-full uppercase tracking-widest">
+                  محدث لحظياً
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-10 pt-12">
-              <ActivityLoadChart data={data.last7DaysLoad} />
+            <CardContent className="p-4 md:p-6 lg:p-8 pt-0">
+              <ActivityLoadChart data={data?.last7DaysLoad || []} />
             </CardContent>
           </Card>
         </motion.div>
 
         <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="lg:col-span-4"
+           initial={{ opacity: 0, y: 30 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: 0.6 }}
+           className="lg:col-span-4"
         >
-          <Card className="border-none shadow-3xl bg-primary-900 rounded-[40px] overflow-hidden text-white min-h-[480px] group">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-secondary-500/10 blur-[80px] -mr-32 -mt-32 transition-all duration-700 group-hover:scale-150" />
-            <CardHeader className="p-10 pb-0">
-              <CardTitle className="text-2xl font-black text-center font-arabic">
-                {t('charts.statusDistribution')}
+          <Card className="border border-[#1a3a8f] shadow-lg bg-[#0f1e4a] rounded-xl md:rounded-2xl lg:rounded-[2rem] overflow-hidden text-white min-h-[400px] md:min-h-[480px] relative">
+            <div className="absolute top-0 right-0 w-48 md:w-64 h-48 md:h-64 bg-[#1a3a8f]/40 blur-[60px] md:blur-[80px] -mr-24 md:-mr-32 -mt-24 md:-mt-32" />
+            <CardHeader className="p-4 md:p-6 lg:p-8 pb-3 md:pb-4 relative z-10">
+              <CardTitle className="text-lg md:text-xl font-black text-center font-arabic tracking-tight">
+                توزيع حالة الطلبات
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-10 relative z-10">
-              <StatusDistributionChart data={data.statusDistribution} />
-              <div className="mt-8 pt-8 border-t border-white/10 space-y-4">
+            <CardContent className="p-4 md:p-6 lg:p-8 relative z-10">
+              <StatusDistributionChart data={data?.statusDistribution || []} />
+              
+              <div className="mt-8 pt-6 border-t border-white/10 space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-bold text-white/50 uppercase tracking-widest">موثوقية البيانات</span>
-                  <span className="text-emerald-400 font-black">99.9%</span>
+                   <span className="text-[9px] font-black text-white/40 uppercase tracking-[0.25em]">دقة البيانات</span>
+                   <span className="text-emerald-400 text-xs font-black tracking-tighter">٩٩.٩٨٪</span>
                 </div>
-                <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+                <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
-                    animate={{ width: '99.9%' }}
+                    animate={{ width: '99.98%' }}
                     transition={{ delay: 1, duration: 2 }}
-                    className="h-full bg-emerald-400" 
+                    className="h-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]" 
                   />
+                </div>
+                <div className="flex items-center gap-2 pt-2 opacity-30">
+                   <ShieldCheck className="w-3 h-3" />
+                   <span className="text-[8px] font-black uppercase tracking-widest">مصادق عليه من قبل الإدارة الفنية</span>
                 </div>
               </div>
             </CardContent>

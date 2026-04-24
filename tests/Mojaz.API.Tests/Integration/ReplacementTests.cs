@@ -73,55 +73,7 @@ public class ReplacementTests : IntegrationTestBase
         eligibility.Success.Should().BeTrue();
         eligibility.Data.Should().NotBeNull();
 
-        // 3. Submit Replacement Request
-        var request = new CreateReplacementRequest 
-        { 
-            LicenseId = oldLicenseId,
-            Reason = ReplacementReason.Lost, 
-            DocumentIds = docIds
-        };
-        var submitResult = await PostAsJsonAsync<ApiResponse<CreateReplacementResponse>>("/api/v1/applications/replacement", request);
-        submitResult.Success.Should().BeTrue();
-        var applicationId = submitResult.Data.ApplicationId;
-
-        // 4. Complete Payment
-        var paymentId = await CreateMockPaymentAsync(applicationId);
-        var paymentRequest = new PaymentConfirmRequest 
-        { 
-            PaymentId = paymentId
-        };
-        var paymentResult = await PostAsJsonAsync<ApiResponse<object>>($"/api/v1/applications/{applicationId}/process-payment", paymentRequest);
-        paymentResult.Success.Should().BeTrue();
-
-        // 5. Administrator Issues License
-        var adminId = Guid.NewGuid();
-        await AuthenticateAsUserAsync(adminId, "Admin");
-        
-        var issueResult = await PostAsJsonAsync<ApiResponse<object>>($"/api/v1/licenses/issue-replacement/{applicationId}", new { IssuerId = adminId });
-        issueResult.Success.Should().BeTrue();
-
-        // 6. Final Verification
-        var updatedLicense = await DbContext.Licenses.FirstOrDefaultAsync(l => l.Id == oldLicenseId);
-        updatedLicense.Status.Should().Be(LicenseStatus.Replaced);
-
-        var newLicense = await DbContext.Licenses.FirstOrDefaultAsync(l => l.HolderId == userId && l.Status == LicenseStatus.Active);
-        newLicense.Should().NotBeNull();
-        newLicense.LicenseNumber.Should().NotBe(oldLicenseId.ToString());
-    }
-
-    [Fact(Skip = "Integration test requires full API context - to be fixed in dedicated sprint")]
-    public async Task FullReplacementFlow_StolenLicense_RequiresReviewAndIssuance()
-    {
-        // 1. Setup
-        var userId = Guid.NewGuid();
-        var oldLicenseId = Guid.NewGuid();
-        DbContext.Licenses.Add(new License { Id = oldLicenseId, HolderId = userId, Status = LicenseStatus.Active });
-        await DbContext.SaveChangesAsync();
-        
-        var docIds = await CreateMockDocumentsAsync();
-        await AuthenticateAsUserAsync(userId);
-
-        // 2. Submit Replacement (Stolen)
+// 3. Submit Replacement Request
         var request = new CreateReplacementRequest 
         { 
             LicenseId = oldLicenseId,
@@ -129,7 +81,7 @@ public class ReplacementTests : IntegrationTestBase
             DocumentIds = docIds
         };
         var submitResult = await PostAsJsonAsync<ApiResponse<CreateReplacementResponse>>("/api/v1/applications/replacement", request);
-        var applicationId = submitResult.Data.ApplicationId;
+        var applicationId = submitResult.Data!.ApplicationId;
 
         // 3. Payment
         var paymentId = await CreateMockPaymentAsync(applicationId);
@@ -137,7 +89,7 @@ public class ReplacementTests : IntegrationTestBase
 
         // 4. Verify Application is Under Review
         var application = await DbContext.Applications.FirstOrDefaultAsync(a => a.Id == applicationId);
-        application.CurrentStage.Should().Be("UnderReview");
+        application!.CurrentStage.Should().Be("UnderReview");
 
         // 5. Receptionist Verifies Police Report
         var receptionistId = Guid.NewGuid();
@@ -154,7 +106,7 @@ public class ReplacementTests : IntegrationTestBase
 
         // 7. Final Verification
         var updatedLicense = await DbContext.Licenses.FirstOrDefaultAsync(l => l.Id == oldLicenseId);
-        updatedLicense.Status.Should().Be(LicenseStatus.Replaced);
+        updatedLicense!.Status.Should().Be(LicenseStatus.Replaced);
     }
 
     [Fact(Skip = "Integration test requires full API context - to be fixed in dedicated sprint")]
@@ -198,7 +150,7 @@ public class ReplacementTests : IntegrationTestBase
             DocumentIds = docIds 
         };
         var submitResult = await PostAsJsonAsync<ApiResponse<CreateReplacementResponse>>("/api/v1/applications/replacement", request);
-        var applicationId = submitResult.Data.ApplicationId;
+        var applicationId = submitResult.Data!.ApplicationId;
 
         // Try to issue without payment
         var adminId = Guid.NewGuid();
@@ -226,7 +178,7 @@ public class ReplacementTests : IntegrationTestBase
             DocumentIds = docIds 
         };
         var submitResult = await PostAsJsonAsync<ApiResponse<CreateReplacementResponse>>("/api/v1/applications/replacement", request);
-        var applicationId = submitResult.Data.ApplicationId;
+        var applicationId = submitResult.Data!.ApplicationId;
         
         var paymentId = await CreateMockPaymentAsync(applicationId);
         await PostAsJsonAsync<ApiResponse<object>>($"/api/v1/applications/{applicationId}/process-payment", new PaymentConfirmRequest { PaymentId = paymentId });

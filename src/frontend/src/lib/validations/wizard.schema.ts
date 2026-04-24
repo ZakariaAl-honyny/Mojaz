@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ServiceType, LicenseCategoryCode } from '@/types/wizard.types';
+import { ServiceType, LicenseCategoryCode, Gender } from '@/types/wizard.types';
 
 // Helper to calculate age from DOB string (YYYY-MM-DD)
 export const calculateAge = (dob: string) => {
@@ -22,12 +22,10 @@ export const step1Schema = z.object({
 
 export const createStep2Schema = (
   dateOfBirth: string | undefined,
-  minAgeMap: Record<LicenseCategoryCode, number>
+  minAgeMap: Record<string, number>
 ) =>
   z.object({
-    categoryCode: z.nativeEnum(LicenseCategoryCode, {
-      required_error: 'wizard.validation.step2.categoryRequired',
-    }),
+    categoryCode: z.string().min(1, 'wizard.validation.step2.categoryRequired'),
   }).superRefine((data, ctx) => {
     if (!dateOfBirth || !data.categoryCode) return;
     const age = calculateAge(dateOfBirth);
@@ -41,11 +39,15 @@ export const createStep2Schema = (
     }
   });
 
+// Gender uses string type matching backend: 'NotSpecified', 'Male', 'Female'
 export const step3Schema = z.object({
   nationalId: z.string().min(10).max(20).regex(/^[0-9]+$/, 'wizard.validation.step3.nationalIdFormat'),
   dateOfBirth: z.string().refine(v => !isNaN(Date.parse(v)), 'wizard.validation.step3.dobInvalid'),
   nationality: z.string().min(1, 'wizard.validation.step3.nationalityRequired'),
-  gender: z.enum(['Male', 'Female'], { required_error: 'wizard.validation.step3.genderRequired' }),
+  gender: z.enum(['NotSpecified', 'Male', 'Female'], {
+    required_error: 'wizard.validation.step3.genderRequired',
+    invalid_type_error: 'wizard.validation.step3.genderInvalid',
+  }),
   mobileNumber: z.string().regex(/^\+?[0-9]{9,15}$/, 'wizard.validation.step3.mobileFormat'),
   email: z.string().email('wizard.validation.step3.emailFormat').optional().or(z.literal('')),
   address: z.string().min(5, 'wizard.validation.step3.addressMin'),
@@ -81,6 +83,6 @@ export type Step3FormValues = z.infer<typeof step3Schema>;
 export type Step4FormValues = z.infer<typeof step4Schema>;
 export type Step5FormValues = z.infer<typeof step5Schema>;
 export const step2BaseSchema = z.object({
-  categoryCode: z.nativeEnum(LicenseCategoryCode),
+  categoryCode: z.string(),
 });
 export type Step2FormValues = z.infer<typeof step2BaseSchema>;

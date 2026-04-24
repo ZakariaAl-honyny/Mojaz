@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
-using Mojaz.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Mojaz.Infrastructure.Persistence;
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace Mojaz.API.Tests;
 
@@ -41,7 +41,10 @@ public class IntegrationTestBase : IClassFixture<WebApplicationFactory<Program>>
                     options.DefaultAuthenticateScheme = "Test";
                     options.DefaultChallengeScheme = "Test";
                 })
-                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
+                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => 
+{
+    options.TimeProvider = TimeProvider.System;
+});
             });
         });
 
@@ -65,8 +68,8 @@ public class IntegrationTestBase : IClassFixture<WebApplicationFactory<Program>>
 public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     public TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options,
-        ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
-        : base(options, logger, encoder, clock)
+        ILoggerFactory logger, UrlEncoder encoder)
+        : base(options, logger, encoder)
     {
     }
 

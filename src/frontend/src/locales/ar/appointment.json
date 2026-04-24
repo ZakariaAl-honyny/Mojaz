@@ -1,0 +1,85 @@
+{
+  "morning": "صباحاً",
+  "afternoon": "مساءً",
+  "appointment": {
+    "title": "المواعيد",
+    "subtitle": "عرض وإدارة مواعيدك",
+    "bookNew": "حجز موعد جديد",
+    "upcoming": "المواعيد القادمة",
+    "history": "السجل",
+    "types": {
+      "medical": "الفحص الطبي",
+      "theory": "الاختبار النظري",
+      "practical": "الاختبار العملي"
+    },
+    "status": {
+      "confirmed": "مؤكد",
+      "pending": "قيد الانتظار",
+      "cancelled": "ملغى",
+      "scheduled": "مجدول",
+      "completed": "مكتمل",
+      "noShow": "لم يحضر"
+    },
+    "book": "احجز موعد",
+    "reschedule": "إعادة تحديد الموعد",
+    "cancel": "إلغاء الموعد",
+    "selectDate": "اختر التاريخ",
+    "selectTime": "اختر الوقت",
+    "availableSlots": "المواعيد المتاحة",
+    "noSlotsAvailable": "لا توجد مواعيد متاحة",
+    "slotAvailable": "موعد متاح",
+    "slotFull": "الموعد ممتلئ",
+    "confirmBooking": "تأكيد الحجز",
+    "confirmReschedule": "تأكيد إعادة التحديد",
+    "confirmCancel": "تأكيد الإلغاء",
+    "bookingSuccess": "تم حجز الموعد بنجاح",
+    "rescheduleSuccess": "تم إعادة تحديد الموعد بنجاح",
+    "cancelSuccess": "تم إلغاء الموعد بنجاح",
+    "bookingFailed": "فشل حجز الموعد",
+    "rescheduleFailed": "فشل إعادة تحديد الموعد",
+    "cancelFailed": "فشل إلغاء الموعد",
+    "maxRescheduleReached": "لقد بلغت الحد الأقصى لإعادة تحديد الموعد",
+    "slotAlreadyBooked": "هذا الموعد محجوز بالفعل",
+    "pastDate": "لا يمكن الحجز لتاريخ ماضٍ",
+    "tooFarAhead": "لا يمكن الحجز لأكثر من 30 يوماً",
+    "tooSoon": "يجب الحجز قبل يوم واحد على الأقل",
+    "reminder": {
+      "title": "تذكير بالموعد",
+      "message": "لديك موعد tomorrow at {time}",
+      "messageTomorrow": "لديك موعد غداً الساعة {time} في فرع {branch}"
+    },
+    "calendar": {
+      "today": "اليوم",
+      "previousMonth": "الشهر السابق",
+      "nextMonth": "الشهر التالي",
+      "weekdays": {
+        "sunday": "أحد",
+        "monday": "اثنين",
+        "tuesday": "ثلاثاء",
+        "wednesday": "أربعاء",
+        "thursday": "خميس",
+        "friday": "جمعة",
+        "saturday": "سبت"
+      },
+      "months": {
+        "january": "يناير",
+        "february": "فبراير",
+        "march": "مارس",
+        "april": "أبريل",
+        "may": "مايو",
+        "june": "يونيو",
+        "july": "يوليو",
+        "august": "أغسطس",
+        "september": "سبتمبر",
+        "october": "أكتوبر",
+        "november": "نوفمبر",
+        "december": "ديسمبر"
+      }
+    },
+    "reason": {
+      "label": "سبب الإلغاء",
+      "placeholder": "أدخل سبب الإلغاء"
+    },
+    "rescheduleCount": "عدد مرات إعادة التحديد: {count}/{max}"
+  }
+}

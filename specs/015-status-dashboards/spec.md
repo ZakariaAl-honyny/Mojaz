@@ -139,7 +139,7 @@ An employee opens a single application's detail page. The page displays: a stick
 - **FR-005**: The `ApplicationTimeline` component MUST display all 10 workflow stages in vertical order, each with: stage number, stage name (localized), and a state indicator.
 - **FR-006**: Stage states and their visual treatments MUST be:
   - `completed` → Solid green circle with checkmark icon, green connector line to next stage
-  - `current` → Animated Framer Motion pulse ring in brand primary (#006C35), "In Progress" label
+  - `current` → Animated Framer Motion pulse ring in brand primary (#1a3a8f), "In Progress" label
   - `failed` → Red circle with X icon, red connector line, expandable failure reason
   - `future` → Muted gray circle outline, dashed connector line
 - **FR-007**: Each stage card MUST be interactive — clicking a completed or current stage expands a detail panel showing: completion timestamp (in user's locale and timezone), actor name + role, and a short outcome note (max 300 characters).

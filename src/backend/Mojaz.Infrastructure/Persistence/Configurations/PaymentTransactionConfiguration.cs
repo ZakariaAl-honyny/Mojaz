@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
 
 namespace Mojaz.Infrastructure.Persistence.Configurations
 {
@@ -14,14 +13,12 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(x => x.ApplicationId).IsRequired();
             builder.Property(x => x.FeeType)
                 .IsRequired()
-                .HasConversion<string>()
-                .HasMaxLength(50);
+                .HasColumnType("tinyint");
             builder.Property(x => x.Amount).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(x => x.Currency).IsRequired().HasMaxLength(10);
             builder.Property(x => x.Status)
                 .IsRequired()
-                .HasConversion<string>()
-                .HasMaxLength(20);
+                .HasColumnType("tinyint");
             builder.Property(x => x.PaymentMethod).HasMaxLength(100);
             builder.Property(x => x.TransactionReference).HasMaxLength(100);
             builder.Property(x => x.PaidAt).IsRequired(false);

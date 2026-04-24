@@ -1,0 +1,165 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - img [ref=e7]
+        - generic [ref=e10]:
+          - heading "مُـجـاز" [level=1] [ref=e11]
+          - paragraph [ref=e12]: المرور الذكي
+      - navigation [ref=e13]:
+        - link "لوحة التحكم" [ref=e14] [cursor=pointer]:
+          - /url: /dashboard
+          - img [ref=e15]
+          - generic [ref=e20]: لوحة التحكم
+        - link "طلباتي" [ref=e21] [cursor=pointer]:
+          - /url: /applications
+          - img [ref=e22]
+          - generic [ref=e25]: طلباتي
+        - link "طلب جديد" [ref=e27] [cursor=pointer]:
+          - /url: /applications/new
+          - img [ref=e28]
+          - generic [ref=e30]: طلب جديد
+        - link "المواعيد" [ref=e31] [cursor=pointer]:
+          - /url: /appointments
+          - img [ref=e32]
+          - generic [ref=e34]: المواعيد
+        - link "رخصتي" [ref=e35] [cursor=pointer]:
+          - /url: /licenses
+          - img [ref=e36]
+          - generic [ref=e42]: رخصتي
+        - link "التنبيهات" [ref=e43] [cursor=pointer]:
+          - /url: /notifications
+          - img [ref=e44]
+          - generic [ref=e47]: التنبيهات
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - img [ref=e51]
+          - generic [ref=e54]:
+            - paragraph [ref=e55]: زكريا الحنيني
+            - paragraph [ref=e58]: "0"
+        - generic [ref=e59]:
+          - link "الملف الشخصي" [ref=e60] [cursor=pointer]:
+            - /url: /profile
+            - img [ref=e61]
+            - generic [ref=e64]: الملف الشخصي
+          - button "تسجيل الخروج" [ref=e65]:
+            - img [ref=e66]
+            - generic [ref=e69]: تسجيل الخروج
+    - generic [ref=e70]:
+      - banner [ref=e71]:
+        - generic [ref=e73]:
+          - img [ref=e74]
+          - textbox "ابحث عن رقم طلب، معاملة، أو فئة رخصة..." [ref=e77]
+        - generic [ref=e78]:
+          - generic [ref=e79]:
+            - button "التنبيهات" [ref=e80]:
+              - img [ref=e81]
+            - button [ref=e84]:
+              - img
+            - button [ref=e85]:
+              - img
+          - button "ز زكريا الحنيني مستفيد" [ref=e86]:
+            - generic [ref=e87]: ز
+            - generic [ref=e88]:
+              - generic [ref=e89]:
+                - paragraph [ref=e90]: زكريا الحنيني
+                - img [ref=e91]
+              - paragraph [ref=e95]: مستفيد
+      - main [ref=e96]:
+        - generic [ref=e98]:
+          - generic [ref=e99]:
+            - generic [ref=e102]:
+              - heading "طلباتي والمتابعة" [level=1] [ref=e103]
+              - paragraph [ref=e104]: مركز إدارة ومتابعة جميع طلباتك الإلكترونية الصادرة عن الإدارة العامة للمرور.
+            - link "طلب إصدار جديد" [ref=e105] [cursor=pointer]:
+              - /url: /applications/new
+              - button "طلب إصدار جديد" [ref=e106]:
+                - img
+                - text: طلب إصدار جديد
+          - generic [ref=e108]:
+            - generic [ref=e109]:
+              - button "عرض الكل 3" [ref=e110]:
+                - text: عرض الكل
+                - generic [ref=e111]: "3"
+              - button "قيد الانتظار 1" [ref=e112]:
+                - text: قيد الانتظار
+                - generic [ref=e113]: "1"
+              - button "تحت المعالجة 1" [ref=e114]:
+                - text: تحت المعالجة
+                - generic [ref=e115]: "1"
+              - button "المنجزة 1" [ref=e116]:
+                - text: المنجزة
+                - generic [ref=e117]: "1"
+            - generic [ref=e118]:
+              - img [ref=e119]
+              - textbox "البحث برقم الطلب المعرّف..." [ref=e122]
+          - generic [ref=e123]:
+            - generic [ref=e126] [cursor=pointer]:
+              - generic [ref=e127]:
+                - img [ref=e129]
+                - generic [ref=e132]:
+                  - generic [ref=e133]:
+                    - heading "رخصة قيادة مركبة خصوصي" [level=3] [ref=e134]
+                    - generic [ref=e135]: B
+                  - paragraph [ref=e136]: "مرجع العمليات: MOJ-2025-48291037"
+              - generic [ref=e137]:
+                - generic [ref=e138]:
+                  - paragraph [ref=e139]: الحالة الراهنة
+                  - generic [ref=e143]: تم التقديم
+                - generic [ref=e145]:
+                  - paragraph [ref=e146]: نسبة الإنجاز
+                  - generic [ref=e147]: 20%
+              - generic [ref=e150]:
+                - generic [ref=e151]:
+                  - paragraph [ref=e152]: تاريخ تحديث الملف
+                  - paragraph [ref=e153]: ١٥‏/٠٣‏/٢٠٢٥
+                - button [ref=e154]:
+                  - img
+            - generic [ref=e157] [cursor=pointer]:
+              - generic [ref=e158]:
+                - img [ref=e160]
+                - generic [ref=e163]:
+                  - generic [ref=e164]:
+                    - heading "تجديد رخصة قيادة خصوصي" [level=3] [ref=e165]
+                    - generic [ref=e166]: B
+                  - paragraph [ref=e167]: "مرجع العمليات: MOJ-2025-99210382"
+              - generic [ref=e168]:
+                - generic [ref=e169]:
+                  - paragraph [ref=e170]: الحالة الراهنة
+                  - generic [ref=e174]: تم الإصدار
+                - generic [ref=e176]:
+                  - paragraph [ref=e177]: نسبة الإنجاز
+                  - generic [ref=e178]: 100%
+              - generic [ref=e181]:
+                - generic [ref=e182]:
+                  - paragraph [ref=e183]: تاريخ تحديث الملف
+                  - paragraph [ref=e184]: ١٠‏/٠٢‏/٢٠٢٥
+                - button [ref=e185]:
+                  - img
+            - generic [ref=e188] [cursor=pointer]:
+              - generic [ref=e189]:
+                - img [ref=e191]
+                - generic [ref=e194]:
+                  - generic [ref=e195]:
+                    - heading "رخصة قيادة دراجة نارية" [level=3] [ref=e196]
+                    - generic [ref=e197]: A
+                  - paragraph [ref=e198]: "مرجع العمليات: MOJ-2025-12345678"
+              - generic [ref=e199]:
+                - generic [ref=e200]:
+                  - paragraph [ref=e201]: الحالة الراهنة
+                  - generic [ref=e205]: قيد المراجعة
+                - generic [ref=e207]:
+                  - paragraph [ref=e208]: نسبة الإنجاز
+                  - generic [ref=e209]: 40%
+              - generic [ref=e212]:
+                - generic [ref=e213]:
+                  - paragraph [ref=e214]: تاريخ تحديث الملف
+                  - paragraph [ref=e215]: ١٠‏/٠٣‏/٢٠٢٥
+                - button [ref=e216]:
+                  - img
+          - generic [ref=e218]:
+            - img [ref=e219]
+            - generic [ref=e222]: مركز المعلومات الوطني - آمن وموثق
+  - region "Notifications (F8)":
+    - list
+  - alert [ref=e223]

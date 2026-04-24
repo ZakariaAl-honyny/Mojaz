@@ -1,9 +1,12 @@
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Hangfire;
 using Hangfire.Dashboard;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Mojaz.API.Extensions;
@@ -70,6 +73,25 @@ builder.Host.UseSerilog((context, config) =>
 // ─── Memory Cache (Required by SystemSettingsService) ───
 builder.Services.AddMemoryCache();
 
+// ─── Hangfire (Background Jobs) ───
+var dbConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(dbConnectionString, new SqlServerStorageOptions
+    {
+        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+        QueuePollInterval = TimeSpan.FromSeconds(15),
+        UseRecommendedIsolationLevel = true,
+        DisableGlobalLocks = true
+    }));
+
+// Register Hangfire server to process background jobs
+builder.Services.AddHangfireServer();
+
+
 // ─── Layer Registrations ───
 // IMPORTANT: AddApplicationServices must come BEFORE AddInfrastructureServices
 // because Infrastructure services (like ProcessAppointmentRemindersJob) depend on Application services
@@ -84,6 +106,15 @@ builder.Services.AddProblemDetails();
 builder.Services.AddControllers(options => 
 {
     options.Filters.Add<ValidationFilter>();
+})
+.ConfigureApiBehaviorOptions(options =>
+{
+    // Keep default behavior
+})
+.AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
 // ─── Request Size Limits (Global Security) ───

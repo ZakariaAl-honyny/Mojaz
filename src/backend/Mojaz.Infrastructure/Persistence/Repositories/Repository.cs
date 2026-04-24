@@ -75,5 +75,11 @@ namespace Mojaz.Infrastructure.Persistence.Repositories
         {
             return _dbSet.AsQueryable();
         }
+
+        // Find without global query filters (bypasses HasQueryFilter)
+        public async Task<IReadOnlyList<T>> FindNoFilterAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default)
+        {
+            return await _dbSet.IgnoreQueryFilters().Where(predicate).ToListAsync(ct);
+        }
     }
 }

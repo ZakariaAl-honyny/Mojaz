@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/static-translations";
 import { Lock, Unlock, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 

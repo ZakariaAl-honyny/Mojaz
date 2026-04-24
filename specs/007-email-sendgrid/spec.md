@@ -115,7 +115,7 @@ As an applicant with incomplete documents, I receive an email listing what is mi
 - **FR-004**: The system MUST retry failed send attempts up to 3 times using exponential backoff (e.g., 1s → 2s → 4s delay).
 - **FR-005**: Every send attempt (success or failure) MUST be recorded in the `EmailLogs` table with: recipient, template name, subject, status, error message (if any), attempt count, and timestamp.
 - **FR-006**: The email service MUST support structured template rendering — each template accepts a typed data object containing only the variables needed for that specific template.
-- **FR-007**: All templates MUST use professional government-grade design: green header (`#006C35`), official Mojaz branding, clean typography, and mobile-responsive layout.
+- **FR-007**: All templates MUST use professional government-grade design: green header (`#1a3a8f`), official Mojaz branding, clean typography, and mobile-responsive layout.
 - **FR-008**: The system MUST support optional file attachments in raw email sends (e.g., for documents or license PDFs).
 - **FR-009**: The SendGrid API key, sender email, and sender name MUST be configurable via environment variables — never hardcoded.
 - **FR-010**: The system MUST suppress duplicate sends for the same (recipient, template, application reference) within a configurable deduplication window.

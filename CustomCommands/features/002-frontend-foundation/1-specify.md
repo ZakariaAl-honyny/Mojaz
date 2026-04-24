@@ -14,7 +14,7 @@ A Next.js 15 application with App Router that serves as the foundation for all f
 
 ### 2. Tailwind CSS 4 + shadcn/ui:
 - Custom Mojaz theme colors:
-  - Primary: #006C35 (Royal Green) with full shade scale (50-900)
+  - Primary: #1a3a8f (King Blue) with full shade scale (50-900)
   - Secondary: #D4A017 (Government Gold) with full scale
   - Status: success=#10B981, warning=#F59E0B, error=#EF4444, info=#3B82F6
   - Neutral: standard gray scale

@@ -1,0 +1,80 @@
+{
+  "reports": {
+    "title": "التقارير والتحليلات",
+    "subtitle": "رؤية شاملة ومؤشرات أداء في الوقت الفعلي",
+    "dashboard": "لوحة تقارير الإدارة",
+    "statusDistribution": "توزيع الحالات",
+    "serviceDistribution": "الخدمات",
+    "delayedApplications": "الطلبات المتأخرة",
+    "testPerformance": "أداء الاختبارات",
+    "branchThroughput": "إنتاجية الفروع",
+    "employeeActivity": "نشاط الموظفين",
+    "issuanceTimeline": "الجدول الزمني",
+    "totalApplications": "إجمالي الطلبات",
+    "activeApplications": "الطلبات النشطة",
+    "completedToday": "مكتمل اليوم",
+    "totalRevenue": "إجمالي الإيرادات",
+    "noData": "لا توجد بيانات للعرض",
+    "count": "العدد",
+    "export": "تصدير CSV",
+    "exportPdf": "تصدير PDF",
+    "reset": "إعادة ضبط",
+    "search": "بحث...",
+    "filters": {
+      "dateRange": "الفترة الزمنية",
+      "from": "من",
+      "to": "إلى",
+      "branch": "الفرع",
+      "category": "فئة الرخصة",
+      "examiner": "المختبر",
+      "apply": "تطبيق",
+      "reset": "إعادة ضبط"
+    },
+    "status": {
+      "draft": "مسودة",
+      "submitted": "مقدم",
+      "inreview": "قيد المراجعة",
+      "approved": "مقبول",
+      "rejected": "مرفوض",
+      "active": "نشط",
+      "cancelled": "ملغى",
+      "expired": "منتهي",
+      "issued": "مصدر",
+      "medical": "الفحص الطبي",
+      "theory": "الاختبار النظري",
+      "practical": "الاختبار العملي"
+    },
+    "service": {
+      "new": "رخصة جديدة",
+      "renewal": "تجديد رخصة",
+      "upgrade": "ترقية رخصة",
+      "replacement": "بدل تالف/فاقد"
+    },
+    "table": {
+      "applicationNumber": "رقم الطلب",
+      "applicant": "المتقدم",
+      "daysInStage": "أيام الانتظار",
+      "branch": "الفرع",
+      "currentStatus": "الحالة الحالية",
+      "actions": "الإجراءات",
+      "employee": "الموظف",
+      "role": "الدور",
+      "processed": "المعالج",
+      "details": "التفاصيل",
+      "pass": "ناجح",
+      "fail": "راسب"
+    },
+    "branch": {
+      "approvalRate": "معدل القبول",
+      "avgTime": "متوسط الوقت",
+      "days": "أيام"
+    },
+    "kpi": {
+      "total": "الإجمالي",
+      "delayed": "متأخر",
+      "days": "يوم"
+    }
+  }
+}
+  }
+}

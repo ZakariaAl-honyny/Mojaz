@@ -1,5 +1,6 @@
 import apiClient from '@/lib/api-client';
 import { ApiResponse } from '@/types/api.types';
+import { LicenseStatus } from '@/lib/enums';
 
 export interface LicenseDto {
   id: string;
@@ -7,7 +8,7 @@ export interface LicenseDto {
   licenseCategoryCode: string;
   licenseCategoryNameEn: string;
   licenseCategoryNameAr: string;
-  status: string;
+  status: LicenseStatus;
   issuedAt: string;
   expiresAt: string;
 }
@@ -76,7 +77,7 @@ const LicenseService = {
     licenseId: string;
     reason: any;
     documentIds?: string[];
-  }): Promise<ApiResponse<{ id: string }>> {
+  }): Promise<ApiResponse<{ id: string; applicationNumber: string }>> {
     const response = await apiClient.post('/applications/replacement', data);
     return response.data;
   },

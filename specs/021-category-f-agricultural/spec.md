@@ -83,5 +83,5 @@ As a driver holding a valid Category F license, I want to apply for a Category B
 ## Assumptions
 
 - Terminology changes ("Field Test") will be handled via localization JSON files, not hardcoded.
-- Design specifications for Category F icons will be provided or generated consistently with the "Royal Green" Mojaz design system.
+- Design specifications for Category F icons will be provided or generated consistently with the "King Blue" Mojaz design system.
 - Strict performance constraints are enforced in the UI components created for this feature (e.g., avoiding heavy imports for icons, using efficient conditional rendering without layouts shifting).

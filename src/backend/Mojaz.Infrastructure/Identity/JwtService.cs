@@ -28,7 +28,7 @@ public class JwtService : IJwtService
         {
             new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
             new Claim(JwtRegisteredClaimNames.Name, fullName),
-            new Claim(ClaimTypes.Role, role.ToString()),
+            new Claim(ClaimTypes.Role, role.ToString()), // Now properly returns string like "Admin", "Applicant" etc
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

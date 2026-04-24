@@ -3,7 +3,7 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/static-translations';
 import { format } from 'date-fns';
 
 interface DailyLoadDto {
@@ -34,33 +34,33 @@ export const DailyLoadTimeline: React.FC<DailyLoadTimelineProps> = ({ data }) =>
             >
               <defs>
                 <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#006C35" stopOpacity={0.1}/>
-                  <stop offset="95%" stopColor="#006C35" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#1a3a8f" stopOpacity={0.1} />
+                  <stop offset="95%" stopColor="#1a3a8f" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
-              <XAxis 
-                dataKey="date" 
-                axisLine={false} 
+              <XAxis
+                dataKey="date"
+                axisLine={false}
                 tickLine={false}
                 tick={{ fill: '#6B7280', fontSize: 10 }}
                 tickFormatter={(value) => format(new Date(value), 'MMM dd')}
               />
-              <YAxis 
-                axisLine={false} 
+              <YAxis
+                axisLine={false}
                 tickLine={false}
                 tick={{ fill: '#6B7280', fontSize: 10 }}
               />
-              <Tooltip 
+              <Tooltip
                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                 labelFormatter={(value) => format(new Date(value), 'yyyy-MM-dd')}
               />
-              <Area 
-                type="monotone" 
-                dataKey="count" 
-                stroke="#006C35" 
-                fillOpacity={1} 
-                fill="url(#colorCount)" 
+              <Area
+                type="monotone"
+                dataKey="count"
+                stroke="#1a3a8f"
+                fillOpacity={1}
+                fill="url(#colorCount)"
                 strokeWidth={2}
               />
             </AreaChart>

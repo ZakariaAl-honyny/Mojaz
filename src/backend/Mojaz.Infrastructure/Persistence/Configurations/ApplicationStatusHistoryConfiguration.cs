@@ -12,12 +12,10 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.FromStatus)
                 .IsRequired()
-                .HasConversion<string>()
-                .HasMaxLength(32);
+                .HasColumnType("tinyint");
             builder.Property(x => x.ToStatus)
                 .IsRequired()
-                .HasConversion<string>()
-                .HasMaxLength(32);
+                .HasColumnType("tinyint");
             builder.Property(x => x.ChangedBy).IsRequired();
             builder.Property(x => x.Notes).HasMaxLength(256);
             builder.Property(x => x.ChangedAt).IsRequired();

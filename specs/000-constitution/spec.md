@@ -13,7 +13,7 @@ Establishes the project governing principles and development guidelines for the 
 - **Name:** Mojaz (مُجاز) — "Licensed/Authorized" in Arabic
 - **Type:** Full-Stack Web Application
 - **Domain:** Government / GovTech / Driving License Management
-- **Primary Color:** #006C35 (Royal Green)
+- **Primary Color:** #1a3a8f (King Blue)
 - **Design System:** Absher-Inspired, government official style
 
 ## Tech Stack

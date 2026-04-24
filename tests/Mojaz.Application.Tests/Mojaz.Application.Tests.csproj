@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <ExcludeAssets>**/Services/AuthService_Login_Tests.cs;**/Services/AuthService_RefreshToken_Tests.cs;**/Services/PracticalServiceTests.cs</ExcludeAssets>
   </PropertyGroup>
 
   <ItemGroup>

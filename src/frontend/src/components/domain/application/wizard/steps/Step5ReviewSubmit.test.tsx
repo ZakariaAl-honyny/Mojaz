@@ -16,6 +16,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
 import Step5ReviewSubmit from './Step5ReviewSubmit';
+import { ServiceType, LicenseCategoryCode, Gender } from '@/types/wizard.types';
 
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
@@ -31,14 +32,14 @@ jest.mock('@/services/application.service', () => ({
   },
 }));
 
-// Mock wizard store
-const mockStep1 = { serviceType: 'NewLicense' };
-const mockStep2 = { categoryCode: 'B' };
+// Mock wizard store with numeric enums
+const mockStep1 = { serviceType: ServiceType.NewLicense };
+const mockStep2 = { categoryCode: LicenseCategoryCode.B };
 const mockStep3 = { 
   nationalId: '1234567890', 
   dateOfBirth: '1995-01-01',
   nationality: 'SA',
-  gender: 'Male',
+  gender: Gender.Male,
   mobileNumber: '+966501234567',
   email: 'test@example.com',
   address: 'Test Address',

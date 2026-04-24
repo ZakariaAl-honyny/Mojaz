@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/static-translations";
 import { Button } from "@/components/ui/button";
 import { paymentService } from "@/services/payment.service";
 import { Download, Loader2, FileCheck } from "lucide-react";

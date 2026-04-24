@@ -3,7 +3,7 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/static-translations';
 
 interface TestPerformanceDto {
   testType: string;

@@ -1,0 +1,26 @@
+{
+  "test": {
+    "title": "Test Results",
+    "subtitle": "View your test results",
+    "theory": {
+      "title": "Theory Test",
+      "passed": "Passed",
+      "failed": "Failed",
+      "pending": "Pending",
+      "score": "Score",
+      "passingScore": "Passing Score",
+      "attempts": "Attempts",
+      "maxAttempts": "Max Attempts"
+    },
+    "practical": {
+      "title": "Practical Test",
+      "passed": "Passed",
+      "failed": "Failed",
+      "pending": "Pending"
+    },
+    "pass": "Pass",
+    "fail": "Fail",
+    "notAttempted": "Not Attempted",
+    "viewResult": "View Result"
+  }
+}

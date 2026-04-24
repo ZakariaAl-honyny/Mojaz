@@ -18,4 +18,7 @@ public interface IRepository<T> where T : class
     Task<int> CountAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
     Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
     System.Linq.IQueryable<T> Query();
+    
+    // Find without global query filters (for auth operations that need to see all records)
+    Task<IReadOnlyList<T>> FindNoFilterAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
 }

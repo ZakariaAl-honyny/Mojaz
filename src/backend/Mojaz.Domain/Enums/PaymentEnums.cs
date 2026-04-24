@@ -1,6 +1,6 @@
 namespace Mojaz.Domain.Enums;
 
-public enum FeeType
+public enum FeeType : byte
 {
     ApplicationFee,
     MedicalExamFee,
@@ -13,7 +13,7 @@ public enum FeeType
     CategoryUpgrade
 }
 
-public enum PaymentStatus
+public enum PaymentStatus : byte
 {
     Pending,
     Paid,

@@ -1,150 +1,156 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { practicalService } from '@/services/practical.service';
 import { TestAttemptBadge } from './TestAttemptBadge';
-import { Calendar, User, FileText, CheckCircle, AlertTriangle } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
-import { useLocale } from 'next-intl';
+import { Calendar, User, FileText, CheckCircle2, AlertCircle, History, Car } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface PracticalTestHistoryProps {
   applicationId: string;
 }
 
 export function PracticalTestHistory({ applicationId }: PracticalTestHistoryProps) {
-  const t = useTranslations('practical.history');
-  const locale = useLocale();
-  
   const { data, isLoading, error } = useQuery({
     queryKey: ['practicalHistory', applicationId],
     queryFn: () => practicalService.getHistory(applicationId),
   });
 
   if (isLoading) {
-    return <div className="space-y-4 animate-pulse">
-      {[1, 2].map(i => (
-        <Card key={i} className="w-full h-48 bg-neutral-100" />
-      ))}
-    </div>;
+    return (
+      <div className="space-y-6 font-arabic animate-pulse" dir="rtl">
+        <div className="h-40 w-full bg-neutral-50 rounded-[2rem]" />
+        <div className="h-40 w-full bg-neutral-50 rounded-[2rem]" />
+      </div>
+    );
   }
 
-  if (error || !data || !data.data || data.data.items.length === 0) {
+  const attempts = data?.data?.items || [];
+
+  const formatDateAr = (dateStr: string) => {
+    if (!dateStr) return '';
+    try {
+      return new Date(dateStr).toLocaleDateString('ar-YE', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    } catch {
+      return dateStr;
+    }
+  };
+
+  if (error || attempts.length === 0) {
     return (
-      <Card className="bg-neutral-50 border-neutral-200 border-dashed">
-        <CardContent className="flex flex-col items-center justify-center p-8 text-neutral-500">
-          <FileText className="w-12 h-12 mb-4 text-neutral-300" />
-          <p>{t('noHistory')}</p>
-        </CardContent>
-      </Card>
+      <div className="bg-neutral-50 rounded-[2.5rem] border-2 border-dashed border-neutral-200 p-16 text-center font-arabic" dir="rtl">
+        <History className="w-16 h-16 mx-auto mb-6 text-neutral-200" />
+        <p className="text-lg font-black text-neutral-400">لا يوجد سجل محاولات اختبار عملي حالياً</p>
+      </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-primary-900">{t('title')}</h3>
-      {data.data.items.map((test) => (
-        <Card key={test.id} className="overflow-hidden border-start-4 border-start-primary-500">
-          <CardHeader className="bg-neutral-50 pb-3 border-b border-neutral-100 flex flex-row items-center justify-between space-y-0">
-            <div>
-              <CardTitle className="text-base font-semibold">
-                {t('attempt', { number: test.attemptNumber })}
-              </CardTitle>
-              <CardDescription className="flex items-center mt-1">
-                <Calendar className="w-3.5 h-3.5 me-1" />
-                {formatDate(test.conductedAt, locale)}
-              </CardDescription>
+    <div className="space-y-8 font-arabic" dir="rtl">
+      <div className="flex items-center gap-4 mb-2">
+         <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-[#1a3a8f]">
+            <History className="w-6 h-6" />
+         </div>
+         <div>
+            <h3 className="text-2xl font-black text-neutral-900">سجل الاختبار العملي</h3>
+            <p className="text-xs font-bold text-neutral-400 mt-0.5">تتبع نتائج القيادة الميدانية والملاحظات الفنية</p>
+         </div>
+      </div>
+
+      <div className="relative space-y-10 before:absolute before:inset-0 before:start-[27px] before:w-0.5 before:bg-neutral-100 before:h-full pb-4">
+        {attempts.map((test, index) => (
+          <motion.div 
+            key={test.id}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="relative ps-20"
+          >
+            {/* Timeline dot */}
+            <div className={cn(
+              "absolute start-0 top-0 w-14 h-14 rounded-2xl shadow-xl border-4 border-white flex items-center justify-center z-10 transition-all duration-500",
+              String(test.result) === 'Pass' ? "bg-emerald-500 text-white shadow-emerald-500/20" : "bg-red-500 text-white shadow-red-500/20"
+            )}>
+              <Car className="w-6 h-6" />
             </div>
-            <TestAttemptBadge result={test.result} />
-          </CardHeader>
-          <CardContent className="pt-4 space-y-3 text-sm">
-            {test.isAbsent ? (
-              <div className="flex items-start text-orange-600 bg-orange-50 p-3 rounded-md">
-                <AlertTriangle className="w-5 h-5 me-2 shrink-0 mt-0.5" />
+
+            <div className={cn(
+              "rounded-[2.5rem] p-10 border transition-all duration-500 hover:shadow-2xl hover:shadow-blue-900/5",
+              String(test.result) === 'Pass' 
+                ? "bg-emerald-50/20 border-emerald-100/30" 
+                : "bg-white border-neutral-100"
+            )}>
+              <div className="flex flex-wrap justify-between items-start gap-6 mb-10">
                 <div>
-                  <p className="font-semibold">{t('isAbsent')}</p>
-                  <p className="text-orange-500 text-xs mt-1">{t('absentDescription')}</p>
+                  <h4 className="text-xl font-black text-neutral-900 tracking-tight">المحاولة رقم {test.attemptNumber}</h4>
+                  <div className="flex items-center gap-2 text-xs font-bold text-neutral-400 mt-2">
+                    <Calendar className="w-4 h-4" />
+                    {formatDateAr(test.conductedAt)}
+                  </div>
                 </div>
+                <TestAttemptBadge result={test.result as any} />
               </div>
-            ) : (
-              <>
-                <div className="grid grid-cols-2 gap-y-2 gap-x-4">
-                  <div className="flex flex-col">
-                    <span className="text-neutral-500 text-xs">{t('score')}</span>
-                    <span className="font-medium text-neutral-900">{test.score} / {test.passingScore}</span>
+
+              {test.isAbsent ? (
+                <div className="flex items-start gap-4 p-6 bg-amber-50 rounded-[1.5rem] border border-amber-100 shadow-sm shadow-amber-500/5 transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-amber-500 shadow-sm">
+                    <AlertCircle className="w-5 h-5" />
                   </div>
-                  {test.vehicleUsed && (
-                    <div className="flex flex-col">
-                      <span className="text-neutral-500 text-xs">{t('vehicleUsed')}</span>
-                      <span className="font-medium text-neutral-900">{test.vehicleUsed}</span>
-                    </div>
-                  )}
+                  <div>
+                    <p className="font-black text-amber-900 text-lg">لم يتم الحضور</p>
+                    <p className="text-amber-700/70 text-xs font-bold mt-1 tracking-tight">تم تسجيل المتدرب كغائب في هذا الموعد المحدد. يرجى مراجعة الإدارة.</p>
+                  </div>
                 </div>
-
-                <hr className="border-neutral-100" />
-
-                <div className="space-y-2">
-                  <div className="flex items-start">
-                    <User className="w-4 h-4 me-2 shrink-0 mt-0.5 text-neutral-400" />
-                    <div>
-                      <span className="text-neutral-500 text-xs block">{t('examiner')}</span>
-                      <span className="font-medium text-neutral-900">{test.examinerName || '—'}</span>
+              ) : (
+                <div className="space-y-10">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest block mb-2">النتيجة والدرجة</span>
+                      <span className="text-3xl font-black text-[#1a3a8f]">{test.score} من {test.passingScore}</span>
                     </div>
+                    {test.vehicleUsed && (
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest block mb-2">المركبة المستخدمة</span>
+                        <div className="flex items-center gap-3">
+                           <div className="w-8 h-8 rounded-lg bg-neutral-100 flex items-center justify-center text-neutral-400">
+                              <Car className="w-4 h-4" />
+                           </div>
+                           <span className="text-lg font-black text-neutral-700">{test.vehicleUsed}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  {test.notes && (
-                    <div className="flex items-start bg-neutral-50 p-2 rounded text-neutral-700">
-                      <FileText className="w-4 h-4 me-2 shrink-0 mt-0.5 text-neutral-400" />
-                      <div>
-                        <span className="text-neutral-500 text-xs block mb-0.5">{t('notes')}</span>
-                        {test.notes}
-                      </div>
+                  <div className="pt-8 border-t border-dashed border-neutral-200">
+                    <div className="flex items-center gap-3 mb-6 font-black text-neutral-900">
+                      <User className="w-4 h-4 text-[#1a3a8f]" />
+                      <span>الفاحص الميداني: {test.examinerName || '--'}</span>
                     </div>
-                  )}
-                  
-                  {/* Internal notes only visible to employees, this is handled by role-based rendering at page level if needed, but here it's included for examiners */}
-                  {test.examinerNotes && (
-                    <div className="flex items-start bg-yellow-50 p-2 rounded text-yellow-800">
-                      <AlertTriangle className="w-4 h-4 me-2 shrink-0 mt-0.5 text-yellow-600" />
-                      <div>
-                        <span className="text-yellow-600 text-xs block mb-0.5">{t('examinerNotes')}</span>
-                        {test.examinerNotes}
+
+                    {test.notes && (
+                      <div className="p-8 bg-neutral-50 rounded-[1.5rem] border border-neutral-100/50 relative overflow-hidden group/notes">
+                        <div className="absolute top-0 start-0 w-1 h-full bg-blue-100" />
+                        <span className="text-[10px] font-black text-neutral-300 uppercase tracking-widest block mb-3 flex items-center gap-2">
+                           <FileText className="w-3.5 h-3.5" />
+                           ملاحظات الفحص الفنية
+                        </span>
+                        <div className="text-neutral-600 font-bold leading-relaxed">
+                          {test.notes}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-
-                {(test.requiresAdditionalTraining || test.needsManualTransmissionEndorsement) && (
-                  <div className="bg-primary-50 p-3 rounded-md border border-primary-100">
-                    <h4 className="text-primary-800 text-xs font-semibold mb-2 uppercase tracking-wider">{t('requirements')}</h4>
-                    <ul className="space-y-1">
-                      {test.requiresAdditionalTraining && (
-                        <li className="flex items-center text-primary-700">
-                          <CheckCircle className="w-4 h-4 me-2" /> 
-                          {t('requiresTraining')} ({test.additionalHoursRequired} {t('hours')})
-                        </li>
-                      )}
-                      {test.needsManualTransmissionEndorsement && (
-                        <li className="flex items-center text-primary-700">
-                          <CheckCircle className="w-4 h-4 me-2" /> 
-                          {t('manualEndorsement')}
-                        </li>
-                      )}
-                    </ul>
-                  </div>
-                )}
-              </>
-            )}
-
-            {test.result !== 'Pass' && test.retakeEligibleAfter && (
-              <div className="text-xs text-neutral-500 mt-2 bg-neutral-50 p-2 rounded text-center">
-                {t('retakeEligible', { date: formatDate(test.retakeEligibleAfter, locale) })}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      ))}
+              )}
+            </div>
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 }

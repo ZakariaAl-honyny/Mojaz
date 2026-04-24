@@ -3,7 +3,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/static-translations';
 import { FileText, Check, Clock, X, Eye, Trash2 } from 'lucide-react';
 import { DocumentDto, DocumentStatus } from '@/types/document.types';
 import { DocumentStatusBadge } from './DocumentStatusBadge';
@@ -108,16 +108,16 @@ export function DocumentReviewPanel({
   const renderDocumentRow = (doc: DocumentDto) => (
     <tr
       key={doc.id}
-      className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer"
+      className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
       onClick={() => setSelectedDocument(doc)}
     >
       <td className="py-3 px-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+          <div className="p-2 rounded-lg bg-gray-100">
             <FileText className="w-5 h-5 text-gray-500" />
           </div>
           <div>
-            <p className="font-medium text-gray-900 dark:text-gray-100">
+            <p className="font-medium text-gray-900">
               {getDocumentTypeName(doc)}
             </p>
             <p className="text-xs text-gray-500">
@@ -132,23 +132,23 @@ export function DocumentReviewPanel({
           <DocumentStatusBadge status={doc.status} />
         </div>
       </td>
-      <td className="py-3 px-4 text-sm text-gray-500 dark:text-gray-400">
+      <td className="py-3 px-4 text-sm text-gray-500">
         {formatDate(doc.createdAt)}
       </td>
-      <td className="py-3 px-4 text-sm text-gray-500 dark:text-gray-400">
+      <td className="py-3 px-4 text-sm text-gray-500">
         {doc.status === DocumentStatus.Pending ? (
           <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => handleApprove(doc.id)}
               disabled={reviewMutation.isPending}
-              className="p-1.5 rounded-lg text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
+              className="p-1.5 rounded-lg text-green-600 hover:bg-green-50 transition-colors"
               title={t('review.approve')}
             >
               <Check className="w-4 h-4" />
             </button>
             <button
               onClick={() => setSelectedDocument(doc)}
-              className="p-1.5 rounded-lg text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+              className="p-1.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
               title={t('review.reject')}
             >
               <X className="w-4 h-4" />
@@ -156,7 +156,7 @@ export function DocumentReviewPanel({
           </div>
         ) : (
           <button
-            className="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 transition-colors"
             title={t('lightbox.download')}
           >
             <Eye className="w-4 h-4" />
@@ -170,40 +170,40 @@ export function DocumentReviewPanel({
     <div className="space-y-4">
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4">
+        <div className="bg-amber-50 rounded-lg p-4">
           <div className="flex items-center gap-3">
             <Clock className="w-5 h-5 text-amber-600" />
             <div>
-              <p className="text-2xl font-bold text-amber-700 dark:text-amber-400">
+              <p className="text-2xl font-bold text-amber-700">
                 {pendingDocs.length}
               </p>
-              <p className="text-sm text-amber-600 dark:text-amber-500">
+              <p className="text-sm text-amber-600">
                 {t('status.pending')}
               </p>
             </div>
           </div>
         </div>
-        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+        <div className="bg-green-50 rounded-lg p-4">
           <div className="flex items-center gap-3">
             <Check className="w-5 h-5 text-green-600" />
             <div>
-              <p className="text-2xl font-bold text-green-700 dark:text-green-400">
+              <p className="text-2xl font-bold text-green-700">
                 {approvedDocs.length}
               </p>
-              <p className="text-sm text-green-600 dark:text-green-500">
+              <p className="text-sm text-green-600">
                 {t('status.approved')}
               </p>
             </div>
           </div>
         </div>
-        <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-4">
+        <div className="bg-red-50 rounded-lg p-4">
           <div className="flex items-center gap-3">
             <X className="w-5 h-5 text-red-600" />
             <div>
-              <p className="text-2xl font-bold text-red-700 dark:text-red-400">
+              <p className="text-2xl font-bold text-red-700">
                 {rejectedDocs.length}
               </p>
-              <p className="text-sm text-red-600 dark:text-red-500">
+              <p className="text-sm text-red-600">
                 {t('status.rejected')}
               </p>
             </div>
@@ -226,21 +226,21 @@ export function DocumentReviewPanel({
       )}
 
       {/* Documents Table */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
         {documents.length > 0 ? (
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+            <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="text-start py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <th className="text-start py-3 px-4 text-sm font-medium text-gray-500">
                   {t('review.title')}
                 </th>
-                <th className="text-start py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <th className="text-start py-3 px-4 text-sm font-medium text-gray-500">
                   {t('status.pending')}
                 </th>
-                <th className="text-start py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <th className="text-start py-3 px-4 text-sm font-medium text-gray-500">
                   {t('review.title')}
                 </th>
-                <th className="text-start py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <th className="text-start py-3 px-4 text-sm font-medium text-gray-500">
                   {t('review.title')}
                 </th>
               </tr>

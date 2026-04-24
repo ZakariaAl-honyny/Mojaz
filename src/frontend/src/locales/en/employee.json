@@ -1,0 +1,18 @@
+{
+  "queue": {
+    "searchPlaceholder": "Search by application number or name...",
+    "advancedFilter": "Advanced Filter",
+    "noResults": "No results match your search.",
+    "recordsFound": "records found",
+    "total": "Total",
+    "columns": {
+      "applicationNumber": "Application Number",
+      "applicantName": "Applicant",
+      "category": "Category",
+      "categoryPrefix": "Category ",
+      "stage": "Stage",
+      "status": "Status",
+      "submittedDate": "Submission Date"
+    }
+  }
+}

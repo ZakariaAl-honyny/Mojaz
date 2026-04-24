@@ -75,7 +75,7 @@ description: "Task list for frontend foundation implementation"
 - [X] T008 Install and configure `@tanstack/react-query`
 - [X] T009 Install and configure `axios`
 - [X] T010 Install `shadcn/ui` CLI and configure base components: Button, Input, Card, Label
-- [X] T011 Create global CSS with Mojaz themes (Primary: #006C35, Secondary: #D4A017) in `src/frontend/src/app/globals.css`
+- [X] T011 Create global CSS with Mojaz themes (Primary: #1a3a8f, Secondary: #D4A017) in `src/frontend/src/app/globals.css`
 
 **Checkpoint**: Core foundational libraries are installed and ready.
 

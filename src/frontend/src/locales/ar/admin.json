@@ -1,0 +1,167 @@
+{
+  "admin": {
+    "dashboard": {
+      "title": "لوحة تحكم المسؤول",
+      "subtitle": "نظرة عامة شاملة على أداء نظام نظام إصدار رخص القادة الالكتروني",
+      "today": "اليوم",
+      "export": "تصدير البيانات",
+      "applicationsToday": "الطلبات اليوم",
+      "licensesIssued": "الرخص الصادرة",
+      "revenue": "الإيرادات",
+      "activeUsers": "المستخدمون النشطون",
+      "applicationsByStatus": "الطلبات حسب الحالة",
+      "applicationsTrend": "اتجاه الطلبات",
+      "recentActivity": "النشاط الأخير",
+      "activities": {
+        "newApplication": "طلب جديد",
+        "licenseIssued": "رخصة مُصدرة",
+        "paymentReceived": "دفعة مستلمة",
+        "newUser": "مستخدم جديد",
+        "applicationRejected": "طلب مرفوض"
+      },
+      "descriptions": {
+        "newApplication": "تم تقديم طلب جديد - {id}",
+        "licenseIssued": "تم إصدار رخصة القيادة رقم {id}",
+        "paymentReceived": "دفعة بقيمة {amount} ريال - {type}",
+        "newUser": "تم تسجيل مستخدم جديد: {name}",
+        "applicationRejected": "تم رفض طلب {id} - {reason}"
+      },
+      "status": {
+        "completed": "مكتمل",
+        "inReview": "قيد المراجعة",
+        "submitted": "مستقدم",
+        "cancelled": "ملغي",
+        "draft": "مسودة"
+      }
+    },
+    "users": {
+      "title": "إدارة المستخدمين",
+      "search": "بحث عن مستخدمين...",
+      "name": "الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "role": "الدور في النظام",
+      "status": "حالة الحساب",
+      "actions": "الإجراءات",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "add": "إضافة مستخدم جديد",
+      "noUsers": "لم يتم العثور على مستخدمين في النظام",
+      "roles": {
+        "admin": "مدير النظام",
+        "receptionist": "موظف استقبال",
+        "doctor": "مسؤول طبي",
+        "examiner": "فاحص فني",
+        "manager": "مدير عمليات",
+        "security": "مسؤول أمن"
+      }
+    },
+    "settings": {
+      "title": "إعدادات النظام",
+      "key": "مفتاح الإعداد",
+      "value": "القيمة",
+      "description": "الوصف",
+      "actions": "الإجراءات",
+      "save": "حفظ التغييرات",
+      "cancel": "إلغاء",
+      "edit": "تعديل الإعداد",
+      "noSettings": "لا توجد إعدادات تهيئة",
+      "saveSuccess": "تم تحديث الإعدادات بنجاح",
+      "saveError": "فشل في تحديث الإعدادات"
+    },
+    "audits": {
+      "title": "سجل تدقيق النظام",
+      "subtitle": "تتبع كافة العمليات والتحركات في النظام",
+      "search": "بحث...",
+      "searchPlaceholder": "بحث بالكيان، المستخدم، أو المعرف",
+      "date": "الطابع الزمني",
+      "user": "بواسطة",
+      "entity": "الكيان",
+      "action": "العملية",
+      "details": "التفاصيل",
+      "noLogs": "لا توجد مدخلات في السجل",
+      "previous": "السابق",
+      "next": "التالي",
+      "loading": "جاري تحميل السجلات...",
+      "filters": {
+        "all": "الكل",
+        "actionType": "نوع العملية",
+        "entityType": "نوع الكيان",
+        "dateRange": "النطاق الزمني",
+        "from": "من",
+        "to": "إلى",
+        "apply": "تطبيق",
+        "reset": "إعادة تعيين"
+      },
+      "detail": {
+        "title": "تفاصيل السجل",
+        "user": "المستخدم",
+        "ipAddress": "عنوان IP",
+        "userAgent": "متصفح المستخدم",
+        "timestamp": "التاريخ والوقت",
+        "entity": "الكيان",
+        "entityId": "معرف الكيان",
+        "action": "العملية",
+        "changes": "التغييرات",
+        "oldValue": "القيمة القديمة",
+        "newValue": "القيمة الجديدة",
+        "noChanges": "لا توجد تغييرات مسجلة",
+        "close": "إغلاق"
+      },
+      "actions": {
+        "create": "إنشاء",
+        "update": "تحديث",
+        "delete": "حذف",
+        "login": "تسجيل دخول",
+        "logout": "تسجيل خروج",
+        "view": "عرض"
+      },
+      "entities": {
+        "user": "مستخدم",
+        "application": "طلب",
+        "license": "رخصة",
+        "payment": "دفعة",
+        "appointment": "موعد",
+        "settings": "إعدادات"
+      }
+    },
+    "reports": {
+      "title": "التقارير الإدارية",
+      "subtitle": "رؤى شاملة حول أداء النظام والامتثال",
+      "export": "تصدير التقرير",
+      "refresh": "تحديث البيانات",
+      "applications": {
+        "title": "اتجاهات الطلبات",
+        "total": "إجمالي الطلبات",
+        "byStatus": "التوزيع حسب الحالة",
+        "byService": "التوزيع حسب الخدمة"
+      },
+      "financial": {
+        "title": "التحليلات المالية",
+        "total": "إجمالي الإيرادات",
+        "daily": "الإيرادات اليومية",
+        "methods": "طرق الدفع"
+      },
+      "performance": {
+        "title": "الأداء التشغيلي",
+        "avgTime": "متوسط وقت المعالجة",
+        "throughput": "إنتاجية النظام",
+        "byMonth": "الأداء الشهري"
+      },
+      "users": {
+        "title": "البيانات الديموغرافية للمستخدمين",
+        "total": "إجمالي المستخدمين النشطين",
+        "byRole": "التوزيع حسب الدور"
+      },
+      "licenses": {
+        "title": "رؤى إصدار الرخص",
+        "active": "الرخص النشطة",
+        "expired": "الرخص المنتهية",
+        "expiringSoon": "تنتهي صلاحيتها قريباً",
+        "byClass": "التوزيع حسب الفئة",
+        "totalIssued": "إجمالي الصادرة",
+        "renewalRates": "معدلات التجديد"
+      }
+    }
+  }
+}

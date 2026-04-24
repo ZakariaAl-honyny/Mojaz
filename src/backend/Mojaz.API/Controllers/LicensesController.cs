@@ -18,6 +18,7 @@ namespace Mojaz.API.Controllers;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces("application/json")]
+[Authorize]
 public class LicensesController : ControllerBase
 {
     private readonly ILicenseService _licenseService;

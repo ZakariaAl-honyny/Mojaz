@@ -105,6 +105,6 @@ As an employee (Receptionist, Doctor, or Examiner), I want to see a dashboard ta
 ## Assumptions
 
 - **Mock OTP**: Registration flow will use a mock OTP for initial frontend development until the backend SMS/Email services are fully connected.
-- **Shared UI Library**: All components will use the `shadcn/ui` base customized with the `#006C35` Royal Green theme.
+- **Shared UI Library**: All components will use the `shadcn/ui` base customized with the `#1a3a8f` King Blue theme.
 - **API Availability**: Frontend components assume corresponding API endpoints (v1) are available or can be easily mocked.
 - **Manual Verification**: Some verification steps (e.g. Identity check) are assumed to be "manual approval" by a Receptionist role in the UI.

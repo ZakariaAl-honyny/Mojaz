@@ -64,7 +64,7 @@ public class ProcessAppointmentRemindersJob
             try
             {
                 // Skip cancelled or completed appointments
-                if (appointment.Status == "Cancelled" || appointment.Status == "Completed")
+                if (appointment.Status == AppointmentStatus.Cancelled || appointment.Status == AppointmentStatus.Completed)
                 {
                     appointment.ReminderSent = true;
                     _appointmentRepository.Update(appointment);

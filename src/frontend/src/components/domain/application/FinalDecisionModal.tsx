@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/static-translations";
 import { useMutation } from "@tanstack/react-query";
 import { FinalDecisionType, FinalizeApplicationRequest } from "@/types/finalApproval.types";
 import { finalApprovalService } from "@/services/finalApproval.service";
@@ -116,8 +116,8 @@ export function FinalDecisionModal({
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
         <Card className="w-full max-w-md p-8 text-center animate-in fade-in zoom-in duration-300">
           <div className="flex justify-center mb-4">
-            <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
-              <CheckCircle className="w-10 h-10 text-green-600 dark:text-green-400" />
+            <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
+              <CheckCircle className="w-10 h-10 text-green-600" />
             </div>
           </div>
           <h3 className="text-2xl font-bold mb-2">{t("messages.success")}</h3>
@@ -140,8 +140,8 @@ export function FinalDecisionModal({
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
         <Card className="w-full max-w-md p-8 text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-20 h-20 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
-              <XCircle className="w-10 h-10 text-red-600 dark:text-red-400" />
+            <div className="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center">
+              <XCircle className="w-10 h-10 text-red-600" />
             </div>
           </div>
           <h3 className="text-2xl font-bold mb-2">{t("errors.submitFailed")}</h3>
@@ -169,7 +169,7 @@ export function FinalDecisionModal({
           <p className="text-gray-500 mb-6">{getDecisionMessage()}</p>
           
           {formData.reason && (
-            <div className="text-left bg-gray-50 dark:bg-gray-900 p-3 rounded-lg mb-6">
+            <div className="text-left bg-gray-50 p-3 rounded-lg mb-6">
               <p className="text-sm text-gray-500">{t("form.reason")}:</p>
               <p className="font-medium">{formData.reason}</p>
             </div>
@@ -215,8 +215,8 @@ export function FinalDecisionModal({
 
         {/* Block approval if Gate4 failed */}
         {!canApprove && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg dark:bg-red-950/30 dark:border-red-800">
-            <p className="text-red-600 dark:text-red-400 font-medium">
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-600 font-medium">
               {t("messages.gate4Failed")}
             </p>
             <p className="text-sm text-red-500 mt-1">

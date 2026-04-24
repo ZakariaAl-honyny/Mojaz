@@ -25,17 +25,40 @@ public class AuditLogMiddleware
             var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var path = context.Request.Path;
 
-            // Simple audit log capture for the scaffold
-            // In a real app, you might want to capture the body or the before/after state
+            // Log concise action: "POST /applications" not full URL with UUID
+            var actionName = $"{method} {GetConciseAction(path)}";
+            
             await auditService.LogAsync(
-                action: $"{method} {path}",
-                entityType: "API_REQUEST",
-                entityId: userId ?? "Anonymous",
-                newValues: $"Request from IP {context.Connection.RemoteIpAddress}"
+                actionName,
+                "API_REQUEST",
+                userId ?? "Anonymous",
+                null,
+                $"IP: {context.Connection.RemoteIpAddress}"
             );
         }
 
         await _next(context);
+    }
+
+    /// <summary>
+    /// Extract concise action from path, removing UUIDs and excessive detail.
+    /// </summary>
+    private static string GetConciseAction(string path)
+    {
+        // /api/v1/applications/8842620f.../wizard-data -> /applications/{id}/wizard-data
+        var segments = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        if (segments.Length < 2) return path;
+
+        // Build concise path
+        var result = new List<string>();
+        foreach (var seg in segments.Skip(1)) // Skip 'api' prefix
+        {
+            if (seg.Length > 36 && seg.Contains('-')) // Likely a UUID
+                result.Add("{id}");
+            else
+                result.Add(seg);
+        }
+        return "/" + string.Join("/", result);
     }
 }
 

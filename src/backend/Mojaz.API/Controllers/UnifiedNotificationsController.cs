@@ -8,10 +8,11 @@ namespace Mojaz.API.Controllers
 {
     /// <summary>
     /// Endpoints for in-app and unified notifications.
+    /// DUPLICATE - Disabled to fix route conflict with NotificationsController
     /// </summary>
-    [ApiController]
-    [Route("api/v1/notifications")]
-    [Produces("application/json")]
+    // [ApiController]
+    // [Route("api/v1/notifications")]
+    // [Produces("application/json")]
     public class UnifiedNotificationsController : ControllerBase
     {
         private readonly INotificationService _notificationService;

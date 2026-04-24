@@ -26,7 +26,7 @@ public class NotificationService : INotificationService
     private readonly IEmailService _emailService;
     private readonly ISmsService _smsService;
     private readonly IPushNotificationService _pushNotificationService;
-    private readonly IBackgroundJobClient _backgroundJobClient;
+    private readonly IBackgroundJobClient? _backgroundJobClient;
 
     public NotificationService(
         IRepository<Notification> notificationRepository,
@@ -36,7 +36,7 @@ public class NotificationService : INotificationService
         IEmailService emailService,
         ISmsService smsService,
         IPushNotificationService pushNotificationService,
-        IBackgroundJobClient backgroundJobClient)
+        IBackgroundJobClient? backgroundJobClient)
     {
         _notificationRepository = notificationRepository;
         _applicationRepository = applicationRepository;
@@ -69,17 +69,26 @@ public class NotificationService : INotificationService
 
         await _notificationRepository.AddAsync(notification);
 
-        // 2. Dispatch via Email (Hangfire async job) - only if user enabled email notifications
+        // 2. Dispatch via Email - use Hangfire if available, otherwise send directly
         if (request.Email && !string.IsNullOrEmpty(user.Email) && user.EnableEmail)
         {
             var subject = user.PreferredLanguage == "ar" ? request.TitleAr : request.TitleEn;
             var body = user.PreferredLanguage == "ar" ? request.MessageAr : request.MessageEn;
-            // Enqueue email job - service method has [AutomaticRetry] attribute
-            _backgroundJobClient.Enqueue(() => _emailService.SendEmailAsync(user.Email, subject, body));
+            
+            // Try Hangfire if available, otherwise send directly
+            if (_backgroundJobClient != null)
+            {
+                _backgroundJobClient.Enqueue(() => _emailService.SendEmailAsync(user.Email, subject, body));
+            }
+            else
+            {
+                // Fallback: send directly without Hangfire
+                _ = _emailService.SendEmailAsync(user.Email, subject, body);
+            }
         }
 
         // 3. Dispatch via SMS (Hangfire async job) - only if user enabled SMS notifications
-        if (request.Sms && !string.IsNullOrEmpty(user.PhoneNumber) && user.EnableSms)
+        if (request.Sms && !string.IsNullOrEmpty(user.PhoneNumber) && user.EnableSms && _backgroundJobClient != null)
         {
             var body = user.PreferredLanguage == "ar" ? request.MessageAr : request.MessageEn;
             // Enqueue SMS job - service method has [AutomaticRetry] attribute
@@ -87,7 +96,7 @@ public class NotificationService : INotificationService
         }
 
         // 4. Dispatch via Push (Hangfire async job) - only if user enabled push notifications
-        if (request.Push && user.EnablePush)
+        if (request.Push && user.EnablePush && _backgroundJobClient != null)
         {
             // Enqueue push notification job - service method has [AutomaticRetry] attribute
             var pushMessage = new PushMessage

@@ -3,7 +3,7 @@
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/static-translations';
 
 interface StatusDonutChartProps {
   data: {

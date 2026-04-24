@@ -10,7 +10,7 @@ public class MedicalExamination : SoftDeletableEntity
     public Guid DoctorId { get; set; }
     public DateTime ExaminedAt { get; set; } = DateTime.UtcNow;
     public MedicalFitnessResult FitnessResult { get; set; }
-    public string? BloodType { get; set; }
+    public BloodTypeEnum? BloodType { get; set; }
     public string? Notes { get; set; }
     public string? ReportReference { get; set; }
     public DateTime? ValidUntil { get; set; }

@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from "react";
 import dynamic from "next/dynamic";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/static-translations";
 import { Button } from "@/components/ui/button";
 import { ShieldAlert, Loader2 } from "lucide-react";
 import { TrainingRecordDto } from "@/types/training.types";

@@ -1,17 +1,11 @@
 "use client";
 
-/**
- * NotificationList Component
- * Modal displaying list of notifications with mark as read functionality
- */
-
-import { useState } from 'react';
-import { useTranslations, useLocale } from 'next-intl';
-import { X, Bell, Check, CheckCheck, Loader2 } from 'lucide-react';
 import { useNotifications } from '@/hooks/useNotifications';
 import { NotificationDto } from '@/types/notification.types';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { X, Bell, Check, CheckCheck, Loader2, Inbox, CalendarClock } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface NotificationListProps {
   isOpen: boolean;
@@ -19,10 +13,6 @@ interface NotificationListProps {
 }
 
 export function NotificationList({ isOpen, onClose }: NotificationListProps) {
-  const t = useTranslations('notifications');
-  const locale = useLocale();
-  const isRTL = locale === 'ar';
-
   const {
     notifications,
     notificationsLoading,
@@ -32,14 +22,7 @@ export function NotificationList({ isOpen, onClose }: NotificationListProps) {
     markAsRead,
   } = useNotifications({ page: 1, pageSize: 50 });
 
-  // For simple implementation, we pass locale as a prop from the parent
-  // or use a different approach to detect direction
-
   if (!isOpen) return null;
-
-  const handleMarkAllAsRead = () => {
-    markAllAsRead();
-  };
 
   const handleNotificationClick = (notification: NotificationDto) => {
     if (!notification.isRead) {
@@ -49,9 +32,9 @@ export function NotificationList({ isOpen, onClose }: NotificationListProps) {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString(locale === 'ar' ? 'ar-SA' : 'en-US', {
+    return date.toLocaleDateString('ar-YE', {
       year: 'numeric',
-      month: 'short',
+      month: 'long',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
@@ -61,127 +44,131 @@ export function NotificationList({ isOpen, onClose }: NotificationListProps) {
   return (
     <>
       {/* Backdrop */}
-      <div
-        className="fixed inset-0 z-40 bg-black/50"
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[100] bg-blue-950/20 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: -20, x: '50%' }}
+        animate={{ opacity: 1, scale: 1, y: 0, x: '50%' }}
+        exit={{ opacity: 0, scale: 0.95, y: -20, x: '50%' }}
         className={cn(
-          'fixed start-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2',
-          'rounded-xl border border-neutral-200 bg-white shadow-xl',
-          'dark:border-neutral-800 dark:bg-neutral-950',
-          'max-h-[80vh] flex flex-col'
+          'fixed end-1/2 top-24 z-[101] w-full max-w-lg -translate-x-1/2 font-arabic',
+          'rounded-[2.5rem] border border-blue-50/50 bg-white shadow-[0_30px_100px_-20px_rgba(26,58,143,0.15)]',
+          'max-h-[75vh] flex flex-col overflow-hidden'
         )}
+        dir="rtl"
       >
         {/* Header */}
-        <div
-          className={cn(
-            'flex items-center justify-between border-b border-neutral-200 px-4 py-3',
-            'dark:border-neutral-800'
-          )}
-        >
-          <div className="flex items-center gap-2">
-            <Bell className="size-5 text-primary" />
-            <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-              {t('title')}
-            </h2>
-            {unreadCount > 0 && (
-              <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-medium text-white">
-                {unreadCount}
-              </span>
-            )}
+        <div className="flex items-center justify-between px-8 py-8 border-b border-neutral-50">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-[#1a3a8f]">
+               <Bell className="w-6 h-6 stroke-[2.5px]" />
+            </div>
+            <div>
+               <h2 className="text-xl font-black text-neutral-900">مركز التنبيهات</h2>
+               <p className="text-xs font-bold text-neutral-400 mt-0.5">تابع آخر مستجدات طلباتك</p>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className={cn(
-              'rounded-lg p-1 text-neutral-500 hover:bg-neutral-100',
-              'dark:text-neutral-400 dark:hover:bg-neutral-800',
-              'transition-colors'
-            )}
-            aria-label="Close"
+            className="w-10 h-10 rounded-xl flex items-center justify-center text-neutral-300 hover:bg-neutral-50 hover:text-neutral-900 transition-all"
           >
-            <X className="size-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
-        {/* Actions */}
+        {/* Actions bar if there are unread notifications */}
         {unreadCount > 0 && (
-          <div
-            className={cn(
-              'border-b border-neutral-200 px-4 py-2',
-              'dark:border-neutral-800'
-            )}
-          >
+          <div className="px-8 py-3 bg-blue-50/30 flex items-center justify-between border-b border-blue-50/50">
+            <span className="text-[10px] font-black text-[#1a3a8f] uppercase tracking-widest">
+              لديك {unreadCount} تنبيهات غير مقروءة
+            </span>
             <Button
               variant="ghost"
               size="sm"
-              onClick={handleMarkAllAsRead}
+              onClick={() => markAllAsRead()}
               disabled={markAllAsReadLoading}
-              className="gap-1.5 text-primary hover:text-primary/80"
+              className="h-8 rounded-lg text-[10px] font-black text-[#1a3a8f] hover:bg-blue-50 flex items-center gap-2"
             >
               {markAllAsReadLoading ? (
-                <Loader2 className="size-4 animate-spin" />
+                <Loader2 className="w-3 h-3 animate-spin" />
               ) : (
-                <CheckCheck className="size-4" />
+                <CheckCheck className="w-3 h-3" />
               )}
-              {t('markAllRead')}
+              تحديد الكل كمقروء
             </Button>
           </div>
         )}
 
-        {/* Notification List */}
-        <div className="flex-1 overflow-y-auto">
+        {/* Notification List Scrollable Area */}
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-2">
           {notificationsLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="size-6 animate-spin text-primary" />
+            <div className="flex flex-col items-center justify-center py-20 gap-4">
+              <Loader2 className="w-8 h-8 animate-spin text-[#1a3a8f]" />
+              <p className="text-xs font-black text-neutral-300 uppercase tracking-widest animate-pulse">جاري التحميل...</p>
             </div>
           ) : notifications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8 text-neutral-500">
-              <Bell className="mb-2 size-8" />
-              <p>{t('empty')}</p>
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="w-20 h-20 rounded-[2rem] bg-neutral-50 flex items-center justify-center mb-6">
+                 <Inbox className="w-10 h-10 text-neutral-200" />
+              </div>
+              <h3 className="text-lg font-black text-neutral-900">صندوق التنبيهات فارغ</h3>
+              <p className="text-xs font-bold text-neutral-400 mt-2">لا توجد تنبيهات حالياً في حسابك</p>
             </div>
           ) : (
-            <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
+            <ul className="space-y-3">
               {notifications.map((notification) => (
                 <li key={notification.id}>
                   <button
                     onClick={() => handleNotificationClick(notification)}
                     className={cn(
-                      'w-full px-4 py-3 text-start transition-colors hover:bg-neutral-50',
-                      'dark:hover:bg-neutral-900',
-                      !notification.isRead && 'bg-primary/5'
+                      'w-full p-6 text-right rounded-[2rem] transition-all duration-300 group',
+                      notification.isRead 
+                        ? 'bg-transparent hover:bg-neutral-50' 
+                        : 'bg-blue-50/50 hover:bg-blue-50 ring-1 ring-blue-100/20 shadow-lg shadow-blue-900/5'
                     )}
                   >
-                    <div className="flex items-start gap-3">
-                      <div
-                        className={cn(
-                          'mt-1.5 size-2 shrink-0 rounded-full',
-                          notification.isRead
-                            ? 'bg-neutral-300 dark:bg-neutral-600'
-                            : 'bg-primary'
-                        )}
-                      />
-                      <div className="flex-1 space-y-1">
-                        <p
-                          className={cn(
-                            'font-medium text-neutral-900 dark:text-neutral-100',
-                            !notification.isRead && 'font-semibold'
-                          )}
-                        >
-                          {isRTL ? notification.titleAr : notification.titleEn}
-                        </p>
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                          {isRTL ? notification.messageAr : notification.messageEn}
-                        </p>
-                        <p className="text-xs text-neutral-400">
-                          {formatDate(notification.createdAt)}
-                        </p>
+                    <div className="flex items-start gap-4">
+                      <div className={cn(
+                        "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 transition-all duration-500",
+                        notification.isRead ? "bg-neutral-50 text-neutral-300" : "bg-white text-[#1a3a8f] shadow-md shadow-blue-900/5"
+                      )}>
+                         <Bell className={cn("w-5 h-5", !notification.isRead && "animate-bounce group-hover:animate-none")} />
                       </div>
-                      {!notification.isRead && (
-                        <Check className="size-4 text-primary" />
-                      )}
+                      
+                      <div className="flex-1 space-y-1.5">
+                        <div className="flex items-center justify-between">
+                           <h4 className={cn(
+                             "text-base font-black tracking-tight",
+                             notification.isRead ? "text-neutral-500" : "text-[#1a3a8f]"
+                           )}>
+                             {notification.titleAr}
+                           </h4>
+                           {!notification.isRead && (
+                             <div className="w-2 h-2 rounded-full bg-[#1a3a8f] animate-pulse" />
+                           )}
+                        </div>
+                        
+                        <p className={cn(
+                          "text-sm font-bold leading-relaxed",
+                          notification.isRead ? "text-neutral-400" : "text-neutral-600"
+                        )}>
+                          {notification.messageAr}
+                        </p>
+                        
+                        <div className="flex items-center gap-2 pt-2">
+                           <CalendarClock className="w-3 h-3 text-neutral-300" />
+                           <span className="text-[10px] font-black text-neutral-300 tracking-wider">
+                             {formatDate(notification.createdAt)}
+                           </span>
+                        </div>
+                      </div>
                     </div>
                   </button>
                 </li>
@@ -189,7 +176,12 @@ export function NotificationList({ isOpen, onClose }: NotificationListProps) {
             </ul>
           )}
         </div>
-      </div>
+        
+        {/* Footer */}
+        <div className="p-8 bg-neutral-50/50 border-t border-neutral-50 text-center">
+           <p className="text-[10px] font-black text-neutral-300 uppercase tracking-[0.2em]">الإدارة العامة للمرور - محافظة صنعاء</p>
+        </div>
+      </motion.div>
     </>
   );
 }

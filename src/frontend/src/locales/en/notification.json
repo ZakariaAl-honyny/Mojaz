@@ -1,0 +1,31 @@
+{
+  "notification": {
+    "title": "Notifications",
+    "subtitle": "View and manage your notifications",
+    "markAllRead": "Mark all as read",
+    "deleteOld": "Delete old",
+    "noNotifications": "No notifications",
+    "noNotificationsDesc": "Your notifications will appear here when you receive updates about your applications and appointments.",
+    "search": "Search notifications",
+    "all": "All",
+    "unread": "Unread",
+    "types": {
+      "payment": "Payment",
+      "appointment": "Appointment",
+      "application": "Application",
+      "license": "License",
+      "test": "Test",
+      "document": "Document",
+      "system": "System"
+    },
+    "actions": {
+      "view": "View",
+      "markRead": "Mark as read",
+      "delete": "Delete"
+    },
+    "status": {
+      "read": "Read",
+      "unread": "Unread"
+    }
+  }
+}

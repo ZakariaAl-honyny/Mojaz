@@ -1,5 +1,6 @@
 using FluentValidation;
 using Mojaz.Application.DTOs.Application;
+using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Domain.Entities;
 using Mojaz.Application.Interfaces.Services;
@@ -54,7 +55,7 @@ public class CreateApplicationValidator : AbstractValidator<CreateApplicationReq
 
         RuleFor(x => x.Gender)
             .NotEmpty().WithMessage("Gender is required.")
-            .Must(g => g == "Male" || g == "Female").WithMessage("Gender must be Male or Female.");
+            .Must(g => g == GenderEnum.Male || g == GenderEnum.Female).WithMessage("Gender must be Male or Female.");
 
         RuleFor(x => x.Nationality).NotEmpty().WithMessage("Nationality is required.");
         
@@ -63,7 +64,7 @@ public class CreateApplicationValidator : AbstractValidator<CreateApplicationReq
         
         RuleFor(x => x.ApplicantType)
             .NotEmpty().WithMessage("Applicant type is required.")
-            .Must(t => t == "Citizen" || t == "Resident").WithMessage("Type must be Citizen or Resident.");
+            .Must(t => t == ApplicantType.Private || t == ApplicantType.Public).WithMessage("Type must be Private or Public.");
 
         // Step 4: Details
         RuleFor(x => x.BranchId).NotEmpty().WithMessage("Preferred branch/center is required.");

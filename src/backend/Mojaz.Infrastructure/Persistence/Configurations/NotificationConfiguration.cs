@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
 
 namespace Mojaz.Infrastructure.Persistence.Configurations
 {
@@ -16,8 +15,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(x => x.ApplicationId).IsRequired(false);
             builder.Property(x => x.EventType)
                 .IsRequired()
-                .HasConversion<string>()
-                .HasMaxLength(64);
+                .HasColumnType("tinyint");
 
             builder.Property(x => x.TitleAr).IsRequired().HasMaxLength(256);
             builder.Property(x => x.TitleEn).IsRequired().HasMaxLength(256);

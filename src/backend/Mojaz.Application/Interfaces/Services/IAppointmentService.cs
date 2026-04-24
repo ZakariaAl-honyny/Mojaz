@@ -13,6 +13,9 @@ public interface IAppointmentService
     Task<AppointmentDto> CreateAppointmentAsync(CreateAppointmentRequest request, CancellationToken ct = default);
     Task<AppointmentDto?> GetAppointmentByIdAsync(Guid id, CancellationToken ct = default);
     Task<List<AppointmentDto>> GetAppointmentsByApplicationAsync(Guid applicationId, CancellationToken ct = default);
+    Task<List<AppointmentDto>> GetMyAppointmentsAsync(Guid userId, CancellationToken ct = default);
+    Task<List<AppointmentDto>> GetAttendanceAsync(DateOnly date, Guid branchId, CancellationToken ct = default);
+    Task<AppointmentDto> CheckInAsync(Guid appointmentId, CancellationToken ct = default);
     Task<AppointmentDto> RescheduleAppointmentAsync(Guid appointmentId, RescheduleAppointmentRequest request, CancellationToken ct = default);
     Task<AppointmentDto> CancelAppointmentAsync(Guid appointmentId, CancelAppointmentRequest request, CancellationToken ct = default);
     Task<AppointmentValidationResult> ValidateBookingAsync(CreateAppointmentRequest request, CancellationToken ct = default);

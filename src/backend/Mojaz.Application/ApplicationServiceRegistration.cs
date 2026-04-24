@@ -23,7 +23,13 @@ public static class ApplicationServiceRegistration
         
         // ─── Workflow & Business ───
         services.AddScoped<IApplicationWorkflowService, ApplicationWorkflowService>();
+        
+        // ApplicationService requires: IRepository<ApplicationEntity>, IRepository<User>, 
+        // IRepository<LicenseCategory>, IRepository<SystemSetting>, IRepository<License>,
+        // IFeeStructureRepository, IRepository<PaymentTransaction>, IUnitOfWork, IMapper, 
+        // IAuditService, INotificationService, IPaymentService
         services.AddScoped<IApplicationService, ApplicationService>();
+        
         services.AddScoped<IDocumentService, DocumentService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<ILicenseService, LicenseService>();

@@ -43,13 +43,27 @@ public class AppointmentRepository : Repository<Appointment>, IAppointmentReposi
             .ToListAsync(ct);
     }
 
+    public async Task<IReadOnlyList<Appointment>> GetByApplicationIdsAsync(List<Guid> applicationIds, CancellationToken ct = default)
+    {
+        if (applicationIds == null || !applicationIds.Any())
+        {
+            return new List<Appointment>();
+        }
+
+        return await _dbSet
+            .Where(x => applicationIds.Contains(x.ApplicationId) && !x.IsDeleted)
+            .OrderByDescending(x => x.ScheduledDate)
+            .ThenByDescending(x => x.CreatedAt)
+            .ToListAsync(ct);
+    }
+
     public async Task<IReadOnlyList<Appointment>> GetByBranchAndDateAsync(Guid branchId, DateOnly date, CancellationToken ct = default)
     {
         return await _dbSet
             .Where(x => 
                 x.BranchId == branchId && 
                 x.ScheduledDate == date &&
-                x.Status != "Cancelled" &&
+                x.Status != AppointmentStatus.Cancelled &&
                 !x.IsDeleted)
             .ToListAsync(ct);
     }
@@ -61,7 +75,7 @@ public class AppointmentRepository : Repository<Appointment>, IAppointmentReposi
                 x.BranchId == branchId && 
                 x.ScheduledDate >= startDate && 
                 x.ScheduledDate <= endDate &&
-                x.Status != "Cancelled" &&
+                x.Status != AppointmentStatus.Cancelled &&
                 !x.IsDeleted)
             .OrderBy(x => x.ScheduledDate)
             .ThenBy(x => x.TimeSlot)
@@ -75,7 +89,7 @@ public class AppointmentRepository : Repository<Appointment>, IAppointmentReposi
                 x.BranchId == branchId && 
                 x.ScheduledDate == date && 
                 x.TimeSlot == timeSlot &&
-                x.Status != "Cancelled" &&
+                x.Status != AppointmentStatus.Cancelled &&
                 !x.IsDeleted, ct);
     }
 
@@ -98,8 +112,8 @@ public class AppointmentRepository : Repository<Appointment>, IAppointmentReposi
             .Where(x => 
                 !x.IsDeleted &&
                 !x.ReminderSent &&
-                x.Status != "Cancelled" &&
-                x.Status != "Completed" &&
+                x.Status != AppointmentStatus.Cancelled &&
+                x.Status != AppointmentStatus.Completed &&
                 x.ScheduledDate == targetDate)
             .ToListAsync(ct);
     }

@@ -2,14 +2,12 @@
 
 import { useWizardStore } from '@/stores/wizard-store';
 import { useApplicationWizard } from '@/hooks/useApplicationWizard';
-import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Send, Save, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Send, Save, Loader2, ArrowRight, ArrowLeft, SendHorizonal, ShieldCheck, BookmarkCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export function WizardNavButtons() {
-  const t = useTranslations('wizard');
   const { currentStep, isSaving, declarationAccepted } = useWizardStore();
   const { goBack, goNext, submit, isSubmitting } = useApplicationWizard();
 
@@ -41,86 +39,109 @@ export function WizardNavButtons() {
   };
 
   return (
-    <div className="sticky bottom-0 z-20 w-full mt-10 -mx-4 px-4 py-6 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800 transition-all duration-300">
-      <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
-        {/* Back button */}
-        <div className={cn(isFirstStep ? 'invisible' : 'visible')}>
-          <Button
-            variant="ghost"
-            onClick={handleBack}
-            disabled={isLoading}
-            className="group flex items-center gap-2 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1 rtl:rotate-180 rtl:group-hover:translate-x-1" />
-            <span className="font-medium">{t('navigation.back')}</span>
-          </Button>
-        </div>
+    <div className="w-full flex items-center justify-between gap-8 py-10 px-10 bg-white/60 backdrop-blur-3xl rounded-[2.5rem] border border-white shadow-[0_-10px_50px_-20px_rgba(26,58,143,0.1)] transition-all duration-700 font-arabic group" dir="rtl">
+      {/* Dynamic Background Glow */}
+      <div className="absolute inset-0 bg-gradient-to-l from-transparent via-[#1a3a8f]/5 to-transparent rounded-[2.5rem] -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
-        {/* Action buttons */}
-        <div className="flex items-center gap-4">
-          {!isLastStep && (
-            <Button
-              variant="ghost"
-              disabled={isLoading}
-              className="hidden sm:flex items-center gap-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400"
-            >
-              <Save className="w-4 h-4" />
-              <span className="text-sm font-medium">{t('navigation.saveDraft')}</span>
-            </Button>
-          )}
+      {/* Back Control */}
+      <div className={cn("transition-all duration-500", isFirstStep ? 'opacity-0 pointer-events-none' : 'opacity-100')}>
+        <Button
+          variant="ghost"
+          onClick={handleBack}
+          disabled={isLoading}
+          className="h-10 md:h-12 px-6 md:px-8 rounded-md font-black text-sm md:text-base transition-all duration-500"
+        >
+          <div className="w-8 h-8 md:w-9 md:h-9 rounded-md bg-neutral-50 flex items-center justify-center transition-transform group-hover:-translate-x-1">
+            <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
+          </div>
+          <span className="text-sm md:text-base">الخطوة السابقة</span>
+        </Button>
+      </div>
 
-          {isSaving && !isSubmitting && (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800 animate-in fade-in slide-in-from-bottom-1">
-              <Loader2 className="w-3 h-3 animate-spin text-neutral-500" />
-              <span className="text-xs text-neutral-500 font-medium">{t('autoSave.saving')}</span>
-            </div>
-          )}
+      {/* Primary Actions Container */}
+      <div className="flex items-center gap-8">
+        <AnimatePresence mode="wait">
+            {!isLastStep && (
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                >
+                    <Button
+                        variant="ghost"
+                        disabled={isLoading}
+                        className="hidden md:flex h-10 md:h-12 px-5 md:px-6 rounded-md items-center gap-3 text-sm md:text-base text-neutral-400 hover:text-emerald-600 font-black transition-all hover:bg-emerald-50 border border-transparent hover:border-emerald-100"
+                    >
+                        <BookmarkCheck className="w-4 h-4 md:w-5 md:h-5" />
+                        <span className="text-sm md:text-base">حفظ المسودة</span>
+                    </Button>
+                </motion.div>
+            )}
+        </AnimatePresence>
 
-          {!isLastStep ? (
-            <Button
-              onClick={handleNext}
-              disabled={isLoading}
-              size="lg"
-              className={cn(
-                "group relative min-w-[140px] bg-primary-600 hover:bg-primary-700 text-white font-semibold transition-all duration-300",
-                "shadow-lg shadow-primary-600/20 hover:shadow-primary-600/30",
-                "rounded-gov overflow-hidden"
-              )}
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                {t('navigation.next')}
-                <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1" />
-              </span>
-              <motion.div 
-                className="absolute inset-0 bg-white/10 dark:bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" 
-                initial={false}
-              />
-            </Button>
-          ) : (
-            <Button
-              onClick={handleSubmit}
-              disabled={isLoading || !declarationAccepted}
-              size="lg"
-              className={cn(
-                "group min-w-[160px] bg-primary-600 hover:bg-primary-700 disabled:bg-neutral-200 dark:disabled:bg-neutral-800 text-white font-bold transition-all duration-300",
-                "shadow-xl shadow-primary-600/20 hover:shadow-primary-600/40",
-                "rounded-gov"
-              )}
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin me-2" />
-                  {t('step5.submitting')}
-                </>
-              ) : (
-                <>
-                  <Send className="w-5 h-5 me-2 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                  {t('step5.submit')}
-                </>
-              )}
-            </Button>
-          )}
-        </div>
+        <AnimatePresence mode="wait">
+            {!isLastStep ? (
+                <motion.div
+                    key="next-btn"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                >
+                    <Button
+                        onClick={handleNext}
+                        disabled={isLoading}
+                        className={cn(
+                            "group h-10 md:h-12 px-6 md:px-8 rounded-md bg-[#1a3a8f] hover:bg-[#00215a] text-white font-black text-sm md:text-base transition-all duration-500",
+                            "flex items-center gap-3 md:gap-4 ring-0"
+                        )}
+                    >
+                        {isLoading ? (
+                            <Loader2 className="w-5 h-5 md:w-6 md:h-6 animate-spin" />
+                        ) : (
+                            <>
+                                <span className="text-sm md:text-base">الانتقال للمرحلة التالية</span>
+                                <div className="w-8 h-8 md:w-10 md:h-10 rounded-md bg-white/20 flex items-center justify-center transition-transform group-hover:-translate-x-1">
+                                    <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
+                                </div>
+                            </>
+                        )}
+                    </Button>
+                </motion.div>
+            ) : (
+                <motion.div
+                    key="submit-btn"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                >
+                    <Button
+                        onClick={handleSubmit}
+                        disabled={isLoading || !declarationAccepted}
+                        className={cn(
+                            "group h-10 md:h-12 px-6 md:px-8 rounded-md bg-[#1a3a8f] text-white font-black text-sm md:text-base transition-all duration-500 hover:bg-emerald-600 disabled:bg-neutral-100 disabled:text-neutral-300 disabled:shadow-none disabled:border-neutral-200",
+                            "flex items-center gap-3 md:gap-4 ring-0"
+                        )}
+                    >
+                        {isSubmitting ? (
+                            <>
+                                <Loader2 className="w-5 h-5 md:w-6 md:h-6 animate-spin" />
+                                <span className="text-sm md:text-base">جاري تقديم الطلب سيادياً...</span>
+                            </>
+                        ) : (
+                            <>
+                                <div className="flex flex-col items-start leading-none gap-1">
+                                    <span className="text-sm md:text-base">إرسال الطلب النهائي</span>
+                                    <span className="text-xs opacity-60 uppercase tracking-widest">الموافقة والمراجعة</span>
+                                </div>
+                                <div className="w-8 h-8 md:w-10 md:h-10 rounded-md bg-white/20 flex items-center justify-center transition-transform group-hover:rotate-12">
+                                    <SendHorizonal className="w-4 h-4 md:w-5 md:h-5" />
+                                </div>
+                            </>
+                        )}
+                    </Button>
+                </motion.div>
+            )}
+        </AnimatePresence>
       </div>
     </div>
   );

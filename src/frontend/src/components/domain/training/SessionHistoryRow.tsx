@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/static-translations";
 import { cn } from "@/lib/utils";
 import { TrainingRecordDto } from "@/types/training.types";
 import { Calendar, User, School, Hash, Clock } from "lucide-react";
@@ -47,7 +47,7 @@ export function SessionHistoryRow({ record, className }: SessionHistoryRowProps)
   ];
 
   return (
-    <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 py-4 border-b border-neutral-100 dark:border-neutral-800", className)}>
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 py-4 border-b border-neutral-100", className)}>
       {fields.map((field, idx) => (
         <div key={idx} className="flex flex-col space-y-1">
           <div className="flex items-center gap-1.5 text-[10px] font-bold text-neutral-400 uppercase tracking-widest">
@@ -55,8 +55,8 @@ export function SessionHistoryRow({ record, className }: SessionHistoryRowProps)
             {field.label}
           </div>
           <div className={cn(
-            "text-sm font-medium text-neutral-700 dark:text-neutral-200 truncate",
-            field.isMono && "font-mono text-primary-700 dark:text-primary-400"
+            "text-sm font-medium text-neutral-700 truncate",
+            field.isMono && "font-mono text-primary-700"
           )}>
             {field.value}
           </div>

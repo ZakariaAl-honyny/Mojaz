@@ -1,0 +1,86 @@
+{
+  "test": "نتائج الاختبارات",
+  "title": "لوحة التحكم",
+  "applicant": {
+    "welcome": "مرحباً، <highlight>{name}</highlight>",
+    "activeApplications": "الطلبات النشطة",
+    "pendingActions": "إجراءات معلقة",
+    "recentApplications": "الطلبات الأخيرة",
+    "noApplications": "ليس لديك أي طلبات نشطة حالياً.",
+    "startNew": "بدء طلب جديد"
+  },
+  "employee": {
+    "workQueue": "قائمة المهام",
+    "stalledAlert": "طلبات متعثرة ({count})",
+    "searchPlaceholder": "البحث برقم الطلب أو اسم مقدم الطلب...",
+    "filters": {
+      "status": "الحالة",
+      "service": "الخدمة",
+      "category": "الفئة"
+    }
+  },
+  "manager": {
+    "title": "نظرة عامة على الأنظمة",
+    "subtitle": "تقارير الذكاء التشغيلي والتحليلات المباشرة.",
+    "kpis": {
+      "todayLoad": "حمولة اليوم",
+      "passRate": "نسبة النجاح",
+      "theory": "نظري",
+      "practical": "عملي",
+      "loadTrend": "+{value}% زيادة تشغيلية",
+      "excellentRate": "معدل كفاءة ممتاز",
+      "stalled": "طلبات متعثرة",
+      "needsAdmin": "بحاجة لتدخل إداري",
+      "activityPoints": "نقاط النشاط",
+      "liveInteractions": "تفاعلات حيّة حالياً"
+    },
+    "charts": {
+      "statusDistribution": "توزيع الطلبات حسب الحالة",
+      "weeklyAnalysis": "تحليل العمليات الأسبوعي",
+      "liveData": "بيانات مباشرة"
+    },
+    "dataReliability": "موثوقية البيانات"
+  },
+  "timeline": {
+    "title": "مسار الطلب",
+    "stages": {
+      "Draft": "مسودة",
+      "Submitted": "مُقدّم",
+      "InReview": "قيد المراجعة",
+      "MedicalExamination": "الفحص الطبي",
+      "TheoryTest": "الاختبار النظري",
+      "PracticalTest": "الاختبار العملي",
+      "Approved": "مقبول",
+      "Payment": "الدفعة النهائية",
+      "Issuance": "إصدار الرخصة",
+      "Active": "رخصة نشطة"
+    }
+  },
+  "status": {
+    "completed": "مكتمل",
+    "inReview": "قيد المراجعة",
+    "submitted": "مُقدّم",
+    "cancelled": "ملغي",
+    "draft": "مسودة"
+  },
+  "days": {
+    "sunday": "الأحد",
+    "monday": "الاثنين",
+    "tuesday": "الثلاثاء",
+    "wednesday": "الأربعاء",
+    "thursday": "الخميس",
+    "friday": "الجمعة",
+    "saturday": "السبت"
+  },
+  "activity": {
+    "newApplication": "طلب جديد",
+    "licenseIssued": "رخصة مُصدرة",
+    "paymentReceived": "دفعة مستلمة",
+    "newUser": "مستخدم جديد",
+    "applicationRejected": "طلب مرفوض"
+  },
+  "chart": {
+    "applications": "طلبات",
+    "completed": "مكتمل"
+  }
+}

@@ -1,63 +1,52 @@
 "use client";
 
-/**
- * NotificationBell Component
- * Displays bell icon with unread count badge and opens notification list on click
- */
-
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
 import { Bell } from 'lucide-react';
 import { useNotifications } from '@/hooks/useNotifications';
 import { NotificationList } from './NotificationList';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface NotificationBellProps {
   className?: string;
 }
 
 export function NotificationBell({ className }: NotificationBellProps) {
-  const t = useTranslations('navigation');
   const [isOpen, setIsOpen] = useState(false);
   const { unreadCount } = useNotifications();
 
-  const handleOpen = () => {
-    setIsOpen(true);
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-
   return (
     <>
-      <button
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         type="button"
         className={cn(
-          'relative inline-flex items-center justify-center rounded-lg p-2',
-          'text-neutral-600 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800',
-          'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+          'relative flex items-center justify-center rounded-2xl w-12 h-12 transition-all duration-300 font-arabic',
+          'bg-neutral-50 text-neutral-400 hover:bg-blue-50 hover:text-[#1a3a8f] hover:shadow-xl hover:shadow-blue-900/5',
           className
         )}
-        onClick={handleOpen}
-        aria-label={t('notifications')}
-        title={t('notifications')}
+        onClick={() => setIsOpen(true)}
+        aria-label="التنبيهات"
+        title="التنبيهات"
       >
-        <Bell className="size-5" />
-        {unreadCount > 0 && (
-          <span
-            className={cn(
-              'absolute -me-1 -mt-1 flex size-5 items-center justify-center',
-              'rounded-full bg-primary text-[10px] font-bold text-white',
-              'ring-2 ring-background'
-            )}
-          >
-            {unreadCount > 99 ? '99+' : unreadCount}
-          </span>
-        )}
-      </button>
+        <Bell className="w-6 h-6 stroke-[2.5px]" />
+        
+        <AnimatePresence>
+          {unreadCount > 0 && (
+            <motion.span
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              className="absolute -top-1 -end-1 flex min-w-[22px] h-[22px] px-1.5 items-center justify-center rounded-full bg-[#1a3a8f] text-[10px] font-black text-white ring-4 ring-white shadow-lg shadow-blue-900/20"
+            >
+              {unreadCount > 99 ? '99+' : unreadCount}
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </motion.button>
 
-      <NotificationList isOpen={isOpen} onClose={handleClose} />
+      <NotificationList isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
 }

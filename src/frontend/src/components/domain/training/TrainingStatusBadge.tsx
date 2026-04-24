@@ -1,67 +1,77 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { TrainingStatusString } from "@/types/training.types";
+import { Clock, CheckCircle2, ShieldCheck, HelpCircle } from "lucide-react";
 
 interface TrainingStatusBadgeProps {
   status: TrainingStatusString;
   className?: string;
-  variant?: "solid" | "outline" | "ghost";
+  variant?: "solid" | "outline";
 }
 
-/**
- * TrainingStatusBadge - Themed badge for training status tracking.
- * Uses Royal Green for Completed and Government Gold for In Progress.
- */
 export function TrainingStatusBadge({ 
   status, 
   className,
   variant = "outline" 
 }: TrainingStatusBadgeProps) {
-  const t = useTranslations("training.status");
+  const getStatusConfig = (statusValue: string) => {
+    switch (statusValue) {
+      case "Required":
+        return {
+          label: "مطلوب",
+          icon: HelpCircle,
+          styles: "bg-neutral-50 text-neutral-400 border-neutral-100",
+        };
+      case "InProgress":
+        return {
+          label: "قيد التدريب",
+          icon: Clock,
+          styles: "bg-amber-50 text-amber-600 border-amber-100",
+          animate: true,
+        };
+      case "Completed":
+        return {
+          label: "مكتمل",
+          icon: CheckCircle2,
+          styles: "bg-emerald-50 text-emerald-600 border-emerald-100",
+        };
+      case "Exempted":
+        return {
+          label: "مُعفى",
+          icon: ShieldCheck,
+          styles: "bg-blue-50 text-[#1a3a8f] border-blue-100",
+        };
+      default:
+        return {
+          label: "غير معروف",
+          icon: HelpCircle,
+          styles: "bg-neutral-50 text-neutral-300 border-neutral-100",
+        };
+    }
+  };
 
-  let colorClass = "";
-  
-  switch (status) {
-    case "Required":
-      colorClass = "bg-neutral-100 text-neutral-600 border-neutral-300";
-      break;
-    case "InProgress":
-      colorClass = "bg-amber-50 text-amber-700 border-amber-200"; // Government Gold-ish
-      break;
-    case "Completed":
-      colorClass = "bg-primary-50 text-primary-700 border-primary-200"; // Royal Green
-      break;
-    case "Exempted":
-      colorClass = "bg-blue-50 text-blue-700 border-blue-200";
-      break;
-    default:
-      colorClass = "bg-neutral-100 text-neutral-800 border-neutral-200";
-  }
-
-  // Simplified variant logic for Mojaz aesthetic
-  const variantStyles = variant === "solid" 
-    ? colorClass.replace("-50", "-600").replace("text-", "text-white ") 
-    : colorClass;
-
-  const translatedLabel = t(status.toLowerCase());
+  const config = getStatusConfig(status);
+  const Icon = config.icon;
 
   return (
     <span 
       className={cn(
-        "inline-flex items-center px-2.5 py-1 rounded-md text-[10px] uppercase tracking-wider font-bold border transition-colors",
-        variantStyles,
+        "inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all duration-300 font-arabic",
+        config.styles,
         className
       )}
     >
-      {status === 'InProgress' && (
-        <span className="me-1.5 flex h-1.5 w-1.5">
-          <span className="animate-ping absolute inline-flex h-1.5 w-1.5 rounded-full bg-amber-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
+      {config.animate && (
+        <span className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
         </span>
       )}
-      {translatedLabel}
+      <Icon className="w-3.5 h-3.5" />
+      {config.label}
     </span>
   );
 }
+
+export default TrainingStatusBadge;

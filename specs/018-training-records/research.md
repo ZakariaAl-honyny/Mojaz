@@ -42,6 +42,6 @@
 
 ## Premium UI Aesthetic Direction
 
-- **Decision**: Governmental Authority / Ledger aesthetic. IBM Plex Sans Arabic (body) + IBM Plex Mono (numbers/hour counts). Warm off-white (#FAF9F6) background, Royal Green (#006C35) authority ink, Government Gold (#D4A017) for Exempted state. Circular SVG progress arc as the centrepiece — pure CSS stroke-dasharray animation.
+- **Decision**: Governmental Authority / Ledger aesthetic. IBM Plex Sans Arabic (body) + IBM Plex Mono (numbers/hour counts). Warm off-white (#FAF9F6) background, King Blue (#1a3a8f) authority ink, Government Gold (#D4A017) for Exempted state. Circular SVG progress arc as the centrepiece — pure CSS stroke-dasharray animation.
 - **Rationale**: Drives FR-015 through FR-019 from spec. The "ledger" feel of IBM Plex Mono for numeric data (hours completed / required) creates instant authority associations appropriate for a government tracking interface. Circular arcs are far more spatially expressive than progress bars and communicate completion percentage at a glance.
 - **Alternatives considered**: Generic shadcn/ui form with primary color overrides (Rejected — violates frontend-design skill's core directive to avoid generic AI aesthetics); standard linear progress bar (Rejected — lacks visual impact, too generic).

@@ -28,8 +28,8 @@ namespace Mojaz.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ApplicantId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<bool>("AdditionalTrainingRequired")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("ApplicantId")
                         .HasColumnType("uniqueidentifier");
@@ -56,6 +56,7 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CurrentStage")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -71,18 +72,35 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("ExpiresAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte?>("FinalDecision")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime?>("FinalDecisionAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("FinalDecisionBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FinalDecisionReason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("LicenseCategoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("LicenseCategoryId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ManagerNotes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("PracticalAttemptCount")
+                        .HasColumnType("int");
 
                     b.Property<string>("PreferredLanguage")
                         .IsRequired()
@@ -93,24 +111,33 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("ReturnToStage")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<DateTime?>("ReviewedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("ReviewedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ServiceType")
-                        .HasColumnType("int");
+                    b.Property<byte>("ServiceType")
+                        .HasColumnType("tinyint");
 
-                    b.Property<bool>("SpecialNeeds")
+                    b.Property<string>("SpecialNeeds")
                         .HasMaxLength(200)
-                        .HasColumnType("bit");
+                        .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
 
                     b.Property<DateTime?>("SubmittedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("TheoryAttemptCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -123,13 +150,9 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasIndex("ApplicantId")
                         .HasDatabaseName("IX_Applications_ApplicantId");
 
-                    b.HasIndex("ApplicantId");
-
                     b.HasIndex("ApplicationNumber")
                         .IsUnique()
                         .HasDatabaseName("IX_Applications_ApplicationNumber");
-
-                    b.HasIndex("LicenseCategoryId");
 
                     b.HasIndex("LicenseCategoryId");
 
@@ -156,26 +179,33 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("DocumentType")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("DocumentType")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("FilePath")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<long>("FileSize")
+                    b.Property<long>("FileSizeBytes")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsRequired")
                         .HasColumnType("bit");
+
+                    b.Property<string>("OriginalFileName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("RejectionReason")
                         .HasMaxLength(256)
@@ -187,19 +217,19 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid?>("ReviewedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Status")
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("StoredFileName")
                         .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UploadedAt")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -230,19 +260,15 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FromStatus")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<byte>("FromStatus")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("ToStatus")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<byte>("ToStatus")
+                        .HasColumnType("tinyint");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -265,16 +291,13 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid>("ApplicationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AppointmentType")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<byte>("AppointmentType")
+                        .HasColumnType("tinyint");
 
                     b.Property<Guid?>("AssignedStaffId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("BranchId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CancellationReason")
@@ -303,13 +326,26 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<bool>("ReminderSent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("RescheduleCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<DateOnly>("ScheduledDate")
                         .HasColumnType("date");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("TimeSlot")
                         .IsRequired()
@@ -328,6 +364,10 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.HasIndex("AppointmentType");
 
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("RescheduleCount");
+
                     b.HasIndex("ScheduledDate");
 
                     b.HasIndex("Status");
@@ -341,16 +381,22 @@ namespace Mojaz.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Action")
+                    b.Property<string>("ActionCategory")
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<Guid>("EntityId")
+                    b.Property<string>("ActionType")
+                        .IsRequired()
                         .HasMaxLength(64)
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("nvarchar(64)");
 
-                    b.Property<string>("EntityType")
+                    b.Property<string>("EntityId")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("EntityName")
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
@@ -359,10 +405,11 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<string>("NewValues")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsSuccess")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("OldValues")
+                    b.Property<string>("Payload")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Timestamp")
@@ -377,9 +424,11 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ActionCategory");
+
                     b.HasIndex("EntityId");
 
-                    b.HasIndex("EntityType");
+                    b.HasIndex("EntityName");
 
                     b.HasIndex("Timestamp");
 
@@ -403,10 +452,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("FromCategory")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
+                    b.Property<byte>("FromCategory")
+                        .HasColumnType("tinyint");
 
                     b.Property<Guid>("LicenseId")
                         .HasColumnType("uniqueidentifier");
@@ -414,10 +461,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid?>("ProcessedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ToCategory")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
+                    b.Property<byte>("ToCategory")
+                        .HasColumnType("tinyint");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -437,6 +482,63 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasIndex("UpgradedAt");
 
                     b.ToTable("CategoryUpgrades", (string)null);
+                });
+
+            modelBuilder.Entity("Mojaz.Domain.Entities.EmailLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RecipientEmail")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("ReferenceId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("TemplateName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientEmail", "TemplateName", "ReferenceId")
+                        .HasDatabaseName("IX_EmailLogs_RecipientEmail_TemplateName_ReferenceId");
+
+                    b.ToTable("EmailLogs");
                 });
 
             modelBuilder.Entity("Mojaz.Domain.Entities.FeeStructure", b =>
@@ -465,10 +567,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("EffectiveTo")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FeeType")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<byte>("FeeType")
+                        .HasColumnType("tinyint");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -500,6 +600,9 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.Property<Guid>("ApplicationId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BlobUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("BranchId")
                         .HasColumnType("uniqueidentifier");
@@ -549,10 +652,8 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -581,6 +682,10 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasIndex("Status")
                         .HasDatabaseName("IX_Licenses_Status");
 
+                    b.HasIndex("HolderId", "Status")
+                        .HasDatabaseName("IX_Licenses_HolderId_Status")
+                        .HasFilter("[IsDeleted] = 0");
+
                     b.ToTable("Licenses", (string)null);
                 });
 
@@ -590,10 +695,8 @@ namespace Mojaz.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("nvarchar(2)");
+                    b.Property<byte>("Code")
+                        .HasColumnType("tinyint");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -626,6 +729,9 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("ValidityYears")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Code")
@@ -634,6 +740,80 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasIndex("IsActive");
 
                     b.ToTable("LicenseCategories", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            Code = (byte)0,
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 890, DateTimeKind.Utc).AddTicks(8883),
+                            IsActive = true,
+                            MinimumAge = 16,
+                            NameAr = "دراجة نارية",
+                            NameEn = "Motorcycle",
+                            RequiresTraining = true,
+                            ValidityYears = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            Code = (byte)1,
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 890, DateTimeKind.Utc).AddTicks(8931),
+                            IsActive = true,
+                            MinimumAge = 18,
+                            NameAr = "خصوصي",
+                            NameEn = "Private",
+                            RequiresTraining = true,
+                            ValidityYears = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                            Code = (byte)2,
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 890, DateTimeKind.Utc).AddTicks(8937),
+                            IsActive = true,
+                            MinimumAge = 21,
+                            NameAr = "نقل عام",
+                            NameEn = "Public Transport",
+                            RequiresTraining = true,
+                            ValidityYears = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+                            Code = (byte)3,
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 890, DateTimeKind.Utc).AddTicks(8941),
+                            IsActive = true,
+                            MinimumAge = 21,
+                            NameAr = "مركبات ثقيلة",
+                            NameEn = "Heavy Vehicles",
+                            RequiresTraining = true,
+                            ValidityYears = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000005"),
+                            Code = (byte)4,
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 890, DateTimeKind.Utc).AddTicks(8946),
+                            IsActive = true,
+                            MinimumAge = 21,
+                            NameAr = "مركبات صناعية",
+                            NameEn = "Industrial Vehicles",
+                            RequiresTraining = true,
+                            ValidityYears = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000006"),
+                            Code = (byte)5,
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 890, DateTimeKind.Utc).AddTicks(8950),
+                            IsActive = true,
+                            MinimumAge = 18,
+                            NameAr = "مركبات زراعية",
+                            NameEn = "Agricultural Vehicles",
+                            RequiresTraining = true,
+                            ValidityYears = 0
+                        });
                 });
 
             modelBuilder.Entity("Mojaz.Domain.Entities.LicenseRenewal", b =>
@@ -695,6 +875,9 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsReportVerified")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("LicenseId")
                         .HasColumnType("uniqueidentifier");
 
@@ -704,9 +887,12 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid?>("ProcessedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Reason")
+                    b.Property<byte>("Reason")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("ReviewComments")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -734,9 +920,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid>("ApplicationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("BloodType")
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
+                    b.Property<byte?>("BloodType")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("CertificatePath")
                         .HasMaxLength(256)
@@ -748,16 +933,23 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("DoctorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ExaminedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FitnessResult")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<byte>("FitnessResult")
+                        .HasColumnType("tinyint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(512)
@@ -799,10 +991,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EventType")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                    b.Property<byte>("EventType")
+                        .HasColumnType("tinyint");
 
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
@@ -885,10 +1075,8 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
-                    b.Property<string>("DestinationType")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
+                    b.Property<byte>("DestinationType")
+                        .HasColumnType("tinyint");
 
                     b.Property<DateTime>("ExpiresAt")
                         .HasColumnType("datetime2");
@@ -897,16 +1085,17 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
+                    b.Property<bool>("IsInvalidated")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsUsed")
                         .HasColumnType("bit");
 
                     b.Property<int>("MaxAttempts")
                         .HasColumnType("int");
 
-                    b.Property<string>("Purpose")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<byte>("Purpose")
+                        .HasColumnType("tinyint");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -930,7 +1119,7 @@ namespace Mojaz.Infrastructure.Migrations
                     b.ToTable("OtpCodes", (string)null);
                 });
 
-            modelBuilder.Entity("Mojaz.Domain.Entities.Payment", b =>
+            modelBuilder.Entity("Mojaz.Domain.Entities.PaymentTransaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -950,40 +1139,48 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.Property<string>("Currency")
                         .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("FailedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FailureReason")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("FeeType")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<byte>("FeeType")
+                        .HasColumnType("tinyint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("PaidAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentMethod")
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ReceiptNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReceiptPath")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("TransactionReference")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -995,11 +1192,13 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationId");
 
-                    b.HasIndex("FeeType");
-
                     b.HasIndex("Status");
 
-                    b.ToTable("Payments", (string)null);
+                    b.HasIndex("TransactionReference")
+                        .IsUnique()
+                        .HasFilter("[TransactionReference] IS NOT NULL");
+
+                    b.ToTable("PaymentTransactions", (string)null);
                 });
 
             modelBuilder.Entity("Mojaz.Domain.Entities.PracticalTest", b =>
@@ -1017,29 +1216,45 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<int>("AttemptNumber")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("ConductedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ExaminerId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsAbsent")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Notes")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("PassingScore")
+                        .HasColumnType("int");
 
                     b.Property<bool>("RequiresAdditionalTraining")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Result")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
+                    b.Property<byte>("Result")
+                        .HasColumnType("tinyint");
 
-                    b.Property<DateTime>("TestDate")
-                        .HasColumnType("datetime2");
+                    b.Property<int?>("Score")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -1048,8 +1263,8 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("VehicleUsed")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -1060,6 +1275,64 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasIndex("Result");
 
                     b.ToTable("PracticalTests", (string)null);
+                });
+
+            modelBuilder.Entity("Mojaz.Domain.Entities.PushToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DeviceType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUsedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PushTokens", (string)null);
                 });
 
             modelBuilder.Entity("Mojaz.Domain.Entities.RefreshToken", b =>
@@ -1111,6 +1384,73 @@ namespace Mojaz.Infrastructure.Migrations
                     b.ToTable("RefreshTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Mojaz.Domain.Entities.SmsLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ApplicationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("Cost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RecipientNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("TemplateType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("TwilioMessageId")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.HasIndex("CreatedAt")
+                        .HasDatabaseName("IX_SmsLogs_CreatedAt");
+
+                    b.HasIndex("Status")
+                        .HasDatabaseName("IX_SmsLogs_Status");
+
+                    b.HasIndex("UserId", "TemplateType")
+                        .HasDatabaseName("IX_SmsLogs_UserId_TemplateType");
+
+                    b.ToTable("SmsLogs");
+                });
+
             modelBuilder.Entity("Mojaz.Domain.Entities.SystemSetting", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1158,6 +1498,418 @@ namespace Mojaz.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("SystemSettings", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000001001"),
+                            Category = "OTP",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3609),
+                            Description = "OTP validity in minutes for SMS",
+                            IsEncrypted = false,
+                            SettingKey = "OTP_VALIDITY_MINUTES_SMS",
+                            SettingValue = "5"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000001002"),
+                            Category = "OTP",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3634),
+                            Description = "OTP validity in minutes for Email",
+                            IsEncrypted = false,
+                            SettingKey = "OTP_VALIDITY_MINUTES_EMAIL",
+                            SettingValue = "10"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000001003"),
+                            Category = "OTP",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3639),
+                            Description = "Max OTP verification attempts",
+                            IsEncrypted = false,
+                            SettingKey = "OTP_MAX_ATTEMPTS",
+                            SettingValue = "3"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000001004"),
+                            Category = "OTP",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3643),
+                            Description = "Cooldown in seconds before resending OTP",
+                            IsEncrypted = false,
+                            SettingKey = "OTP_RESEND_COOLDOWN_SECONDS",
+                            SettingValue = "60"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000001005"),
+                            Category = "OTP",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3647),
+                            Description = "Max OTP resends per hour",
+                            IsEncrypted = false,
+                            SettingKey = "OTP_MAX_RESEND_PER_HOUR",
+                            SettingValue = "3"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000007001"),
+                            Category = "Email",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3708),
+                            Description = "Deduplication window in seconds for outgoing emails",
+                            IsEncrypted = false,
+                            SettingKey = "EMAIL_DEDUP_WINDOW_SECONDS",
+                            SettingValue = "300"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000007002"),
+                            Category = "Email",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3713),
+                            Description = "Maximum retry attempts for failed emails",
+                            IsEncrypted = false,
+                            SettingKey = "EMAIL_MAX_RETRIES",
+                            SettingValue = "3"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000007003"),
+                            Category = "Email",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3718),
+                            Description = "Base delay in seconds for email retry exponential backoff",
+                            IsEncrypted = false,
+                            SettingKey = "EMAIL_RETRY_BASE_DELAY_SECONDS",
+                            SettingValue = "60"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000008001"),
+                            Category = "Appointment",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3730),
+                            Description = "Maximum number of times an applicant can reschedule an appointment",
+                            IsEncrypted = false,
+                            SettingKey = "MAX_RESCHEDULE_COUNT",
+                            SettingValue = "3"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000008002"),
+                            Category = "Appointment",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3735),
+                            Description = "Default duration of an appointment slot in minutes",
+                            IsEncrypted = false,
+                            SettingKey = "DEFAULT_APPOINTMENT_DURATION_MINUTES",
+                            SettingValue = "30"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000008003"),
+                            Category = "Appointment",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3739),
+                            Description = "Maximum number of appointments allowed per time slot per branch",
+                            IsEncrypted = false,
+                            SettingKey = "MAX_APPOINTMENTS_PER_SLOT",
+                            SettingValue = "2"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000008004"),
+                            Category = "Appointment",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3746),
+                            Description = "Buffer time between appointments in minutes",
+                            IsEncrypted = false,
+                            SettingKey = "SLOT_BUFFER_MINUTES",
+                            SettingValue = "15"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000008005"),
+                            Category = "Appointment",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3750),
+                            Description = "Start of working hours for appointments (24-hour format)",
+                            IsEncrypted = false,
+                            SettingKey = "WORKING_HOURS_START",
+                            SettingValue = "08:00"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000008006"),
+                            Category = "Appointment",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3754),
+                            Description = "End of working hours for appointments (24-hour format)",
+                            IsEncrypted = false,
+                            SettingKey = "WORKING_HOURS_END",
+                            SettingValue = "16:00"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000008007"),
+                            Category = "Appointment",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3757),
+                            Description = "Hours before appointment to send reminder notification",
+                            IsEncrypted = false,
+                            SettingKey = "REMINDER_HOURS_BEFORE",
+                            SettingValue = "24"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000008008"),
+                            Category = "Appointment",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3773),
+                            Description = "Minimum days in advance an appointment must be booked",
+                            IsEncrypted = false,
+                            SettingKey = "MIN_BOOKING_DAYS_AHEAD",
+                            SettingValue = "1"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000008009"),
+                            Category = "Appointment",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3776),
+                            Description = "Maximum days in advance an appointment can be booked",
+                            IsEncrypted = false,
+                            SettingKey = "MAX_BOOKING_DAYS_AHEAD",
+                            SettingValue = "30"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000009001"),
+                            Category = "Training",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3780),
+                            Description = "Minimum training hours for Category A (Motorcycle)",
+                            IsEncrypted = false,
+                            SettingKey = "MIN_TRAINING_HOURS_CATEGORY_A",
+                            SettingValue = "8"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000009002"),
+                            Category = "Training",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3784),
+                            Description = "Minimum training hours for Category B (Private)",
+                            IsEncrypted = false,
+                            SettingKey = "MIN_TRAINING_HOURS_CATEGORY_B",
+                            SettingValue = "20"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000009003"),
+                            Category = "Training",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3788),
+                            Description = "Minimum training hours for Category C (Public Transport)",
+                            IsEncrypted = false,
+                            SettingKey = "MIN_TRAINING_HOURS_CATEGORY_C",
+                            SettingValue = "30"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000009004"),
+                            Category = "Training",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3791),
+                            Description = "Minimum training hours for Category D (Heavy Vehicles)",
+                            IsEncrypted = false,
+                            SettingKey = "MIN_TRAINING_HOURS_CATEGORY_D",
+                            SettingValue = "40"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000009005"),
+                            Category = "Training",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3795),
+                            Description = "Minimum training hours for Category E (Industrial)",
+                            IsEncrypted = false,
+                            SettingKey = "MIN_TRAINING_HOURS_CATEGORY_E",
+                            SettingValue = "40"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000009006"),
+                            Category = "Training",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3799),
+                            Description = "Minimum training hours for Category F (Agricultural)",
+                            IsEncrypted = false,
+                            SettingKey = "MIN_TRAINING_HOURS_CATEGORY_F",
+                            SettingValue = "20"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000009007"),
+                            Category = "Training",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3811),
+                            Description = "Minimum age for Category F (Agricultural)",
+                            IsEncrypted = false,
+                            SettingKey = "MIN_AGE_CATEGORY_F",
+                            SettingValue = "18"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000010002"),
+                            Category = "Theory",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3837),
+                            Description = "Number of theory test questions for Category F (Agricultural)",
+                            IsEncrypted = false,
+                            SettingKey = "THEORY_QUESTIONS_CATEGORY_F",
+                            SettingValue = "20"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000011004"),
+                            Category = "License",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3841),
+                            Description = "License validity in years for Category F (Agricultural)",
+                            IsEncrypted = false,
+                            SettingKey = "VALIDITY_YEARS_CATEGORY_F",
+                            SettingValue = "10"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000010001"),
+                            Category = "Theory",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3844),
+                            Description = "Minimum passing score for theory test",
+                            IsEncrypted = false,
+                            SettingKey = "MIN_PASS_SCORE_THEORY",
+                            SettingValue = "80"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000011001"),
+                            Category = "Practical",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3848),
+                            Description = "Minimum passing score for practical test",
+                            IsEncrypted = false,
+                            SettingKey = "MIN_PASS_SCORE_PRACTICAL",
+                            SettingValue = "80"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000011002"),
+                            Category = "Practical",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3851),
+                            Description = "Maximum number of practical test attempts",
+                            IsEncrypted = false,
+                            SettingKey = "MAX_PRACTICAL_ATTEMPTS",
+                            SettingValue = "3"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000011003"),
+                            Category = "Practical",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3855),
+                            Description = "Days applicant must wait before rebooking after practical test failure",
+                            IsEncrypted = false,
+                            SettingKey = "COOLING_PERIOD_DAYS_PRACTICAL",
+                            SettingValue = "7"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000012001"),
+                            Category = "Upgrade",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3859),
+                            Description = "Minimum months a license must be held before upgrading",
+                            IsEncrypted = false,
+                            SettingKey = "MIN_HOLDING_PERIOD_UPGRADE_MONTHS",
+                            SettingValue = "12"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000012002"),
+                            Category = "Upgrade",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3862),
+                            Description = "Allowed category upgrade paths (Format: FROM-TO, separated by comma)",
+                            IsEncrypted = false,
+                            SettingKey = "ALLOWED_UPGRADE_PATHS",
+                            SettingValue = "B-C,C-D,D-E,F-B"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000012003"),
+                            Category = "Upgrade",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3867),
+                            Description = "Percentage reduction in training hours for category upgrades",
+                            IsEncrypted = false,
+                            SettingKey = "UPGRADE_TRAINING_REDUCTION_PCNT",
+                            SettingValue = "50"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000013001"),
+                            Category = "Security",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3870),
+                            Description = "Retention period for Audit Logs in days",
+                            IsEncrypted = false,
+                            SettingKey = "SECURITY_LOG_RETENTION_DAYS",
+                            SettingValue = "90"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000013002"),
+                            Category = "Security",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3874),
+                            Description = "Number of permits for authentication endpoints per window",
+                            IsEncrypted = false,
+                            SettingKey = "RATE_LIMIT_AUTH_PERMIT",
+                            SettingValue = "10"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000013003"),
+                            Category = "Security",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3878),
+                            Description = "Time window in seconds for authentication rate limiting",
+                            IsEncrypted = false,
+                            SettingKey = "RATE_LIMIT_AUTH_WINDOW",
+                            SettingValue = "60"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000013004"),
+                            Category = "Security",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3882),
+                            Description = "Number of permits for global API endpoints per window",
+                            IsEncrypted = false,
+                            SettingKey = "RATE_LIMIT_GLOBAL_PERMIT",
+                            SettingValue = "100"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000013005"),
+                            Category = "Security",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3885),
+                            Description = "Time window in seconds for global rate limiting",
+                            IsEncrypted = false,
+                            SettingKey = "RATE_LIMIT_GLOBAL_WINDOW",
+                            SettingValue = "60"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000013006"),
+                            Category = "Security",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3889),
+                            Description = "Maximum allowed file size for uploads in bytes (Default 5MB)",
+                            IsEncrypted = false,
+                            SettingKey = "MAX_FILE_SIZE_BYTES",
+                            SettingValue = "5242880"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000013007"),
+                            Category = "Security",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3893),
+                            Description = "Number of failed login attempts before sending security alert",
+                            IsEncrypted = false,
+                            SettingKey = "SECURITY_ALERT_THRESHOLD",
+                            SettingValue = "5"
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000013008"),
+                            Category = "Security",
+                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3896),
+                            Description = "Time window in minutes for security alert threshold",
+                            IsEncrypted = false,
+                            SettingKey = "SECURITY_ALERT_WINDOW_MINS",
+                            SettingValue = "10"
+                        });
                 });
 
             modelBuilder.Entity("Mojaz.Domain.Entities.TheoryTest", b =>
@@ -1172,32 +1924,42 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<int>("AttemptNumber")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("ConductedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ExaminerId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsAbsent")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Notes")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("PassingScore")
                         .HasColumnType("int");
 
-                    b.Property<string>("Result")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)");
+                    b.Property<byte>("Result")
+                        .HasColumnType("tinyint");
 
-                    b.Property<int>("Score")
+                    b.Property<int?>("Score")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("TestDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -1225,6 +1987,10 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid>("ApplicationId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("CenterName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<string>("CertificateNumber")
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
@@ -1241,28 +2007,56 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ExemptionApprovedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid?>("ExemptionApprovedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ExemptionReason")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                    b.Property<Guid?>("ExemptionDocumentId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsExempt")
+                    b.Property<string>("ExemptionReason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ExemptionRejectionReason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("RequiredHours")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsExempted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("SchoolName")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                    b.Property<int>("TotalHoursRequired")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TrainerName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("TrainingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("TrainingStatus")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint")
+                        .HasDefaultValue((byte)0);
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -1274,9 +2068,15 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationId");
 
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("ExemptionApprovedBy");
+
+                    b.HasIndex("ExemptionDocumentId");
+
                     b.HasIndex("SchoolName");
 
-                    b.HasIndex("Status");
+                    b.HasIndex("TrainingStatus");
 
                     b.ToTable("TrainingRecords", (string)null);
                 });
@@ -1291,13 +2091,18 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("ApplicantType")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                    b.Property<byte?>("AppRole")
+                        .HasColumnType("tinyint");
 
-                    b.Property<string>("BloodType")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                    b.Property<byte?>("ApplicantType")
+                        .HasMaxLength(30)
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("AppointmentPreference")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte?>("BloodType")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("City")
                         .HasMaxLength(50)
@@ -1309,7 +2114,7 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletedAt")
@@ -1326,6 +2131,21 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("EmailVerifiedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("EnableEmail")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("EnablePush")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("EnableSms")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<int>("FailedLoginAttempts")
                         .HasColumnType("int");
 
@@ -1339,8 +2159,8 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Gender")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte?>("Gender")
+                        .HasColumnType("tinyint");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -1356,6 +2176,11 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.Property<bool>("IsPhoneVerified")
                         .HasColumnType("bit");
+
+                    b.Property<bool>("IsSecurityBlocked")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime?>("LastLoginAt")
                         .HasColumnType("datetime2");
@@ -1398,12 +2223,15 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("RegistrationMethod")
+                    b.Property<byte>("RegistrationMethod")
                         .HasMaxLength(20)
-                        .HasColumnType("int");
+                        .HasColumnType("tinyint");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                    b.Property<bool>("RequiresPasswordReset")
+                        .HasColumnType("bit");
+
+                    b.Property<byte>("Role")
+                        .HasColumnType("tinyint");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -1413,17 +2241,9 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique()
-                        .HasDatabaseName("IX_Users_Email");
-
                     b.HasIndex("NationalId")
                         .IsUnique()
                         .HasDatabaseName("IX_Users_NationalId");
-
-                    b.HasIndex("PhoneNumber")
-                        .IsUnique()
-                        .HasDatabaseName("IX_Users_PhoneNumber");
 
                     b.ToTable("Users", null, t =>
                         {
@@ -1433,28 +2253,16 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.Application", b =>
                 {
-                    b.HasOne("Mojaz.Domain.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("ApplicantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Mojaz.Domain.Entities.User", "Applicant")
                         .WithMany()
                         .HasForeignKey("ApplicantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Mojaz.Domain.Entities.LicenseCategory", null)
-                        .WithMany()
-                        .HasForeignKey("LicenseCategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Mojaz.Domain.Entities.LicenseCategory", "LicenseCategory")
                         .WithMany()
                         .HasForeignKey("LicenseCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Applicant");
@@ -1467,7 +2275,7 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasOne("Mojaz.Domain.Entities.Application", "Application")
                         .WithMany()
                         .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Application");
@@ -1476,7 +2284,7 @@ namespace Mojaz.Infrastructure.Migrations
             modelBuilder.Entity("Mojaz.Domain.Entities.ApplicationStatusHistory", b =>
                 {
                     b.HasOne("Mojaz.Domain.Entities.Application", "Application")
-                        .WithMany()
+                        .WithMany("StatusHistory")
                         .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1489,7 +2297,7 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasOne("Mojaz.Domain.Entities.Application", "Application")
                         .WithMany()
                         .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Application");
@@ -1500,13 +2308,13 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasOne("Mojaz.Domain.Entities.Application", "Application")
                         .WithMany()
                         .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Mojaz.Domain.Entities.License", "License")
                         .WithMany()
                         .HasForeignKey("LicenseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Application");
@@ -1519,7 +2327,7 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasOne("Mojaz.Domain.Entities.LicenseCategory", "LicenseCategory")
                         .WithMany()
                         .HasForeignKey("LicenseCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("LicenseCategory");
@@ -1530,13 +2338,13 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasOne("Mojaz.Domain.Entities.User", "Holder")
                         .WithMany()
                         .HasForeignKey("HolderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Mojaz.Domain.Entities.LicenseCategory", "LicenseCategory")
                         .WithMany()
                         .HasForeignKey("LicenseCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Holder");
@@ -1549,13 +2357,13 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasOne("Mojaz.Domain.Entities.Application", "Application")
                         .WithMany()
                         .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Mojaz.Domain.Entities.License", "License")
                         .WithMany()
                         .HasForeignKey("LicenseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Application");
@@ -1568,13 +2376,13 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasOne("Mojaz.Domain.Entities.Application", "Application")
                         .WithMany()
                         .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Mojaz.Domain.Entities.License", "License")
                         .WithMany()
                         .HasForeignKey("LicenseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Application");
@@ -1604,7 +2412,7 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Mojaz.Domain.Entities.Payment", b =>
+            modelBuilder.Entity("Mojaz.Domain.Entities.PaymentTransaction", b =>
                 {
                     b.HasOne("Mojaz.Domain.Entities.Application", "Application")
                         .WithMany()
@@ -1618,23 +2426,68 @@ namespace Mojaz.Infrastructure.Migrations
             modelBuilder.Entity("Mojaz.Domain.Entities.PracticalTest", b =>
                 {
                     b.HasOne("Mojaz.Domain.Entities.Application", "Application")
-                        .WithMany()
+                        .WithMany("PracticalTests")
                         .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Mojaz.Domain.Entities.User", "Examiner")
+                        .WithMany()
+                        .HasForeignKey("ExaminerId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Application");
+
+                    b.Navigation("Examiner");
+                });
+
+            modelBuilder.Entity("Mojaz.Domain.Entities.PushToken", b =>
+                {
+                    b.HasOne("Mojaz.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Mojaz.Domain.Entities.SmsLog", b =>
+                {
+                    b.HasOne("Mojaz.Domain.Entities.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Mojaz.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Application");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Mojaz.Domain.Entities.TheoryTest", b =>
                 {
                     b.HasOne("Mojaz.Domain.Entities.Application", "Application")
-                        .WithMany()
+                        .WithMany("TheoryTests")
                         .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Mojaz.Domain.Entities.User", "Examiner")
+                        .WithMany()
+                        .HasForeignKey("ExaminerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Application");
+
+                    b.Navigation("Examiner");
                 });
 
             modelBuilder.Entity("Mojaz.Domain.Entities.TrainingRecord", b =>
@@ -1642,10 +2495,40 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasOne("Mojaz.Domain.Entities.Application", "Application")
                         .WithMany()
                         .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Mojaz.Domain.Entities.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Mojaz.Domain.Entities.User", "ExemptionApprover")
+                        .WithMany()
+                        .HasForeignKey("ExemptionApprovedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Mojaz.Domain.Entities.ApplicationDocument", "ExemptionDocument")
+                        .WithMany()
+                        .HasForeignKey("ExemptionDocumentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Application");
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("ExemptionApprover");
+
+                    b.Navigation("ExemptionDocument");
+                });
+
+            modelBuilder.Entity("Mojaz.Domain.Entities.Application", b =>
+                {
+                    b.Navigation("PracticalTests");
+
+                    b.Navigation("StatusHistory");
+
+                    b.Navigation("TheoryTests");
                 });
 #pragma warning restore 612, 618
         }

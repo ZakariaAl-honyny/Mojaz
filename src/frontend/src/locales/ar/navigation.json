@@ -1,0 +1,44 @@
+{
+  "header": {
+    "brand": "نظام إصدار رخص القادة الالكتروني",
+    "tagline": "Mojaz Digital",
+    "nav": {
+      "home": "الرئيسية",
+      "about": "عن المنصة",
+      "services": "الخدمات",
+      "centers": "المراكز"
+    }
+  },
+  "sidebar": {
+    "brand": "نظام إصدار رخص القادة الالكتروني",
+    "tagline": "Gov Platform",
+    "userPlaceholder": "اسم المستخدم",
+    "rolePlaceholder": "الدور",
+    "reports": {
+      "applications": "تقرير الطلبات",
+      "financial": "التقرير المالي",
+      "users": "تقرير المستخدمين",
+      "performance": "التقرير التشغيلي",
+      "audits": "سجلات المراجعة"
+    }
+  },
+  "topNav": {
+    "support": "الدعم",
+    "userPlaceholder": "اسم المستخدم",
+    "rolePlaceholder": "مقدم الطلب"
+  },
+  "navigation": {
+    "dashboard": "لوحة التحكم",
+    "applications": "الطلبات",
+    "licenses": "الرخص",
+    "progress": "التقدم",
+    "training": "التدريب",
+    "appointments": "المواعيد",
+    "payments": "المدفوعات",
+    "notifications": "الإشعارات",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج",
+    "profile": "الملف الشخصي",
+    "menu": "القائمة"
+  }
+}

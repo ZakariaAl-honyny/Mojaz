@@ -1,6 +1,6 @@
 namespace Mojaz.Domain.Enums;
 
-public enum NotificationEventType
+public enum NotificationEventType : byte
 {
     ApplicationSubmitted,
     ApplicationCancelled,
@@ -16,5 +16,8 @@ public enum NotificationEventType
     DocumentRejected,
     FinalApprovalApproved,
     FinalApprovalRejected,
-    FinalApprovalReturned
+    FinalApprovalReturned,
+    OtpSent,
+    OtpResent,
+    OtpVerified
 }

@@ -1,0 +1,26 @@
+{
+  "test": {
+    "title": "نتائج الاختبارات",
+    "subtitle": "عرض نتائج اختباراتك",
+    "theory": {
+      "title": "الاختبار النظري",
+      "passed": "ناجح",
+      "failed": "راسب",
+      "pending": "قيد الانتظار",
+      "score": "الدرجة",
+      "passingScore": "درجة النجاح",
+      "attempts": "المحاولات",
+      "maxAttempts": "الحد الأقصى للمحاولات"
+    },
+    "practical": {
+      "title": "الاختبار العملي",
+      "passed": "ناجح",
+      "failed": "راسب",
+      "pending": "قيد الانتظار"
+    },
+    "pass": "ناجح",
+    "fail": "راسب",
+    "notAttempted": "لم يتم الأخذ",
+    "viewResult": "عرض النتيجة"
+  }
+}

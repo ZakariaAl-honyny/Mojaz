@@ -1,0 +1,167 @@
+{
+  "admin": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "subtitle": "Comprehensive overview of Mojaz system performance",
+      "today": "Today",
+      "export": "Export Data",
+      "applicationsToday": "Applications Today",
+      "licensesIssued": "Licenses Issued",
+      "revenue": "Revenue",
+      "activeUsers": "Active Users",
+      "applicationsByStatus": "Applications by Status",
+      "applicationsTrend": "Applications Trend",
+      "recentActivity": "Recent Activity",
+      "activities": {
+        "newApplication": "New Application",
+        "licenseIssued": "License Issued",
+        "paymentReceived": "Payment Received",
+        "newUser": "New User",
+        "applicationRejected": "Application Rejected"
+      },
+      "descriptions": {
+        "newApplication": "New application submitted - {id}",
+        "licenseIssued": "License issued successfully - ID: {id}",
+        "paymentReceived": "Payment of {amount} YER received - {type}",
+        "newUser": "New user registered: {name}",
+        "applicationRejected": "Application {id} rejected - {reason}"
+      },
+      "status": {
+        "completed": "Completed",
+        "inReview": "In Review",
+        "submitted": "Submitted",
+        "cancelled": "Cancelled",
+        "draft": "Draft"
+      }
+    },
+    "users": {
+      "title": "User Management",
+      "search": "Search users...",
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "role": "System Role",
+      "status": "Account Status",
+      "actions": "Actions",
+      "active": "Active",
+      "inactive": "Inactive",
+      "add": "Add New User",
+      "noUsers": "No users found in the system",
+      "roles": {
+        "admin": "System Admin",
+        "receptionist": "Receptionist",
+        "doctor": "Medical Officer",
+        "examiner": "Technical Examiner",
+        "manager": "Operations Manager",
+        "security": "Security Officer"
+      }
+    },
+    "settings": {
+      "title": "System Configuration",
+      "key": "Setting Key",
+      "value": "Value",
+      "description": "Description",
+      "actions": "Actions",
+      "save": "Save Changes",
+      "cancel": "Cancel",
+      "edit": "Edit Setting",
+      "noSettings": "No configuration settings found",
+      "saveSuccess": "Settings updated successfully",
+      "saveError": "Failed to update settings"
+    },
+    "audits": {
+      "title": "System Audit Logs",
+      "subtitle": "Track all system operations and changes",
+      "search": "Search...",
+      "searchPlaceholder": "Search by entity, user, or ID",
+      "date": "Timestamp",
+      "user": "Performed By",
+      "entity": "Entity",
+      "action": "Operation",
+      "details": "Details",
+      "noLogs": "No audit entries found",
+      "previous": "Previous",
+      "next": "Next",
+      "loading": "Loading audit logs...",
+      "filters": {
+        "all": "All",
+        "actionType": "Action Type",
+        "entityType": "Entity Type",
+        "dateRange": "Date Range",
+        "from": "From",
+        "to": "To",
+        "apply": "Apply",
+        "reset": "Reset"
+      },
+      "detail": {
+        "title": "Log Details",
+        "user": "User",
+        "ipAddress": "IP Address",
+        "userAgent": "User Agent",
+        "timestamp": "Date & Time",
+        "entity": "Entity",
+        "entityId": "Entity ID",
+        "action": "Action",
+        "changes": "Changes",
+        "oldValue": "Old Value",
+        "newValue": "New Value",
+        "noChanges": "No changes recorded",
+        "close": "Close"
+      },
+      "actions": {
+        "create": "Create",
+        "update": "Update",
+        "delete": "Delete",
+        "login": "Login",
+        "logout": "Logout",
+        "view": "View"
+      },
+      "entities": {
+        "user": "User",
+        "application": "Application",
+        "license": "License",
+        "payment": "Payment",
+        "appointment": "Appointment",
+        "settings": "Settings"
+      }
+    },
+    "reports": {
+      "title": "Administrative Reports",
+      "subtitle": "Comprehensive insights into system performance and compliance",
+      "export": "Export Report",
+      "refresh": "Refresh Data",
+      "applications": {
+        "title": "Application Trends",
+        "total": "Total Applications",
+        "byStatus": "Distribution by Status",
+        "byService": "Distribution by Service"
+      },
+      "financial": {
+        "title": "Revenue Analytics",
+        "total": "Total Revenue",
+        "daily": "Daily Revenue",
+        "methods": "Payment Methods"
+      },
+      "performance": {
+        "title": "Operational Performance",
+        "avgTime": "Average Processing Time",
+        "throughput": "System Throughput",
+        "byMonth": "Monthly Performance"
+      },
+      "users": {
+        "title": "User Demographics",
+        "total": "Total Active Users",
+        "byRole": "Breakdown by Role"
+      },
+      "licenses": {
+        "title": "License Issuance Insights",
+        "active": "Active Licenses",
+        "expired": "Expired Licenses",
+        "expiringSoon": "Expiring Soon",
+        "byClass": "Breakdown by Class",
+        "totalIssued": "Total Issued",
+        "renewalRates": "Renewal Rates"
+      }
+    }
+  }
+}

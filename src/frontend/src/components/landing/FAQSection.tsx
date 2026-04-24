@@ -2,101 +2,132 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslations } from 'next-intl';
-import { Plus, Minus, HelpCircle } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+const faqs = [
+  {
+    question: "ما هي المتطلبات الأساسية للحصول على رخصة قيادة؟",
+    answer: "يجب ألا يقل العمر عن ١٨ عاماً (أو ١٦ للدراجات النارية)، وتوفير فحص طبي معتمد من المراكز الطبية التابعة للمرور، بالإضافة إلى صورة من البطاقة الشخصية وإثبات السكن.",
+  },
+  {
+    question: "كم تستغرق عملية إصدار الرخصة عبر المنصة؟",
+    answer: "في حال اكتمال جميع المتطلبات واجتياز الاختبارات، يتم إصدار الرخصة رقمياً فوراً، ويمكن استلام النسخة المطبوعة من أقرب مركز مرور خلال ٢٤ ساعة.",
+  },
+  {
+    question: "هل يمكنني تجديد رخصتي المنتهية منذ سنوات؟",
+    answer: "نعم، يمكنك التقديم على تجديد الرخصة عبر المنصة، وسيتم احتساب الغرامات المقررة قانوناً إن وجدت، مع ضرورة إجراء فحص طبي جديد.",
+  },
+  {
+    question: "كيف يتم سداد الرسوم الحكومية؟",
+    answer: "توفر المنصة خيارات سداد رقمية متعددة تشمل المحافظ الإلكترونية والحوالات البنكية المباشرة عبر نظام سداد الموحد.",
+  },
+  {
+    question: "ماذا افعل إذا رُفع طلبي؟",
+    answer: "في حالة رفض الطلب، ستصلك رسالة نصية وإشعار تفصيلي عبر المنصة يوضح سبب الرفض والخطوات المطلوبة لتصحيح الوضع وإعادة التقديم.",
+  },
+];
 
 export default function FAQSection() {
-  const t = useTranslations('landing.faq');
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
 
-  // Since we have an array in translation, we need to map through indices
-  // For the MVP we only have 2 in the translation file I created
-  const items = [0, 1];
-
   return (
-    <section className="py-24 bg-neutral-50 dark:bg-neutral-900/50">
-      <div className="container mx-auto px-6">
-        <div className="flex flex-col lg:flex-row gap-16">
-          {/* Header Area */}
-          <div className="lg:w-1/3 space-y-6">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+    <section id="faq" className="py-20 lg:py-28 bg-background font-arabic" dir="rtl">
+      <div className="container mx-auto px-6 lg:px-12">
+        <div className="max-w-3xl mx-auto">
+
+          {/* Header */}
+          <div className="text-center mb-12 space-y-3">
+            <motion.span
+              initial={{ opacity: 0, y: -10 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-2 text-primary-600 font-bold uppercase tracking-widest text-sm"
+              className="inline-block px-4 py-1.5 rounded-full bg-[#1a3a8f]/8 text-[#1a3a8f] text-xs font-bold tracking-widest border border-[#1a3a8f]/15"
             >
-              <HelpCircle className="w-5 h-5" />
-              {t('title')}
-            </motion.div>
+              مركز المساعدة
+            </motion.span>
             <motion.h2
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="text-3xl md:text-5xl font-bold text-neutral-900 dark:text-white leading-tight"
+              transition={{ delay: 0.08 }}
+              className="text-3xl md:text-4xl font-black text-[#0f1e4a] tracking-tight"
             >
-              كل ما تحتاج <br className="hidden md:block" /> معرفته عن المنصة
+              الأسئلة الشائعة
             </motion.h2>
             <motion.p
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="text-neutral-500 dark:text-neutral-400"
+              transition={{ delay: 0.14 }}
+              className="text-base text-neutral-500 font-semibold"
             >
-              إليك إجابات على أكثر الأسئلة شيوعاً حول خدمات مُجاز وكيفية الاستفادة منها.
+              إجابات واضحة على أكثر الأسئلة تكراراً من المراجعين
             </motion.p>
           </div>
 
-          {/* FAQ Accordion */}
-          <div className="lg:w-2/3 space-y-4">
-            {items.map((index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className={`rounded-2xl border transition-all duration-300 ${
-                  activeIndex === index 
-                    ? 'border-primary-500 bg-white dark:bg-neutral-900 shadow-xl shadow-primary-500/5' 
-                    : 'border-neutral-200 dark:border-neutral-800 hover:border-primary-500/50'
-                }`}
-              >
-                <button
-                  onClick={() => setActiveIndex(activeIndex === index ? null : index)}
-                  className="w-full px-8 py-6 flex items-center justify-between text-start"
-                >
-                  <span className={`text-lg font-bold transition-colors ${
-                    activeIndex === index ? 'text-primary-600' : 'text-neutral-900 dark:text-white'
-                  }`}>
-                    {t(`items.${index}.q`)}
-                  </span>
-                  <div className={`flex-shrink-0 ml-4 w-8 h-8 rounded-full border flex items-center justify-center transition-all ${
-                    activeIndex === index 
-                      ? 'bg-primary-600 border-primary-600 text-white rotate-180' 
-                      : 'border-neutral-200 dark:border-neutral-700 text-neutral-500'
-                  }`}>
-                    {activeIndex === index ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                  </div>
-                </button>
-                
-                <AnimatePresence>
-                  {activeIndex === index && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-8 pb-8 text-neutral-600 dark:text-neutral-400 leading-relaxed border-t border-neutral-100 dark:border-neutral-800 pt-6">
-                        {t(`items.${index}.a`)}
-                      </div>
-                    </motion.div>
+          {/* Accordion */}
+          <div className="space-y-3">
+            {faqs.map((faq, index) => {
+              const isOpen = activeIndex === index;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.07 }}
+                  className={cn(
+                    "rounded-xl border transition-all duration-300 overflow-hidden",
+                    isOpen
+                      ? "border-[#1a3a8f]/25 bg-white shadow-md shadow-[#1a3a8f]/6"
+                      : "border-border bg-card hover:border-[#1a3a8f]/15 hover:bg-white"
                   )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
+                >
+                  <button
+                    onClick={() => setActiveIndex(isOpen ? null : index)}
+                    className="w-full px-6 py-5 flex items-center justify-between gap-4 text-start group"
+                  >
+                    <span className={cn(
+                      "text-base font-bold leading-snug transition-colors duration-300",
+                      isOpen ? "text-[#1a3a8f]" : "text-neutral-800 group-hover:text-[#1a3a8f]"
+                    )}>
+                      {faq.question}
+                    </span>
+                    <div className={cn(
+                      "shrink-0 w-8 h-8 rounded-lg flex items-center justify-center border transition-all duration-300",
+                      isOpen
+                        ? "bg-[#1a3a8f] border-[#1a3a8f] text-white"
+                        : "border-border text-neutral-400 group-hover:border-[#1a3a8f]/30 group-hover:text-[#1a3a8f]"
+                    )}>
+                      <ChevronDown className={cn(
+                        "w-4 h-4 transition-transform duration-300",
+                        isOpen ? "rotate-180" : ""
+                      )} />
+                    </div>
+                  </button>
+
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                      >
+                        <div className="px-6 pb-6 pt-0">
+                          <div className="border-t border-border pt-4">
+                            <p className="text-sm text-neutral-500 font-semibold leading-relaxed">
+                              {faq.answer}
+                            </p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>

@@ -26,10 +26,19 @@ namespace Mojaz.Infrastructure.Extensions
             services.AddScoped<IEmailService, SendGridEmailService>();
             services.AddScoped<IEmailLogRepository, EmailLogRepository>();
             
-            services.AddSingleton<IRazorLightEngine>(_ => new RazorLightEngineBuilder()
-                .UseFileSystemProject("src/backend/Mojaz.Infrastructure/EmailTemplates")
-                .UseMemoryCachingProvider()
-                .Build());
+            services.AddSingleton<IRazorLightEngine>(_ => 
+            {
+                var baseDir = AppContext.BaseDirectory;
+                var templatePath = Path.Combine(baseDir, "..", "..", "..", "Mojaz.Infrastructure", "EmailTemplates");
+                if (!Directory.Exists(templatePath))
+                {
+                    templatePath = Path.Combine(baseDir, "EmailTemplates");
+                }
+                return new RazorLightEngineBuilder()
+                    .UseFileSystemProject(templatePath)
+                    .UseMemoryCachingProvider()
+                    .Build();
+            });
             
             return services;
         }

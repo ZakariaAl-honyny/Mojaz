@@ -96,9 +96,9 @@ public class ReplaceLicenseServiceTests
         // Assert
         result.Success.Should().BeTrue();
         result.Data.Should().NotBeNull();
-        result.Data.IsEligible.Should().BeTrue();
-        result.Data.LicenseId.Should().Be(licenseId);
-        result.Data.LicenseNumber.Should().Be(license.LicenseNumber);
+        result.Data!.IsEligible.Should().BeTrue();
+        result.Data!.LicenseId.Should().Be(licenseId);
+        result.Data!.LicenseNumber.Should().Be(license.LicenseNumber);
     }
 
     [Fact]

@@ -4,7 +4,8 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import WizardStepIndicator from './WizardStepIndicator';
 import { useWizardStore } from '@/stores/wizard-store';
-import { useTranslations } from 'next-intl';
+import { AutoSaveIndicator } from './shared/AutoSaveIndicator';
+import { cn } from '@/lib/utils';
 
 interface WizardLayoutProps {
   children: React.ReactNode;
@@ -14,54 +15,36 @@ export default function WizardLayout({ children }: WizardLayoutProps) {
   const currentStep = useWizardStore((state) => state.currentStep);
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Wizard Header & Indicator */}
-        <div className="mb-12">
+    <div className="min-h-screen bg-[#f8fafc] py-24 px-4 sm:px-6 lg:px-8 font-arabic relative overflow-hidden" dir="rtl">
+      {/* Sovereignty Background Accents */}
+      <div className="absolute top-0 left-0 w-full h-[600px] bg-gradient-to-b from-[#1a3a8f]/5 to-transparent -z-10" />
+      <div className="absolute top-[20%] -right-20 w-96 h-96 bg-[#1a3a8f]/5 rounded-full blur-[120px] -z-10" />
+
+      <div className="w-full max-w-4xl mx-auto p-4 md:p-6 space-y-16 relative">
+        {/* Institutional Progress Architecture */}
+        <div className="bg-white/80 backdrop-blur-xl p-12 rounded-[3.5rem] shadow-[0_30px_100px_-20px_rgba(26,58,143,0.08)] border border-white">
           <WizardStepIndicator />
         </div>
 
-        {/* Wizard Content with Page Transitions */}
-        <motion.div
+        {/* Master Stage Container */}
+        <motion.main
           key={currentStep}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.3, ease: 'easeInOut' }}
-          className="bg-white dark:bg-neutral-900 shadow-gov rounded-gov border border-neutral-200 dark:border-neutral-800 overflow-hidden"
+          initial={{ opacity: 0, scale: 0.98, y: 40 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          className="bg-white shadow-[0_40px_120px_-30px_rgba(26,58,143,0.12)] rounded-[4rem] border border-neutral-100/50 overflow-visible relative"
         >
-          <div className="p-6 sm:p-10">
+          {/* Subtle Institutional Content Guard */}
+          <div className="p-10 sm:p-20">
             {children}
           </div>
-        </motion.div>
+        </motion.main>
 
-        {/* Auto-save Status Bar (Floating) */}
-        <div className="mt-8 text-center">
+        {/* Institutional Feedback Loop */}
+        <div className="flex justify-center pb-12">
             <AutoSaveIndicator />
         </div>
       </div>
     </div>
-  );
-}
-
-function AutoSaveIndicator() {
-  const t = useTranslations('wizard.autoSave');
-  const lastSavedAt = useWizardStore((state) => state.lastSavedAt);
-  const consecutiveFailures = useWizardStore((state) => state.consecutiveSaveFailures);
-
-  if (consecutiveFailures >= 3) {
-    return (
-      <span className="text-sm text-status-warning animate-pulse">
-        {t('connectionIssues')}
-      </span>
-    );
-  }
-
-  if (!lastSavedAt) return null;
-
-  return (
-    <span className="text-sm text-neutral-400">
-      {t('lastSaved')} {new Date(lastSavedAt).toLocaleTimeString()}
-    </span>
   );
 }

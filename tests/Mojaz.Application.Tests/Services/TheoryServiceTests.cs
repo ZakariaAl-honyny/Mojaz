@@ -298,8 +298,8 @@ public class TheoryServiceTests
 
         // Assert
         result.Success.Should().BeTrue();
-        result.Data.Items.Should().HaveCount(2);
-        result.Data.Items.First().AttemptNumber.Should().Be(1);
+        result.Data!.Items.Should().HaveCount(2);
+        result.Data!.Items.First().AttemptNumber.Should().Be(1);
     }
 
     [Fact]
@@ -340,7 +340,7 @@ public class TheoryServiceTests
 
         // Assert
         result.Success.Should().BeTrue();
-        result.Data.Items.Should().HaveCount(1);
+        result.Data!.Items.Should().HaveCount(1);
     }
 
     #endregion

@@ -1,36 +1,39 @@
 import React, { memo } from 'react';
-import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
-import { Plus, LayoutDashboard, Clock, CheckCircle2, AlertCircle, Award, Bell, FileText, ArrowUpRight, Download, Star, TrendingUp } from 'lucide-react';
+import { 
+  Plus, LayoutDashboard, Clock, CheckCircle2, 
+  ArrowUpRight, FileText, ChevronLeft, ShieldCheck, 
+  Award, Bell, Download, HelpCircle
+} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { DashboardSummaryDto } from '@/types/application.types';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { FormattedDate } from '@/components/shared/FormattedDate';
 
 interface ApplicantDashboardProps {
   data: DashboardSummaryDto;
   userName: string;
 }
 
-const StatCard = memo(({ title, value, icon: Icon, colorClass, delay = 0 }: any) => (
+const StatCard = memo(({ title, value, icon: Icon, color, delay = 0 }: any) => (
   <motion.div
-    initial={{ opacity: 0, scale: 0.95 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ delay, duration: 0.5, ease: "circOut" }}
+    initial={{ opacity: 0, y: 16 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay, duration: 0.4 }}
     className="h-full"
   >
-    <Card className="h-full border-none shadow-xl bg-white/40 backdrop-blur-xl group hover:shadow-2xl transition-all duration-500 overflow-hidden relative rounded-[24px]">
-      <div className={cn("absolute top-0 right-0 w-32 h-32 blur-3xl opacity-10 rounded-full -mr-16 -mt-16", colorClass)} />
-      <CardContent className="p-8">
-        <div className="flex justify-between items-start relative z-10">
-          <div className={`p-4 rounded-2xl ${colorClass} shadow-lg shadow-black/5`}>
-            <Icon className="w-8 h-8 text-white" />
+    <Card className="h-full border border-neutral-200 shadow-sm bg-white hover:shadow-md hover:border-[#1a3a8f]/20 transition-all duration-300 rounded-xl group overflow-hidden">
+      <CardContent className="p-3 md:p-4">
+        <div className="flex items-center justify-between gap-3">
+          <div className="space-y-0.5 md:space-y-1">
+            <p className="text-[9px] md:text-[10px] font-black text-neutral-400 uppercase tracking-widest leading-none mb-1">{title}</p>
+            <h3 className="text-xl md:text-2xl font-black text-neutral-900 tracking-tight">{value}</h3>
           </div>
-          <div className="text-end">
-            <p className="text-xs font-black text-neutral-500 uppercase tracking-[0.2em] mb-2">{title}</p>
-            <h3 className="text-4xl font-black text-neutral-900 tracking-tighter">{value}</h3>
+          <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center transition-transform group-hover:scale-110" style={{ backgroundColor: `${color}10`, color: color }}>
+            <Icon className="w-4 h-4 md:w-5 md:h-5" />
           </div>
         </div>
       </CardContent>
@@ -41,171 +44,194 @@ const StatCard = memo(({ title, value, icon: Icon, colorClass, delay = 0 }: any)
 StatCard.displayName = 'StatCard';
 
 export const ApplicantDashboard = ({ data, userName }: ApplicantDashboardProps) => {
-  const t = useTranslations('dashboard.applicant');
-
   return (
-    <div className="max-w-7xl mx-auto space-y-12" data-testid="dashboard-summary">
-      {/* Editorial Header */}
-      <header className="relative py-10 px-4">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="max-w-2xl"
-          >
-            <span className="inline-block px-3 py-1 rounded-full bg-primary-100 text-primary-700 text-[10px] font-black uppercase tracking-widest mb-6">
-              {new Date().toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-            </span>
-            <h1 className="text-5xl md:text-7xl font-black text-neutral-900 leading-[1.1] tracking-tighter mb-6 font-arabic">
-              {t.rich('welcome', { 
-                name: userName,
-                highlight: (chunks) => <span className="text-primary-600">{chunks}</span>
-              })}
-            </h1>
-            <p className="text-xl text-neutral-500 font-medium leading-relaxed font-arabic">
-              تتبع حالة طلباتك واحصل على رخصتك بكل سهولة ويسر عبر منصة مُجاز الرقمية.
-            </p>
-          </motion.div>
- 
-          <Link href="/applications/new">
-            <Button data-testid="new-application-btn" className="bg-primary-600 hover:bg-primary-700 text-white h-16 px-10 rounded-[20px] shadow-2xl shadow-primary-900/40 transition-all hover:scale-105 active:scale-95 text-lg font-black">
-              <Plus className="me-3 w-6 h-6" />
-              {t('startNew')}
-            </Button>
-          </Link>
-        </div>
-      </header>
-
-      {/* Grid Layout - 2/3 and 1/3 */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 px-4">
-        {/* Left Column - Stats & Summary */}
-        <div className="lg:col-span-8 space-y-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <StatCard 
-              title={t('activeApplications')} 
-              value={data.activeApplicationsCount} 
-              icon={LayoutDashboard}
-              colorClass="bg-primary-600"
-              delay={0.1}
-            />
-            <StatCard 
-              title={t('pendingActions')} 
-              value={data.pendingActionsCount} 
-              icon={Clock}
-              colorClass="bg-amber-500"
-              delay={0.2} 
-            />
-            <StatCard 
-              title="إجمالي المنجز" 
-              value={data.stats.totalSubmitted} 
-              icon={CheckCircle2}
-              colorClass="bg-emerald-500"
-              delay={0.3}
-            />
+    <div className="max-w-5xl mx-auto space-y-6 md:space-y-8 font-arabic" dir="rtl">
+      
+      {/* Welcome Banner */}
+      <section className="relative overflow-hidden rounded-xl md:rounded-2xl bg-[#0f1e4a] p-5 md:p-7 shadow-xl">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_#1a3a8f_0%,_transparent_70%)]" />
+        
+        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-5 md:gap-4">
+          <div className="space-y-2 md:space-y-3 max-w-xl text-center md:text-start">
+            <motion.span 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="text-[9px] md:text-[10px] px-2.5 md:px-3 py-1 bg-white/10 rounded-full text-white w-fit mx-auto md:mx-0 font-bold"
+            >
+              <FormattedDate date={new Date()} options={{ weekday: 'long', day: 'numeric', month: 'long' }} />
+            </motion.span>
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-lg md:text-2xl font-black text-white leading-tight tracking-tight"
+            >
+              مرحباً بك، <br className="hidden md:block" />
+              <span className="text-[#D4A017]">{userName || 'المتقدم'}</span>
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-slate-300 font-bold text-xs md:text-sm opacity-90"
+            >
+              تابع خطوات إصدار رخصتك الإلكترونية عبر منظومة المرور الموحدة.
+            </motion.p>
           </div>
 
-          {/* Activity Section */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
           >
-            <Card className="border-none shadow-2xl bg-white/60 backdrop-blur-2xl rounded-[32px] overflow-hidden">
-              <CardHeader className="p-8 pb-0">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-2xl font-black flex items-center gap-3">
-                    <div className="w-2 h-8 bg-primary-600 rounded-full" />
-                    {t('recentApplications')}
-                  </CardTitle>
-                  <Link href="/applications" className="text-sm text-primary-600 font-black hover:underline tracking-tight">
-                    عرض الكل
-                  </Link>
-                </div>
-              </CardHeader>
-              <CardContent className="p-8 pt-6">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-start">
-                    <thead>
-                      <tr className="border-b border-neutral-100">
-                        <th className="pb-4 text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] text-start">رقم الطلب</th>
-                        <th className="pb-4 text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] text-start">الفئة</th>
-                        <th className="pb-4 text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] text-start">المرحلة</th>
-                        <th className="pb-4 text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] text-start">الحالة</th>
-                        <th className="pb-4 text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] text-end">التحديث</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-50">
-                      {data.applications.map((app) => (
-                        <tr 
-                          key={app.id} 
-                          className="hover:bg-white/50 transition-colors group cursor-pointer"
-                        >
-                          <td className="py-5 font-black text-primary-700 tracking-tight">{app.applicationNumber}</td>
-                          <td className="py-5">
-                            <span className="font-black text-neutral-600 bg-neutral-100 px-3 py-1 rounded-lg text-xs">
-                              {app.licenseCategoryCode}
-                            </span>
-                          </td>
-                          <td className="py-5 text-sm font-bold text-neutral-600">
-                            {app.currentStage}
-                          </td>
-                          <td className="py-5">
-                            <StatusBadge status={app.status} />
-                          </td>
-                          <td className="py-5 text-end">
-                            <span className="text-xs text-neutral-400 font-bold">
-                              {new Date(app.updatedAt).toLocaleDateString('ar-SA')}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
+            <Link href="/applications/new">
+              <Button className="h-10 md:h-11 px-5 md:px-6 bg-[#D4A017] hover:bg-[#b88a14] text-white rounded-lg md:rounded-xl text-sm font-bold shadow-lg shadow-amber-900/10 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+                <Plus className="w-4 h-4 md:w-5 md:h-5" />
+                ابدأ طلب جديد
+              </Button>
+            </Link>
           </motion.div>
         </div>
+      </section>
 
-        {/* Right Column - Featured Card */}
-        <div className="lg:col-span-4">
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5 }}
-            className="sticky top-24"
-          >
-            <div className="bg-primary-900 rounded-[40px] p-8 text-white relative overflow-hidden group shadow-3xl shadow-primary-900/30">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/20 blur-[80px] -mr-32 -mt-32" />
-              <div className="relative z-10">
-                <div className="w-16 h-16 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center mb-8 border border-white/10">
-                  <CheckCircle2 className="w-8 h-8 text-primary-400" />
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          title="الطلبات النشطة"
+          value={data?.activeApplicationsCount || 0}
+          icon={LayoutDashboard}
+          color="#1a3a8f"
+          delay={0.1}
+        />
+        <StatCard
+          title="إجراءات معلقة"
+          value={data?.pendingActionsCount || 0}
+          icon={Clock}
+          color="#D4A017"
+          delay={0.2}
+        />
+        <StatCard
+          title="طلبات منجزة"
+          value={data?.stats?.totalSubmitted || 0}
+          icon={CheckCircle2}
+          color="#0f766e"
+          delay={0.3}
+        />
+        <StatCard
+          title="إخطارات جديدة"
+          value={data?.newNotificationsCount || 0}
+          icon={Bell}
+          color="#7c3aed"
+          delay={0.4}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main Applications Table */}
+        <div className="lg:col-span-2 space-y-6">
+          <Card className="border border-neutral-200 shadow-sm rounded-xl overflow-hidden bg-white">
+            <CardHeader className="p-4 md:p-5 border-b border-neutral-100 flex flex-row items-center justify-between space-y-0">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-primary-50 flex items-center justify-center">
+                  <FileText className="w-4 h-4 md:w-4.5 md:h-4.5 text-[#1a3a8f]" />
                 </div>
-                <h3 className="text-3xl font-black mb-4 font-arabic leading-tight tracking-tight">جاهز للاختبار؟</h3>
-                <p className="text-primary-100/70 mb-8 leading-relaxed font-medium">
-                  نحن هنا لتمكينك. اطلع على دليل الاختبارات النظرية والعملية لضمان نجاحك من المرة الأولى.
-                </p>
-                <button className="w-full bg-white text-primary-900 font-black h-16 rounded-2xl hover:bg-primary-50 transition-all hover:scale-105 active:scale-95 px-6 text-sm flex items-center justify-between group/btn">
-                  <span>تحميل الدليل الإرشادي</span>
-                  <Plus className="w-5 h-5 group-hover/btn:rotate-90 transition-transform" />
-                </button>
+                <CardTitle className="text-base md:text-lg font-black text-neutral-900 tracking-tight">أحدث الطلبات</CardTitle>
               </div>
-            </div>
-            
-            <div className="mt-8 p-8 bg-amber-50 rounded-[32px] border border-amber-100 group hover:border-amber-200 transition-colors">
-              <div className="flex gap-4">
-                <div className="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border border-amber-200">
-                  <Clock className="w-7 h-7 text-amber-600" />
+              <Link href="/applications">
+                <Button variant="ghost" className="text-[#1a3a8f] font-black text-xs hover:bg-[#1a3a8f]/5 gap-1.5 md:gap-2 group h-8 md:h-9 px-3">
+                  عرض الكل
+                  <ChevronLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-right">
+                  <thead>
+                    <tr className="bg-neutral-50/50">
+                      <th className="px-4 md:px-6 py-2.5 md:py-3.5 text-[9px] md:text-[10px] font-black text-neutral-400 uppercase tracking-widest">رقم الطلب</th>
+                      <th className="px-4 md:px-6 py-2.5 md:py-3.5 text-[9px] md:text-[10px] font-black text-neutral-400 uppercase tracking-widest">الفئة</th>
+                      <th className="px-4 md:px-6 py-2.5 md:py-3.5 text-[9px] md:text-[10px] font-black text-neutral-400 uppercase tracking-widest">المرحلة الحالية</th>
+                      <th className="px-4 md:px-6 py-2.5 md:py-3.5 text-[9px] md:text-[10px] font-black text-neutral-400 uppercase tracking-widest text-center">الحالة</th>
+                      <th className="px-4 md:px-6 py-2.5 md:py-3.5 text-[9px] md:text-[10px] font-black text-neutral-400 uppercase tracking-widest text-left">التاريخ</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-100">
+                    {data?.applications?.map((app) => (
+                      <tr key={app.id} className="hover:bg-neutral-50/50 transition-colors group cursor-pointer border-b last:border-0 border-neutral-50">
+                        <td className="px-4 md:px-6 py-3.5 md:py-4 font-black text-[#1a3a8f] text-xs md:text-sm tracking-tight group-hover:underline">
+                          <Link href={`/applications/${app.id}`}>
+                            {app.applicationNumber}
+                          </Link>
+                        </td>
+                        <td className="px-4 md:px-6 py-3.5 md:py-4">
+                          <span className="inline-flex items-center justify-center w-6 h-6 md:w-7 md:h-7 rounded-md bg-neutral-100 text-neutral-900 text-[9px] md:text-[10px] font-black">
+                            {app.licenseCategoryCode}
+                          </span>
+                        </td>
+                        <td className="px-4 md:px-6 py-3.5 md:py-4 text-[10px] md:text-xs font-bold text-neutral-600">
+                          {app.currentStage}
+                        </td>
+                        <td className="px-4 md:px-6 py-3.5 md:py-4 text-center">
+                          <StatusBadge status={app.status} />
+                        </td>
+                        <td className="px-4 md:px-6 py-3.5 md:py-4 text-left text-[9px] md:text-[10px] font-bold text-neutral-400">
+                          <FormattedDate date={app.updatedAt} />
+                        </td>
+                      </tr>
+                    ))}
+                    {(!data?.applications || data.applications.length === 0) && (
+                      <tr>
+                        <td colSpan={5} className="px-8 py-16 text-center text-neutral-400 font-bold italic">
+                          لا توجد طلبات نشطة لعرضها في الوقت الحالي
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Sidebar Cards */}
+        <div className="space-y-6">
+          {/* Guide Card */}
+          <div className="relative group overflow-hidden rounded-xl bg-white border border-neutral-200 p-5 md:p-6 shadow-sm hover:shadow-md hover:border-[#1a3a8f]/20 transition-all duration-300">
+             <div className="absolute top-0 right-0 w-24 md:w-32 h-24 md:h-32 bg-[#1a3a8f]/5 blur-2xl md:blur-3xl -mr-12 md:-mr-16 -mt-12 md:-mt-16" />
+             <div className="relative z-10 space-y-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-emerald-50 rounded-xl flex items-center justify-center border border-emerald-100">
+                  <Award className="w-5 h-5 md:w-6 md:h-6 text-emerald-600" />
                 </div>
-                <div>
-                  <h4 className="font-black text-amber-900 text-lg mb-1 tracking-tight">نصيحة اليوم</h4>
-                  <p className="text-sm text-amber-700/70 font-bold leading-relaxed">
-                    تأكد من إحضار الهوية الوطنية الأصلية عند موعد فحص النظر لضمان سلاسة الإجراءات.
+                <div className="space-y-1">
+                  <h4 className="text-base md:text-lg font-black text-neutral-900 tracking-tight leading-tight">دليل النجاح</h4>
+                  <p className="text-[10px] md:text-xs text-neutral-500 font-semibold leading-relaxed">
+                    استعد للاختبارات النظرية والعملية عبر الاطلاع على دليل الإرشادات المعتمد.
                   </p>
                 </div>
-              </div>
-            </div>
-          </motion.div>
+                <Button className="w-full h-10 md:h-11 bg-[#1a3a8f] hover:bg-[#152d6f] text-white rounded-lg text-[10px] md:text-xs font-black transition-all gap-2 md:gap-3 shadow-lg shadow-blue-900/10">
+                  تحميل الدليل (PDF)
+                  <Download className="w-3.5 h-3.5" />
+                </Button>
+             </div>
+          </div>
+
+          {/* Tips Card */}
+          <div className="p-5 md:p-6 bg-[#D4A017]/5 border border-[#D4A017]/10 rounded-xl space-y-2 md:space-y-3">
+             <div className="flex items-center gap-2 md:gap-3">
+                <HelpCircle className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#D4A017]" />
+                <h4 className="font-black text-[#856404] text-[9px] md:text-[11px] uppercase tracking-widest text-right">معلومة سريعة</h4>
+             </div>
+             <p className="text-[10px] md:text-xs text-[#856404] font-bold leading-relaxed text-right">
+                يمكنك التحقق من صلاحية رخصتك في أي وقت من خلال قسم "تراخيصي" في القائمة الجانبية.
+             </p>
+          </div>
+
+          {/* Security Banner */}
+          <div className="flex items-center justify-center gap-3 opacity-30 select-none">
+             <ShieldCheck className="w-4 h-4" />
+             <span className="text-[10px] font-black uppercase tracking-[0.2em]">بياناتك محمية بأنظمة تشفير سيادية</span>
+          </div>
         </div>
       </div>
     </div>

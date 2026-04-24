@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Mojaz.Domain.Enums;
 
 namespace Mojaz.Application.DTOs.Application;
@@ -7,12 +8,6 @@ public class EligibilityCheckRequest
     public Guid LicenseCategoryId { get; set; }
     public ServiceType? ServiceType { get; set; }
     public Guid? CurrentLicenseId { get; set; }
-}
-
-public class EligibilityCheckResult
-{
-    public bool IsEligible { get; set; }
-    public List<string> Reasons { get; set; } = new();
 }
 
 public class ApplicationFilterRequest
@@ -31,6 +26,12 @@ public class ApplicationFilterRequest
     public int PageSize { get; set; } = 20;
 }
 
+public class CreateApplicationDraftRequest
+{
+    [JsonPropertyName("serviceType")]
+    public ServiceType ServiceType { get; set; }
+}
+
 public class CreateApplicationRequest
 {
     // Step 1: Service
@@ -42,17 +43,17 @@ public class CreateApplicationRequest
     // Step 3: Personal Information (Updating Applicant profile)
     public string NationalId { get; set; } = string.Empty;
     public DateTime DateOfBirth { get; set; }
-    public string Gender { get; set; } = string.Empty;
+    public GenderEnum? Gender { get; set; }
     public string Nationality { get; set; } = string.Empty;
     public string? Address { get; set; }
     public string? City { get; set; }
     public string? Region { get; set; }
-    public string ApplicantType { get; set; } = "Citizen";
+    public ApplicantType? ApplicantType { get; set; }
 
     // Step 4: Details
     public Guid? BranchId { get; set; }
     public string PreferredLanguage { get; set; } = "ar";
-    public bool SpecialNeeds { get; set; }
+    public string? SpecialNeeds { get; set; }
     
     // Step 5: Review
     public bool DataAccuracyConfirmed { get; set; }
@@ -64,7 +65,7 @@ public class UpdateDraftRequest
     public Guid? LicenseCategoryId { get; set; }
     public Guid? BranchId { get; set; }
     public string? PreferredLanguage { get; set; }
-    public bool? SpecialNeeds { get; set; }
+    public string? SpecialNeeds { get; set; }
 }
 
 public class SubmitApplicationRequest
@@ -75,6 +76,15 @@ public class SubmitApplicationRequest
 public class CancelApplicationRequest
 {
     public string Reason { get; set; } = string.Empty;
+}
+
+public class UpdateApplicationRequest
+{
+    public ServiceType? ServiceType { get; set; }
+    public Guid? LicenseCategoryId { get; set; }
+    public Guid? BranchId { get; set; }
+    public string? PreferredLanguage { get; set; }
+    public string? SpecialNeeds { get; set; }
 }
 
 public class ApplicationDto
@@ -89,7 +99,7 @@ public class ApplicationDto
     public ApplicationStatus Status { get; set; }
     public string? CurrentStage { get; set; }
     public string PreferredLanguage { get; set; } = "ar";
-    public bool SpecialNeeds { get; set; }
+    public string? SpecialNeeds { get; set; }
     public bool DataAccuracyConfirmed { get; set; }
     public DateTime? SubmittedAt { get; set; }
     public DateTime? ExpiresAt { get; set; }
@@ -158,4 +168,89 @@ public class UpgradeApplicationRequest
     public Guid BranchId { get; set; }
     public string PreferredLanguage { get; set; } = "ar";
     public bool DataAccuracyConfirmed { get; set; }
+}
+
+/// <summary>
+/// Complete wizard data response — includes both application fields and applicant user fields.
+/// Used to restore wizard state on page refresh or app revisit.
+/// </summary>
+public class ApplicationWizardDto
+{
+    // Identity
+    public Guid Id { get; set; }
+    public string ApplicationNumber { get; set; } = string.Empty;
+    public ApplicationStatus Status { get; set; }
+    public string CurrentStage { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+
+    // Step 1: Service
+    public ServiceType ServiceType { get; set; }
+
+    // Step 2: Category
+    public Guid LicenseCategoryId { get; set; }
+    public string LicenseCategoryCode { get; set; } = string.Empty;
+    public string LicenseCategoryNameAr { get; set; } = string.Empty;
+    public string LicenseCategoryNameEn { get; set; } = string.Empty;
+
+    // Step 3: Personal Info (from User entity)
+    public string? NationalId { get; set; }
+    public DateTime? DateOfBirth { get; set; }
+    public GenderEnum? Gender { get; set; }
+    public string? Nationality { get; set; }
+    public string? MobileNumber { get; set; }  // User.PhoneNumber
+    public string? Email { get; set; }
+    public string? Address { get; set; }
+    public string? City { get; set; }
+    public string? Region { get; set; }
+    public ApplicantType? ApplicantType { get; set; }
+
+    // Step 4: Preferences (from Application entity)
+    public Guid? BranchId { get; set; }
+    public string PreferredLanguage { get; set; } = "ar";
+    public string? SpecialNeeds { get; set; }  // from Application entity
+    public string? AppointmentPreference { get; set; }  // User.AppointmentPreference
+}
+
+/// <summary>
+/// Request to update both application and applicant user data during wizard progression or auto-save.
+/// </summary>
+public class UpdateWizardDataRequest
+{
+    // Step 2
+    public Guid? LicenseCategoryId { get; set; }
+
+    // Step 3 (User fields)
+    public string? NationalId { get; set; }
+    public DateTime? DateOfBirth { get; set; }
+    public GenderEnum? Gender { get; set; }
+    public string? Nationality { get; set; }
+    public string? MobileNumber { get; set; }
+    public string? Email { get; set; }
+    public string? Address { get; set; }
+    public string? City { get; set; }
+    public string? Region { get; set; }
+    public ApplicantType? ApplicantType { get; set; }
+
+    // Step 4 (Application + User fields)
+    public Guid? BranchId { get; set; }
+    public string? PreferredLanguage { get; set; }
+    public string? SpecialNeeds { get; set; }
+    public string? AppointmentPreference { get; set; }
+}
+
+public class ReplacementApplicationRequest
+{
+    public Guid LicenseId { get; set; }
+    public string Reason { get; set; } = string.Empty;
+    public List<Guid>? DocumentIds { get; set; }
+}
+
+public class ReplacementEligibilityResponse
+{
+    public bool IsEligible { get; set; }
+    public Guid LicenseId { get; set; }
+    public string LicenseNumber { get; set; } = string.Empty;
+    public DateTime ExpiryDate { get; set; }
+    public string? Message { get; set; }
 }

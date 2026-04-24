@@ -1,25 +1,45 @@
+// ============================================================
+// ApplicationStatus - matches backend numeric values (Mojaz.Domain/Enums/ApplicationStatus.cs)
+// Backend: Draft=0, Submitted=1, DocumentReview=2, InReview=3, MedicalExam=4,
+//          Training=5, TheoryTest=6, PracticalTest=7, Approved=8, Payment=9,
+//          Issued=10, Active=11, Rejected=12, Cancelled=13, Expired=14
+// ============================================================
 export enum ApplicationStatus {
-  Draft = 'Draft',
-  Submitted = 'Submitted',
-  Documents = 'Documents', // Was DocumentReview
-  InReview = 'InReview',
-  Medical = 'Medical', // Was MedicalExam
-  Training = 'Training',
-  Theory = 'Theory', // Was TheoryTest
-  Practical = 'Practical', // Was PracticalTest
-  Approved = 'Approved',
-  Payment = 'Payment',
-  Issued = 'Issued',
-  Active = 'Active',
-  Rejected = 'Rejected',
-  Cancelled = 'Cancelled',
-  Expired = 'Expired',
-  // Specific statuses from api.types
-  Paid = 'Paid',
-  MedicalDone = 'MedicalDone',
-  TheoryDone = 'TheoryDone',
-  PracticalDone = 'PracticalDone'
+  Draft = 0,
+  Submitted = 1,
+  DocumentReview = 2,
+  InReview = 3,
+  MedicalExam = 4,
+  Training = 5,
+  TheoryTest = 6,
+  PracticalTest = 7,
+  Approved = 8,
+  Payment = 9,
+  Issued = 10,
+  Active = 11,
+  Rejected = 12,
+  Cancelled = 13,
+  Expired = 14,
 }
+
+// Display labels for ApplicationStatus
+export const ApplicationStatusLabels = {
+  [ApplicationStatus.Draft]: { ar: 'مسودة', en: 'Draft' },
+  [ApplicationStatus.Submitted]: { ar: 'مُقدَّم', en: 'Submitted' },
+  [ApplicationStatus.DocumentReview]: { ar: 'مراجعة المستندات', en: 'Document Review' },
+  [ApplicationStatus.InReview]: { ar: 'قيد المراجعة', en: 'In Review' },
+  [ApplicationStatus.MedicalExam]: { ar: 'الفحص الطبي', en: 'Medical Exam' },
+  [ApplicationStatus.Training]: { ar: 'التدريب', en: 'Training' },
+  [ApplicationStatus.TheoryTest]: { ar: 'الاختبار النظري', en: 'Theory Test' },
+  [ApplicationStatus.PracticalTest]: { ar: 'الاختبار العملي', en: 'Practical Test' },
+  [ApplicationStatus.Approved]: { ar: 'مقبول', en: 'Approved' },
+  [ApplicationStatus.Payment]: { ar: 'الدفع', en: 'Payment' },
+  [ApplicationStatus.Issued]: { ar: 'تم الإصدار', en: 'Issued' },
+  [ApplicationStatus.Active]: { ar: 'نشط', en: 'Active' },
+  [ApplicationStatus.Rejected]: { ar: 'مرفوض', en: 'Rejected' },
+  [ApplicationStatus.Cancelled]: { ar: 'ملغى', en: 'Cancelled' },
+  [ApplicationStatus.Expired]: { ar: 'منتهي الصلاحية', en: 'Expired' },
+} as const;
 
 export enum ReplacementReason {
   Lost = 1,
@@ -28,11 +48,11 @@ export enum ReplacementReason {
 }
 
 export interface ApplicationSummaryDto {
-  id: number;
+  id: string;
   applicationNumber: string;
   applicantName: string;
-  licenseCategoryCode: string;
-  serviceType: string;
+  licenseCategoryCode: number;
+  serviceType: number;
   currentStage: string;
   status: ApplicationStatus;
   submittedDate: string;
@@ -51,7 +71,7 @@ export interface TimelineStageDto {
 }
 
 export interface ApplicationTimelineDto {
-  applicationId: number;
+  applicationId: string;
   currentStageNumber: number;
   stages: TimelineStageDto[];
 }
@@ -67,6 +87,7 @@ export interface RecentNotificationDto {
 export interface DashboardSummaryDto {
   activeApplicationsCount: number;
   pendingActionsCount: number;
+  newNotificationsCount: number;
   applications: ApplicationSummaryDto[];
   upcomingAppointments: AppointmentSummaryDto[];
   recentNotifications: RecentNotificationDto[];
@@ -74,7 +95,7 @@ export interface DashboardSummaryDto {
 }
 
 export interface AppointmentSummaryDto {
-  id: number;
+  id: string;
   appointmentDate: string;
   serviceType: string;
   status: string;
@@ -91,10 +112,11 @@ export interface ManagerKpiDto {
   statusDistribution: StatusDistributionDto[];
   last7DaysLoad: DailyLoadDto[];
   totalStalledApplications: number;
+  activeUsers: number;
 }
 
 export interface StatusDistributionDto {
-  status: string;
+  status: number;
   count: number;
 }
 
@@ -113,3 +135,41 @@ export interface VerifyStolenReportResponse {
   message: string;
 }
 
+// Admin Dashboard DTOs
+export interface AdminKpiDto {
+  todayStats: AdminTodayStats;
+  statusDistribution: StatusData[];
+  weeklyTrend: WeeklyTrend[];
+  recentActivity: ActivityItem[];
+}
+
+export interface AdminTodayStats {
+  applications: number;
+  licenses: number;
+  revenue: number;
+  activeUsers: number;
+  applicationsChange: number;
+  licensesChange: number;
+  revenueChange: number;
+  usersChange: number;
+}
+
+export interface StatusData {
+  name: string;
+  value: number;
+  color: string;
+}
+
+export interface WeeklyTrend {
+  date: string;
+  applications: number;
+  completed: number;
+}
+
+export interface ActivityItem {
+  id: string;
+  type: 'application' | 'license' | 'payment' | 'user';
+  title: string;
+  description: string;
+  timestamp: string;
+}

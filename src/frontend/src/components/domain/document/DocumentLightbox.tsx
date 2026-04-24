@@ -3,7 +3,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/static-translations';
 import { X, Check, FileText, Image as ImageIcon, ChevronLeft, ChevronRight, Download, AlertCircle } from 'lucide-react';
 import { DocumentDto, DocumentStatus } from '@/types/document.types';
 import { DocumentStatusBadge } from './DocumentStatusBadge';
@@ -52,25 +52,25 @@ export function DocumentLightbox({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl">
+      <div className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+            <h3 className="font-semibold text-gray-900">
               {document.documentTypeName}
             </h3>
             <DocumentStatusBadge status={document.status} />
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content - Document Viewer */}
-        <div className="p-4 bg-gray-50 dark:bg-gray-800 flex items-center justify-center min-h-[400px]">
+        <div className="p-4 bg-gray-50 flex items-center justify-center min-h-[400px]">
           {isImage ? (
             <img
               src={`/api/v1/applications/${document.applicationId}/documents/${document.id}/download`}
@@ -80,7 +80,7 @@ export function DocumentLightbox({
           ) : isPdf ? (
             <div className="text-center">
               <FileText className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-gray-600 mb-4">
                 {document.originalFileName}
               </p>
               <a
@@ -95,7 +95,7 @@ export function DocumentLightbox({
           ) : (
             <div className="text-center">
               <FileText className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-gray-600">
                 {document.originalFileName}
               </p>
             </div>
@@ -103,15 +103,15 @@ export function DocumentLightbox({
         </div>
 
         {/* Document Info */}
-        <div className="px-4 py-3 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
+        <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
+          <div className="flex flex-wrap gap-4 text-sm text-gray-600">
             <span>{document.originalFileName}</span>
             <span>•</span>
             <span>{(document.fileSizeBytes / 1024).toFixed(1)} KB</span>
             {document.rejectionReason && (
               <>
                 <span>•</span>
-                <span className="text-red-600 dark:text-red-400">
+                <span className="text-red-600">
                   {t('review.rejectionReason')}: {document.rejectionReason}
                 </span>
               </>
@@ -121,7 +121,7 @@ export function DocumentLightbox({
 
         {/* Actions */}
         {canReview ? (
-          <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="p-4 border-t border-gray-200">
             {!showRejectForm ? (
               <div className="flex gap-3 justify-end">
                 <Button
@@ -143,14 +143,14 @@ export function DocumentLightbox({
             ) : (
               <div className="space-y-3">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <label className="text-sm font-medium text-gray-700">
                     {t('review.rejectionReason')}
                   </label>
                   <textarea
                     value={rejectionReason}
                     onChange={(e) => setRejectionReason(e.target.value)}
                     placeholder={t('review.rejectionPlaceholder')}
-                    className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    className="w-full p-3 rounded-lg border border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     rows={3}
                   />
                 </div>
@@ -177,7 +177,7 @@ export function DocumentLightbox({
             )}
           </div>
         ) : (
-          <div className="p-4 border-t border-gray-200 dark:border-gray-700 text-center text-gray-500">
+          <div className="p-4 border-t border-gray-200 text-center text-gray-500">
             {document.status === DocumentStatus.Approved
               ? t('status.approved')
               : document.status === DocumentStatus.Rejected

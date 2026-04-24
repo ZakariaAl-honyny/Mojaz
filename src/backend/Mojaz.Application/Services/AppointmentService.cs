@@ -24,6 +24,7 @@ public class AppointmentService : IAppointmentService
     private readonly INotificationService _notificationService;
     private readonly IMapper _mapper;
     private readonly ITrainingService _trainingService;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly AppointmentBookingValidator _bookingValidator;
 
     public AppointmentService(
@@ -33,6 +34,7 @@ public class AppointmentService : IAppointmentService
         INotificationService notificationService,
         IMapper mapper,
         ITrainingService trainingService,
+        IUnitOfWork unitOfWork,
         AppointmentBookingValidator bookingValidator)
     {
         _appointmentRepository = appointmentRepository;
@@ -41,6 +43,7 @@ public class AppointmentService : IAppointmentService
         _notificationService = notificationService;
         _mapper = mapper;
         _trainingService = trainingService;
+        _unitOfWork = unitOfWork;
         _bookingValidator = bookingValidator;
     }
 
@@ -59,7 +62,7 @@ public class AppointmentService : IAppointmentService
         // Get booked slots for the date
         var bookedAppointments = await _appointmentRepository.GetByBranchAndDateAsync(branchId, date, ct);
         var bookedSlots = bookedAppointments
-            .Where(a => a.AppointmentType == type && a.Status != "Cancelled")
+            .Where(a => a.AppointmentType == type && a.Status != AppointmentStatus.Cancelled)
             .GroupBy(a => a.TimeSlot)
             .ToDictionary(g => g.Key, g => g.Count());
 
@@ -110,7 +113,7 @@ public class AppointmentService : IAppointmentService
             ScheduledDate = request.ScheduledDate,
             TimeSlot = request.TimeSlot,
             BranchId = request.BranchId,
-            Status = "Scheduled",
+            Status = AppointmentStatus.Scheduled,
             Notes = request.Notes,
             RescheduleCount = 0,
             ReminderSent = false
@@ -173,12 +176,12 @@ public class AppointmentService : IAppointmentService
             throw new InvalidOperationException("Appointment not found");
         }
 
-        if (appointment.Status == "Cancelled" || appointment.Status == "Completed")
+        if (appointment.Status == AppointmentStatus.Cancelled || appointment.Status == AppointmentStatus.Completed)
         {
             throw new InvalidOperationException("Cannot cancel an already cancelled or completed appointment");
         }
 
-        appointment.Status = "Cancelled";
+        appointment.Status = AppointmentStatus.Cancelled;
         appointment.CancelledAt = DateTime.UtcNow;
         appointment.CancellationReason = request.Reason;
 
@@ -191,5 +194,52 @@ public class AppointmentService : IAppointmentService
     public async Task<AppointmentValidationResult> ValidateBookingAsync(CreateAppointmentRequest request, CancellationToken ct = default)
     {
         return await _bookingValidator.ValidateBookingAsync(request, ct);
+    }
+
+    public async Task<List<AppointmentDto>> GetMyAppointmentsAsync(Guid userId, CancellationToken ct = default)
+    {
+        // Get all applications submitted by this user that have pending appointments
+        var applications = await _applicationRepository.FindAsync(
+            a => a.ApplicantId == userId 
+                 && a.Status >= ApplicationStatus.Submitted
+                 && a.Status < ApplicationStatus.Issued
+                 && !a.IsDeleted,
+            ct: ct);
+
+        var applicationIds = applications.Select(a => a.Id).ToList();
+        
+        // Get all appointments for these applications
+        var appointments = await _appointmentRepository.GetByApplicationIdsAsync(applicationIds, ct);
+        
+        return _mapper.Map<List<AppointmentDto>>(appointments);
+    }
+
+    public async Task<List<AppointmentDto>> GetAttendanceAsync(DateOnly date, Guid branchId, CancellationToken ct = default)
+    {
+        var appointments = await _appointmentRepository.GetByBranchAndDateAsync(branchId, date, ct);
+        return _mapper.Map<List<AppointmentDto>>(appointments);
+    }
+
+    public async Task<AppointmentDto> CheckInAsync(Guid appointmentId, CancellationToken ct = default)
+    {
+        var appointment = await _appointmentRepository.GetByIdForRescheduleAsync(appointmentId, ct);
+        if (appointment == null)
+        {
+            throw new InvalidOperationException("Appointment not found");
+        }
+
+        if (appointment.Status == AppointmentStatus.Cancelled || appointment.Status == AppointmentStatus.Completed)
+        {
+            throw new InvalidOperationException("Cannot check in to an already cancelled or completed appointment");
+        }
+
+        appointment.CheckInTime = TimeOnly.FromDateTime(DateTime.UtcNow);
+        appointment.Status = AppointmentStatus.Scheduled; // Mark as checked in
+
+        _appointmentRepository.Update(appointment);
+        await _unitOfWork.SaveChangesAsync(ct);
+
+        var updatedAppointment = await _appointmentRepository.GetByIdWithApplicationAsync(appointmentId, ct);
+        return _mapper.Map<AppointmentDto>(updatedAppointment);
     }
 }

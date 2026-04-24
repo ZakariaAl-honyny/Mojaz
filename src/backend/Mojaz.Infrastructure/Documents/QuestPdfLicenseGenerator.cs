@@ -39,9 +39,9 @@ namespace Mojaz.Infrastructure.Documents
                                 {
                                     row.RelativeItem().Column(headerCol =>
                                     {
-                                        headerCol.Item().Text("Kingdom of Saudi Arabia").FontSize(14).Bold().FontColor("#006C35");
-                                        headerCol.Item().Text("Ministry of Interior").FontSize(12).FontColor("#006C35");
-                                        headerCol.Item().Text("Driving License").FontSize(16).Bold().FontColor("#006C35");
+                                        headerCol.Item().Text("Kingdom of Saudi Arabia").FontSize(14).Bold().FontColor("#1a3a8f");
+                                        headerCol.Item().Text("Ministry of Interior").FontSize(12).FontColor("#1a3a8f");
+                                        headerCol.Item().Text("Driving License").FontSize(16).Bold().FontColor("#1a3a8f");
                                     });
 
                                     row.ConstantItem(60).Height(60).Placeholder(); // Logo Placeholder

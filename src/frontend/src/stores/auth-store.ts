@@ -1,11 +1,15 @@
 import {create} from 'zustand';
 import {persist, createJSONStorage} from 'zustand/middleware';
+import { UserRole, isApplicantRole, isEmployeeRole, isAdminRole } from '@/lib/enums';
 
 interface User {
   id: string;
   fullName: string;
   email: string;
-  role: string;
+  role: UserRole | string;
+  phoneNumber?: string;
+  nationalId?: string;
+  createdAt?: string;
 }
 
 interface AuthState {

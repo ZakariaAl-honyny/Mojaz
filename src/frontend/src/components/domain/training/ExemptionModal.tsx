@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/static-translations";
 import { cn } from "@/lib/utils";
 import { TrainingRecordDto } from "@/types/training.types";
 import { Button } from "@/components/ui/button";
@@ -63,11 +63,11 @@ export function ExemptionModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-      <Card className="w-full max-w-xl shadow-2xl border-none relative overflow-hidden bg-white dark:bg-neutral-950">
+      <Card className="w-full max-w-xl shadow-2xl border-none relative overflow-hidden bg-white">
         {/* Authority Header Stripe */}
         <div className="h-1 w-full bg-primary-600"></div>
         
-        <CardHeader className="flex flex-row items-center justify-between border-b border-neutral-100 dark:border-neutral-900">
+        <CardHeader className="flex flex-row items-center justify-between border-b border-neutral-100">
           <CardTitle className="text-sm font-bold uppercase tracking-widest text-neutral-500">
             Review Exemption Request
           </CardTitle>
@@ -77,7 +77,7 @@ export function ExemptionModal({
         </CardHeader>
 
         <CardContent className="py-6 space-y-6">
-          <div className="bg-neutral-50 dark:bg-neutral-900 p-4 rounded-lg border border-neutral-100 dark:border-neutral-800">
+          <div className="bg-neutral-50 p-4 rounded-lg border border-neutral-100">
             <h4 className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.2em] mb-2">{th('applicantInfo')}</h4>
             <div className="flex justify-between items-center text-sm">
               <span className="font-bold text-neutral-700">APP-2025-{record.applicationId.substring(0,8)}</span>
@@ -87,7 +87,7 @@ export function ExemptionModal({
 
           <div className="space-y-2">
             <Label className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Exemption Reason</Label>
-            <p className="text-sm p-3 bg-white dark:bg-neutral-900 border border-neutral-100 rounded-md text-neutral-700">
+            <p className="text-sm p-3 bg-white border border-neutral-100 rounded-md text-neutral-700">
               {record.exemptionReason}
             </p>
           </div>
@@ -108,7 +108,7 @@ export function ExemptionModal({
           )}
         </CardContent>
 
-        <CardFooter className="flex gap-3 justify-end bg-neutral-50/50 dark:bg-neutral-900/50 border-t border-neutral-100 dark:border-neutral-900 py-4">
+        <CardFooter className="flex gap-3 justify-end bg-neutral-50/50 border-t border-neutral-100 py-4">
           {mode === "view" ? (
             <>
               <Button 

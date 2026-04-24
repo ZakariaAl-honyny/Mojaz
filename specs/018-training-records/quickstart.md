@@ -69,7 +69,7 @@ Frontend available at: `http://localhost:3000`
 2. Navigate to `/ar/employee/training/{applicationId}` where the application is in `TrainingRequired` stage.
 3. Fill in the training form — school name, hours (try partial, e.g. 15 out of 30).
 4. Observe the **circular arc progress indicator** animate to 50%.
-5. Submit again with remaining 15 hours — observe arc reach 100% and status badge flip to `Completed` (Royal Green).
+5. Submit again with remaining 15 hours — observe arc reach 100% and status badge flip to `Completed` (King Blue).
 6. Verify the applicant receives an In-App notification.
 
 ---

@@ -1,88 +1,86 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/routing';
-import LanguageSwitcher from '../shared/LanguageSwitcher';
-import ThemeToggler from '../shared/ThemeToggler';
-import { Button } from '../ui/button';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
-import { Sparkles } from 'lucide-react';
+import { Menu, Search, UserCircle2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default function PublicHeader() {
-  const t = useTranslations('auth.login');
   const [isScrolled, setIsScrolled] = useState(false);
-  const { scrollY } = useScroll();
-  
-  const backgroundColor = useTransform(
-    scrollY,
-    [0, 50],
-    ['rgba(10, 10, 10, 0)', 'rgba(10, 10, 10, 0.8)']
-  );
-
-  const paddingY = useTransform(
-    scrollY,
-    [0, 50],
-    ['2rem', '1rem']
-  );
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <motion.header
-      style={{ backgroundColor: isScrolled ? undefined : backgroundColor, paddingTop: paddingY, paddingBottom: paddingY }}
+    <header 
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex items-center justify-center",
-        isScrolled ? "h-20 bg-neutral-950/80 backdrop-blur-xl border-b border-white/5 shadow-2xl" : "h-28"
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 font-arabic h-16 flex items-center border-b border-t-2 border-t-[#D4A017]",
+        isScrolled 
+          ? "bg-white/95 backdrop-blur-md shadow-sm border-neutral-200" 
+          : "bg-white/80 backdrop-blur-sm border-transparent"
       )}
+      dir="rtl"
     >
-      <div className="container mx-auto px-6 flex items-center justify-between">
-        <div className="flex items-center gap-12">
-          <Link href="/" className="group flex items-center gap-3">
-            <div className="w-12 h-12 bg-primary-600 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-xl shadow-primary-900/40 group-hover:rotate-6 transition-transform">
-              M
-            </div>
-            <div className="leading-tight">
-              <span className="text-2xl font-black text-white tracking-tighter">
-                مُجاز
-              </span>
-              <div className="flex items-center gap-1 opacity-50">
-                <Sparkles className="w-2.5 h-2.5 text-primary-400" />
-                <span className="text-[9px] text-white font-black uppercase tracking-[0.2em]">Mojaz Digital</span>
-              </div>
-            </div>
-          </Link>
-          
-          <nav className="hidden lg:flex items-center gap-8 text-sm font-black uppercase tracking-widest text-neutral-400">
-            <Link href="/" className="hover:text-primary-400 transition-colors">الرئيسية</Link>
-            <Link href="/about" className="hover:text-primary-400 transition-colors">عن المنصة</Link>
-            <Link href="/services" className="hover:text-primary-400 transition-colors">الخدمات</Link>
-            <Link href="/centers" className="hover:text-primary-400 transition-colors">المراكز</Link>
-          </nav>
-        </div>
-
-        <div className="flex items-center gap-6">
-          <div className="hidden sm:flex items-center p-1.5 bg-white/5 dark:bg-black/20 rounded-2xl border border-white/5 backdrop-blur-md">
-            <LanguageSwitcher />
-            <div className="w-px h-4 bg-white/10 mx-2" />
-            <ThemeToggler />
+      <div className="container mx-auto px-4 lg:px-8 flex items-center justify-between">
+        {/* Logo and Brand */}
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 shrink-0">
+            <img 
+              src="/logo.png" 
+              alt="شعار الإدارة العامة للمرور" 
+              className="w-full h-full object-contain transition-transform group-hover:scale-105" 
+            />
           </div>
+          <div className="leading-tight">
+            <span className="text-lg font-black text-[#1a3a8f] block tracking-tight">
+              نظام رخص القيادة
+            </span>
+            <span className="text-[9px] text-neutral-400 font-bold uppercase tracking-wider block">
+              الجمهورية اليمنية · الإدارة العامة للمرور
+            </span>
+          </div>
+        </Link>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center gap-8">
+          <Link href="/" className="text-sm font-bold text-[#1a3a8f] hover:opacity-70 transition-opacity">
+            الرئيسية
+          </Link>
+          <Link href="/#services" className="text-sm font-bold text-neutral-500 hover:text-[#1a3a8f] transition-colors">
+            الخدمات الإلكترونية
+          </Link>
+          <Link href="/#categories" className="text-sm font-bold text-neutral-500 hover:text-[#1a3a8f] transition-colors">
+            فئات الرخصة
+          </Link>
+          <Link href="/#faq" className="text-sm font-bold text-neutral-500 hover:text-[#1a3a8f] transition-colors">
+            الأسئلة الشائعة
+          </Link>
+        </nav>
+
+        {/* Actions */}
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" className="w-10 h-10 rounded-lg text-neutral-400 hover:text-[#1a3a8f] hidden sm:flex">
+             <Search className="w-5 h-5" />
+          </Button>
           
           <Link href="/login">
-            <Button size="lg" className="bg-primary-600 hover:bg-primary-700 text-white rounded-full px-8 text-sm font-black shadow-lg shadow-primary-900/40 transition-all duration-300 hover:scale-105 active:scale-95">
-              {t('submit')}
+            <Button className="h-10 px-6 bg-[#1a3a8f] hover:bg-[#152d6f] text-white rounded-lg text-sm font-bold transition-all gap-2">
+              <UserCircle2 className="w-4 h-4" />
+              <span>دخول المتقدمين</span>
             </Button>
           </Link>
+
+          <Button variant="ghost" size="icon" className="lg:hidden w-10 h-10 rounded-lg text-neutral-400">
+             <Menu className="w-6 h-6" />
+          </Button>
         </div>
       </div>
-    </motion.header>
+    </header>
   );
 }
-
-import { cn } from '@/lib/utils';

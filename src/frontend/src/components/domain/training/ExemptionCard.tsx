@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/static-translations";
 import { cn } from "@/lib/utils";
 import { TrainingRecordDto } from "@/types/training.types";
 import { Card, CardContent } from "@/components/ui/card";

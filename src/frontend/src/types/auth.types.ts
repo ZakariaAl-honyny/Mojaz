@@ -1,14 +1,29 @@
 import { ApiResponse } from './api.types';
 
+// ============================================================
+// UserRole - matches backend numeric values
+// Backend: Applicant=0, Receptionist=1, Doctor=2, Examiner=3, Manager=4, Admin=5, Security=6
+// ============================================================
 export enum UserRole {
   Applicant = 0,
   Receptionist = 1,
   Doctor = 2,
   Examiner = 3,
   Manager = 4,
-  Security = 5,
-  Admin = 6
+  Admin = 5,
+  Security = 6
 }
+
+// Display labels for UserRole
+export const UserRoleLabels = {
+  [UserRole.Applicant]: { ar: 'متقدم', en: 'Applicant' },
+  [UserRole.Receptionist]: { ar: 'موظف الاستقبال', en: 'Receptionist' },
+  [UserRole.Doctor]: { ar: 'طبيب', en: 'Doctor' },
+  [UserRole.Examiner]: { ar: 'مفتش', en: 'Examiner' },
+  [UserRole.Manager]: { ar: 'مدير', en: 'Manager' },
+  [UserRole.Admin]: { ar: 'مدير النظام', en: 'Admin' },
+  [UserRole.Security]: { ar: 'امن', en: 'Security' },
+} as const;
 
 export enum RegistrationMethod {
   NationalId = 0,
@@ -53,14 +68,14 @@ export interface RegisterResponse {
 }
 
 export interface VerifyOtpRequest {
-  userId: string;
+  destination: string;
   code: string;
-  type: OtpPurpose;
+  purpose: OtpPurpose;
 }
 
 export interface ResendOtpRequest {
-  userId: string;
-  type: OtpPurpose;
+  destination: string;
+  purpose: OtpPurpose;
 }
 
 export interface LoginResponse {
@@ -70,12 +85,31 @@ export interface LoginResponse {
 }
 
 export interface LoginRequest {
-<<<<<<< Updated upstream
-  email?: string;
-  phone?: string;
-  nationalId?: string;
-=======
-  email: string;
->>>>>>> Stashed changes
+  identifier: string;
   password: string;
+  method?: RegistrationMethod;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
+export interface LogoutRequest {
+  refreshToken: string;
+}
+
+export interface ForgotPasswordRequest {
+  destination: string;
+  purpose: OtpPurpose;
+}
+
+export interface ResetPasswordRequest {
+  userId: string;
+  code: string;
+  newPassword: string;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
 }

@@ -65,7 +65,7 @@ As a prospective driver, I want to see a clear, step-by-step workflow of the iss
 - **FR-007**: System MUST provide a responsive FAQ Accordion using state-driven expanding functional components.
 - **FR-008**: System MUST utilize strict Next.js App Router performance patterns, avoiding client-side waterfalls and minimizing bundle size (e.g. dynamic imports where necessary, standard Lucide icons).
 - **FR-009**: System MUST support full internationalization (i18n), fetching translations from `landing.json` correctly for both English (`ltr`) and Arabic (`rtl`).
-- **FR-010**: System MUST embody a premium, Absher-inspired Royal Green design aesthetic without relying on generic styling.
+- **FR-010**: System MUST embody a premium, Absher-inspired King Blue design aesthetic without relying on generic styling.
 
 ### Key Entities
 

@@ -6,7 +6,12 @@ import {
   VerifyOtpRequest, 
   ResendOtpRequest,
   LoginResponse,
-  LoginRequest
+  LoginRequest,
+  RefreshTokenRequest,
+  LogoutRequest,
+  ForgotPasswordRequest,
+  ResetPasswordRequest,
+  ChangePasswordRequest
 } from '@/types/auth.types';
 
 export const authService = {
@@ -15,6 +20,22 @@ export const authService = {
    */
   async register(data: RegisterRequest): Promise<ApiResponse<RegisterResponse>> {
     const response = await apiClient.post<ApiResponse<RegisterResponse>>('/auth/register', data);
+    return response.data;
+  },
+
+  /**
+   * Register a new user with email
+   */
+  async registerWithEmail(data: RegisterRequest): Promise<ApiResponse<RegisterResponse>> {
+    const response = await apiClient.post<ApiResponse<RegisterResponse>>('/auth/register/email', data);
+    return response.data;
+  },
+
+  /**
+   * Register a new user with phone
+   */
+  async registerWithPhone(data: RegisterRequest): Promise<ApiResponse<RegisterResponse>> {
+    const response = await apiClient.post<ApiResponse<RegisterResponse>>('/auth/register/phone', data);
     return response.data;
   },
 
@@ -45,8 +66,8 @@ export const authService = {
   /**
    * Logout user by clearing refresh token
    */
-  async logout(refreshToken: string): Promise<ApiResponse<void>> {
-    const response = await apiClient.post<ApiResponse<void>>('/auth/logout', { refreshToken });
+  async logout(data: LogoutRequest): Promise<ApiResponse<void>> {
+    const response = await apiClient.post<ApiResponse<void>>('/auth/logout', data);
     return response.data;
   },
 
@@ -59,6 +80,30 @@ export const authService = {
       newPassword,
       confirmPassword: newPassword
     });
+    return response.data;
+  },
+
+  /**
+   * Refresh access token using refresh token
+   */
+  async refreshToken(data: RefreshTokenRequest): Promise<ApiResponse<LoginResponse>> {
+    const response = await apiClient.post<ApiResponse<LoginResponse>>('/auth/refresh-token', data);
+    return response.data;
+  },
+
+  /**
+   * Request password reset OTP
+   */
+  async forgotPassword(data: ForgotPasswordRequest): Promise<ApiResponse<string>> {
+    const response = await apiClient.post<ApiResponse<string>>('/auth/forgot-password', data);
+    return response.data;
+  },
+
+  /**
+   * Reset password with OTP
+   */
+  async resetPassword(data: ResetPasswordRequest): Promise<ApiResponse<LoginResponse>> {
+    const response = await apiClient.post<ApiResponse<LoginResponse>>('/auth/reset-password', data);
     return response.data;
   }
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Step5ReviewSubmit } from '@/components/domain/application/wizard/steps/Step5ReviewSubmit';
-import { NextIntlClientProvider } from 'next-intl';
+import { NextIntlClientProvider } from '@/lib/static-translations';
 import { useWizardStore } from '@/stores/wizard-store';
 import { useApplicationWizard } from '@/hooks/useApplicationWizard';
 

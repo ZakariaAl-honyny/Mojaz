@@ -1,13 +1,11 @@
-// Upload Card Component for Document Upload
-
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
-import { useTranslations } from 'next-intl';
-import { Upload, FileText, Image as ImageIcon, X, AlertCircle } from 'lucide-react';
+import { Upload, FileText, Image as ImageIcon, X, AlertCircle, CheckCircle2, RotateCcw, FileSearch, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DocumentDto, DocumentRequirementDto, DocumentStatus, DocumentType } from '@/types/document.types';
 import { DocumentStatusBadge } from './DocumentStatusBadge';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface UploadCardProps {
   requirement: DocumentRequirementDto;
@@ -28,41 +26,34 @@ export function UploadCard({
   uploadProgress = 0,
   error,
 }: UploadCardProps) {
-  const t = useTranslations('document');
   const [isDragging, setIsDragging] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Get document type name
-  const getDocumentTypeName = (type: DocumentType): string => {
-    const key = DocumentType[type];
-    return t(`types.${key}`) || key;
+  // Get document type name logic simplified for RTL hardcoded
+  const documentNameMap: Record<number, string> = {
+    [DocumentType.IdCopy]: 'صورة البطاقة الشخصية',
+    [DocumentType.MedicalReport]: 'تقرير الفحص الطبي',
+    [DocumentType.TrainingCertificate]: 'شهادة الخبرة',
+    [DocumentType.AddressProof]: 'إثبات العنوان',
+    [DocumentType.PersonalPhoto]: 'الصورة الشخصية',
+    [DocumentType.GuardianConsent]: 'موافقة ولي الأمر',
+    [DocumentType.PreviousLicense]: 'الرخصة السابقة',
   };
 
-  // Check if file is an image
-  const isImage = (file: File): boolean => {
-    return file.type.startsWith('image/');
+  const getDocumentTypeName = (type: number): string => {
+    return documentNameMap[type] || 'مستند آخر';
   };
 
-  // Handle file selection
   const handleFileSelect = useCallback(
     (file: File) => {
-      // Validate file type
       const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
-      if (!allowedTypes.includes(file.type)) {
-        console.error('Invalid file type');
-        return;
-      }
+      if (!allowedTypes.includes(file.type)) return;
 
-      // Validate file size (5MB max)
       const maxSize = 5 * 1024 * 1024;
-      if (file.size > maxSize) {
-        console.error('File too large');
-        return;
-      }
+      if (file.size > maxSize) return;
 
-      // Create preview for images
-      if (isImage(file)) {
+      if (file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = (e) => setPreviewUrl(e.target?.result as string);
         reader.readAsDataURL(file);
@@ -75,204 +66,128 @@ export function UploadCard({
     [onUpload]
   );
 
-  // Handle drag events
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  }, []);
-
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-  }, []);
-
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault();
       setIsDragging(false);
-
       const files = e.dataTransfer.files;
-      if (files.length > 0) {
-        handleFileSelect(files[0]);
-      }
+      if (files.length > 0) handleFileSelect(files[0]);
     },
     [handleFileSelect]
   );
 
-  // Handle click to browse
-  const handleClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      handleFileSelect(files[0]);
-    }
-  };
-
-  // Get status from document or requirement
   const currentStatus = document?.status || requirement.status;
   const hasDocument = !!document || requirement.hasUpload;
 
-  // Render file preview
-  const renderPreview = () => {
-    if (previewUrl) {
-      return (
-        <div className="relative w-full h-32 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
-          <img
-            src={previewUrl}
-            alt={document?.originalFileName || requirement.documentTypeName}
-            className="w-full h-full object-cover"
-          />
-          {isUploading && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <div className="text-white text-sm font-medium">{uploadProgress}%</div>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    if (document?.originalFileName) {
-      // Show file type icon based on content type
-      const isDocImage = document.contentType?.startsWith('image/');
-      return (
-        <div className="w-full h-32 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-          {isDocImage ? (
-            <ImageIcon className="w-12 h-12 text-gray-400" />
-          ) : (
-            <FileText className="w-12 h-12 text-gray-400" />
-          )}
-        </div>
-      );
-    }
-
-    return null;
-  };
-
-  // Render upload area
-  const renderUploadArea = () => {
-    if (isUploading) {
-      return (
-        <div className="space-y-2">
-          <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary-500 transition-all duration-300"
-              style={{ width: `${uploadProgress}%` }}
-            />
-          </div>
-          <p className="text-sm text-center text-gray-500">{t('upload.uploading')}</p>
-        </div>
-      );
-    }
-
-    return (
-      <div
-        className={cn(
-          'border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors',
-          isDragging
-            ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
-            : 'border-gray-300 dark:border-gray-600 hover:border-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800'
-        )}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        onClick={handleClick}
-      >
-        <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-        <p className="text-sm text-gray-500">{t('upload.dragDrop')}</p>
-        <p className="text-xs text-gray-400 mt-1">{t('upload.maxSize', { size: 5 })}</p>
-      </div>
-    );
-  };
-
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
+    <div className="bg-white rounded-[2rem] border border-blue-50/50 p-8 shadow-2xl shadow-blue-900/5 font-arabic group transition-all duration-500 hover:shadow-blue-900/10" dir="rtl">
       {/* Header */}
-      <div className="flex items-start justify-between mb-3">
-        <div>
-          <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-            {getDocumentTypeName(requirement.documentType)}
-          </h3>
-          {requirement.isConditional && requirement.conditionDescription && (
-            <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
-              {t('conditional.show', { condition: requirement.conditionDescription })}
-            </p>
-          )}
+      <div className="flex items-start justify-between mb-8">
+        <div className="flex items-center gap-4">
+           <div className={cn(
+             "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500",
+             hasDocument ? "bg-emerald-50 text-emerald-600" : "bg-blue-50 text-[#1a3a8f]"
+           )}>
+              {hasDocument ? <CheckCircle2 className="w-6 h-6" /> : <FileSearch className="w-6 h-6" />}
+           </div>
+           <div>
+              <h3 className="text-lg font-black text-neutral-900 tracking-tight">
+                {getDocumentTypeName(requirement.documentType)}
+              </h3>
+              <p className={cn(
+                "text-[10px] font-black uppercase tracking-[0.2em] mt-1",
+                requirement.isRequired ? "text-blue-400" : "text-neutral-300"
+              )}>
+                {requirement.isRequired ? 'مطلوب إلزامي' : 'اختياري'}
+              </p>
+           </div>
         </div>
-        {currentStatus !== undefined && currentStatus !== null && (
-          <DocumentStatusBadge status={currentStatus} />
+        {currentStatus !== undefined && <DocumentStatusBadge status={currentStatus} />}
+      </div>
+
+      {/* Upload/Preview Section */}
+      <div className="relative min-h-[160px]">
+        {hasDocument ? (
+          <div className="space-y-6">
+            <div className="relative rounded-[1.5rem] overflow-hidden border border-neutral-100 bg-neutral-50 h-[140px] flex items-center justify-center group/preview">
+               {previewUrl || (document?.contentType?.startsWith('image/')) ? (
+                 <img
+                   src={previewUrl || `/api/documents/${document?.id}/view`}
+                   alt="Preview"
+                   className="w-full h-full object-cover transition-transform duration-700 group-hover/preview:scale-110"
+                 />
+               ) : (
+                 <FileText className="w-16 h-16 text-neutral-200" />
+               )}
+               
+               {isUploading && (
+                 <div className="absolute inset-0 bg-[#1a3a8f]/80 backdrop-blur-sm flex flex-col items-center justify-center gap-4">
+                    <Loader2 className="w-10 h-10 animate-spin text-white" />
+                    <span className="text-white font-black text-xl">{uploadProgress}%</span>
+                 </div>
+               )}
+
+               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/preview:opacity-100 transition-opacity duration-500 flex items-end p-4">
+                  <span className="text-white text-[10px] font-black uppercase tracking-widest">
+                    {document?.originalFileName || 'تم الرفع بنجاح'}
+                  </span>
+               </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-4">
+              {currentStatus !== DocumentStatus.Approved && onDelete && (
+                <button
+                  onClick={onDelete}
+                  className="flex-1 h-12 flex items-center justify-center gap-3 rounded-xl bg-red-50 text-red-600 font-black text-sm hover:bg-red-100 transition-all border border-red-100"
+                >
+                  <X className="w-4 h-4" />
+                  حذف الملف
+                </button>
+              )}
+              {currentStatus === DocumentStatus.Rejected && (
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex-1 h-12 flex items-center justify-center gap-3 rounded-xl bg-blue-50 text-[#1a3a8f] font-black text-sm hover:bg-blue-100 transition-all border border-blue-100"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  إعادة الرفع
+                </button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div
+            onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+            className={cn(
+              "absolute inset-0 rounded-[1.5rem] border-2 border-dashed flex flex-col items-center justify-center gap-4 transition-all duration-500 cursor-pointer",
+              isDragging 
+                ? "bg-blue-50 border-[#1a3a8f] scale-[0.98]" 
+                : "bg-neutral-50 border-neutral-200 hover:bg-white hover:border-[#1a3a8f] hover:shadow-xl hover:shadow-blue-900/5"
+            )}
+          >
+             <div className="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center text-neutral-300 group-hover:text-[#1a3a8f] transition-colors">
+                <Upload className="w-6 h-6" />
+             </div>
+             <div className="text-center">
+                <p className="text-sm font-black text-neutral-900">اسحب الملف هنا</p>
+                <p className="text-[10px] font-bold text-neutral-400 mt-1 uppercase tracking-widest">أو اضغط للتصفح (الحد الأقصى 5 ميجابايت)</p>
+             </div>
+          </div>
         )}
       </div>
 
-      {/* Preview or Upload Area */}
-      {hasDocument ? (
-        <div className="space-y-3">
-          {renderPreview()}
-          
-          {/* File info */}
-          {document && (
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600 dark:text-gray-400 truncate max-w-[150px]">
-                {document.originalFileName}
-              </span>
-              <span className="text-gray-400 text-xs">
-                {(document.fileSizeBytes / 1024).toFixed(1)} KB
-              </span>
-            </div>
-          )}
-
-          {/* Rejection reason */}
-          {currentStatus === DocumentStatus.Rejected && document?.rejectionReason && (
-            <div className="flex items-start gap-2 p-2 bg-red-50 dark:bg-red-900/20 rounded-lg">
-              <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-              <p className="text-xs text-red-700 dark:text-red-300">{document.rejectionReason}</p>
-            </div>
-          )}
-
-          {/* Actions */}
-          <div className="flex gap-2">
-            {currentStatus !== DocumentStatus.Approved && onDelete && (
-              <button
-                onClick={onDelete}
-                className="flex items-center gap-1 px-3 py-1.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-              >
-                <X className="w-4 h-4" />
-                {t('upload.remove')}
-              </button>
-            )}
-            {currentStatus === DocumentStatus.Rejected && (
-              <button
-                onClick={handleClick}
-                className="flex items-center gap-1 px-3 py-1.5 text-sm text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors"
-              >
-                <Upload className="w-4 h-4" />
-                {t('upload.reupload')}
-              </button>
-            )}
-          </div>
-        </div>
-      ) : (
-        renderUploadArea()
-      )}
-
-      {/* Error message */}
-      {error && (
-        <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
-      )}
-
-      {/* Hidden file input */}
       <input
         ref={fileInputRef}
         type="file"
         accept=".pdf,.jpg,.jpeg,.png"
-        onChange={handleInputChange}
+        onChange={(e) => e.target.files?.[0] && handleFileSelect(e.target.files[0])}
         className="hidden"
         disabled={isUploading}
       />
     </div>
   );
 }
-
-export default UploadCard;

@@ -53,7 +53,7 @@ frontend/
 - **Objective**: Provide a premium theme that persists and respects system settings.
 - **Implementation**:
     - Use `next-themes` provider.
-    - Extend Tailwind theme with Mojaz colors (#006C35 Primary, #D4A017 Secondary).
+    - Extend Tailwind theme with Mojaz colors (#1a3a8f Primary, #D4A017 Secondary).
     - Map shadcn/ui variables to Mojaz colors.
     - Persist preference in `localStorage`.
 
@@ -86,7 +86,7 @@ frontend/
 
 ## Summary
 
-Build a Next.js 15 App Router platform with strict TypeScript 5, integrating Tailwind CSS 4 and shadcn/ui tailored to the Mojaz Royal Green/Government Gold palette. Establish the core translation system (next-intl), theme toggling, routing layouts for different roles (Public, Applicant, Employee, Admin), and the global state/API clients (Zustand, React Query, Axios).
+Build a Next.js 15 App Router platform with strict TypeScript 5, integrating Tailwind CSS 4 and shadcn/ui tailored to the Mojaz King Blue/Government Gold palette. Establish the core translation system (next-intl), theme toggling, routing layouts for different roles (Public, Applicant, Employee, Admin), and the global state/API clients (Zustand, React Query, Axios).
 
 ## Technical Context
 

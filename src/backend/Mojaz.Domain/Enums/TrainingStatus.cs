@@ -1,6 +1,6 @@
 namespace Mojaz.Domain.Enums;
 
-public enum TrainingStatus
+public enum TrainingStatus : byte
 {
     Required = 0,
     InProgress = 1,

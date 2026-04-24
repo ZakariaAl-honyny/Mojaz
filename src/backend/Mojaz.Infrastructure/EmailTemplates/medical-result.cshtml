@@ -5,8 +5,8 @@
 }
 
 @section Ar {
-    <h2 style="color: #006C35; font-family: 'Cairo', sans-serif;">ظهور نتائج الفحص الطبي</h2>
-    <p>لقد صدرت نتائج فحصك الطبي لطلب الرخصة رقم: <span style="color: #006C35;">@Model.ApplicationNumber</span></p>
+    <h2 style="color: #1a3a8f; font-family: 'Cairo', sans-serif;">ظهور نتائج الفحص الطبي</h2>
+    <p>لقد صدرت نتائج فحصك الطبي لطلب الرخصة رقم: <span style="color: #1a3a8f;">@Model.ApplicationNumber</span></p>
     <div style="background: @(Model.IsFit ? "#f0fdf4" : "#fef2f2"); padding: 15px; border-radius: 8px; border: 1px solid @(Model.IsFit ? "#86efac" : "#fecaca"); margin: 20px 0;">
         <p style="margin: 5px 0;"><strong>النتيجة النهائية:</strong> <span style="font-weight: bold; color: @(Model.IsFit ? "#166534" : "#991b1b");">@(Model.IsFit ? "لائق طبياً" : "غير لائق طبياً")</span></p>
         <p style="margin: 5px 0;"><strong>المركز الطبي:</strong> @Model.MedicalCenterAr</p>
@@ -17,8 +17,8 @@
 }
 
 @section En {
-    <h2 style="color: #006C35;">Medical Examination Results</h2>
-    <p>Your medical examination results are ready for application: <span style="color: #006C35;">@Model.ApplicationNumber</span></p>
+    <h2 style="color: #1a3a8f;">Medical Examination Results</h2>
+    <p>Your medical examination results are ready for application: <span style="color: #1a3a8f;">@Model.ApplicationNumber</span></p>
     <div style="background: @(Model.IsFit ? "#f0fdf4" : "#fef2f2"); padding: 15px; border-radius: 8px; border: 1px solid @(Model.IsFit ? "#86efac" : "#fecaca"); margin: 20px 0;">
         <p style="margin: 5px 0;"><strong>Final Result:</strong> <span style="font-weight: bold; color: @(Model.IsFit ? "#166534" : "#991b1b");">@(Model.IsFit ? "FIT" : "UNFIT")</span></p>
         <p style="margin: 5px 0;"><strong>Medical Center:</strong> @Model.MedicalCenterEn</p>

@@ -1,4 +1,11 @@
+
 # AGENTS.md — Mojaz (مُجاز) Platform
+
+## CRITICAL AGENT INSTRUCTIONS (v2.0)
+- **Arabic Lockdown:** Any agent producing English strings or i18n logic will have its output rejected.
+- **Light-Mode Only:** Agents must actively strip any `dark:` variants from the codebase during refactoring.
+- **RTL Hardcoding:** Do not use conditional logic for direction; the system is permanently RTL.
+
 
 > This file defines instructions, rules, and conventions for AI coding agents
 > (Cursor, Copilot, Claude, etc.) working on the Mojaz platform.
@@ -12,8 +19,8 @@
 Project: Mojaz (مُجاز) — Government Driving License Platform
 Type: Full-Stack Web Application
 Domain: Government / GovTech / Driving License Lifecycle
-Languages: Arabic (RTL, default) + English (LTR)
-Design System: Absher-Inspired, Royal Green (#006C35)
+Languages: 100% Arabic (RTL, default)
+Design System: Absher-Inspired, King Blue (#1a3a8f)
 MVP Scope: 8 services, 6 license categories, 7 roles, 10 workflow stages
 ```
 
@@ -179,14 +186,14 @@ frontend/
 // ALL agents MUST use these exact colors. NEVER invent new colors.
 
 const mojazColors = {
-  // Primary — Royal Green (Government)
+  // Primary — King Blue (Government)
   primary: {
     50:  '#E6F2EC',
     100: '#B3D9C4',
     200: '#80C09C',
     300: '#4DA674',
     400: '#1A8D4C',
-    500: '#006C35',  // ← Main primary. Use this as DEFAULT.
+    500: '#1a3a8f',  // ← Main primary. Use this as DEFAULT.
     600: '#005C2D',
     700: '#004C25',
     800: '#003C1D',
@@ -581,7 +588,7 @@ const t = useTranslations('application');
 ### Translation File Structure
 
 ```json
-// public/locales/ar/application.json
+// src/locales/ar/application.json
 {
   "create": {
     "title": "إنشاء طلب جديد",

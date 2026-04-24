@@ -15,7 +15,7 @@ public class Application : SoftDeletableEntity
     public ApplicationStatus Status { get; set; } = ApplicationStatus.Draft;
     public string CurrentStage { get; set; } = string.Empty;
     public string PreferredLanguage { get; set; } = "ar";
-    public bool SpecialNeeds { get; set; }
+    public string? SpecialNeeds { get; set; }
     public bool DataAccuracyConfirmed { get; set; }
     public DateTime? SubmittedAt { get; set; }
     public Guid? ReviewedBy { get; set; }

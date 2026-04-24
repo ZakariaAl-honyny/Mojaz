@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { WizardShell } from '@/components/domain/application/wizard/WizardShell';
-import { NextIntlClientProvider } from 'next-intl';
+import { NextIntlClientProvider } from '@/lib/static-translations';
 import { useWizardStore } from '@/stores/wizard-store';
 import { useApplicationWizard } from '@/hooks/useApplicationWizard';
 import { useParams } from 'next/navigation';

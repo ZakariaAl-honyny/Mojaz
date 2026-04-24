@@ -27,6 +27,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(x => x.TrainingStatus)
                 .IsRequired()
                 .HasConversion<int>()
+                .HasColumnType("tinyint")
                 .HasDefaultValue(TrainingStatus.Required);
             
             // Exemption fields

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Step1ServiceSelection from '@/components/domain/application/wizard/steps/Step1ServiceSelection';
-import { NextIntlClientProvider } from 'next-intl';
+import { NextIntlClientProvider } from '@/lib/static-translations';
 import { useWizardStore } from '@/stores/wizard-store';
 import { ServiceType } from '@/types/wizard.types';
 

@@ -14,12 +14,10 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Destination).IsRequired().HasMaxLength(128);
             builder.Property(x => x.DestinationType)
                 .IsRequired()
-                .HasConversion<string>()
-                .HasMaxLength(16);
+                .HasColumnType("tinyint");
             builder.Property(x => x.Purpose)
                 .IsRequired()
-                .HasConversion<string>()
-                .HasMaxLength(32);
+                .HasColumnType("tinyint");
             builder.Property(x => x.IpAddress).HasMaxLength(64);
             builder.Property(x => x.AttemptCount).IsRequired();
             builder.Property(x => x.MaxAttempts).IsRequired();

@@ -9,7 +9,8 @@ export type PaymentMethod =
   | 'Mada' 
   | 'Visa' 
   | 'MasterCard' 
-  | 'ApplePay';
+  | 'ApplePay'
+  | 'BankTransfer';
 
 export type FeeType = 
   | 'ApplicationFee' 

@@ -1,94 +1,74 @@
-import { defineConfig, devices } from '@playwright/test';
-import path from 'path';
+import { defineConfig, devices, PlaywrightTestConfig } from '@playwright/test';
 
 /**
- * See https://playwright.dev/docs/test-configuration.
+ * Mojaz Platform - Playwright Test Configuration
+ * 
+ * Comprehensive E2E testing configuration supporting:
+ * - Desktop & Mobile browsers
+ * - RTL/LTR layouts
+ * - Dark/Light themes
+ * - Multiple authentication roles
+ * - Performance benchmarking
  */
-export default defineConfig({
+
+const config: PlaywrightTestConfig = {
   testDir: './playwright',
-  timeout: 60 * 1000,
-  expect: {
-    timeout: 5000,
-    toHaveScreenshot: {
-      maxDiffPixelRatio: 0.05,
-    },
-  },
-  fullyParallel: true,
+  
+  // Fully qualified tests in e2e directory
+  testMatch: [
+    'e2e/**/*.spec.ts',
+    'visual/**/*.spec.ts',
+    'perf/**/*.spec.ts'
+  ],
+  
+// Reporter configuration
+  reporter: [
+    ['html', { outputFolder: 'playwright-report' }],
+    ['list'],
+    ['json', { outputFile: 'playwright-results.json' }]
+  ],
+  
+  // Parallel execution settings
+  fullyParallel: process.env.CI === 'true',
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 2 : undefined,
-  reporter: [['html'], ['list']],
   
-  use: {
-    baseURL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-    trace: 'on-first-retry',
-    extraHTTPHeaders: {
-      'Accept': 'application/json',
+  // Timeout settings
+  timeout: 30 * 1000, // 30 seconds per test
+  expect: {
+    timeout: 10 * 1000, // 10 seconds for expect assertions
+    toMatchSnapshot: {
+      maxDiffPixelRatio: 0.05, // 5% tolerance for visual regressions
     },
   },
-
+  
+// Projects to run tests in
   projects: [
-    /* Setup project for auth and seeding */
     {
-      name: 'setup',
-      testMatch: /.*\.setup\.ts/,
-    },
-
-    /* Main testing projects */
-    {
-      name: 'chromium-ar-light',
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: 'playwright/.auth/applicant.json',
-        locale: 'ar-SA',
-        colorScheme: 'light',
-      },
-      dependencies: ['setup'],
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
     },
     {
-      name: 'chromium-en-dark',
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: 'playwright/.auth/applicant.json',
-        locale: 'en-US',
-        colorScheme: 'dark',
-      },
-      dependencies: ['setup'],
-    },
-    
-    /* Dedicated Role projects for RBAC verification */
-    {
-      name: 'receptionist-view',
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: 'playwright/.auth/receptionist.json',
-        locale: 'ar-SA',
-      },
-      dependencies: ['setup'],
-      testMatch: /.*employee\/receptionist\.spec\.ts/,
+      name: 'Mobile Chrome',
+      use: { ...devices['Pixel 5'] },
     },
     {
-      name: 'doctor-view',
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: 'playwright/.auth/doctor.json',
-        locale: 'ar-SA',
-      },
-      dependencies: ['setup'],
-      testMatch: /.*employee\/officials\.spec\.ts/,
-    },
-
-    /* Mobile viewports */
-    {
-      name: 'mobile-chrome-ar',
-      use: {
-        ...devices['Pixel 5'],
-        storageState: 'playwright/.auth/applicant.json',
-        locale: 'ar-SA',
-      },
-      dependencies: ['setup'],
+      name: 'Mobile Safari',
+      use: { ...devices['iPhone 12'] },
     },
   ],
+  
+  // Web server configuration for local testing
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000, // 2 minutes for server startup
+  },
+  
+  // Output directories
+  outputDir: 'playwright/test-results',
+};
 
-  outputDir: 'test-results/',
-});
+export default defineConfig(config);

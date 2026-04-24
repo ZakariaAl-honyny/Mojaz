@@ -1,6 +1,6 @@
 ﻿namespace Mojaz.Domain.Enums;
 
-public enum AppointmentType
+public enum AppointmentType : byte
 {
     MedicalExam,
     TheoryTest,

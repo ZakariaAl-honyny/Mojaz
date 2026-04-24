@@ -61,7 +61,7 @@ As an employee, I want the system to enforce medical certificate validity gracef
 
 ### Frontend Aesthetics & Performance Requirements
 
-- **FR-013**: The Doctor's user interface MUST exhibit a distinctive, premium professional aesthetic (Royal Green #006C35), utilizing sharp typography (IBM Plex Sans Arabic/Inter), and contextual effects like subtle shadowing and glassmorphism, avoiding generic form layouts.
+- **FR-013**: The Doctor's user interface MUST exhibit a distinctive, premium professional aesthetic (King Blue #1a3a8f), utilizing sharp typography (IBM Plex Sans Arabic/Inter), and contextual effects like subtle shadowing and glassmorphism, avoiding generic form layouts.
 - **FR-014**: The frontend MUST eliminate rendering waterfalls by executing parallel data fetching and leveraging server components (`React.cache`, `next/dynamic`) where heavy rendering is necessary.
 - **FR-015**: The interface MUST use optimistic updates and `useTransition` for the result submission process to ensure the UI feels completely instantaneous without flicker.
 - **FR-016**: Visual status distinction MUST be extreme but professional (e.g., intense green for Fit, sharp red for Unfit) with CSS-only micro-animations confirming selection to the doctor.

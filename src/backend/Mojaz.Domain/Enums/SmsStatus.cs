@@ -1,6 +1,6 @@
 namespace Mojaz.Domain.Enums
 {
-    public enum SmsStatus
+    public enum SmsStatus : byte
     {
         Pending = 0,
         Sent = 1,

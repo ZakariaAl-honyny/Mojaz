@@ -1,5 +1,5 @@
 import apiClient from '@/lib/api-client';
-import { ApiResponse, PaginatedResult } from '@/types/api.types';
+import { ApiResponse, PaginatedResult, TestResult } from '@/types/api.types';
 
 export interface SubmitPracticalResultRequest {
   score: number;
@@ -22,7 +22,7 @@ export interface PracticalTestDto {
   score: number;
   passingScore: number;
   isAbsent: boolean;
-  result: 'Pass' | 'Fail' | 'Absent';
+  result: TestResult;
   notes?: string;
   examinerNotes?: string;
   vehicleUsed?: string;
@@ -35,7 +35,7 @@ export interface PracticalTestDto {
 
 export const practicalService = {
   submitResult: async (applicationId: string, data: SubmitPracticalResultRequest): Promise<ApiResponse<PracticalTestDto>> => {
-    const response = await apiClient.post<ApiResponse<PracticalTestDto>>(`/practicaltests/applications/${applicationId}/submit`, data);
+    const response = await apiClient.post<ApiResponse<PracticalTestDto>>(`/practical-tests/applications/${applicationId}/submit`, data);
     return response.data;
   },
 
@@ -45,7 +45,7 @@ export const practicalService = {
     pageSize = 10
   ): Promise<ApiResponse<PaginatedResult<PracticalTestDto>>> => {
     const response = await apiClient.get<ApiResponse<PaginatedResult<PracticalTestDto>>>(
-      `/practicaltests/applications/${applicationId}/history`,
+      `/practical-tests/applications/${applicationId}/history`,
       { params: { page, pageSize } }
     );
     return response.data;

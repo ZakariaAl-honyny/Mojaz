@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
 
 namespace Mojaz.Infrastructure.Persistence.Configurations
 {
@@ -13,13 +12,14 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.AppointmentType)
                 .IsRequired()
-                .HasConversion<string>()
-                .HasMaxLength(32);
+                .HasColumnType("tinyint");
             builder.Property(x => x.ScheduledDate).IsRequired();
             builder.Property(x => x.TimeSlot).IsRequired().HasMaxLength(16);
             builder.Property(x => x.BranchId);
             builder.Property(x => x.AssignedStaffId);
-            builder.Property(x => x.Status).IsRequired().HasMaxLength(32);
+            builder.Property(x => x.Status)
+                .IsRequired()
+                .HasColumnType("tinyint");
             builder.Property(x => x.Notes).HasMaxLength(256);
             builder.Property(x => x.CancelledAt);
             builder.Property(x => x.CancellationReason).HasMaxLength(128);

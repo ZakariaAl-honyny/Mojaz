@@ -3,7 +3,7 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/static-translations';
 
 interface ServiceBarChartProps {
   data: {
@@ -13,7 +13,7 @@ interface ServiceBarChartProps {
   }[];
 }
 
-const COLORS = ['#006C35', '#D4A017', '#1A8D4C', '#A67C00'];
+const COLORS = ['#1a3a8f', '#D4A017', '#1A8D4C', '#A67C00'];
 
 export const ServiceBarChart: React.FC<ServiceBarChartProps> = ({ data }) => {
   const t = useTranslations('reports');
@@ -33,19 +33,19 @@ export const ServiceBarChart: React.FC<ServiceBarChartProps> = ({ data }) => {
               margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
-              <XAxis 
-                dataKey="serviceType" 
-                axisLine={false} 
+              <XAxis
+                dataKey="serviceType"
+                axisLine={false}
                 tickLine={false}
                 tick={{ fill: '#6B7280', fontSize: 12 }}
-                formatter={(value: string) => t(`service.${value.toLowerCase()}`)}
+                tickFormatter={(value: string) => t(`service.${value.toLowerCase()}`)}
               />
-              <YAxis 
-                axisLine={false} 
+              <YAxis
+                axisLine={false}
                 tickLine={false}
                 tick={{ fill: '#6B7280', fontSize: 12 }}
               />
-              <Tooltip 
+              <Tooltip
                 cursor={{ fill: '#F9FAFB' }}
                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                 formatter={(value: number) => [value, t('count')]}

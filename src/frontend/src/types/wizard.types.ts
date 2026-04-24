@@ -1,25 +1,42 @@
 import { z } from 'zod';
+import { ServiceType, LicenseCategoryCode } from '@/lib/enums';
 
-export enum ServiceType {
-  NewLicense = 'NewLicense',
-  Renewal = 'Renewal',
-  Replacement = 'Replacement',
-  CategoryUpgrade = 'CategoryUpgrade',
-  TestRetake = 'TestRetake',
-  AppointmentBooking = 'AppointmentBooking',
-  Cancellation = 'Cancellation',
-  DocumentDownload = 'DocumentDownload',
-  ExperienceCertificate = 'ExperienceCertificate',
+// Re-export for convenience
+export { ServiceType, LicenseCategoryCode };
+
+// Gender numeric enum (matches backend: NotSpecified=0, Male=1, Female=2)
+export enum Gender {
+  NotSpecified = 0,
+  Male = 1,
+  Female = 2
 }
 
-export enum LicenseCategoryCode {
-  A = 'A',
-  B = 'B',
-  C = 'C',
-  D = 'D',
-  E = 'E',
-  F = 'F',
-}
+// Display labels for enums (separate from API values)
+export const ServiceTypeLabels = {
+  [ServiceType.NewLicense]: { ar: 'رخصة جديدة', en: 'New License' },
+  [ServiceType.Renewal]: { ar: 'تجديد رخصة', en: 'Renewal' },
+  [ServiceType.Replacement]: { ar: 'استبدال رخصة', en: 'Replacement' },
+  [ServiceType.CategoryUpgrade]: { ar: 'ترقية فئة', en: 'Category Upgrade' },
+  [ServiceType.InternationalLicense]: { ar: 'رخصة دولية', en: 'International License' },
+  [ServiceType.StatusChange]: { ar: 'تغيير الحالة', en: 'Status Change' },
+  [ServiceType.MedicalExtension]: { ar: 'تمديد طبي', en: 'Medical Extension' },
+  [ServiceType.TemporaryLicense]: { ar: 'رخصة مؤقتة', en: 'Temporary License' },
+} as const;
+
+export const LicenseCategoryLabels = {
+  [LicenseCategoryCode.A]: { ar: 'دراجة ناري��', en: 'Motorcycle' },
+  [LicenseCategoryCode.B]: { ar: 'سيارة خاصة', en: 'Private Car' },
+  [LicenseCategoryCode.C]: { ar: 'شاحنة خفيفة', en: 'Light Truck' },
+  [LicenseCategoryCode.D]: { ar: 'حافلة', en: 'Bus' },
+  [LicenseCategoryCode.E]: { ar: 'شاحنة ثقيلة', en: 'Heavy Truck' },
+  [LicenseCategoryCode.F]: { ar: 'مركبة خاصة', en: 'Special Vehicle' },
+} as const;
+
+export const GenderLabels = {
+  [Gender.NotSpecified]: { ar: 'غير محدد', en: 'Not Specified' },
+  [Gender.Male]: { ar: 'ذكر', en: 'Male' },
+  [Gender.Female]: { ar: 'أنثى', en: 'Female' },
+} as const;
 
 export type StepId = 1 | 2 | 3 | 4 | 5;
 
@@ -28,14 +45,14 @@ export interface Step1Data {
 }
 
 export interface Step2Data {
-  categoryCode: LicenseCategoryCode | null;
+  categoryCode: string | null; // Backend returns "A", "B", etc. as strings
 }
 
 export interface Step3Data {
   nationalId: string;
   dateOfBirth: string;
   nationality: string;
-  gender: 'Male' | 'Female';
+  gender: Gender;
   mobileNumber: string;
   email: string;
   address: string;
@@ -53,15 +70,16 @@ export interface Step4Data {
 }
 
 export interface LicenseCategoryOption {
-  code: LicenseCategoryCode;
+  id: string;
+  code: string; // Backend returns "A", "B", etc. - convert to number using licenseCategoryToNumber
   nameAr: string;
   nameEn: string;
-  descriptionAr: string;
-  descriptionEn: string;
+  descriptionAr?: string;
+  descriptionEn?: string;
   minAge: number;
-  icon: string;
-  validityYears: number;
-  upgradeFrom?: LicenseCategoryCode;
+  icon?: string;
+  validityYears?: number;
+  upgradeFrom?: string;
 }
 
 export interface ExamCenter {
@@ -70,6 +88,8 @@ export interface ExamCenter {
   nameEn: string;
   city: string;
   region: string;
+  address?: string;
+  phoneNumber?: string;
   isActive: boolean;
 }
 
@@ -114,4 +134,23 @@ export interface WizardState {
   incrementSaveFailures: () => void;
   resetSaveFailures: () => void;
   resetWizard: () => void;
+  loadFromApi: (data: {
+    serviceType?: number | null;
+    licenseCategoryCode?: number | string | null;
+    nationalId?: string | null;
+    dateOfBirth?: string | null;
+    nationality?: string | null;
+    gender?: number | string | null;
+    mobileNumber?: string | null;
+    email?: string | null;
+    address?: string | null;
+    city?: string | null;
+    region?: string | null;
+    applicantType?: string | null;
+    preferredCenterId?: string | null;
+    testLanguage?: string | null;
+    appointmentPreference?: string | null;
+    specialNeedsDeclaration?: boolean | null;
+    specialNeedsNote?: string | null;
+  }) => void;
 }

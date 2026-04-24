@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { LicenseCategoryCode } from '@/types/wizard.types';
 
 // Calculate age from date of birth
 export function calculateAge(dateOfBirth: string): number {
@@ -13,15 +12,13 @@ export function calculateAge(dateOfBirth: string): number {
   return age;
 }
 
-// Create schema with age validation
+// Create schema with age validation - accepts string codes from API ("A", "B", etc.)
 export const createStep2Schema = (
   dateOfBirth: string | undefined,
-  minAgeMap: Record<LicenseCategoryCode, number>
+  minAgeMap: Record<string, number>
 ) =>
   z.object({
-    categoryCode: z.nativeEnum(LicenseCategoryCode, {
-      required_error: 'wizard.validation.step2.categoryRequired',
-    }),
+    categoryCode: z.string().min(1, 'wizard.validation.step2.categoryRequired'),
   }).superRefine((data, ctx) => {
     if (!dateOfBirth || !data.categoryCode) return;
     const age = calculateAge(dateOfBirth);

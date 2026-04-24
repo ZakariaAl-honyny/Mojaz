@@ -1,163 +1,126 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
-import { CheckCircle2, ChevronLeft } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Check, ShieldCheck } from 'lucide-react';
 import type { StepId } from '@/types/wizard.types';
+import { motion } from 'framer-motion';
 
 interface WizardProgressBarProps {
   currentStep: number;
   onStepClick: (step: StepId) => void;
 }
 
-const STEPS: { num: number; key: string }[] = [
-  { num: 1, key: 'steps.step1' },
-  { num: 2, key: 'steps.step2' },
-  { num: 3, key: 'steps.step3' },
-  { num: 4, key: 'steps.step4' },
-  { num: 5, key: 'steps.step5' },
+const STEPS = [
+  { num: 1, label: 'نوع الخدمة' },
+  { num: 2, label: 'فئة الرخصة' },
+  { num: 3, label: 'بيانات المتقدم' },
+  { num: 4, label: 'تفاصيل الطلب' },
+  { num: 5, label: 'المراجعة والتقديم' },
 ];
 
 export function WizardProgressBar({ currentStep, onStepClick }: WizardProgressBarProps) {
-  const t = useTranslations('wizard');
-
   const getStepStatus = (stepNum: number): 'completed' | 'current' | 'upcoming' => {
     if (stepNum < currentStep) return 'completed';
     if (stepNum === currentStep) return 'current';
     return 'upcoming';
   };
 
-  const handleStepClick = (stepNum: number) => {
-    // Allow clicking on completed steps only
-    if (stepNum < currentStep) {
-      onStepClick(stepNum as StepId);
-    }
-  };
-
   return (
-    <div className="w-full">
-      {/* Mobile: Vertical stack with cards */}
-      <div className="block lg:hidden space-y-2">
+    <div className="w-full font-arabic" dir="rtl">
+      {/* Desktop: Horizontal stepper - compact version */}
+      <div className="hidden sm:flex items-center justify-between relative px-4 py-6 bg-white rounded-xl border border-neutral-100 shadow-sm overflow-hidden">
+        {/* Background subtle pattern */}
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
+            <div className="absolute top-0 inset-inline-start-0 w-full h-full bg-[radial-gradient(#1a3a8f_1px,transparent_1px)] [background-size:16px_16px]" />
+        </div>
+
+        {/* Progress line */}
+        <div className="absolute top-[26px] sm:top-[28px] inset-inline-start-[60px] inset-inline-end-[60px] h-0.5 bg-neutral-100 rounded-full z-0">
+            <motion.div 
+               className="h-full bg-primary rounded-full z-0"
+               initial={{ scaleX: 0 }}
+               animate={{ scaleX: (currentStep - 1) / (STEPS.length - 1) }}
+               transition={{ duration: 0.8, ease: "circOut" }}
+               style={{ width: '100%' }}
+            />
+        </div>
+
         {STEPS.map((step) => {
           const status = getStepStatus(step.num);
           const isClickable = status === 'completed';
 
           return (
-            <Card
-              key={step.num}
-              className={cn(
-                'transition-all duration-200',
-                status === 'completed' && 'cursor-pointer border-neutral-200 dark:border-neutral-700 hover:border-primary-300 dark:hover:border-primary-700',
-                status === 'current' && 'cursor-default border-primary-500 bg-primary-50 dark:bg-primary-900/20',
-                status === 'upcoming' && 'cursor-not-allowed border-neutral-100 dark:border-neutral-800 opacity-60 pointer-events-none'
-              )}
-              onClick={isClickable ? () => handleStepClick(step.num) : undefined}
-              aria-disabled={!isClickable}
-            >
-              <CardContent className="p-3 flex items-center gap-3">
-                {/* Status icon - universal, no RTL flip */}
-                <div className="flex-shrink-0">
-                  {status === 'completed' ? (
-                    <CheckCircle2 className="w-5 h-5 text-primary-500" />
-                  ) : status === 'current' ? (
-                    <div className="w-5 h-5 rounded-full bg-primary-500 text-white text-xs font-bold flex items-center justify-center">
-                      {step.num}
-                    </div>
-                  ) : (
-                    <div className="w-5 h-5 rounded-full bg-neutral-200 dark:bg-neutral-700 text-neutral-400 dark:text-neutral-500 text-xs font-bold flex items-center justify-center">
-                      {step.num}
-                    </div>
-                  )}
-                </div>
-
-                {/* Step title */}
-                <span
-                  className={cn(
-                    'text-sm font-medium',
-                    status === 'current' && 'text-primary-700 dark:text-primary-300',
-                    status === 'completed' && 'text-neutral-700 dark:text-neutral-300',
-                    status === 'upcoming' && 'text-neutral-400 dark:text-neutral-500'
-                  )}
-                >
-                  {t(step.key)}
-                </span>
-
-                {/* Arrow indicator for clickable */}
-                {isClickable && (
-                  <ChevronLeft className="w-4 h-4 ms-auto text-neutral-400 rtl:rotate-180" />
+            <div key={step.num} className="relative z-10 flex flex-col items-center">
+              <button
+                type="button"
+                onClick={() => isClickable && onStepClick(step.num as StepId)}
+                disabled={!isClickable}
+                className={cn(
+                  'w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg flex items-center justify-center transition-all duration-500 relative',
+                  status === 'current' && 'bg-primary text-white shadow-lg shadow-primary/25 scale-105',
+                  status === 'completed' && 'bg-primary text-white border-2 border-primary/20',
+                  status === 'upcoming' && 'bg-neutral-50 text-neutral-300 border border-neutral-100 cursor-not-allowed opacity-40'
                 )}
-              </CardContent>
-            </Card>
+              >
+                {status === 'completed' ? (
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5 stroke-[3px]" />
+                ) : (
+                  <span className="text-xs sm:text-sm font-bold">{step.num}</span>
+                )}
+              </button>
+
+              {/* Step label - hidden on mobile, visible on sm+ */}
+              <div className="absolute top-10 sm:top-11 md:top-12 text-center w-16 sm:w-20 md:w-24">
+                <span className={cn(
+                  'text-[9px] sm:text-[10px] font-bold transition-all duration-500 block hidden sm:block',
+                  status === 'current' && 'text-primary',
+                  status === 'completed' && 'text-neutral-500',
+                  status === 'upcoming' && 'text-neutral-300'
+                )}>
+                  {step.label}
+                </span>
+              </div>
+            </div>
           );
         })}
       </div>
 
-      {/* Desktop: Horizontal stepper */}
-      <div className="hidden lg:flex items-center justify-between">
-        {STEPS.map((step, index) => {
-          const status = getStepStatus(step.num);
-          const isClickable = status === 'completed';
-
-          return (
-            <div key={step.num} className="flex items-center flex-1">
-              {/* Step circle with clickable wrapper */}
-              <button
-                type="button"
-                onClick={isClickable ? () => handleStepClick(step.num) : undefined}
-                disabled={!isClickable}
-                aria-disabled={!isClickable}
-                className={cn(
-                  'relative z-10 flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300',
-                  status === 'current' && 'bg-primary-50 dark:bg-primary-900/30 border-2 border-primary-500',
-                  status === 'completed' && 'hover:bg-primary-50 dark:hover:bg-primary-900/20 cursor-pointer',
-                  status === 'upcoming' && 'pointer-events-none cursor-not-allowed',
-                  status === 'upcoming' && 'cursor-not-allowed'
-                )}
-              >
-                {/* Step indicator */}
-                <div
-                  className={cn(
-                    'w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300',
-                    status === 'current' && 'bg-primary-500 text-white ring-4 ring-primary-100/50 dark:ring-primary-900/30',
-                    status === 'completed' && 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400',
-                    status === 'upcoming' && 'bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500'
-                  )}
-                >
-                  {status === 'completed' ? (
-                    <CheckCircle2 className="w-5 h-5" />
-                  ) : (
-                    step.num
-                  )}
-                </div>
-
-                {/* Step label */}
-                <span
-                  className={cn(
-                    'font-medium text-sm whitespace-nowrap',
-                    status === 'current' && 'text-primary-700 dark:text-primary-300 font-semibold',
-                    status === 'completed' && 'text-neutral-700 dark:text-neutral-300',
-                    status === 'upcoming' && 'text-neutral-400 dark:text-neutral-500'
-                  )}
-                >
-                  {t(step.key)}
-                </span>
-              </button>
-
-              {/* Connector line */}
-              {index < STEPS.length - 1 && (
-                <div
-                  className={cn(
-                    'flex-1 h-0.5 mx-2 sm:mx-4 rounded transition-colors duration-300',
-                    status === 'completed' || STEPS[index + 1].num <= currentStep
-                      ? 'bg-primary-200 dark:bg-primary-800'
-                      : 'bg-neutral-200 dark:bg-neutral-700'
-                  )}
-                />
-              )}
-            </div>
-          );
-        })}
+      {/* Mobile: Compact progress bar */}
+      <div className="sm:hidden space-y-3">
+        <div className="flex items-center h-1.5 bg-neutral-100 rounded-full overflow-hidden">
+           {STEPS.map((step) => {
+             const isCurrent = step.num === currentStep;
+             const isCompleted = step.num < currentStep;
+             return (
+               <div 
+                 key={step.num}
+                 className={cn(
+                   "h-full flex-1 transition-all duration-500",
+                   isCurrent ? "bg-primary" : isCompleted ? "bg-primary/60" : "bg-transparent"
+                 )}
+               />
+             )
+           })}
+        </div>
+        
+        {/* Mobile step indicator */}
+        <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-neutral-100">
+           <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-primary text-white rounded-lg flex items-center justify-center font-bold text-sm shadow-md">
+                 {currentStep}
+              </div>
+              <div className="space-y-0.5">
+                 <span className="text-[8px] font-bold text-primary uppercase tracking-wider block opacity-60">المرحلة</span>
+                 <span className="text-sm font-bold text-primary">
+                    {STEPS.find(s => s.num === currentStep)?.label}
+                 </span>
+              </div>
+           </div>
+           
+           <div className="w-8 h-8 rounded-lg bg-neutral-50 flex items-center justify-center text-neutral-300">
+              <ShieldCheck className="w-4 h-4" />
+           </div>
+        </div>
       </div>
     </div>
   );

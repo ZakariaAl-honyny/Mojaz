@@ -15,7 +15,7 @@ public class CreateMedicalResultRequest
     [Required]
     public MedicalFitnessResult Result { get; set; }
 
-    public string? BloodType { get; set; }
+    public BloodTypeEnum? BloodType { get; set; }
 
     public string? Notes { get; set; }
     

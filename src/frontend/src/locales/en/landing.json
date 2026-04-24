@@ -1,0 +1,193 @@
+{
+  "hero": {
+    "badge": "Unified Government Platform",
+    "title": "Your Gateway to Safe and Legal Driving",
+    "subtitle": "The official unified system for issuing and renewing driving licenses. Complete your transaction electronically with complete security and sovereign speed.",
+    "cta": {
+      "start": "Start Now",
+      "login": "Track Existing Application"
+    },
+    "trust": {
+      "official": "Officially endorsed by the General Traffic Department",
+      "encryption": "Government TLS 1.3 Encryption",
+      "service": "24/7 Service"
+    },
+    "features": {
+      "arabic": "Arabic Language Support",
+      "verified": "Digitally Verified"
+    }
+  },
+  "services": {
+    "title": "All Traffic Services in One Place",
+    "subtitle": "A complete digital system to process all driving license transactions easily and safely",
+    "label": "Our Electronic Services",
+    "items": {
+      "new": {
+        "title": "New License",
+        "desc": "Issue a driving license for the first time"
+      },
+      "renewal": {
+        "title": "License Renewal",
+        "desc": "Renew your expired driving license"
+      },
+      "replacement": {
+        "title": "Lost/Damaged Replacement",
+        "desc": "Issue a replacement for lost or damaged license"
+      },
+      "upgrade": {
+        "title": "License Upgrade",
+        "desc": "Upgrade your driving license category"
+      },
+      "international": {
+        "title": "International License",
+        "desc": "Obtain an international driving license"
+      },
+      "agricultural": {
+        "title": "Agricultural Vehicles",
+        "desc": "Licenses for agricultural equipment and heavy machinery"
+      },
+      "probationary": {
+        "title": "Probationary License",
+        "desc": "Manage pathways for new drivers"
+      },
+      "learner": {
+        "title": "Learner Permit",
+        "desc": "Permit for driving practice"
+      }
+    },
+    "action": "Go to Service"
+  },
+  "workflow": {
+    "title": "How to Get Your Digital License?",
+    "subtitle": "We have simplified government procedures into clear, transparent steps",
+    "label": "Step by Step",
+    "steps": {
+      "registration": {
+        "title": "Create Account",
+        "desc": "Register using your national ID and activate your account via secure SMS."
+      },
+      "application": {
+        "title": "Submit Application",
+        "desc": "Choose the service, fill in the data, and upload documents digitally."
+      },
+      "documents": {
+        "title": "Document Review",
+        "desc": "Our team reviews your application and verifies the documents."
+      },
+      "medical": {
+        "title": "Medical Examination",
+        "desc": "Complete medical examinations at approved centers."
+      },
+      "testing": {
+        "title": "Traffic Tests",
+        "desc": "Take the theory and practical tests."
+      },
+      "issuance": {
+        "title": "License Issuance",
+        "desc": "Your license is issued digitally and physically immediately."
+      }
+    },
+    "action": "Start Your Journey Now"
+  },
+  "categories": {
+    "title": "Choose the Right Category for Your Needs",
+    "subtitle": "We offer our services for all approved driving license categories",
+    "label": "License Categories",
+    "items": {
+      "A": { "name": "Motorcycle", "age": "16+ years" },
+      "B": { "name": "Private Car", "age": "18+ years" },
+      "C": { "name": "Medium Transport", "age": "21+ years" },
+      "D": { "name": "Public Transport", "age": "21+ years" },
+      "E": { "name": "Heavy Transport", "age": "21+ years" },
+      "F": { "name": "Agricultural Machinery", "age": "18+ years" }
+    }
+  },
+  "features": {
+    "title": "Why Mojaz Platform?",
+    "subtitle": "The platform is designed to be the ideal digital partner for citizens",
+    "label": "Platform Features",
+    "items": {
+      "speed": {
+        "title": "Fast Processing",
+        "desc": "Complete transactions in record time with full automation"
+      },
+      "security": {
+        "title": "Security & Protection",
+        "desc": "Encrypt your data and privacy with the latest security technologies"
+      },
+      "support": {
+        "title": "Specialized Support",
+        "desc": "A specialized support team available around the clock"
+      },
+      "coverage": {
+        "title": "Geographic Coverage",
+        "desc": "Our services are available in all governorates"
+      },
+      "platform": {
+        "title": "Smart Platform",
+        "desc": "Manage all your data through a sophisticated interface"
+      },
+      "notifications": {
+        "title": "Instant Notifications",
+        "desc": "A smart notification system that reminds you of appointments"
+      }
+    }
+  },
+  "stats": {
+    "title": "Digital Transformation Journey in Numbers",
+    "label": "Numbers & Achievements",
+    "items": {
+      "licenses": { "value": "150,000+", "label": "Issued Licenses" },
+      "users": { "value": "50,000+", "label": "Active Users" },
+      "satisfaction": { "value": "98%", "label": "License Holder Satisfaction" },
+      "time": { "value": "3 Minutes", "label": "Avg. Submission Time" }
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Clear answers to the most common questions",
+    "label": "Help Center",
+    "items": {
+      "requirements": {
+        "q": "What are the basic requirements for obtaining a driving license?",
+        "a": "You must be at least 18 years old (or 16 for motorcycles), provide an approved medical examination, a copy of your ID, and proof of residence."
+      },
+      "processing": {
+        "q": "How long does the license issuance process take through the platform?",
+        "a": "If all requirements are met and tests are passed, the license is issued digitally immediately, and the printed copy can be picked up from the nearest traffic center within 24 hours."
+      },
+      "expired": {
+        "q": "Can I renew my license that expired years ago?",
+        "a": "Yes, you can apply for license renewal through the platform, and any legally mandated fines will be calculated."
+      },
+      "payment": {
+        "q": "How are government fees paid?",
+        "a": "The platform provides multiple digital payment options including e-wallets and direct bank transfers."
+      },
+      "rejected": {
+        "q": "What should I do if my application is rejected?",
+        "a": "In case of rejection, you will receive a detailed message through the platform explaining the reason and the required steps."
+      }
+    }
+  },
+  "cta": {
+    "title": "Ready to Start Your Journey with Modern Mojaz System?",
+    "subtitle": "Join thousands of drivers who have benefited from our electronic services",
+    "primaryButton": "Register Now for Free",
+    "secondaryButton": "Contact Us",
+    "security": "Fully protected and encrypted sovereign system"
+  },
+  "header": {
+    "home": "Home",
+    "services": "Electronic Services",
+    "categories": "License Categories",
+    "faq": "FAQ",
+    "login": "Applicant Login"
+  },
+  "footer": {
+    "services": "Services",
+    "about": "About the System",
+    "contact": "Contact",
+    "contactInfo": "For inquiries and assistance"
+  }
+}

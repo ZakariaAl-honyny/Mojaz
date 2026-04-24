@@ -1,6 +1,6 @@
 namespace Mojaz.Domain.Enums;
 
-public enum FinalDecisionType
+public enum FinalDecisionType : byte
 {
     Approved,
     Rejected,

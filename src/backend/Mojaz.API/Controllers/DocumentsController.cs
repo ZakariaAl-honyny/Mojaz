@@ -5,6 +5,7 @@ using Mojaz.Application.Interfaces.Services;
 using Mojaz.Shared;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -33,6 +34,10 @@ public class DocumentsController : ControllerBase
     {
         _documentService = documentService;
     }
+
+    // =====================
+    // GUID-based endpoints
+    // =====================
 
     /// <summary>
     /// Upload a required document for an application.
@@ -64,10 +69,6 @@ public class DocumentsController : ControllerBase
     /// </summary>
     /// <param name="applicationId">The application ID</param>
     /// <returns>List of documents with their status</returns>
-    /// <remarks>
-    /// Applicants see only their own application's documents.
-    /// Employees can view any application's documents.
-    /// </remarks>
     /// <response code="200">Returns list of documents</response>
     [HttpGet]
     [Authorize]
@@ -84,11 +85,7 @@ public class DocumentsController : ControllerBase
     /// Get document requirements for an application.
     /// </summary>
     /// <param name="applicationId">The application ID</param>
-    /// <returns>List of document requirements showing which docs are required/conditional</returns>
-    /// <remarks>
-    /// Returns all 8 document types with their requirement status.
-    /// Conditional documents (GuardianConsent, AddressProof, etc.) are shown based on applicant profile.
-    /// </remarks>
+    /// <returns>List of document requirements</returns>
     /// <response code="200">Returns list of document requirements</response>
     [HttpGet("requirements")]
     [Authorize]
@@ -99,6 +96,181 @@ public class DocumentsController : ControllerBase
         var result = await _documentService.GetRequirementsAsync(applicationId, userId);
         return StatusCode(result.StatusCode, result);
     }
+
+    // ============================
+    // Application Number endpoints
+    // ============================
+
+    /// <summary>
+    /// Upload a required document using application number.
+    /// </summary>
+    /// <param name="applicationNumber">The application number (e.g., MOJ-2026-22469742)</param>
+    /// <param name="request">Upload request containing document type and file</param>
+    /// <returns>Created document with status</returns>
+    /// <remarks>
+    /// Use this endpoint when you have the application number instead of the GUID.
+    /// Allowed file types: PDF, JPG, JPEG, PNG
+    /// Maximum file size: 5MB
+    /// </remarks>
+    /// <response code="201">Document uploaded successfully</response>
+    /// <response code="400">Invalid file type, size exceeds limit, or validation error</response>
+    /// <response code="403">Unauthorized - user does not own the application</response>
+    /// <response code="404">Application not found</response>
+    [HttpPost("upload-by-number")]
+    [Authorize(Roles = "Applicant,Receptionist")]
+    [ProducesResponseType(typeof(ApiResponse<DocumentDto>), StatusCodes.Status201Created)]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> UploadByApplicationNumberAsync(
+        [FromRoute] string applicationNumber,
+        [FromForm] UploadDocumentRequest request)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _documentService.UploadByApplicationNumberAsync(applicationNumber, request, userId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// List all documents for an application using application number.
+    /// </summary>
+    /// <param name="applicationNumber">The application number (e.g., MOJ-2026-22469742)</param>
+    /// <returns>List of documents with their status</returns>
+    /// <response code="200">Returns list of documents</response>
+    [HttpGet("by-number/{applicationNumber}")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<IEnumerable<DocumentDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetByApplicationNumberAsync([FromRoute] string applicationNumber)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var role = User.FindFirstValue(ClaimTypes.Role)!;
+        var result = await _documentService.GetByApplicationNumberAsync(applicationNumber, userId, role);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Get document requirements using application number.
+    /// </summary>
+    /// <param name="applicationNumber">The application number (e.g., MOJ-2026-22469742)</param>
+    /// <returns>List of document requirements</returns>
+    /// <response code="200">Returns list of document requirements</response>
+    [HttpGet("requirements-by-number/{applicationNumber}")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<IEnumerable<DocumentRequirementDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetRequirementsByApplicationNumberAsync([FromRoute] string applicationNumber)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _documentService.GetRequirementsByApplicationNumberAsync(applicationNumber, userId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    // ==========================
+    // Application Number based endpoints (top-level routes)
+    // ==========================
+
+    /// <summary>
+    /// Get document requirements for an application using application number (top-level route).
+    /// </summary>
+    /// <param name="applicationNumber">The application number (e.g., MOJ-2026-22469742)</param>
+    /// <returns>List of document requirements</returns>
+    /// <response code="200">Returns list of document requirements</response>
+[HttpGet("~/api/v1/applications/requirements-by-number/{applicationNumber}/documents/requirements")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<IEnumerable<DocumentRequirementDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetRequirementsByNumberTopLevelAsync([FromRoute] string applicationNumber)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _documentService.GetRequirementsByApplicationNumberAsync(applicationNumber, userId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Bulk approve all pending documents for an application using application number.
+    /// </summary>
+    /// <param name="applicationNumber">The application number (e.g., MOJ-2026-22469742)</param>
+    /// <returns>Count of approved documents</returns>
+    /// <remarks>
+    /// Approves all documents with status 'Pending' in a single transaction.
+    /// Only available for Receptionist, Manager, and Admin roles.
+    /// </remarks>
+    /// <response code="200">Returns approval count</response>
+    /// <response code="403">User does not have permission</response>
+    [HttpPatch("~/api/v1/applications/by-number/{applicationNumber}/documents/bulk-approve")]
+    [Authorize(Roles = "Admin,Receptionist,Manager")]
+    [ProducesResponseType(typeof(ApiResponse<BulkApproveResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> BulkApproveByApplicationNumberAsync([FromRoute] string applicationNumber)
+    {
+        var reviewerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _documentService.BulkApproveByApplicationNumberAsync(applicationNumber, reviewerId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Download a document's physical file using application number.
+    /// </summary>
+    /// <param name="applicationNumber">The application number (e.g., MOJ-2026-22469742)</param>
+    /// <param name="documentId">The document ID to download</param>
+    /// <returns>The document file</returns>
+    /// <remarks>
+    /// Only the document owner or employees can download.
+    /// Returns the original file with proper content type.
+    /// </remarks>
+    /// <response code="200">Returns the document file</response>
+    /// <response code="403">User not authorized to access this document</response>
+    /// <response code="404">Document not found</response>
+    [HttpGet("~/api/v1/applications/by-number/{applicationNumber}/documents/{documentId}/download")]
+    [Authorize]
+    [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DownloadByApplicationNumberAsync([FromRoute] string applicationNumber, [FromRoute] Guid documentId)
+    {
+        try
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var role = User.FindFirstValue(ClaimTypes.Role)!;
+            var (content, contentType, fileName) = await _documentService.DownloadByApplicationNumberAsync(applicationNumber, documentId, userId, role);
+            
+            // Convert Stream to byte array for File result
+            using var memoryStream = new MemoryStream();
+            await content.CopyToAsync(memoryStream);
+            return File(memoryStream.ToArray(), contentType, fileName);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return StatusCode(403, ApiResponse<object>.Fail(403, ex.Message));
+        }
+        catch (Exception ex)
+        {
+            return NotFound(ApiResponse<object>.Fail(404, ex.Message));
+        }
+    }
+
+    /// <summary>
+    /// Delete an un-approved document using application number.
+    /// </summary>
+    /// <param name="applicationNumber">The application number (e.g., MOJ-2026-22469742)</param>
+    /// <param name="documentId">The document ID to delete</param>
+    /// <returns>Success status</returns>
+    /// <remarks>
+    /// Only allows deletion when application status is 'Draft'.
+    /// After submission, documents cannot be deleted.
+    /// Uses soft delete - document is marked as deleted but not physically removed.
+    /// </remarks>
+    /// <response code="200">Document deleted successfully</response>
+    /// <response code="403">Cannot delete after application submission</response>
+    /// <response code="404">Document not found</response>
+    [HttpDelete("~/api/v1/applications/by-number/{applicationNumber}/documents/{documentId}")]
+    [Authorize(Roles = "Applicant,Receptionist")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> DeleteByApplicationNumberAsync([FromRoute] string applicationNumber, [FromRoute] Guid documentId)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _documentService.DeleteByApplicationNumberAsync(applicationNumber, documentId, userId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    // ==========================
+    // Remaining endpoints
+    // ==========================
 
     /// <summary>
     /// Bulk approve all pending documents for an application.

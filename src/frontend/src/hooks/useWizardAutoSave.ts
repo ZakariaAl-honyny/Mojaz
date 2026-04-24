@@ -3,12 +3,10 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useWizardStore } from "@/stores/wizard-store";
 import { useApplicationMutation } from "@/hooks/useApplicationMutation";
-import { useTranslations } from "next-intl";
 
 const AUTO_SAVE_INTERVAL = 30_000; // 30 seconds
 
 export function useWizardAutoSave() {
-  const t = useTranslations("wizard");
   const lastSavedHashRef = useRef<string | null>(null);
   
   const {
@@ -45,16 +43,27 @@ export function useWizardAutoSave() {
     setSaving(true);
     try {
       await updateDraftAsync(applicationId, {
-        step1,
-        step2,
-        step3,
-        step4,
+        licenseCategoryId: step2.categoryCode,
+        nationalId: step3.nationalId,
+        dateOfBirth: step3.dateOfBirth ? new Date(step3.dateOfBirth).toISOString() : undefined,
+        nationality: step3.nationality,
+        gender: step3.gender,
+        mobileNumber: step3.mobileNumber,
+        email: step3.email,
+        address: step3.address,
+        city: step3.city,
+        region: step3.region,
+        applicantType: step4.applicantType,
+        branchId: step4.preferredCenterId,
+        preferredLanguage: step4.testLanguage,
+        specialNeeds: step4.specialNeedsDeclaration,
+        appointmentPreference: step4.appointmentPreference,
       });
       lastSavedHashRef.current = currentHash;
       setLastSavedAt(new Date());
       resetSaveFailures();
     } catch (error) {
-      console.error("Auto-save failed:", error);
+      console.error("Auto-save failure:", error);
       incrementSaveFailures();
     } finally {
       setSaving(false);

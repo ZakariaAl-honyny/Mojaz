@@ -3,9 +3,9 @@
     ViewBag.Title = "Application Received";
 }
 @section Ar {
-    <h2 style="color:#006C35;">Êã ÇÓÊáÇã ÇáØáÈ</h2>
-    <p>ÑÞã ÇáØáÈ: <b>@Model.ApplicationNumber</b></p>
-    <p>äæÚ ÇáÎÏãÉ: @Model.ServiceTypeAr</p>
+    <h2 style="color:#1a3a8f;">ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½</h2>
+    <p>ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½: <b>@Model.ApplicationNumber</b></p>
+    <p>ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: @Model.ServiceTypeAr</p>
     <ul>
         @foreach (var step in Model.NextStepsAr ?? new List<string>())
         {
@@ -14,7 +14,7 @@
     </ul>
 }
 @section En {
-    <h2 style="color:#006C35;">Application Received</h2>
+    <h2 style="color:#1a3a8f;">Application Received</h2>
     <p>Application Number: <b>@Model.ApplicationNumber</b></p>
     <p>Service Type: @Model.ServiceTypeEn</p>
     <ul>

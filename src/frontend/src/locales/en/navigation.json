@@ -1,0 +1,44 @@
+{
+  "header": {
+    "brand": "Mojaz",
+    "tagline": "Mojaz Digital",
+    "nav": {
+      "home": "Home",
+      "about": "About",
+      "services": "Services",
+      "centers": "Centers"
+    }
+  },
+  "sidebar": {
+    "brand": "Mojaz",
+    "tagline": "Gov Platform",
+    "userPlaceholder": "User Name",
+    "rolePlaceholder": "Role",
+    "reports": {
+      "applications": "Applications Report",
+      "financial": "Financial Report",
+      "users": "Users Report",
+      "performance": "Performance Report",
+      "audits": "Audit Logs"
+    }
+  },
+  "topNav": {
+    "support": "Support",
+    "userPlaceholder": "User Name",
+    "rolePlaceholder": "Applicant"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "applications": "Applications",
+    "licenses": "Licenses",
+    "progress": "Progress",
+    "training": "Training",
+    "appointments": "Appointments",
+    "payments": "Payments",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "logout": "Logout",
+    "profile": "Profile",
+    "menu": "Menu"
+  }
+}

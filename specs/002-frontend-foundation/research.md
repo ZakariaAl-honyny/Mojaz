@@ -14,7 +14,7 @@
 
 ### Theming Strategy
 **Decision**: `next-themes` and Tailwind CSS generic color palette variables mapping.
-**Rationale**: By defining HSL custom properties inside `globals.css` that map exactly to the Mojaz color definitions (Primary #006C35, Secondary #D4A017), shadcn/ui components will natively support Dark and Light themes.
+**Rationale**: By defining HSL custom properties inside `globals.css` that map exactly to the Mojaz color definitions (Primary #1a3a8f, Secondary #D4A017), shadcn/ui components will natively support Dark and Light themes.
 **Alternatives considered**: Explicit dark mode classes in Tailwind (more verbose, harder to maintain consistency).
 
 ### Internationalization

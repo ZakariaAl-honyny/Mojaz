@@ -50,7 +50,7 @@ As a citizen or resident user, I need to access the platform in either Arabic (d
 
 ### User Story 2 - Distinctive UI/UX Branding & Theming (Priority: P1)
 
-As a user, I want a striking, highly polished UI inspired by Absher (Royal Green #006C35 & Government Gold #D4A017) that embraces a clear aesthetic direction (e.g., *Refined Government Utilitarian*) featuring distinctive typography, fluid micro-interactions, and dark/light modes.
+As a user, I want a striking, highly polished UI inspired by Absher (King Blue #1a3a8f & Government Gold #D4A017) that embraces a clear aesthetic direction (e.g., *Refined Government Utilitarian*) featuring distinctive typography, fluid micro-interactions, and dark/light modes.
 
 **Why this priority**: Avoids generic "AI slop" layouts. The system requires a production-grade UI that instills trust and feels premium.
 **Independent Test**: Theme toggling between Light and Dark mode correctly applies semantic CSS variables.
@@ -91,7 +91,7 @@ As the front-end system, I need a robust API client wrapper that automatically m
 
 
 - **FR-001**: Next.js 15 App Router with TypeScript 5 strict mode and `src/` structure.
-- **FR-002**: Tailwind CSS 4 + shadcn/ui with full Mojaz theme (Primary #006C35, Secondary #D4A017, Status colors).
+- **FR-002**: Tailwind CSS 4 + shadcn/ui with full Mojaz theme (Primary #1a3a8f, Secondary #D4A017, Status colors).
 - **FR-003**: next-intl 3 with locale routing `/ar/...` and `/en/...`; Arabic RTL as default locale.
 - **FR-004**: next-themes with Dark/Light/System preference and localStorage persistence.
 - **FR-005**: Layout system: RootLayout, PublicLayout, ApplicantLayout, EmployeeLayout, AdminLayout.

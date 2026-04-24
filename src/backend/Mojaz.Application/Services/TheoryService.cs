@@ -299,5 +299,62 @@ namespace Mojaz.Application.Services
 
             return application.TheoryAttemptCount >= maxAttempts;
         }
+
+        public async Task<ApiResponse<PagedResult<TheoryTestDto>>> GetHistoryByApplicationNumberAsync(string applicationNumber, Guid userId, string role, int page = 1, int pageSize = 10)
+        {
+            if (string.IsNullOrWhiteSpace(applicationNumber))
+            {
+                return ApiResponse<PagedResult<TheoryTestDto>>.Fail(400, "Application number is required.");
+            }
+
+            var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
+            var application = applications.FirstOrDefault();
+
+            if (application == null)
+            {
+                return ApiResponse<PagedResult<TheoryTestDto>>.Fail(404, "Application not found.");
+            }
+
+            // Ownership check for Applicant role
+            if (role == "Applicant" && application.ApplicantId != userId)
+            {
+                return ApiResponse<PagedResult<TheoryTestDto>>.Fail(403, "You do not have permission to view this application's test history.");
+            }
+
+            // Query all TheoryTest records by ApplicationId
+            var allTests = await _theoryRepository.GetAllByApplicationIdAsync(application.Id);
+            var testList = allTests.ToList();
+
+            var totalCount = testList.Count;
+            var pagedItems = testList
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var coolingDaysStr = await _settingsService.GetAsync("COOLING_PERIOD_DAYS");
+            int coolingDays = int.TryParse(coolingDaysStr, out var cd) ? cd : 7;
+
+            var dtos = pagedItems.Select(t =>
+            {
+                var dto = _mapper.Map<TheoryTestDto>(t);
+
+                if (t.Result == TestResult.Fail || t.Result == TestResult.Absent)
+                {
+                    dto.RetakeEligibleAfter = t.ConductedAt.AddDays(coolingDays);
+                }
+
+                return dto;
+            }).ToList();
+
+            var pagedResult = new PagedResult<TheoryTestDto>
+            {
+                Items = dtos,
+                TotalCount = totalCount,
+                Page = page,
+                PageSize = pageSize
+            };
+
+            return ApiResponse<PagedResult<TheoryTestDto>>.Ok(pagedResult);
+        }
     }
 }

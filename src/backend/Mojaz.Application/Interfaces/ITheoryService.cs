@@ -9,6 +9,7 @@ namespace Mojaz.Application.Interfaces
     {
         Task<ApiResponse<TheoryTestDto>> SubmitResultAsync(Guid applicationId, SubmitTheoryResultRequest request, Guid examinerId);
         Task<ApiResponse<PagedResult<TheoryTestDto>>> GetHistoryAsync(Guid applicationId, Guid userId, string role, int page = 1, int pageSize = 10);
+        Task<ApiResponse<PagedResult<TheoryTestDto>>> GetHistoryByApplicationNumberAsync(string applicationNumber, Guid userId, string role, int page = 1, int pageSize = 10);
         Task<bool> IsInCoolingPeriodAsync(Guid applicationId);
         Task<bool> HasReachedMaxAttemptsAsync(Guid applicationId);
     }

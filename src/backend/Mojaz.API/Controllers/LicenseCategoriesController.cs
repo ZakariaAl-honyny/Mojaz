@@ -1,13 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Application.DTOs.Application;
-using Mojaz.Shared.Models;
+using Mojaz.Shared;
 using System.Threading.Tasks;
 
 namespace Mojaz.API.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
+[Route("api/v1/license-categories")]
 [Produces("application/json")]
 public class LicenseCategoriesController : ControllerBase
 {

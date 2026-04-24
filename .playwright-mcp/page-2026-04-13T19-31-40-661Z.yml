@@ -1,0 +1,219 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - img "Government Hero Background" [ref=e6]
+    - generic [ref=e9]:
+      - generic [ref=e14]: منصة مُجاز الحكومية
+      - heading "بوابتك للحصول على رخصة قيادة آمنة ونظامية" [level=1] [ref=e15]
+      - paragraph [ref=e16]: منصة مُجاز توفر خدمات رقمية متكاملة لدورة حياة رخصة القيادة في المملكة. سرعة، أمان، واحترافية.
+      - generic [ref=e17]:
+        - link "ابدأ الآن" [ref=e18] [cursor=pointer]:
+          - /url: /register
+          - button "ابدأ الآن" [ref=e19]:
+            - text: ابدأ الآن
+            - img
+        - link "كيف يعمل؟" [ref=e20] [cursor=pointer]:
+          - /url: /about
+          - button "كيف يعمل؟" [ref=e21]
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: 2.4M+
+          - generic [ref=e25]: Active Users
+        - generic [ref=e26]:
+          - generic [ref=e27]: 1.8M+
+          - generic [ref=e28]: Issued Licenses
+        - generic [ref=e29]:
+          - generic [ref=e30]: 99.9%
+          - generic [ref=e31]: Processing Speed
+        - generic [ref=e32]:
+          - generic [ref=e33]: 24/7
+          - generic [ref=e34]: Daily Service
+    - generic [ref=e36]: Scroll
+  - main [ref=e38]:
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - generic [ref=e44]: خدمات القيادة المتكاملة
+        - heading "احصل على جميع احتياجات رخصة القيادة الخاصة بك في مكان واحد مع تجربة رقمية مبسطة." [level=2] [ref=e45]
+      - generic [ref=e46]:
+        - generic [ref=e49]:
+          - img [ref=e51]
+          - generic [ref=e53]:
+            - heading "landing.services.items.new.title" [level=3] [ref=e54]
+            - paragraph [ref=e55]: landing.services.items.new.description
+          - generic [ref=e56]:
+            - generic [ref=e57]: ابدأ الخدمة
+            - img [ref=e58]
+        - generic [ref=e62]:
+          - img [ref=e64]
+          - generic [ref=e69]:
+            - heading "تجديد الرخصة" [level=3] [ref=e70]
+            - paragraph [ref=e71]: جدد رخصتك الحالية بسرعة وسهولة.
+          - generic [ref=e72]:
+            - generic [ref=e73]: ابدأ الخدمة
+            - img [ref=e74]
+        - generic [ref=e78]:
+          - img [ref=e80]
+          - generic [ref=e83]:
+            - heading "بدل فاقد/تالف" [level=3] [ref=e84]
+            - paragraph [ref=e85]: طلب رخصة بديلة للرخص المفقودة أو التالفة.
+          - generic [ref=e86]:
+            - generic [ref=e87]: ابدأ الخدمة
+            - img [ref=e88]
+        - generic [ref=e92]:
+          - img [ref=e94]
+          - generic [ref=e97]:
+            - heading "ترقية الفئة" [level=3] [ref=e98]
+            - paragraph [ref=e99]: قم بترقية رخصتك إلى فئة مركبة جديدة.
+          - generic [ref=e100]:
+            - generic [ref=e101]: ابدأ الخدمة
+            - img [ref=e102]
+    - generic [ref=e105]:
+      - generic [ref=e107]: رحلتك نحو الرخصة
+      - generic [ref=e110]:
+        - generic [ref=e113]:
+          - generic [ref=e114]: "01"
+          - heading "التسجيل الرقمي" [level=3] [ref=e115]
+          - paragraph [ref=e116]: قدم طلبك من خلال المنصة.
+        - generic [ref=e121]:
+          - generic [ref=e122]: "02"
+          - heading "الفحص الطبي" [level=3] [ref=e123]
+          - paragraph [ref=e124]: اكمل فحوصات اللياقة في المراكز المعتمدة.
+        - generic [ref=e129]:
+          - generic [ref=e130]: "03"
+          - heading "مدرسة القيادة" [level=3] [ref=e131]
+          - paragraph [ref=e132]: التحق ببرامج تدريب احترافية.
+        - generic [ref=e137]:
+          - generic [ref=e138]: "04"
+          - heading "الاختبار النظري" [level=3] [ref=e139]
+          - paragraph [ref=e140]: اجتز تقييم المعلومات الإلكتروني.
+        - generic [ref=e145]:
+          - generic [ref=e146]: "05"
+          - heading "الاختبار العملي" [level=3] [ref=e147]
+          - paragraph [ref=e148]: أثبت مهاراتك في القيادة على الطريق.
+        - generic [ref=e153]:
+          - generic [ref=e154]: "06"
+          - heading "إصدار الرخصة" [level=3] [ref=e155]
+          - paragraph [ref=e156]: استلم رخصتك الرقمية والمطبوعة.
+    - generic [ref=e160]:
+      - generic [ref=e162]: فئات الرخص
+      - generic [ref=e163]:
+        - generic [ref=e165]:
+          - generic [ref=e166]:
+            - img [ref=e168]
+            - generic [ref=e173]: A
+          - generic [ref=e174]:
+            - heading "الدراجات النارية" [level=3] [ref=e175]
+            - generic [ref=e177]: الحد الأدنى للسن 16 عاماً
+        - generic [ref=e180]:
+          - generic [ref=e181]:
+            - img [ref=e183]
+            - generic [ref=e187]: B
+          - generic [ref=e188]:
+            - heading "المركبات الخصوصية" [level=3] [ref=e189]
+            - generic [ref=e191]: الحد الأدنى للسن 18 عاماً
+        - generic [ref=e194]:
+          - generic [ref=e195]:
+            - img [ref=e197]
+            - generic [ref=e202]: C
+          - generic [ref=e203]:
+            - heading "النقل العام" [level=3] [ref=e204]
+            - generic [ref=e206]: الحد الأدنى للسن 18 عاماً
+        - generic [ref=e209]:
+          - generic [ref=e210]:
+            - img [ref=e212]
+            - generic [ref=e216]: D
+          - generic [ref=e217]:
+            - heading "المركبات الثقيلة" [level=3] [ref=e218]
+            - generic [ref=e220]: الحد الأدنى للسن 18 عاماً
+        - generic [ref=e223]:
+          - generic [ref=e224]:
+            - img [ref=e226]
+            - generic [ref=e231]: E
+          - generic [ref=e232]:
+            - heading "المعدات الإنشائية" [level=3] [ref=e233]
+            - generic [ref=e235]: الحد الأدنى للسن 18 عاماً
+        - generic [ref=e238]:
+          - generic [ref=e239]:
+            - img [ref=e241]
+            - generic [ref=e244]: F
+          - generic [ref=e245]:
+            - heading "الآلات الزراعية" [level=3] [ref=e246]
+            - generic [ref=e248]: الحد الأدنى للسن 18 عاماً
+    - generic [ref=e252]:
+      - generic [ref=e253]:
+        - generic [ref=e254]: لماذا تختار مُجاز؟
+        - heading "منصة رقمية متكاملة تضع المواطن أولاً" [level=2] [ref=e255]:
+          - text: منصة رقمية متكاملة
+          - text: تضع المواطن أولاً
+        - paragraph [ref=e256]: قمنا بتصميم مُجاز لتكون الحل الأمثل والوحيد لإدارة كل ما يتعلق برخص القيادة في المملكة، مع التركيز على السرعة، الأمان، وسهولة الاستخدام.
+      - generic [ref=e257]:
+        - generic [ref=e258]:
+          - img [ref=e260]
+          - heading "مميزات ذكية" [level=4] [ref=e262]
+          - paragraph [ref=e263]: نظام متطور يضمن دقة البيانات وسلاسة الإجراءات الحكومية.
+        - generic [ref=e264]:
+          - img [ref=e266]
+          - heading "مميزات ذكية" [level=4] [ref=e269]
+          - paragraph [ref=e270]: نظام متطور يضمن دقة البيانات وسلاسة الإجراءات الحكومية.
+        - generic [ref=e271]:
+          - img [ref=e273]
+          - heading "مميزات ذكية" [level=4] [ref=e275]
+          - paragraph [ref=e276]: نظام متطور يضمن دقة البيانات وسلاسة الإجراءات الحكومية.
+        - generic [ref=e277]:
+          - img [ref=e279]
+          - heading "مميزات ذكية" [level=4] [ref=e282]
+          - paragraph [ref=e283]: نظام متطور يضمن دقة البيانات وسلاسة الإجراءات الحكومية.
+        - generic [ref=e284]:
+          - img [ref=e286]
+          - heading "مميزات ذكية" [level=4] [ref=e289]
+          - paragraph [ref=e290]: نظام متطور يضمن دقة البيانات وسلاسة الإجراءات الحكومية.
+        - generic [ref=e291]:
+          - img [ref=e293]
+          - heading "مميزات ذكية" [level=4] [ref=e298]
+          - paragraph [ref=e299]: نظام متطور يضمن دقة البيانات وسلاسة الإجراءات الحكومية.
+    - generic [ref=e302]:
+      - heading "landing.stats.title" [level=2] [ref=e304]
+      - generic [ref=e305]:
+        - generic [ref=e306]:
+          - generic [ref=e307]: 2.4M+
+          - generic [ref=e308]: landing.stats.active_users
+        - generic [ref=e309]:
+          - generic [ref=e310]: 1.8M+
+          - generic [ref=e311]: landing.stats.issued_licenses
+        - generic [ref=e312]:
+          - generic [ref=e313]: 98%
+          - generic [ref=e314]: landing.stats.satisfaction_rate
+        - generic [ref=e315]:
+          - generic [ref=e316]: 45+
+          - generic [ref=e317]: landing.stats.centers
+    - generic [ref=e320]:
+      - generic [ref=e321]:
+        - generic [ref=e322]:
+          - img [ref=e323]
+          - text: الأسئلة الشائعة
+        - heading "كل ما تحتاج معرفته عن المنصة" [level=2] [ref=e326]:
+          - text: كل ما تحتاج
+          - text: معرفته عن المنصة
+        - paragraph [ref=e327]: إليك إجابات على أكثر الأسئلة شيوعاً حول خدمات مُجاز وكيفية الاستفادة منها.
+      - generic [ref=e328]:
+        - generic [ref=e329]:
+          - button "landing.faq.items.q1.q" [ref=e330]:
+            - generic [ref=e331]: landing.faq.items.q1.q
+            - img [ref=e333]
+          - generic [ref=e334]: landing.faq.items.q1.a
+        - button "landing.faq.items.q2.q" [ref=e336]:
+          - generic [ref=e337]: landing.faq.items.q2.q
+          - img [ref=e339]
+    - generic [ref=e345]:
+      - generic:
+        - img
+      - heading "جاهز لبدء رحلتك الرقمية مع مُجاز؟" [level=2] [ref=e346]:
+        - text: جاهز لبدء رحلتك
+        - text: الرقمية مع مُجاز؟
+      - paragraph [ref=e347]: انضم إلى ملايين المواطنين والمقيمين الذين يستفيدون من الخدمات الحكومية الذكية بكل سهولة وأمان.
+      - generic [ref=e348]:
+        - link "landing.hero.cta" [ref=e349] [cursor=pointer]:
+          - /url: /register
+          - button "landing.hero.cta" [ref=e350]
+        - link "تواصل معنا" [ref=e351] [cursor=pointer]:
+          - /url: /contact
+          - button "تواصل معنا" [ref=e352]

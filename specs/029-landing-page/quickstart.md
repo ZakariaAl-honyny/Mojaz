@@ -26,6 +26,6 @@ npm run dev
 ## Verification
 
 1. **View the Layout**: Open your browser to `http://localhost:3000/en` to view the English LTR layout.
-2. **View Localization/RTL**: Open `http://localhost:3000/ar` to view the Arabic RTL layout. Verify that all components, including the workflow timeline and grid layouts, cleanly match the Royal Green visual design system constraints.
+2. **View Localization/RTL**: Open `http://localhost:3000/ar` to view the Arabic RTL layout. Verify that all components, including the workflow timeline and grid layouts, cleanly match the King Blue visual design system constraints.
 3. **Animations**: Scroll down manually to trigger Framer Motion staggered reveals in the "Services" and "Workflow" sections.
 4. **Performance Check**: Run Lighthouse in Incognito mode against the local production build (`npm run build && npm run start`). Verify a score of 90+ across all metrics with 0.0 CLS.

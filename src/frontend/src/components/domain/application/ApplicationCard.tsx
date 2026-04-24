@@ -1,11 +1,10 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { ApplicationStatus } from "@/types/api.types";
 import { StatusBadge } from "./StatusBadge";
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, ChevronRight, Activity, Calendar } from "lucide-react";
+import { FileText, ChevronLeft, Activity, Calendar, Fingerprint } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ApplicationCardProps {
@@ -15,8 +14,16 @@ interface ApplicationCardProps {
   status: ApplicationStatus;
   currentStage: string;
   updatedAt: string;
-  locale: string;
 }
+
+const categoryLabels: Record<string, string> = {
+  "privateCar": "رخصة قيادة خصوصي",
+  "motorcycle": "رخصة دراجة نارية",
+  "lightTransport": "رخصة نقل خفيف",
+  "heavyTransport": "رخصة نقل ثقيل",
+  "publicBus": "رخصة حافلة عامة",
+  "construction": "رخصة معدات ثقيلة"
+};
 
 export function ApplicationCard({
   id,
@@ -24,52 +31,52 @@ export function ApplicationCard({
   categoryNameKey,
   status,
   currentStage,
-  updatedAt,
-  locale
+  updatedAt
 }: ApplicationCardProps) {
-  const t = useTranslations();
+  const categoryLabel = categoryLabels[categoryNameKey] || categoryNameKey;
 
   return (
-    <Link href={`/${locale}/applications/${id}`}>
-      <Card data-testid="application-card" className="border-0 shadow-sm hover:shadow-md transition-shadow group bg-white cursor-pointer relative overflow-hidden">
-        {/* Subtle decorative edge */}
+    <Link href={`/applications/${id}`}>
+      <Card data-testid="application-card" className="border-none shadow-sm hover:shadow-2xl transition-all duration-500 group bg-white cursor-pointer relative overflow-hidden rounded-[2.5rem]">
+        {/* Subtle decorative edge with King Blue */}
         <div className={cn(
-          "absolute rtl:right-0 ltr:left-0 top-0 bottom-0 w-1 rounded-s-xl",
-          status === "Draft" ? "bg-neutral-300" :
+          "absolute right-0 top-0 bottom-0 w-1.5 transition-all duration-500",
+          status === "Draft" ? "bg-neutral-200" :
           status === "Rejected" || status === "Cancelled" ? "bg-red-500" :
-          status === "Issued" || status === "Approved" || status === "Paid" ? "bg-green-500" :
-          "bg-primary-500"
+          status === "Issued" || status === "Approved" || status === "Paid" ? "bg-emerald-500" :
+          "bg-[#1a3a8f]"
         )} />
         
-        <CardContent className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex-1 space-y-3">
-             <div className="flex items-center gap-3">
-                <span className="font-bold text-primary-900 border border-primary-200 bg-primary-50 px-2 py-0.5 rounded text-sm font-mono">
+        <CardContent className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div className="flex-1 space-y-5">
+             <div className="flex flex-wrap items-center gap-4">
+                <span className="font-black text-[#1a3a8f] border border-blue-100 bg-blue-50/50 px-4 py-1.5 rounded-xl text-xs font-mono uppercase tracking-widest flex items-center gap-2">
+                  <Fingerprint className="w-3.5 h-3.5 opacity-60" />
                   {number}
                 </span>
                 <StatusBadge status={status} />
              </div>
              
              <div>
-                <h3 className="font-semibold text-lg text-neutral-800">
-                  {t(`application.create.fields.${categoryNameKey}` as any)}
+                <h3 className="font-black text-2xl text-neutral-900 group-hover:text-[#1a3a8f] transition-colors leading-tight">
+                  {categoryLabel}
                 </h3>
              </div>
              
-             <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-500">
-                <span className="flex items-center gap-1.5 bg-neutral-100 px-2 py-1 rounded">
-                   <Activity className="w-3.5 h-3.5" />
+             <div className="flex flex-wrap items-center gap-6 text-[11px] text-neutral-400 font-bold uppercase tracking-wider">
+                <span className="flex items-center gap-2 bg-neutral-50 px-4 py-2 rounded-xl group-hover:bg-blue-50/50 group-hover:text-[#1a3a8f] transition-all">
+                   <Activity className="w-4 h-4 opacity-50" />
                    {currentStage}
                 </span>
-                <span className="flex items-center gap-1.5">
-                   <Calendar className="w-3.5 h-3.5" />
-                   {t("application.details.submittedOn")}: {new Date(updatedAt).toLocaleDateString()}
+                <span className="flex items-center gap-2">
+                   <Calendar className="w-4 h-4 opacity-50" />
+                   تاريخ التحديث: {new Date(updatedAt).toLocaleDateString('ar-YE', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </span>
              </div>
           </div>
           
-          <div className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-neutral-50 group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors">
-            <ChevronRight className="w-5 h-5 rtl:rotate-180" />
+          <div className="hidden md:flex items-center justify-center w-14 h-14 rounded-2xl bg-neutral-50 group-hover:bg-[#1a3a8f] group-hover:text-white transition-all duration-500 shadow-inner group-hover:shadow-2xl">
+            <ChevronLeft className="w-6 h-6" />
           </div>
         </CardContent>
       </Card>

@@ -46,11 +46,11 @@ public class CreateApplicationValidatorTests
             LicenseCategoryId = categoryId,
             NationalId = "1000000000",
             DateOfBirth = DateTime.UtcNow.AddYears(-17), // 17 years old
-            Gender = "Male",
+            Gender = GenderEnum.Male,
             Nationality = "Saudi",
             City = "Riyadh",
             Region = "Riyadh",
-            ApplicantType = "Citizen",
+            ApplicantType = ApplicantType.Private,
             BranchId = Guid.NewGuid(),
             PreferredLanguage = "ar",
             DataAccuracyConfirmed = true
@@ -88,11 +88,11 @@ public class CreateApplicationValidatorTests
             LicenseCategoryId = categoryId,
             NationalId = "1000000000",
             DateOfBirth = DateTime.UtcNow.AddYears(-19), // 19 years old
-            Gender = "Male",
+            Gender = GenderEnum.Male,
             Nationality = "Saudi",
             City = "Riyadh",
             Region = "Riyadh",
-            ApplicantType = "Citizen",
+            ApplicantType = ApplicantType.Private,
             BranchId = Guid.NewGuid(),
             PreferredLanguage = "ar",
             DataAccuracyConfirmed = true

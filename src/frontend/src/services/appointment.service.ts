@@ -1,7 +1,6 @@
 import apiClient from '@/lib/api-client';
 import { ApiResponse } from '@/types/api.types';
-
-export type AppointmentType = 'MedicalExam' | 'TheoryTest' | 'PracticalTest';
+import { AppointmentType } from '@/lib/enums';
 
 export interface AppointmentDto {
   id: string;
@@ -12,9 +11,10 @@ export interface AppointmentDto {
   branchId: string | null;
   branchName: string | null;
   assignedStaffId: string | null;
-  status: 'Scheduled' | 'Completed' | 'Cancelled' | 'NoShow';
+  status: string;
   notes: string | null;
   cancellationReason: string | null;
+  checkInTime: string | null;
   rescheduleCount: number;
   reminderSent: boolean;
   createdAt: string;
@@ -127,6 +127,31 @@ const AppointmentService = {
    */
   async validateBooking(request: CreateAppointmentRequest): Promise<ApiResponse<AppointmentValidationResult>> {
     const response = await apiClient.post('/appointments/validate', request);
+    return response.data;
+  },
+
+  /**
+   * Get all appointments for the current logged-in user (applicant)
+   * This fetches the user's submitted/active applications and gets their appointments
+   */
+  async getMyAppointments(): Promise<ApiResponse<AppointmentDto[]>> {
+    const response = await apiClient.get('/appointments/my-appointments');
+    return response.data;
+  },
+
+  /**
+   * Get appointments for employee attendance tracking (for a specific date and branch)
+   */
+  async getAttendance(date: string): Promise<ApiResponse<AppointmentDto[]>> {
+    const response = await apiClient.get('/appointments/attendance', { params: { date } });
+    return response.data;
+  },
+
+  /**
+   * Check in an applicant for their appointment
+   */
+  async checkIn(appointmentId: string): Promise<ApiResponse<AppointmentDto>> {
+    const response = await apiClient.patch(`/appointments/${appointmentId}/check-in`);
     return response.data;
   }
 };

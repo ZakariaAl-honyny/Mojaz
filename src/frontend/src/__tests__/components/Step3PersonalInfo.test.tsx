@@ -1,10 +1,11 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Step3PersonalInfo } from '@/components/domain/application/wizard/steps/Step3PersonalInfo';
-import { NextIntlClientProvider } from 'next-intl';
+import { NextIntlClientProvider } from '@/lib/static-translations';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useWizardStore } from '@/stores/wizard-store';
 import { useApplicationWizard } from '@/hooks/useApplicationWizard';
+import { Gender } from '@/types/wizard.types';
 
 // Mock store and hook
 jest.mock('@/stores/wizard-store');
@@ -54,7 +55,7 @@ describe('Step3PersonalInfo', () => {
       step3: {
         nationalId: '',
         dateOfBirth: '',
-        gender: 'Male',
+        gender: Gender.Male,
         mobileNumber: '',
         email: '',
       },

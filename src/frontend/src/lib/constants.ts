@@ -1,7 +1,8 @@
 import { ServiceType } from '@/types/wizard.types';
 
-export const APP_NAME = "مُجاز | Mojaz";
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+export const APP_NAME = "نظام إصدار رخص القيادة الإلكتروني - مُجاز";
+export const INSTITUTION_NAME = "الإدارة العامة للمرور - محافظة صنعاء";
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5013/api/v1";
 
 export const ROUTES = {
   HOME: "/",
@@ -23,9 +24,6 @@ export const ROLES = {
   ADMIN: "Admin",
 };
 
-export const LOCALES = ["ar", "en"] as const;
-export type Locale = (typeof LOCALES)[number];
-
 // Wizard Query Keys for React Query
 export const wizardQueryKeys = {
   existingDraft: ['applications', 'draft', 'check'] as const,
@@ -35,62 +33,67 @@ export const wizardQueryKeys = {
   regions: ['lookups', 'regions'] as const,
 };
 
+// Institutional Color Tokens - Royal King Blue
+export const PRIMARY_COLOR = '#1a3a8f'; 
+export const SECONDARY_COLOR = '#D4A017'; 
+
+// Services config - matches backend ServiceType enum (numeric values 0-7)
+// Note: Future services (8+) are not yet defined in backend and marked as unavailable
 export const SERVICES_CONFIG = [
   {
     type: ServiceType.NewLicense,
-    titleKey: 'wizard.step1.newLicense.title',
-    descriptionKey: 'wizard.step1.newLicense.description',
+    title: 'إصدار رخصة قيادة جديدة',
+    description: 'بدء إجراءات الحصول على رخصة قيادة لأول مرة (خصوصي، نقل، دراجة).',
     icon: 'FilePlus',
     availableInMvp: true,
   },
   {
     type: ServiceType.Renewal,
-    titleKey: 'wizard.step1.renewal.title',
-    descriptionKey: 'wizard.step1.renewal.description',
+    title: 'تجديد رخصة القيادة',
+    description: 'تجديد صلاحية رخصة القيادة المنتهية أو التي قاربت على الانتهاء.',
     icon: 'RefreshCw',
     availableInMvp: true,
   },
   {
     type: ServiceType.Replacement,
-    titleKey: 'wizard.step1.replacement.title',
-    descriptionKey: 'wizard.step1.replacement.description',
+    title: 'بدل فاقد أو تالف',
+    description: 'إصدار رخصة بديلة في حال فقدان أو تلف الرخصة الحالية.',
     icon: 'Copy',
     availableInMvp: true,
   },
   {
     type: ServiceType.CategoryUpgrade,
-    titleKey: 'wizard.step1.upgrade.title',
-    descriptionKey: 'wizard.step1.upgrade.description',
+    title: 'ترقية فئة الرخصة',
+    description: 'إضافة فئات جديدة إلى رخصتك الحالية (مثلاً من خصوصي إلى نقل).',
     icon: 'TrendingUp',
     availableInMvp: true,
   },
   {
-    type: ServiceType.TestRetake,
-    titleKey: 'wizard.step1.retake.title',
-    descriptionKey: 'wizard.step1.retake.description',
-    icon: 'Repeat',
-    availableInMvp: false,
+    type: ServiceType.InternationalLicense,
+    title: 'رخصة قيادة دولية',
+    description: 'إصدار رخصة قيادة دولية للت السفر الدولي.',
+    icon: 'Globe',
+    availableInMvp: true,
   },
   {
-    type: ServiceType.AppointmentBooking,
-    titleKey: 'wizard.step1.appointment.title',
-    descriptionKey: 'wizard.step1.appointment.description',
-    icon: 'Calendar',
-    availableInMvp: false,
+    type: ServiceType.StatusChange,
+    title: 'تغيير حالة الرخصة',
+    description: 'تغيير حالة الرخصة (تعليق، إلغاء، استئناف).',
+    icon: 'RefreshCw',
+    availableInMvp: true,
   },
   {
-    type: ServiceType.Cancellation,
-    titleKey: 'wizard.step1.cancellation.title',
-    descriptionKey: 'wizard.step1.cancellation.description',
-    icon: 'XCircle',
-    availableInMvp: false,
+    type: ServiceType.MedicalExtension,
+    title: 'تمديد طبي',
+    description: 'تمديد صلاحية الرخصة بناءً على تقرير طبي جديد.',
+    icon: 'Plus',
+    availableInMvp: true,
   },
   {
-    type: ServiceType.DocumentDownload,
-    titleKey: 'wizard.step1.download.title',
-    descriptionKey: 'wizard.step1.download.description',
-    icon: 'Download',
-    availableInMvp: false,
-    href: '/downloads',
+    type: ServiceType.TemporaryLicense,
+    title: 'رخصة مؤقتة',
+    description: 'إصدار رخصة قيادة مؤقتة لفترة محددة.',
+    icon: 'Clock',
+    availableInMvp: true,
   },
 ];
