@@ -53,7 +53,7 @@ export default function WizardErrorDisplay({
           }}
           className="h-16 px-10 rounded-2xl bg-white border-red-500/20 text-red-600 hover:bg-red-600 hover:text-white hover:border-red-600 font-black transition-all duration-700 w-full md:w-auto shadow-sm group"
         >
-          <RefreshCw className="w-5 h-5 ml-3 group-hover:rotate-180 transition-transform duration-700" />
+          <RefreshCw className="w-5 h-5 ms-3 group-hover:rotate-180 transition-transform duration-700" />
           {retryLabel}
         </Button>
       </div>

@@ -169,7 +169,7 @@ export function FinalDecisionModal({
           <p className="text-gray-500 mb-6">{getDecisionMessage()}</p>
           
           {formData.reason && (
-            <div className="text-left bg-gray-50 p-3 rounded-lg mb-6">
+            <div className="text-end bg-gray-50 p-3 rounded-lg mb-6">
               <p className="text-sm text-gray-500">{t("form.reason")}:</p>
               <p className="font-medium">{formData.reason}</p>
             </div>
@@ -189,7 +189,7 @@ export function FinalDecisionModal({
               )}
               disabled={mutation.isPending}
             >
-              {mutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {mutation.isPending && <Loader2 className="w-4 h-4 me-2 animate-spin" />}
               {t("common.confirm")}
             </Button>
           </div>

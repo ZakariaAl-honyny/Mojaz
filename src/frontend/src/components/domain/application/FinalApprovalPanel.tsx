@@ -90,7 +90,7 @@ export function FinalApprovalPanel({ applicationId, isEditable = true }: FinalAp
                 : "bg-gray-100 text-gray-400"
             )}
           >
-            <svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 ms-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
             {t("actions.approve")}
@@ -101,7 +101,7 @@ export function FinalApprovalPanel({ applicationId, isEditable = true }: FinalAp
             onClick={() => handleDecisionSelect(FinalDecisionType.Rejected)}
             className="flex-1 min-w-[140px] border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
           >
-            <svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 ms-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
             {t("actions.reject")}
@@ -112,7 +112,7 @@ export function FinalApprovalPanel({ applicationId, isEditable = true }: FinalAp
             onClick={() => handleDecisionSelect(FinalDecisionType.Returned)}
             className="flex-1 min-w-[140px] border-amber-200 text-amber-600 hover:bg-amber-50 hover:border-amber-300"
           >
-            <svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 ms-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
             </svg>
             {t("actions.return")}

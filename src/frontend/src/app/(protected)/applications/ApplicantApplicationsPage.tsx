@@ -141,9 +141,9 @@ export default function ApplicantApplicationsPage() {
 
           {/* Search Box */}
           <div className="relative w-full lg:w-80 h-10 group">
-            <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 group-focus-within:text-[#1a3a8f] transition-colors" />
+            <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 group-focus-within:text-[#1a3a8f] transition-colors" />
             <Input
-              className="h-10 pr-10 rounded-lg border-neutral-100 bg-neutral-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all font-bold text-xs text-right"
+              className="h-10 ps-10 rounded-lg border-neutral-100 bg-neutral-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all font-bold text-xs text-end"
               placeholder="البحث برقم الطلب المعرّف..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -228,7 +228,7 @@ export default function ApplicantApplicationsPage() {
                       </div>
 
                       <div className="flex items-center gap-3 md:gap-4 w-full lg:w-auto justify-end">
-                        <div className="text-left hidden lg:block">
+                        <div className="text-start hidden lg:block">
                           <p className="text-[8px] md:text-[9px] text-neutral-400 font-black uppercase tracking-[0.1em] md:tracking-[0.2em] mb-1">تاريخ تحديث الملف</p>
                           <p className="text-[10px] md:text-xs font-black text-neutral-900 tracking-tight">
                             <FormattedDate date={app.updatedAt || app.createdAt} />
@@ -272,7 +272,7 @@ export default function ApplicantApplicationsPage() {
                       className="h-16 px-10 rounded-2xl bg-[#1a3a8f] hover:bg-[#152d6f] text-white shadow-xl shadow-blue-900/10 font-black text-base"
                       onClick={() => router.push('/applications/new')}
                     >
-                      <Plus className="w-5 h-5 ml-3" />
+                      <Plus className="w-5 h-5 ms-3" />
                       البدء بمعاملة جديدة
                     </Button>
                   </CardContent>

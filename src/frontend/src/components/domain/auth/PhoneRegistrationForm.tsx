@@ -99,7 +99,7 @@ export function PhoneRegistrationForm() {
       <div className="grid grid-cols-1 gap-10">
         {/* Full Name */}
         <div className="group space-y-4">
-          <Label className="text-sm font-black text-[#1a3a8f] mr-4 flex items-center gap-3">
+          <Label className="text-sm font-black text-[#1a3a8f] me-4 flex items-center gap-3">
             <User className="w-4.5 h-4.5" />
             الاسم الكامل (كما هو في الوثيقة الشخصية)
           </Label>
@@ -114,7 +114,7 @@ export function PhoneRegistrationForm() {
             />
           </div>
           {errors.fullName && (
-            <p className="text-xs text-red-500 font-bold mr-4">
+            <p className="text-xs text-red-500 font-bold me-4">
               {errors.fullName.message}
             </p>
           )}
@@ -122,14 +122,13 @@ export function PhoneRegistrationForm() {
 
         {/* Phone */}
         <div className="group space-y-4">
-          <Label className="text-sm font-black text-[#1a3a8f] mr-4 flex items-center gap-3">
+          <Label className="text-sm font-black text-[#1a3a8f] me-4 flex items-center gap-3">
             <Phone className="w-4.5 h-4.5" />
             رقم الهاتف الجوال (يمني)
           </Label>
           <div className="relative">
             <Input
               placeholder="+9677XXXXXXXX"
-              dir="ltr"
               className={cn(
                 "h-16 bg-neutral-100/50 border-none rounded-[1.5rem] px-8 text-[#1a3a8f] font-black placeholder:text-neutral-300 focus-visible:ring-4 focus-visible:ring-[#1a3a8f]/10 transition-all text-left font-mono shadow-inner", 
                 errors.phone && "ring-4 ring-red-500/10 bg-red-50/50"
@@ -138,7 +137,7 @@ export function PhoneRegistrationForm() {
             />
           </div>
           {errors.phone && (
-            <p className="text-xs text-red-500 font-bold mr-4">
+            <p className="text-xs text-red-500 font-bold me-4">
                {errors.phone.message}
             </p>
           )}
@@ -147,7 +146,7 @@ export function PhoneRegistrationForm() {
         {/* Passwords */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div className="group space-y-4">
-            <Label className="text-sm font-black text-[#1a3a8f] mr-4 flex items-center gap-3">
+            <Label className="text-sm font-black text-[#1a3a8f] me-4 flex items-center gap-3">
               <Lock className="w-4.5 h-4.5" />
               كلمة المرور
             </Label>
@@ -170,7 +169,7 @@ export function PhoneRegistrationForm() {
           </div>
 
           <div className="group space-y-4">
-            <Label className="text-sm font-black text-[#1a3a8f] mr-4 flex items-center gap-3">
+            <Label className="text-sm font-black text-[#1a3a8f] me-4 flex items-center gap-3">
               <KeySquare className="w-4.5 h-4.5" />
               تأكيد كلمة المرور
             </Label>

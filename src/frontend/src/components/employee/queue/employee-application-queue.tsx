@@ -98,12 +98,12 @@ export function EmployeeApplicationQueue() {
             placeholder="البحث برقم الطلب، الاسم، أو الهوية..."
             value={globalFilter}
             onChange={(event) => setGlobalFilter(event.target.value)}
-            className="pr-12 h-12 border-neutral-100 bg-neutral-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all rounded-xl font-bold text-sm text-right"
+            className="pe-12 h-12 border-neutral-100 bg-neutral-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all rounded-xl font-bold text-sm text-right"
           />
         </div>
         
         <div className="flex items-center gap-2">
-          <div className="flex items-center bg-neutral-50 p-1 rounded-xl border border-neutral-100 ml-2">
+          <div className="flex items-center bg-neutral-50 p-1 rounded-xl border border-neutral-100 ms-2">
              <Button variant="ghost" size="icon" className="h-10 w-10 rounded-lg bg-white shadow-sm border border-neutral-200 text-[#1a3a8f]">
                 <List className="w-4 h-4" />
              </Button>

@@ -243,7 +243,7 @@ export function ApplicationWizard() {
                         <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center transition-all", formData.categoryId === cat.id ? "bg-[#1a3a8f] text-white shadow-lg" : "bg-neutral-100 text-neutral-400")}>
                           <cat.icon className="w-8 h-8" />
                         </div>
-                        <div className="text-right">
+                        <div className="text-start">
                           <h3 className={cn("font-black text-lg", formData.categoryId === cat.id ? "text-[#1a3a8f]" : "text-neutral-700")}>{cat.label}</h3>
                           <p className="text-xs font-bold text-neutral-400 mt-1">الحد الأدنى للسن: {cat.minAge} عاماً</p>
                         </div>
@@ -263,7 +263,7 @@ export function ApplicationWizard() {
               {currentStep === 3 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                   <div className="space-y-4">
-                    <Label className="text-sm font-black text-[#1a3a8f] mr-2">رقم الهوية الوطنية / البطاقة الشخصية</Label>
+                    <Label className="text-sm font-black text-[#1a3a8f] me-2">رقم الهوية الوطنية / البطاقة الشخصية</Label>
                     <Input 
                       value={formData.nationalId} 
                       onChange={(e) => updateForm("nationalId", e.target.value)} 
@@ -272,7 +272,7 @@ export function ApplicationWizard() {
                     />
                   </div>
                   <div className="space-y-4">
-                    <Label className="text-sm font-black text-[#1a3a8f] mr-2">تاريخ الميلاد (يوم/شهر/سنة)</Label>
+                    <Label className="text-sm font-black text-[#1a3a8f] me-2">تاريخ الميلاد (يوم/شهر/سنة)</Label>
                     <Input 
                       type="date" 
                       value={formData.dateOfBirth} 
@@ -281,16 +281,16 @@ export function ApplicationWizard() {
                     />
                   </div>
                   <div className="space-y-4">
-                    <Label className="text-sm font-black text-[#1a3a8f] mr-2">رقم الهاتف الجوال</Label>
+                    <Label className="text-sm font-black text-[#1a3a8f] me-2">رقم الهاتف الجوال</Label>
                     <Input 
                       value={formData.phone} 
                       onChange={(e) => updateForm("phone", e.target.value)} 
                       placeholder="+967..." 
-                      className="h-16 bg-neutral-50 border-neutral-100 rounded-2xl px-6 font-bold text-lg dir-ltr text-right"
+                      className="h-16 bg-neutral-50 border-neutral-100 rounded-2xl px-6 font-bold text-lg dir-ltr text-end"
                     />
                   </div>
                   <div className="space-y-4">
-                    <Label className="text-sm font-black text-[#1a3a8f] mr-2">البريد الإلكتروني</Label>
+                    <Label className="text-sm font-black text-[#1a3a8f] me-2">البريد الإلكتروني</Label>
                     <Input 
                       type="email"
                       value={formData.email} 
@@ -306,7 +306,7 @@ export function ApplicationWizard() {
               {currentStep === 4 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                   <div className="space-y-4">
-                    <Label className="text-sm font-black text-[#1a3a8f] mr-2">فرع المرور المفضل</Label>
+                    <Label className="text-sm font-black text-[#1a3a8f] me-2">فرع المرور المفضل</Label>
                     <select 
                       className="flex h-16 w-full rounded-2xl border border-neutral-100 bg-neutral-50 px-6 font-bold text-lg shadow-sm outline-none focus:ring-4 focus:ring-[#1a3a8f]/10"
                       value={formData.preferredBranch} 
@@ -319,7 +319,7 @@ export function ApplicationWizard() {
                     </select>
                   </div>
                   <div className="space-y-4">
-                    <Label className="text-sm font-black text-[#1a3a8f] mr-2">لغة الاختبار المفضل</Label>
+                    <Label className="text-sm font-black text-[#1a3a8f] me-2">لغة الاختبار المفضل</Label>
                     <select 
                       className="flex h-16 w-full rounded-2xl border border-neutral-100 bg-neutral-50 px-6 font-bold text-lg shadow-sm outline-none focus:ring-4 focus:ring-[#1a3a8f]/10"
                       value={formData.testLanguage} 
@@ -330,7 +330,7 @@ export function ApplicationWizard() {
                     </select>
                   </div>
                   <div className="col-span-full space-y-4">
-                    <Label className="text-sm font-black text-[#1a3a8f] mr-2">هل لديك أي احتياجات خاصة؟ (اختياري)</Label>
+                    <Label className="text-sm font-black text-[#1a3a8f] me-2">هل لديك أي احتياجات خاصة؟ (اختياري)</Label>
                     <textarea 
                       className="flex min-h-[120px] w-full rounded-2xl border border-neutral-100 bg-neutral-50 px-6 py-4 font-bold text-lg shadow-sm outline-none focus:ring-4 focus:ring-[#1a3a8f]/10"
                       value={formData.specialNeeds} 
@@ -393,7 +393,7 @@ export function ApplicationWizard() {
             disabled={currentStep === 1}
             className="h-16 px-8 flex-1 sm:flex-none font-black text-neutral-400 hover:text-white hover:bg-[#1a3a8f] rounded-2xl transition-all"
           >
-            <ArrowRight className="w-5 h-5 ml-2" />
+            <ArrowRight className="w-5 h-5 ms-2" />
             السابق
           </Button>
           
@@ -402,7 +402,7 @@ export function ApplicationWizard() {
             onClick={() => {}}
             className="h-16 px-8 flex-1 sm:flex-none font-black text-[#1a3a8f] bg-[#1a3a8f]/5 hover:bg-[#1a3a8f]/10 rounded-2xl transition-all"
           >
-            <Save className="w-5 h-5 ml-2" />
+            <Save className="w-5 h-5 ms-2" />
             حفظ كمسودة
           </Button>
         </div>

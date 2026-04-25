@@ -99,7 +99,7 @@ export function EmailRegistrationForm() {
       <div className="grid grid-cols-1 gap-10">
         {/* Full Name */}
         <div className="group space-y-4">
-          <Label className="text-sm font-black text-[#1a3a8f] mr-4 flex items-center gap-3">
+          <Label className="text-sm font-black text-[#1a3a8f] me-4 flex items-center gap-3">
             <User className="w-4.5 h-4.5" />
             الاسم الكامل (كما هو في الوثيقة الشخصية)
           </Label>
@@ -114,7 +114,7 @@ export function EmailRegistrationForm() {
             />
           </div>
           {errors.fullName && (
-            <p className="text-xs text-red-500 font-bold mr-4">
+            <p className="text-xs text-red-500 font-bold me-4">
               {errors.fullName.message}
             </p>
           )}
@@ -122,7 +122,7 @@ export function EmailRegistrationForm() {
 
         {/* Email */}
         <div className="group space-y-4">
-          <Label className="text-sm font-black text-[#1a3a8f] mr-4 flex items-center gap-3">
+          <Label className="text-sm font-black text-[#1a3a8f] me-4 flex items-center gap-3">
             <Mail className="w-4.5 h-4.5" />
             عنوان البريد الإلكتروني
           </Label>
@@ -130,7 +130,6 @@ export function EmailRegistrationForm() {
             <Input
               type="email"
               placeholder="example@mojaz.com"
-              dir="ltr"
               className={cn(
                 "h-16 bg-neutral-100/50 border-none rounded-[1.5rem] px-8 text-[#1a3a8f] font-black placeholder:text-neutral-300 focus-visible:ring-4 focus-visible:ring-[#1a3a8f]/10 transition-all text-left shadow-inner", 
                 errors.email && "ring-4 ring-red-500/10 bg-red-50/50"
@@ -139,7 +138,7 @@ export function EmailRegistrationForm() {
             />
           </div>
           {errors.email && (
-            <p className="text-xs text-red-500 font-bold mr-4">
+            <p className="text-xs text-red-500 font-bold me-4">
               {errors.email.message}
             </p>
           )}
@@ -148,7 +147,7 @@ export function EmailRegistrationForm() {
         {/* Passwords */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div className="group space-y-4">
-            <Label className="text-sm font-black text-[#1a3a8f] mr-4 flex items-center gap-3">
+            <Label className="text-sm font-black text-[#1a3a8f] me-4 flex items-center gap-3">
               <Lock className="w-4.5 h-4.5" />
               كلمة المرور
             </Label>
@@ -171,7 +170,7 @@ export function EmailRegistrationForm() {
           </div>
 
           <div className="group space-y-4">
-            <Label className="text-sm font-black text-[#1a3a8f] mr-4 flex items-center gap-3">
+            <Label className="text-sm font-black text-[#1a3a8f] me-4 flex items-center gap-3">
               <KeySquare className="w-4.5 h-4.5" />
               تأكيد كلمة المرور
             </Label>

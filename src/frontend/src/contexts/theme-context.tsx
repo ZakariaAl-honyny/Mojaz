@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-export type Theme = "light" | "dark";
+export type Theme = "light";
 
 interface ThemeContextType {
   theme: Theme;
@@ -15,7 +15,7 @@ export function ThemeProvider({ children, defaultTheme = "light" }: { children: 
   const [theme, setTheme] = React.useState<Theme>(defaultTheme);
   
   const toggleTheme = React.useCallback(() => {
-    setTheme(prev => prev === "light" ? "dark" : "light");
+    // Light mode only - no-op
   }, []);
   
   return (
