@@ -14,15 +14,15 @@ namespace Mojaz.Application.Services;
 public interface IUserService
 {
     Task<CreateUserResponse> CreateUserAsync(CreateUserRequest request);
-    Task UpdateUserStatusAsync(Guid userId, bool isActive);
-    Task UpdateUserRoleAsync(Guid userId, AppRole appRole);
-    Task UnlockUserAsync(Guid userId);
-    Task<ApiResponse<bool>> SetSecurityBlockAsync(Guid userId, bool isBlocked, string reason);
+    Task UpdateUserStatusAsync(int userId, bool isActive);
+    Task UpdateUserRoleAsync(int userId, AppRole appRole);
+    Task UnlockUserAsync(int userId);
+    Task<ApiResponse<bool>> SetSecurityBlockAsync(int userId, bool isBlocked, string reason);
     Task<ApiResponse<PagedResult<UserDto>>> GetUsersAsync(int page, int pageSize, string? search, AppRole? role);
-    Task<ApiResponse<UserDto>> GetUserByIdAsync(Guid userId);
-    Task<ApiResponse<UserDto>> GetCurrentUserAsync(Guid userId);
-    Task<ApiResponse<UserDto>> UpdateCurrentUserAsync(Guid userId, UpdateMeRequest request);
-    Task<ApiResponse<bool>> DeleteUserAsync(Guid userId);
+    Task<ApiResponse<UserDto>> GetUserByIdAsync(int userId);
+    Task<ApiResponse<UserDto>> GetCurrentUserAsync(int userId);
+    Task<ApiResponse<UserDto>> UpdateCurrentUserAsync(int userId, UpdateMeRequest request);
+    Task<ApiResponse<bool>> DeleteUserAsync(int userId);
 }
 
 public class UserService : IUserService
@@ -75,7 +75,7 @@ public class UserService : IUserService
         };
     }
 
-    public async Task UpdateUserStatusAsync(Guid userId, bool isActive)
+    public async Task UpdateUserStatusAsync(int userId, bool isActive)
     {
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)
@@ -90,7 +90,7 @@ public class UserService : IUserService
         _logger.LogInformation("Updated user {UserId} status to IsActive: {IsActive}", userId, isActive);
     }
 
-    public async Task UpdateUserRoleAsync(Guid userId, AppRole appRole)
+    public async Task UpdateUserRoleAsync(int userId, AppRole appRole)
     {
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)
@@ -105,7 +105,7 @@ public class UserService : IUserService
         _logger.LogInformation("Updated user {UserId} role to: {Role}", userId, appRole);
     }
 
-    public async Task UnlockUserAsync(Guid userId)
+    public async Task UnlockUserAsync(int userId)
     {
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)
@@ -122,7 +122,7 @@ public class UserService : IUserService
         _logger.LogInformation("Unlocked user {UserId}. Reset failed attempts to 0.", userId);
     }
 
-    public async Task<ApiResponse<bool>> SetSecurityBlockAsync(Guid userId, bool isBlocked, string reason)
+    public async Task<ApiResponse<bool>> SetSecurityBlockAsync(int userId, bool isBlocked, string reason)
     {
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)
@@ -220,7 +220,7 @@ public class UserService : IUserService
         return ApiResponse<PagedResult<UserDto>>.Ok(result, "تم استرجاع المستخدمين بنجاح");
     }
 
-    public async Task<ApiResponse<UserDto>> GetUserByIdAsync(Guid userId)
+    public async Task<ApiResponse<UserDto>> GetUserByIdAsync(int userId)
     {
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)
@@ -255,7 +255,7 @@ public class UserService : IUserService
         return ApiResponse<UserDto>.Ok(userDto, "تم استرجاع المستخدم بنجاح");
     }
 
-    public async Task<ApiResponse<UserDto>> GetCurrentUserAsync(Guid userId)
+    public async Task<ApiResponse<UserDto>> GetCurrentUserAsync(int userId)
     {
         var result = await GetUserByIdAsync(userId);
         if (result.Success && result.Data != null)
@@ -265,7 +265,7 @@ public class UserService : IUserService
         return result;
     }
 
-    public async Task<ApiResponse<UserDto>> UpdateCurrentUserAsync(Guid userId, UpdateMeRequest request)
+    public async Task<ApiResponse<UserDto>> UpdateCurrentUserAsync(int userId, UpdateMeRequest request)
     {
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)
@@ -336,7 +336,7 @@ public class UserService : IUserService
         return ApiResponse<UserDto>.Ok(userDto, "تم تحديث البيانات بنجاح");
     }
 
-    public async Task<ApiResponse<bool>> DeleteUserAsync(Guid userId)
+    public async Task<ApiResponse<bool>> DeleteUserAsync(int userId)
     {
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)

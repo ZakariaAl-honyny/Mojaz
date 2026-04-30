@@ -54,7 +54,7 @@ public class FinalApprovalService : IFinalApprovalService
         _logger = logger;
     }
 
-    public async Task<ApiResponse<Gate4ValidationResultDto>> GetGate4StatusAsync(Guid applicationId, Guid managerId)
+    public async Task<ApiResponse<Gate4ValidationResultDto>> GetGate4StatusAsync(int applicationId, int managerId)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null)
@@ -82,7 +82,7 @@ public class FinalApprovalService : IFinalApprovalService
         return ApiResponse<Gate4ValidationResultDto>.Ok(dto, "تم استرجاع حالة التحقق من البوابة الرابعة.");
     }
 
-    public async Task<ApiResponse<ApplicationDecisionDto>> FinalizeAsync(Guid applicationId, FinalizeApplicationRequest request, Guid managerId)
+    public async Task<ApiResponse<ApplicationDecisionDto>> FinalizeAsync(int applicationId, FinalizeApplicationRequest request, int managerId)
     {
         // 1. Load Application — 404 if not found
         var application = await _applicationRepository.GetByIdAsync(applicationId);

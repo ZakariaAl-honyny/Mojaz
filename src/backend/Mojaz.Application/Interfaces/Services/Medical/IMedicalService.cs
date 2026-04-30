@@ -1,7 +1,6 @@
 using Mojaz.Application.DTOs.Medical;
 using Mojaz.Domain.Enums;
 using Mojaz.Shared;
-using System;
 using System.Threading.Tasks;
 
 namespace Mojaz.Application.Interfaces.Services;
@@ -16,18 +15,18 @@ public interface IMedicalService
     /// </summary>
     Task<ApiResponse<MedicalResultDto>> CreateMedicalResultAsync(
         CreateMedicalResultRequest request,
-        Guid doctorId);
+        int doctorId);
 
     /// <summary>
     /// Gets medical examination result by application ID
     /// </summary>
-    Task<ApiResponse<MedicalResultDto>> GetByApplicationIdAsync(Guid applicationId);
+    Task<ApiResponse<MedicalResultDto>> GetByApplicationIdAsync(int applicationId);
 
     /// <summary>
     /// Updates the medical examination result
     /// </summary>
     Task<ApiResponse<MedicalResultDto>> UpdateResultAsync(
-        Guid id,
+        int id,
         MedicalFitnessResult result,
         string? notes);
 }

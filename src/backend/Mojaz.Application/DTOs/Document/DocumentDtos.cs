@@ -12,8 +12,8 @@ public class UploadDocumentRequest
 
 public class DocumentDto
 {
-    public Guid Id { get; set; }
-    public Guid ApplicationId { get; set; }
+    public int Id { get; set; }
+    public int ApplicationId { get; set; }
     public DocumentType DocumentType { get; set; }
     public string DocumentTypeName { get; set; } = string.Empty;
     public string OriginalFileName { get; set; } = string.Empty;
@@ -21,7 +21,7 @@ public class DocumentDto
     public string ContentType { get; set; } = string.Empty;
     public DocumentStatus Status { get; set; }
     public string? RejectionReason { get; set; }
-    public Guid? ReviewedBy { get; set; }
+    public int? ReviewedBy { get; set; }
     public DateTime? ReviewedAt { get; set; }
     public DateTime CreatedAt { get; set; }
     public string DownloadUrl { get; set; } = string.Empty;
@@ -42,13 +42,13 @@ public class DocumentRequirementDto
     public string? ConditionDescription { get; set; }
     public bool HasUpload { get; set; }
     public DocumentStatus? Status { get; set; }
-    public Guid? DocumentId { get; set; }
+    public int? DocumentId { get; set; }
 }
 
 public class BulkApproveResponse
 {
     public int ApprovedCount { get; set; }
-    public List<Guid> ApprovedDocumentIds { get; set; } = new();
+    public List<int> ApprovedDocumentIds { get; set; } = new();
 }
 
 public class RequestMissingDocumentsRequest

@@ -2,7 +2,7 @@ namespace Mojaz.Application.DTOs.Application;
 
 public class Gate4ValidationResultDto
 {
-    public Guid ApplicationId { get; set; }
+    public int ApplicationId { get; set; }
     public bool IsFullyPassed { get; set; }
     public List<Gate4ConditionDto> Conditions { get; set; } = new();
 }

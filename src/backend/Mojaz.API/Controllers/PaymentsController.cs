@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Mojaz.Application.DTOs.Payment;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Shared;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -35,7 +34,7 @@ namespace Mojaz.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<IEnumerable<PaymentDto>>), 200)]
         public async Task<IActionResult> GetMyPaymentsAsync()
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _paymentService.GetMyPaymentsAsync(userId);
             return StatusCode(result.StatusCode, result);
         }
@@ -52,7 +51,7 @@ namespace Mojaz.API.Controllers
             [FromQuery] string? status = null,
             [FromQuery] string? search = null)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var role = User.FindFirstValue(ClaimTypes.Role) ?? "Applicant";
             
             var result = await _paymentService.GetAllPaymentsAsync(page, pageSize, status, search, userId, role);
@@ -67,7 +66,7 @@ namespace Mojaz.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<PaymentDto>), 201)]
         public async Task<IActionResult> InitiatePaymentAsync([FromBody] PaymentInitiateRequest request)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var role = User.FindFirstValue(ClaimTypes.Role) ?? "Applicant";
 
             var result = await _paymentService.InitiatePaymentAsync(request.ApplicationId, request, userId, role);
@@ -80,9 +79,9 @@ namespace Mojaz.API.Controllers
         [HttpPost("{paymentId}/process")]
         [Authorize(Roles = "Applicant,Receptionist,Manager,Admin")]
         [ProducesResponseType(typeof(ApiResponse<PaymentDto>), 200)]
-        public async Task<IActionResult> ProcessPaymentAsync(Guid paymentId)
+        public async Task<IActionResult> ProcessPaymentAsync(int paymentId)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var role = User.FindFirstValue(ClaimTypes.Role) ?? "Applicant";
 
             var result = await _paymentService.ProcessPaymentAsync(paymentId, userId, role);
@@ -107,7 +106,7 @@ namespace Mojaz.API.Controllers
         [HttpGet("verify/{paymentId}")]
         [Authorize(Roles = "Applicant,Receptionist,Doctor,Examiner,Manager,Security,Admin")]
         [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
-        public async Task<IActionResult> VerifyPaymentAsync(Guid paymentId)
+        public async Task<IActionResult> VerifyPaymentAsync(int paymentId)
         {
             var result = await _paymentService.VerifyPaymentAsync(paymentId);
             return StatusCode(result.StatusCode, result);
@@ -121,7 +120,7 @@ namespace Mojaz.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<PaymentDto>), 200)]
         public async Task<IActionResult> ConfirmPaymentAsync([FromBody] PaymentConfirmRequest request)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var role = User.FindFirstValue(ClaimTypes.Role) ?? "Applicant";
 
             var result = await _paymentService.ConfirmPaymentAsync(request, userId, role);
@@ -134,9 +133,9 @@ namespace Mojaz.API.Controllers
         [HttpGet("receipt/{paymentId}")]
         [Authorize(Roles = "Applicant,Receptionist,Doctor,Examiner,Manager,Security,Admin")]
         [ProducesResponseType(typeof(ApiResponse<PaymentReceiptResponse>), 200)]
-        public async Task<IActionResult> GetReceiptAsync(Guid paymentId)
+        public async Task<IActionResult> GetReceiptAsync(int paymentId)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var role = User.FindFirstValue(ClaimTypes.Role) ?? "Applicant";
 
             var result = await _paymentService.GetReceiptAsync(paymentId, userId, role);
@@ -153,10 +152,10 @@ namespace Mojaz.API.Controllers
         public async Task<IActionResult> GetByApplicationAsync(string appIdOrNumber)
         {
             var appId = await ResolveAppIdAsync(appIdOrNumber);
-            if (appId == Guid.Empty)
+            if (appId == 0)
                 return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var role = User.FindFirstValue(ClaimTypes.Role) ?? "Applicant";
             var result = await _paymentService.GetByApplicationIdAsync(appId, userId, role);
             return StatusCode(result.StatusCode, result);
@@ -172,22 +171,22 @@ namespace Mojaz.API.Controllers
         public async Task<IActionResult> InitiatePaymentAsync(string appIdOrNumber, [FromBody] InitiatePaymentRequest request)
         {
             var appId = await ResolveAppIdAsync(appIdOrNumber);
-            if (appId == Guid.Empty)
+            if (appId == 0)
                 return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var role = User.FindFirstValue(ClaimTypes.Role) ?? "Applicant";
             var result = await _paymentService.InitiatePaymentByNumberAsync(appIdOrNumber, request, userId, role);
             return StatusCode(result.StatusCode, result);
         }
 
-        private async Task<Guid> ResolveAppIdAsync(string appIdOrNumber)
+        private async Task<int> ResolveAppIdAsync(string appIdOrNumber)
         {
-            if (string.IsNullOrWhiteSpace(appIdOrNumber)) return Guid.Empty;
-            if (Guid.TryParse(appIdOrNumber.Trim(), out var id)) return id;
+            if (string.IsNullOrWhiteSpace(appIdOrNumber)) return 0;
+            if (int.TryParse(appIdOrNumber.Trim(), out var id)) return id;
 
             var result = await _applicationService.GetByApplicationNumberAsync(appIdOrNumber.Trim());
-            return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
+            return result.Data?.FirstOrDefault()?.Id ?? 0;
         }
     }
 }

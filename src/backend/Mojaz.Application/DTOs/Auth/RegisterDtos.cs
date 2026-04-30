@@ -16,14 +16,14 @@ public class RegisterRequest
 
 public class RegisterResponse
 {
-    public Guid UserId { get; set; }
+    public int UserId { get; set; }
     public bool RequiresVerification { get; set; }
     public string Message { get; set; } = string.Empty;
 }
 
 public class UserDto
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string FullName { get; set; } = string.Empty;
     public string? Email { get; set; }
     public string? Phone { get; set; }

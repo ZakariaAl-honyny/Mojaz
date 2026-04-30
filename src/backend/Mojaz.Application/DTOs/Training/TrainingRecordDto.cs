@@ -5,8 +5,8 @@ namespace Mojaz.Application.DTOs.Training
 {
     public class TrainingRecordDto
     {
-        public Guid Id { get; set; }
-        public Guid ApplicationId { get; set; }
+        public int Id { get; set; }
+        public int ApplicationId { get; set; }
         public string SchoolName { get; set; } = string.Empty;
         public string? CertificateNumber { get; set; }
         public int CompletedHours { get; set; }
@@ -17,8 +17,8 @@ namespace Mojaz.Application.DTOs.Training
         public TrainingStatus TrainingStatus { get; set; }
         public bool IsExempted { get; set; }
         public string? ExemptionReason { get; set; }
-        public Guid? ExemptionDocumentId { get; set; }
-        public Guid? ExemptionApprovedBy { get; set; }
+        public int? ExemptionDocumentId { get; set; }
+        public int? ExemptionApprovedBy { get; set; }
         public DateTime? ExemptionApprovedAt { get; set; }
         public string? ExemptionRejectionReason { get; set; }
         public DateTime? CompletedAt { get; set; }

@@ -5,9 +5,9 @@ namespace Mojaz.Application.Interfaces.Services;
 
 public interface IDashboardService
 {
-    Task<ApiResponse<DashboardSummaryDto>> GetApplicantDashboardAsync(Guid userId);
+    Task<ApiResponse<DashboardSummaryDto>> GetApplicantDashboardAsync(int userId);
     Task<ApiResponse<ManagerKpiDto>> GetManagerDashboardAsync();
     Task<ApiResponse<AdminKpiDto>> GetAdminDashboardAsync();
-    Task<ApiResponse<EmployeeDashboardDto>> GetEmployeeDashboardAsync(Guid userId);
-    Task<ApiResponse<ReceptionistDashboardDto>> GetReceptionistDashboardAsync(Guid userId);
+    Task<ApiResponse<EmployeeDashboardDto>> GetEmployeeDashboardAsync(int userId);
+    Task<ApiResponse<ReceptionistDashboardDto>> GetReceptionistDashboardAsync(int userId);
 }

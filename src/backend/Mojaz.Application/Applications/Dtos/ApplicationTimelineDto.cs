@@ -2,7 +2,7 @@ namespace Mojaz.Application.Applications.Dtos;
 
 public class ApplicationTimelineDto
 {
-    public Guid ApplicationId { get; set; }
+    public int ApplicationId { get; set; }
     public int CurrentStageNumber { get; set; }
     public List<TimelineStageDto> Stages { get; set; } = new();
 }

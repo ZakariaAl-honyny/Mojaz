@@ -9,7 +9,6 @@ using Mojaz.Application.Interfaces;
 using Mojaz.Domain.Enums;
 using Mojaz.Shared;
 using Mojaz.Shared.Constants;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -54,7 +53,7 @@ public class ApplicationsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<ApplicationDto>), 201)]
     public async Task<IActionResult> CreateAsync([FromBody] CreateApplicationRequest request)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.CreateAsync(request, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -67,7 +66,7 @@ public class ApplicationsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<ApplicationDto>), 201)]
     public async Task<IActionResult> CreateDraftAsync([FromBody] CreateApplicationDraftRequest request)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.CreateDraftAsync(request.ServiceType, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -81,10 +80,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> GetByIdAsync(string idOrNumber)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "الطلب غير موجود."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
         var result = await _applicationService.GetByIdAsync(applicationId, userId, role);
         return StatusCode(result.StatusCode, result);
@@ -102,10 +101,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> GetWizardDataAsync(string idOrNumber)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
         var result = await _applicationService.GetWizardDataAsync(applicationId, userId, role);
         return StatusCode(result.StatusCode, result);
@@ -123,10 +122,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> UpdateWizardDataAsync(string idOrNumber, [FromBody] UpdateWizardDataRequest request)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.UpdateWizardDataAsync(applicationId, request, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -143,7 +142,7 @@ public class ApplicationsController : ControllerBase
         [FromQuery] string? search = null,
         [FromQuery] string? status = null)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
         var result = await _applicationService.GetListAsync(userId, role, page, pageSize, search, status);
         return StatusCode(result.StatusCode, result);
@@ -157,10 +156,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> UpdateAsync(string idOrNumber, [FromBody] UpdateApplicationRequest request)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.UpdateAsync(applicationId, request, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -174,10 +173,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> SubmitAsync(string idOrNumber)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.SubmitAsync(applicationId, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -191,11 +190,11 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> PayAsync(string idOrNumber)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
         // For demo: use a default user ID
-        Guid userId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+        int userId = 1;
         
         var result = await _applicationService.MarkAsPaidAsync(applicationId, userId);
         return StatusCode(result.StatusCode, result);
@@ -210,10 +209,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> ApproveAsync(string idOrNumber, [FromQuery] string? reason = null)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.ApproveAsync(applicationId, reason ?? "", userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -227,10 +226,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> RejectAsync(string idOrNumber, [FromQuery] string reason)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.RejectAsync(applicationId, reason, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -244,10 +243,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> UpdateStatusAsync(string idOrNumber, [FromQuery] ApplicationStatus status, [FromQuery] string? reason = null)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.UpdateStatusAsync(applicationId, status, reason ?? "", userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -261,10 +260,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> CancelAsync(string idOrNumber, [FromBody] CancelApplicationRequest request)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.CancelAsync(applicationId, request.Reason, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -278,7 +277,7 @@ public class ApplicationsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<object>), 400)]
     public async Task<IActionResult> CreateUpgradeAsync([FromBody] UpgradeApplicationRequest request)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.CreateUpgradeApplicationAsync(request, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -291,7 +290,7 @@ public class ApplicationsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<ReplacementEligibilityResponse>), 200)]
     public async Task<IActionResult> GetReplacementEligibilityAsync()
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.GetReplacementEligibilityAsync(userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -305,7 +304,7 @@ public class ApplicationsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<object>), 400)]
     public async Task<IActionResult> CreateReplacementAsync([FromBody] ReplacementApplicationRequest request)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.CreateReplacementApplicationAsync(request, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -319,7 +318,7 @@ public class ApplicationsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<object>), 400)]
     public async Task<IActionResult> ProcessReplacementPaymentAsync(string applicationNumber)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         
         var applications = await _applicationService.GetByApplicationNumberAsync(applicationNumber);
         var application = applications.Data?.FirstOrDefault();
@@ -413,7 +412,7 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> GetTimelineAsync(string idOrNumber)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
         var result = await _applicationService.GetTimelineAsync(applicationId);
@@ -428,7 +427,7 @@ public class ApplicationsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<ReplacementEligibilityResponse>), 200)]
     public async Task<IActionResult> GetUpgradeEligibilityAsync()
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.GetReplacementEligibilityAsync(userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -475,10 +474,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> RecordSecurityVerificationAsync(string idOrNumber, [FromBody] SecurityVerificationRequest request)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.RecordSecurityVerificationAsync(applicationId, request, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -493,10 +492,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> ForwardToMedicalAsync(string idOrNumber)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.ForwardToMedicalAsync(applicationId, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -511,10 +510,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> ForwardToTrainingAsync(string idOrNumber)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.ForwardToTrainingAsync(applicationId, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -529,10 +528,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> ForwardAsync(string idOrNumber, [FromBody] ForwardApplicationRequest request)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         
         ApiResponse<bool> result;
         
@@ -561,10 +560,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> GetGate4StatusAsync(string idOrNumber)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _finalApprovalService.GetGate4StatusAsync(applicationId, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -579,10 +578,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> FinalizeAsync(string idOrNumber, [FromBody] FinalizeApplicationRequest request)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _finalApprovalService.FinalizeAsync(applicationId, request, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -597,7 +596,7 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> GetRetakeEligibilityAsync(string idOrNumber)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
         var result = await _testRetakeService.CheckEligibilityAsync(applicationId);
@@ -614,7 +613,7 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> RequestRetakeAsync(string idOrNumber, [FromBody] RetakeRequest request)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
         var result = await _testRetakeService.RequestRetakeAsync(applicationId, request);
@@ -632,10 +631,10 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> AssignAsync(string idOrNumber, [FromBody] AssignApplicationRequest request)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.AssignAsync(applicationId, request, userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -649,7 +648,7 @@ public class ApplicationsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<object>), 400)]
     public async Task<IActionResult> CheckEligibilityAsync([FromQuery] LicenseCategoryCode categoryCode, [FromQuery] ServiceType serviceType)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _applicationService.CheckEligibilityAsync(userId, categoryCode, serviceType);
         return StatusCode(result.StatusCode, result);
     }
@@ -663,22 +662,22 @@ public class ApplicationsController : ControllerBase
     public async Task<IActionResult> GetPendingPaymentAsync(string idOrNumber)
     {
         var appId = await ResolveAppIdAsync(idOrNumber);
-        if (appId == Guid.Empty)
+        if (appId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role) ?? "Applicant";
 
         var result = await _paymentService.GetPendingPaymentForApplicationAsync(appId, userId, role);
         return StatusCode(result.StatusCode, result);
     }
 
-    private async Task<Guid> ResolveAppIdAsync(string appIdOrNumber)
+    private async Task<int> ResolveAppIdAsync(string appIdOrNumber)
     {
-        if (string.IsNullOrWhiteSpace(appIdOrNumber)) return Guid.Empty;
-        if (Guid.TryParse(appIdOrNumber.Trim(), out var id)) return id;
+        if (string.IsNullOrWhiteSpace(appIdOrNumber)) return 0;
+        if (int.TryParse(appIdOrNumber.Trim(), out var id)) return id;
 
         var result = await _applicationService.GetByApplicationNumberAsync(appIdOrNumber.Trim());
-        return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
+        return result.Data?.FirstOrDefault()?.Id ?? 0;
     }
 }

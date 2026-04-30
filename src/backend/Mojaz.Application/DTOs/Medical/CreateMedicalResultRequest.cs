@@ -7,10 +7,10 @@ namespace Mojaz.Application.DTOs.Medical;
 public class CreateMedicalResultRequest
 {
     [Required]
-    public Guid ApplicationId { get; set; }
+    public int ApplicationId { get; set; }
 
     [Required]
-    public Guid AppointmentId { get; set; }
+    public int AppointmentId { get; set; }
 
     [Required]
     public MedicalFitnessResult Result { get; set; }

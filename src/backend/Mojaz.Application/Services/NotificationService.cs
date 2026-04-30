@@ -112,7 +112,7 @@ public class NotificationService : INotificationService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<ApiResponse<PagedResult<NotificationDto>>> GetUserNotificationsAsync(Guid userId, int page = 1, int pageSize = 20)
+    public async Task<ApiResponse<PagedResult<NotificationDto>>> GetUserNotificationsAsync(int userId, int page = 1, int pageSize = 20)
     {
         var allNotifications = await _notificationRepository.FindAsync(n => n.UserId == userId);
         var totalCount = allNotifications.Count;
@@ -146,7 +146,7 @@ public class NotificationService : INotificationService
         return ApiResponse<PagedResult<NotificationDto>>.Ok(result);
     }
 
-    public async Task<ApiResponse<int>> GetUnreadCountAsync(Guid userId)
+    public async Task<ApiResponse<int>> GetUnreadCountAsync(int userId)
     {
         var count = await _notificationRepository.CountAsync(n => n.UserId == userId && !n.IsRead);
         return ApiResponse<int>.Ok(count);

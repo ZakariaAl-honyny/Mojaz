@@ -4,7 +4,7 @@ namespace Mojaz.Application.DTOs.Application;
 
 public class ApplicationDecisionDto
 {
-    public Guid ApplicationId { get; set; }
+    public int ApplicationId { get; set; }
     public string ApplicationNumber { get; set; } = string.Empty;
     public ApplicationStatus NewStatus { get; set; }
     public FinalDecisionType Decision { get; set; }

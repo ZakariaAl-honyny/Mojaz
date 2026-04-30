@@ -13,7 +13,7 @@ public interface ICategoryUpgradeService
     /// <summary>
     /// Checks if the current license has been held for the minimum required period before an upgrade can be requested.
     /// </summary>
-    Task<bool> CheckHoldingPeriodAsync(Guid licenseId, Guid currentUserId);
+    Task<bool> CheckHoldingPeriodAsync(int licenseId, int currentUserId);
 
     /// <summary>
     /// Calculates the applicable fees for upgrading to the target category.
@@ -28,5 +28,5 @@ public interface ICategoryUpgradeService
     /// <summary>
     /// Archives the existing license upon successful completion of the upgrade process.
     /// </summary>
-    Task<bool> ArchiveExistingLicenseAsync(Guid licenseId);
+    Task<bool> ArchiveExistingLicenseAsync(int licenseId);
 }

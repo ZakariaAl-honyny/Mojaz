@@ -104,7 +104,7 @@ namespace Mojaz.Application.Services
             return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(trainingRecord), "تم إنشاء سجل التدريب بنجاح.");
         }
 
-        public async Task<ApiResponse<TrainingRecordDto>> GetByApplicationIdAsync(Guid applicationId, Guid? currentUserId = null, string? currentUserRole = null)
+        public async Task<ApiResponse<TrainingRecordDto>> GetByApplicationIdAsync(int applicationId, int? currentUserId = null, string? currentUserRole = null)
         {
             var trainingRecord = await _trainingRepository.GetByApplicationIdAsync(applicationId);
             if (trainingRecord == null) return ApiResponse<TrainingRecordDto>.Fail(404, "سجل التدريب غير موجود.");
@@ -125,7 +125,7 @@ namespace Mojaz.Application.Services
             return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(trainingRecord));
         }
 
-        public async Task<ApiResponse<PagedResult<TrainingRecordDto>>> GetAllAsync(Guid userId, string role, int page = 1, int pageSize = 20, string? search = null, string? status = null)
+        public async Task<ApiResponse<PagedResult<TrainingRecordDto>>> GetAllAsync(int userId, string role, int page = 1, int pageSize = 20, string? search = null, string? status = null)
         {
             // Only allow managers/admins to see all training records
             if (role != "Manager" && role != "Admin" && role != "Receptionist")
@@ -172,7 +172,7 @@ namespace Mojaz.Application.Services
             return ApiResponse<PagedResult<TrainingRecordDto>>.Ok(pagedResult);
         }
 
-        public async Task<ApiResponse<TrainingRecordDto>> UpdateHoursAsync(Guid id, UpdateTrainingHoursRequest request)
+        public async Task<ApiResponse<TrainingRecordDto>> UpdateHoursAsync(int id, UpdateTrainingHoursRequest request)
         {
             var trainingRecord = await _trainingRepository.GetByIdAsync(id);
             if (trainingRecord == null) return ApiResponse<TrainingRecordDto>.Fail(404, "سجل التدريب غير موجود.");
@@ -212,7 +212,7 @@ namespace Mojaz.Application.Services
                 var application = await _applicationRepository.GetByIdAsync(trainingRecord.ApplicationId);
                 await _notificationService.SendAsync(new NotificationRequest
                 {
-                    UserId = application?.ApplicantId ?? Guid.Empty,
+                    UserId = application?.ApplicantId ?? 0,
                     ApplicationId = trainingRecord.ApplicationId,
                     EventType = NotificationEventType.StatusChanged,
                     TitleAr = "اكتمل التدريب",
@@ -266,7 +266,7 @@ namespace Mojaz.Application.Services
             return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(existing), "تم تقديم طلب الإعفاء.");
         }
 
-        public async Task<ApiResponse<TrainingRecordDto>> ApproveExemptionAsync(Guid id, ExemptionActionRequest request)
+        public async Task<ApiResponse<TrainingRecordDto>> ApproveExemptionAsync(int id, ExemptionActionRequest request)
         {
             var trainingRecord = await _trainingRepository.GetByIdAsync(id);
             if (trainingRecord == null) return ApiResponse<TrainingRecordDto>.Fail(404, "سجل التدريب غير موجود.");
@@ -313,7 +313,7 @@ namespace Mojaz.Application.Services
             return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(trainingRecord), "تمت الموافقة على الإعفاء.");
         }
 
-        public async Task<ApiResponse<TrainingRecordDto>> RejectExemptionAsync(Guid id, ExemptionActionRequest request)
+        public async Task<ApiResponse<TrainingRecordDto>> RejectExemptionAsync(int id, ExemptionActionRequest request)
         {
             var trainingRecord = await _trainingRepository.GetByIdAsync(id);
             if (trainingRecord == null) return ApiResponse<TrainingRecordDto>.Fail(404, "سجل التدريب غير موجود.");
@@ -350,7 +350,7 @@ namespace Mojaz.Application.Services
             return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(trainingRecord), "تم رفض الإعفاء.");
         }
 
-        public async Task<ApiResponse<bool>> IsTrainingCompleteAsync(Guid applicationId)
+        public async Task<ApiResponse<bool>> IsTrainingCompleteAsync(int applicationId)
         {
             var trainingRecord = await _trainingRepository.GetByApplicationIdAsync(applicationId);
             if (trainingRecord == null) return ApiResponse<bool>.Ok(false);

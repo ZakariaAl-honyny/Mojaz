@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 
 namespace Mojaz.Application.Interfaces.Services
@@ -9,8 +8,8 @@ namespace Mojaz.Application.Interfaces.Services
     public interface IPushNotificationService
     {
         Task SendAsync(PushMessage message);
-        Task SendToUserAsync(Guid userId, PushMessage message);
-        Task RegisterTokenAsync(Guid userId, string token, string deviceType);
+        Task SendToUserAsync(int userId, PushMessage message);
+        Task RegisterTokenAsync(int userId, string token, string deviceType);
     }
 
     /// <summary>

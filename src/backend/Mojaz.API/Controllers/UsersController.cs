@@ -6,7 +6,6 @@ using Mojaz.Application.Services;
 using Mojaz.Domain.Enums;
 using Mojaz.Shared.Constants;
 using Mojaz.Shared;
-using System;
 using System.Threading.Tasks;
 
 namespace Mojaz.API.Controllers;
@@ -37,7 +36,7 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> GetMeAsync()
     {
         var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
         {
             return Unauthorized(ApiResponse<UserDto>.Fail(401, "غير مصرح بالدخول"));
         }
@@ -56,7 +55,7 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> UpdateMeAsync([FromBody] UpdateMeRequest request)
     {
         var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
         {
             return Unauthorized(ApiResponse<UserDto>.Fail(401, "غير مصرح بالدخول"));
         }
@@ -85,11 +84,11 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Get a user by ID.
     /// </summary>
-    [HttpGet("{userId:guid}")]
+    [HttpGet("{userId:int}")]
     [Authorize(Policy = RolePolicies.AdminOnly)]
     [ProducesResponseType(typeof(ApiResponse<UserDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetByIdAsync(Guid userId)
+    public async Task<IActionResult> GetByIdAsync(int userId)
     {
         var result = await _userService.GetUserByIdAsync(userId);
         return StatusCode(result.StatusCode, result);
@@ -123,7 +122,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateStatusAsync(Guid userId, [FromBody] UpdateUserStatusRequest request)
+    public async Task<IActionResult> UpdateStatusAsync(int userId, [FromBody] UpdateUserStatusRequest request)
     {
         try
         {
@@ -144,7 +143,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateRoleAsync(Guid userId, [FromBody] UpdateUserRoleRequest request)
+    public async Task<IActionResult> UpdateRoleAsync(int userId, [FromBody] UpdateUserRoleRequest request)
     {
         try
         {
@@ -164,7 +163,7 @@ public class UsersController : ControllerBase
     [Authorize(Policy = RolePolicies.AdminOnly)]
     [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UnlockUserAsync(Guid userId)
+    public async Task<IActionResult> UnlockUserAsync(int userId)
     {
         try
         {
@@ -180,11 +179,11 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Set or remove security block on a user account.
     /// </summary>
-    [HttpPatch("{userId:guid}/security-block")]
+    [HttpPatch("{userId:int}/security-block")]
     [Authorize(Roles = "Admin,Security")]
     [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> SetSecurityBlockAsync(Guid userId, [FromBody] SecurityBlockRequest request)
+    public async Task<IActionResult> SetSecurityBlockAsync(int userId, [FromBody] SecurityBlockRequest request)
     {
         var result = await _userService.SetSecurityBlockAsync(userId, request.IsBlocked, request.Reason);
         return StatusCode(result.StatusCode, result);
@@ -193,12 +192,12 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Soft delete a user. Sets IsDeleted=true and IsActive=false.
     /// </summary>
-    [HttpDelete("{userId:guid}")]
+    [HttpDelete("{userId:int}")]
     [Authorize(Policy = RolePolicies.AdminOnly)]
     [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> DeleteAsync(Guid userId)
+    public async Task<IActionResult> DeleteAsync(int userId)
     {
         var result = await _userService.DeleteUserAsync(userId);
         return StatusCode(result.StatusCode, result);

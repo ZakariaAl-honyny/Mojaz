@@ -10,7 +10,7 @@ namespace Mojaz.Application.DTOs.LicenseReplacement;
 public class ReplacementEligibilityDto
 {
     public bool IsEligible { get; set; }
-    public Guid? LicenseId { get; set; }
+    public int? LicenseId { get; set; }
     public string? LicenseNumber { get; set; }
     public DateTime? ExpiryDate { get; set; }
     public string? Message { get; set; }
@@ -21,9 +21,9 @@ public class ReplacementEligibilityDto
 /// </summary>
 public class CreateReplacementRequest
 {
-    public Guid LicenseId { get; set; }
+    public int LicenseId { get; set; }
     public ReplacementReason Reason { get; set; }
-    public List<Guid> DocumentIds { get; set; } = new();
+    public List<int> DocumentIds { get; set; } = new();
 }
 
 /// <summary>
@@ -31,21 +31,21 @@ public class CreateReplacementRequest
 /// </summary>
 public class CreateReplacementResponse
 {
-    public Guid ApplicationId { get; set; }
+    public int ApplicationId { get; set; }
     public string ApplicationNumber { get; set; } = default!;
     public decimal RequiredFee { get; set; }
 }
 
 public class LicenseReplacementDto
 {
-    public Guid Id { get; set; }
-    public Guid LicenseId { get; set; }
-    public Guid ApplicationId { get; set; }
+    public int Id { get; set; }
+    public int LicenseId { get; set; }
+    public int ApplicationId { get; set; }
     public ReplacementReason Reason { get; set; }
     public bool IsReportVerified { get; set; }
     public string? ReviewComments { get; set; }
     public DateTime ProcessedAt { get; set; }
-    public Guid? ProcessedBy { get; set; }
+    public int? ProcessedBy { get; set; }
     public string? LicenseNumber { get; set; }
     public string? CurrentStatus { get; set; }
     public DateTime? ExpiryDate { get; set; }

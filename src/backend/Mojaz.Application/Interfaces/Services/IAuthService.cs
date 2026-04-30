@@ -1,6 +1,5 @@
 using Mojaz.Application.DTOs.Auth;
 using Mojaz.Shared;
-using System;
 using System.Threading.Tasks;
 
 namespace Mojaz.Application.Interfaces.Services;
@@ -15,5 +14,5 @@ public interface IAuthService
     Task<ApiResponse<bool>> LogoutAsync(LogoutRequest request);
     Task<ApiResponse<bool>> ForgotPasswordAsync(ForgotPasswordRequest request);
     Task<ApiResponse<bool>> ResetPasswordAsync(ResetPasswordRequest request);
-    Task<ApiResponse<bool>> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword);
+    Task<ApiResponse<bool>> ChangePasswordAsync(int userId, string currentPassword, string newPassword);
 }

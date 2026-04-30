@@ -4,10 +4,10 @@ namespace Mojaz.Application.DTOs.FeeStructures;
 
 public class FeeStructureDto
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public FeeType FeeType { get; set; }
     public string FeeTypeName { get; set; } = string.Empty;
-    public Guid? LicenseCategoryId { get; set; }
+    public int? LicenseCategoryId { get; set; }
     public string? LicenseCategoryName { get; set; }
     public decimal Amount { get; set; }
     public string Currency { get; set; } = "SAR";
@@ -21,7 +21,7 @@ public class FeeStructureDto
 public class CreateFeeStructureRequest
 {
     public FeeType FeeType { get; set; }
-    public Guid? LicenseCategoryId { get; set; }
+    public int? LicenseCategoryId { get; set; }
     public decimal Amount { get; set; }
     public string Currency { get; set; } = "SAR";
     public DateTime EffectiveFrom { get; set; }
@@ -32,7 +32,7 @@ public class CreateFeeStructureRequest
 public class UpdateFeeStructureRequest
 {
     public FeeType? FeeType { get; set; }
-    public Guid? LicenseCategoryId { get; set; }
+    public int? LicenseCategoryId { get; set; }
     public decimal? Amount { get; set; }
     public string? Currency { get; set; }
     public DateTime? EffectiveFrom { get; set; }

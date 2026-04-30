@@ -39,7 +39,7 @@ public class DashboardService : IDashboardService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ApiResponse<DashboardSummaryDto>> GetApplicantDashboardAsync(Guid userId)
+    public async Task<ApiResponse<DashboardSummaryDto>> GetApplicantDashboardAsync(int userId)
     {
         try
         {
@@ -294,7 +294,7 @@ public class DashboardService : IDashboardService
         return $"منذ {(int)span.TotalDays} يوم";
     }
 
-    public async Task<ApiResponse<EmployeeDashboardDto>> GetEmployeeDashboardAsync(Guid userId)
+    public async Task<ApiResponse<EmployeeDashboardDto>> GetEmployeeDashboardAsync(int userId)
     {
         var today = DateTime.UtcNow.Date;
         var tomorrow = today.AddDays(1);
@@ -341,7 +341,7 @@ public class DashboardService : IDashboardService
         return ApiResponse<EmployeeDashboardDto>.Ok(dashboard);
     }
 
-    public async Task<ApiResponse<ReceptionistDashboardDto>> GetReceptionistDashboardAsync(Guid userId)
+    public async Task<ApiResponse<ReceptionistDashboardDto>> GetReceptionistDashboardAsync(int userId)
     {
         var today = DateTime.UtcNow.Date;
 

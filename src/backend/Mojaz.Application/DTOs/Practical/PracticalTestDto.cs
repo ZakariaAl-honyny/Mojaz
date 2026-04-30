@@ -10,12 +10,12 @@ public class PracticalTestDto
     /// <summary>
     /// Unique identifier of the practical test
     /// </summary>
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     /// Identifier of the associated application
     /// </summary>
-    public Guid ApplicationId { get; set; }
+    public int ApplicationId { get; set; }
 
     /// <summary>
     /// The attempt number for this test
@@ -70,7 +70,7 @@ public class PracticalTestDto
     /// <summary>
     /// Identifier of the examiner who conducted the test
     /// </summary>
-    public Guid ExaminerId { get; set; }
+    public int ExaminerId { get; set; }
 
     /// <summary>
     /// Name of the examiner who conducted the test

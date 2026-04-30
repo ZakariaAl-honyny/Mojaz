@@ -6,9 +6,9 @@ namespace Mojaz.Application.DTOs.TestRetake;
 
 public class RetakeEligibilityDto
 {
-    public Guid ApplicationId { get; set; }
+    public int ApplicationId { get; set; }
     public string ApplicationNumber { get; set; } = string.Empty;
-    public Guid LicenseCategoryId { get; set; }
+    public int LicenseCategoryId { get; set; }
     public string LicenseCategoryCode { get; set; } = string.Empty;
     public string LicenseCategoryName { get; set; } = string.Empty;
     

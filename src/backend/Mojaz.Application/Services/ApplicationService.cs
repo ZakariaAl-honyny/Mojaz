@@ -62,7 +62,7 @@ public class ApplicationService : IApplicationService
         _paymentService = paymentService;
     }
 
-    public async Task<ApiResponse<ApplicationDto>> CreateAsync(CreateApplicationRequest request, Guid userId)
+    public async Task<ApiResponse<ApplicationDto>> CreateAsync(CreateApplicationRequest request, int userId)
     {
         // 1. Eligibility Check (Gate 1)
         var category = await _categoryRepository.GetByIdAsync(request.LicenseCategoryId);
@@ -165,7 +165,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<ApplicationDto>.Ok(_mapper.Map<ApplicationDto>(application), "تم تقديم الطلب بنجاح.");
     }
 
-    public async Task<ApiResponse<ApplicationDto>> CreateDraftAsync(ServiceType serviceType, Guid userId)
+    public async Task<ApiResponse<ApplicationDto>> CreateDraftAsync(ServiceType serviceType, int userId)
     {
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null) return ApiResponse<ApplicationDto>.Fail(404, "المستخدم غير موجود.");
@@ -209,7 +209,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<ApplicationDto>.Ok(_mapper.Map<ApplicationDto>(application), "تم إنشاء المسودة بنجاح.");
     }
 
-    public async Task<ApiResponse<ApplicationDto>> GetByIdAsync(Guid id, Guid userId, string role)
+    public async Task<ApiResponse<ApplicationDto>> GetByIdAsync(int id, int userId, string role)
     {
         var application = await _applicationRepository.Query()
             .Include(a => a.LicenseCategory)
@@ -223,7 +223,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<ApplicationDto>.Ok(_mapper.Map<ApplicationDto>(application));
     }
 
-    public async Task<ApiResponse<ApplicationWizardDto>> GetWizardDataAsync(Guid id, Guid userId, string role)
+    public async Task<ApiResponse<ApplicationWizardDto>> GetWizardDataAsync(int id, int userId, string role)
     {
         var application = await _applicationRepository.Query()
             .Include(a => a.LicenseCategory)
@@ -273,7 +273,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<ApplicationWizardDto>.Ok(dto);
     }
 
-    public async Task<ApiResponse<ApplicationWizardDto>> UpdateWizardDataAsync(Guid id, UpdateWizardDataRequest request, Guid userId)
+    public async Task<ApiResponse<ApplicationWizardDto>> UpdateWizardDataAsync(int id, UpdateWizardDataRequest request, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(id);
         if (application == null) return ApiResponse<ApplicationWizardDto>.Fail(404, "الطلب غير موجود.");
@@ -421,7 +421,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<ApplicationWizardDto>.Ok(dto, "تم تحديث بيانات المعالج بنجاح.");
     }
 
-    public async Task<ApiResponse<PagedResult<ApplicationDto>>> GetListAsync(Guid userId, string role, int page = 1, int pageSize = 20, string? search = null, string? status = null)
+    public async Task<ApiResponse<PagedResult<ApplicationDto>>> GetListAsync(int userId, string role, int page = 1, int pageSize = 20, string? search = null, string? status = null)
     {
         // Validate pagination parameters
         if (page < 1) page = 1;
@@ -508,13 +508,13 @@ public class ApplicationService : IApplicationService
         return ApiResponse<IEnumerable<ApplicationDto>>.Ok(_mapper.Map<List<ApplicationDto>>(applications));
     }
 
-    public async Task<bool> IsOwnerAsync(Guid applicationId, Guid userId)
+    public async Task<bool> IsOwnerAsync(int applicationId, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         return application != null && application.ApplicantId == userId;
     }
 
-    public async Task<ApiResponse<bool>> UpdateAsync(Guid id, UpdateApplicationRequest request, Guid userId)
+    public async Task<ApiResponse<bool>> UpdateAsync(int id, UpdateApplicationRequest request, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(id);
         if (application == null) return ApiResponse<bool>.Fail(404, "الطلب غير موجود.");
@@ -542,7 +542,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<bool>.Ok(true, "تم تحديث الطلب بنجاح.");
     }
 
-    public async Task<ApiResponse<bool>> CancelAsync(Guid id, string reason, Guid userId)
+    public async Task<ApiResponse<bool>> CancelAsync(int id, string reason, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(id);
         if (application == null) return ApiResponse<bool>.Fail(404, "الطلب غير موجود.");
@@ -563,7 +563,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<bool>.Ok(true, "تم إلغاء الطلب بنجاح.");
     }
 
-    public async Task<ApiResponse<bool>> UpdateStatusAsync(Guid id, ApplicationStatus status, string reason, Guid userId)
+    public async Task<ApiResponse<bool>> UpdateStatusAsync(int id, ApplicationStatus status, string reason, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(id);
         if (application == null) return ApiResponse<bool>.Fail(404, "الطلب غير موجود.");
@@ -663,7 +663,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<List<LicenseCategoryDto>>.Ok(dtos);
     }
 
-    public async Task<ApiResponse<ApplicationDto>> CreateUpgradeApplicationAsync(UpgradeApplicationRequest request, Guid userId)
+    public async Task<ApiResponse<ApplicationDto>> CreateUpgradeApplicationAsync(UpgradeApplicationRequest request, int userId)
     {
         // 1. Validate current license exists and belongs to user
         var currentLicense = await _licenseRepository.GetByIdAsync(request.CurrentLicenseId);
@@ -749,7 +749,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<ApplicationDto>.Ok(_mapper.Map<ApplicationDto>(application), "تم تقديم طلب ترقية الرخصة بنجاح.");
     }
 
-    public async Task<ApiResponse<ReplacementEligibilityResponse>> GetReplacementEligibilityAsync(Guid userId)
+    public async Task<ApiResponse<ReplacementEligibilityResponse>> GetReplacementEligibilityAsync(int userId)
     {
         // Find valid license for user (not expired and within replacement window)
         var settingsRepo = _settingsRepository;
@@ -785,7 +785,7 @@ public class ApplicationService : IApplicationService
         });
     }
 
-    public async Task<ApiResponse<ApplicationDto>> CreateReplacementApplicationAsync(ReplacementApplicationRequest request, Guid userId)
+    public async Task<ApiResponse<ApplicationDto>> CreateReplacementApplicationAsync(ReplacementApplicationRequest request, int userId)
     {
         // 1. Validate license exists and belongs to user
         var existingLicense = await _licenseRepository.GetByIdAsync(request.LicenseId);
@@ -1062,7 +1062,7 @@ public class ApplicationService : IApplicationService
         return stages;
     }
 
-    public async Task<ApiResponse<bool>> SubmitAsync(Guid id, Guid userId)
+    public async Task<ApiResponse<bool>> SubmitAsync(int id, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(id);
         if (application == null) return ApiResponse<bool>.Fail(404, "Application not found.");
@@ -1101,7 +1101,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<bool>.Ok(true, "Application submitted successfully.");
     }
 
-    public async Task<ApiResponse<bool>> ApproveAsync(Guid id, string reason, Guid userId)
+    public async Task<ApiResponse<bool>> ApproveAsync(int id, string reason, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(id);
         if (application == null) return ApiResponse<bool>.Fail(404, "Application not found.");
@@ -1144,7 +1144,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<bool>.Ok(true, "Application approved and moved to next stage.");
     }
 
-    public async Task<ApiResponse<bool>> RejectAsync(Guid id, string reason, Guid userId)
+    public async Task<ApiResponse<bool>> RejectAsync(int id, string reason, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(id);
         if (application == null) return ApiResponse<bool>.Fail(404, "Application not found.");

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -40,7 +39,7 @@ public class FeeStructureService : IFeeStructureService
         return ApiResponse<List<FeeStructureDto>>.Ok(dtos, "تم استرجاع قائمة الأسعار بنجاح.");
     }
 
-    public async Task<ApiResponse<FeeStructureDto>> GetByIdAsync(Guid id)
+    public async Task<ApiResponse<FeeStructureDto>> GetByIdAsync(int id)
     {
         var fee = await _feeStructureRepository.GetByIdAsync(id);
         if (fee == null)
@@ -69,7 +68,6 @@ public class FeeStructureService : IFeeStructureService
 
         var fee = new FeeStructure
         {
-            Id = Guid.NewGuid(),
             FeeType = request.FeeType,
             LicenseCategoryId = request.LicenseCategoryId,
             Amount = request.Amount,
@@ -89,7 +87,7 @@ public class FeeStructureService : IFeeStructureService
         return ApiResponse<FeeStructureDto>.Created(MapToDto(fee, categoryDict), "تم إنشاء الرسم بنجاح.");
     }
 
-    public async Task<ApiResponse<FeeStructureDto>> UpdateAsync(Guid id, UpdateFeeStructureRequest request)
+    public async Task<ApiResponse<FeeStructureDto>> UpdateAsync(int id, UpdateFeeStructureRequest request)
     {
         var fee = await _feeStructureRepository.GetByIdAsync(id);
         if (fee == null)
@@ -128,7 +126,7 @@ public class FeeStructureService : IFeeStructureService
         return ApiResponse<FeeStructureDto>.Ok(MapToDto(fee, categoryDict), "تم تحديث الرسم بنجاح.");
     }
 
-    public async Task<ApiResponse<object>> DeleteAsync(Guid id)
+    public async Task<ApiResponse<object>> DeleteAsync(int id)
     {
         var fee = await _feeStructureRepository.GetByIdAsync(id);
         if (fee == null)
@@ -145,7 +143,7 @@ public class FeeStructureService : IFeeStructureService
         return ApiResponse<object>.Ok(null, "تم حذف الرسم بنجاح.");
     }
 
-    private FeeStructureDto MapToDto(FeeStructure fee, Dictionary<Guid, string> categoryDict)
+    private FeeStructureDto MapToDto(FeeStructure fee, Dictionary<int, string> categoryDict)
     {
         return new FeeStructureDto
         {

@@ -6,7 +6,7 @@ public class EligibilityResponse
 {
     public bool IsEligible { get; set; }
     public string? Reason { get; set; }
-    public Guid? LicenseId { get; set; }
+    public int? LicenseId { get; set; }
     public string? LicenseNumber { get; set; }
     public string? LicenseCategoryCode { get; set; }
     public string? LicenseCategoryName { get; set; }

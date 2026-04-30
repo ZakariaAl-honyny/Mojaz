@@ -6,7 +6,6 @@ using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Shared;
 using Mojaz.Shared.Constants;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,7 +42,7 @@ public class PaymentService : IPaymentService
     /// <summary>
     /// Get all payments for the current applicant's applications
     /// </summary>
-    public async Task<ApiResponse<IEnumerable<PaymentDto>>> GetMyPaymentsAsync(Guid userId)
+    public async Task<ApiResponse<IEnumerable<PaymentDto>>> GetMyPaymentsAsync(int userId)
     {
         // Find all applications belonging to this user
         var applications = await _applicationRepository.FindAsync(a => a.ApplicantId == userId && !a.IsDeleted);
@@ -86,7 +85,7 @@ public class PaymentService : IPaymentService
     /// <summary>
     /// Get all payments with pagination (for employees/managers and applicants)
     /// </summary>
-    public async Task<ApiResponse<PagedResult<PaymentDto>>> GetAllPaymentsAsync(int page, int pageSize, string? status, string? search, Guid? userId = null, string? role = null)
+    public async Task<ApiResponse<PagedResult<PaymentDto>>> GetAllPaymentsAsync(int page, int pageSize, string? status, string? search, int? userId = null, string? role = null)
     {
         var query = _paymentRepository.Query().Where(p => !p.IsDeleted);
 
@@ -167,7 +166,7 @@ public class PaymentService : IPaymentService
         return ApiResponse<PagedResult<PaymentDto>>.Ok(result);
     }
 
-public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid applicationId, PaymentInitiateRequest request, Guid userId, string role)
+    public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(int applicationId, PaymentInitiateRequest request, int userId, string role)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null) return ApiResponse<PaymentDto>.Fail(404, "الطلب غير موجود.");
@@ -191,7 +190,7 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
             Amount = amount,
             Status = PaymentStatus.Pending,
             PaymentMethod = request.FeeType.ToString(),
-            TransactionReference = $"TXN_{Guid.NewGuid()}"
+            TransactionReference = $"TXN_{Random.Shared.Next(100000, 999999)}"
         };
 
         await _paymentRepository.AddAsync(payment);
@@ -207,7 +206,7 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
         });
     }
 
-    public async Task<ApiResponse<PaymentDto>> InitiatePaymentByNumberAsync(string applicationNumber, InitiatePaymentRequest request, Guid userId, string role)
+    public async Task<ApiResponse<PaymentDto>> InitiatePaymentByNumberAsync(string applicationNumber, InitiatePaymentRequest request, int userId, string role)
     {
         var application = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
         var app = application.FirstOrDefault();
@@ -232,7 +231,7 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
             Amount = amount,
             Status = PaymentStatus.Pending,
             PaymentMethod = request.FeeType.ToString(),
-            TransactionReference = $"TXN_{Guid.NewGuid()}"
+            TransactionReference = $"TXN_{Random.Shared.Next(100000, 999999)}"
         };
 
         await _paymentRepository.AddAsync(payment);
@@ -292,7 +291,7 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
         }, "تمت العملية بنجاح.");
     }
 
-    public async Task<ApiResponse<IEnumerable<PaymentDto>>> GetByApplicationIdAsync(Guid applicationId, Guid userId, string role)
+    public async Task<ApiResponse<IEnumerable<PaymentDto>>> GetByApplicationIdAsync(int applicationId, int userId, string role)
     {
         // Ownership check for Applicants
         if (role == "Applicant")
@@ -314,7 +313,7 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
         }));
     }
 
-    public async Task<ApiResponse<IEnumerable<PaymentDto>>> GetByApplicationNumberAsync(string applicationNumber, Guid userId, string role)
+    public async Task<ApiResponse<IEnumerable<PaymentDto>>> GetByApplicationNumberAsync(string applicationNumber, int userId, string role)
     {
         if (string.IsNullOrWhiteSpace(applicationNumber))
             return ApiResponse<IEnumerable<PaymentDto>>.Fail(400, "معرف الطلب مطلوب.");
@@ -342,7 +341,7 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
     /// <summary>
     /// Get a single payment by ID
     /// </summary>
-    public async Task<ApiResponse<PaymentDto>> GetByIdAsync(Guid paymentId, Guid userId, string role)
+    public async Task<ApiResponse<PaymentDto>> GetByIdAsync(int paymentId, int userId, string role)
     {
         var payment = await _paymentRepository.GetByIdAsync(paymentId);
         if (payment == null) return ApiResponse<PaymentDto>.Fail(404, "الدفع غير موجود.");
@@ -377,7 +376,7 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
         });
     }
 
-public async Task<ApiResponse<bool>> VerifyPaymentAsync(Guid paymentId)
+    public async Task<ApiResponse<bool>> VerifyPaymentAsync(int paymentId)
     {
         var payment = await _paymentRepository.GetByIdAsync(paymentId);
         if (payment == null) return ApiResponse<bool>.Fail(404, "الدفع غير موجود.");
@@ -385,7 +384,7 @@ public async Task<ApiResponse<bool>> VerifyPaymentAsync(Guid paymentId)
         return ApiResponse<bool>.Ok(payment.Status == PaymentStatus.Paid);
     }
 
-    public async Task<ApiResponse<PaymentDto>> ConfirmPaymentAsync(PaymentConfirmRequest request, Guid userId, string role)
+    public async Task<ApiResponse<PaymentDto>> ConfirmPaymentAsync(PaymentConfirmRequest request, int userId, string role)
     {
         var payment = await _paymentRepository.GetByIdAsync(request.PaymentId);
         if (payment == null) return ApiResponse<PaymentDto>.Fail(404, "الدفع غير موجود.");
@@ -408,7 +407,7 @@ public async Task<ApiResponse<bool>> VerifyPaymentAsync(Guid paymentId)
         // Generate receipt number if successful
         if (request.IsSuccessful)
         {
-            payment.ReceiptNumber = $"RCP-{DateTime.UtcNow:yyyyMMdd}-{payment.Id:N}".ToUpper();
+            payment.ReceiptNumber = $"RCP-{DateTime.UtcNow:yyyyMMdd}-{payment.Id}".ToUpper();
         }
 
         _paymentRepository.Update(payment);
@@ -450,7 +449,7 @@ public async Task<ApiResponse<bool>> VerifyPaymentAsync(Guid paymentId)
         }, "تم تحديث وسيلة الدفع بنجاح.");
     }
 
-    public async Task<ApiResponse<PaymentReceiptResponse>> GetReceiptAsync(Guid paymentId, Guid userId, string role)
+    public async Task<ApiResponse<PaymentReceiptResponse>> GetReceiptAsync(int paymentId, int userId, string role)
     {
         var payment = await _paymentRepository.GetByIdAsync(paymentId);
         if (payment == null) return ApiResponse<PaymentReceiptResponse>.Fail(404, "الدفع غير موجود.");
@@ -494,7 +493,7 @@ public async Task<ApiResponse<bool>> VerifyPaymentAsync(Guid paymentId)
     /// <summary>
     /// Process a payment by ID - simulates successful payment
     /// </summary>
-    public async Task<ApiResponse<PaymentDto>> ProcessPaymentAsync(Guid paymentId, Guid userId, string role)
+    public async Task<ApiResponse<PaymentDto>> ProcessPaymentAsync(int paymentId, int userId, string role)
     {
         var payment = await _paymentRepository.GetByIdAsync(paymentId);
         if (payment == null) return ApiResponse<PaymentDto>.Fail(404, "الدفع غير موجود.");
@@ -516,7 +515,7 @@ public async Task<ApiResponse<bool>> VerifyPaymentAsync(Guid paymentId)
         payment.Status = PaymentStatus.Paid;
         payment.PaidAt = DateTime.UtcNow;
         payment.PaymentMethod = "Simulated";
-        payment.ReceiptNumber = $"RCP-{DateTime.UtcNow:yyyyMMdd}-{payment.Id:N}".ToUpper();
+        payment.ReceiptNumber = $"RCP-{DateTime.UtcNow:yyyyMMdd}-{payment.Id}".ToUpper();
 
         _paymentRepository.Update(payment);
 
@@ -572,7 +571,7 @@ public async Task<ApiResponse<bool>> VerifyPaymentAsync(Guid paymentId)
     /// <summary>
     /// Get pending payment for a specific application
     /// </summary>
-    public async Task<ApiResponse<PaymentDto>> GetPendingPaymentForApplicationAsync(Guid applicationId, Guid userId, string role)
+    public async Task<ApiResponse<PaymentDto>> GetPendingPaymentForApplicationAsync(int applicationId, int userId, string role)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null) return ApiResponse<PaymentDto>.Fail(404, "الطلب غير موجود.");
@@ -624,4 +623,3 @@ public async Task<ApiResponse<bool>> VerifyPaymentAsync(Guid paymentId)
     }
 
 }
-

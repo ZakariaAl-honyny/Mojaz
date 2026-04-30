@@ -5,14 +5,14 @@ namespace Mojaz.Application.DTOs.Appointments;
 
 public class AppointmentDto
 {
-    public Guid Id { get; set; }
-    public Guid ApplicationId { get; set; }
+    public int Id { get; set; }
+    public int ApplicationId { get; set; }
     public AppointmentType AppointmentType { get; set; }
     public DateOnly ScheduledDate { get; set; }
     public string TimeSlot { get; set; } = string.Empty;
-    public Guid? BranchId { get; set; }
+    public int? BranchId { get; set; }
     public string? BranchName { get; set; }
-    public Guid? AssignedStaffId { get; set; }
+    public int? AssignedStaffId { get; set; }
     public string Status { get; set; } = string.Empty;
     public string? Notes { get; set; }
     public string? CancellationReason { get; set; }
@@ -39,9 +39,9 @@ public class DaySlotsDto
 
 public class CreateAppointmentRequest
 {
-    public Guid ApplicationId { get; set; }
+    public int ApplicationId { get; set; }
     public AppointmentType Type { get; set; }
-    public Guid BranchId { get; set; }
+    public int BranchId { get; set; }
     public DateOnly ScheduledDate { get; set; }
     public string TimeSlot { get; set; } = string.Empty;
     public string? Notes { get; set; }
@@ -51,7 +51,7 @@ public class RescheduleAppointmentRequest
 {
     public DateOnly NewScheduledDate { get; set; }
     public string NewTimeSlot { get; set; } = string.Empty;
-    public Guid? NewBranchId { get; set; }
+    public int? NewBranchId { get; set; }
 }
 
 public class CancelAppointmentRequest
@@ -61,7 +61,7 @@ public class CancelAppointmentRequest
 
 public class AppointmentResponse
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public DateOnly ScheduledDate { get; set; }
     public string TimeSlot { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;

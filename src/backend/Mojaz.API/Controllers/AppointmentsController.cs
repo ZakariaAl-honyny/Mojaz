@@ -4,7 +4,6 @@ using Mojaz.Application.DTOs.Appointments;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Enums;
 using Mojaz.Shared;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;

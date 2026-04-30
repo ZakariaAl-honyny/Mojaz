@@ -43,7 +43,7 @@ public class MedicalService : IMedicalService
     /// </summary>
     public async Task<ApiResponse<MedicalResultDto>> CreateMedicalResultAsync(
         CreateMedicalResultRequest request, 
-        Guid doctorId)
+        int doctorId)
     {
         // Verify application exists and belongs to applicant
         var application = await _unitOfWork.Repository<Mojaz.Domain.Entities.Application>().GetByIdAsync(request.ApplicationId);
@@ -142,7 +142,7 @@ public class MedicalService : IMedicalService
     /// <summary>
     /// Gets medical examination result by application ID
     /// </summary>
-    public async Task<ApiResponse<MedicalResultDto>> GetByApplicationIdAsync(Guid applicationId)
+    public async Task<ApiResponse<MedicalResultDto>> GetByApplicationIdAsync(int applicationId)
     {
         var medicalExam = await _unitOfWork.Repository<MedicalExamination>()
             .FindAsync(x => x.ApplicationId == applicationId && !x.IsDeleted);
@@ -160,7 +160,7 @@ public class MedicalService : IMedicalService
     /// Updates the medical examination result
     /// </summary>
     public async Task<ApiResponse<MedicalResultDto>> UpdateResultAsync(
-        Guid id, 
+        int id, 
         MedicalFitnessResult result, 
         string? notes)
     {

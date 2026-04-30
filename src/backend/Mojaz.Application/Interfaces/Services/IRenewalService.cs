@@ -5,9 +5,9 @@ namespace Mojaz.Application.Interfaces.Services;
 
 public interface IRenewalService
 {
-    Task<ApiResponse<EligibilityResponse>> ValidateEligibilityAsync(Guid applicantId, Guid licenseCategoryId);
-    Task<ApiResponse<Guid>> CreateRenewalAsync(CreateRenewalRequest request);
-    Task<ApiResponse<bool>> ProcessMedicalResultAsync(Guid applicationId, Guid medicalExaminationId);
-    Task<ApiResponse<bool>> PayRenewalFeeAsync(Guid applicationId, PaymentRequest paymentInfo);
-    Task<ApiResponse<IssueLicenseResponse>> IssueLicenseAsync(Guid applicationId);
+    Task<ApiResponse<EligibilityResponse>> ValidateEligibilityAsync(int applicantId, int licenseCategoryId);
+    Task<ApiResponse<int>> CreateRenewalAsync(CreateRenewalRequest request);
+    Task<ApiResponse<bool>> ProcessMedicalResultAsync(int applicationId, int medicalExaminationId);
+    Task<ApiResponse<bool>> PayRenewalFeeAsync(int applicationId, PaymentRequest paymentInfo);
+    Task<ApiResponse<IssueLicenseResponse>> IssueLicenseAsync(int applicationId);
 }

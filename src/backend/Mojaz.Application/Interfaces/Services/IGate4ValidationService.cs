@@ -1,5 +1,4 @@
 using Mojaz.Domain.Entities;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -23,5 +22,5 @@ public class Gate4Condition
 
 public interface IGate4ValidationService
 {
-    Task<Gate4ValidationResult> ValidateAsync(Guid applicationId);
+    Task<Gate4ValidationResult> ValidateAsync(int applicationId);
 }

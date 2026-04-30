@@ -10,7 +10,6 @@ using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Shared;
 using Mojaz.Shared.Constants;
-using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -67,7 +66,7 @@ public class LicenseService : ILicenseService
         _upgradeService = upgradeService;
     }
 
-    public async Task<ApiResponse<LicenseDto>> IssueLicenseAsync(Guid applicationId, Guid issuerId)
+    public async Task<ApiResponse<LicenseDto>> IssueLicenseAsync(int applicationId, int issuerId)
     {
         // 1. Idempotency Check: Already issued?
         var existingLicense = await _licenseRepository.ExistsAsync(x => x.ApplicationId == applicationId);
@@ -197,7 +196,7 @@ public class LicenseService : ILicenseService
         return ApiResponse<LicenseDto>.Ok(resultDto, "تم إصدار الرخصة بنجاح.");
     }
 
-    public async Task<ApiResponse<LicenseDto>> GetByIdAsync(Guid id, Guid userId, string role)
+    public async Task<ApiResponse<LicenseDto>> GetByIdAsync(int id, int userId, string role)
     {
         var license = await _licenseRepository.GetByIdAsync(id);
         if (license == null) return ApiResponse<LicenseDto>.NotFound("الرخصة غير موجودة.");
@@ -210,7 +209,7 @@ public class LicenseService : ILicenseService
         return ApiResponse<LicenseDto>.Ok(dto);
     }
 
-    public async Task<ApiResponse<LicenseDto>> GetByApplicationIdAsync(Guid applicationId, Guid userId, string role)
+    public async Task<ApiResponse<LicenseDto>> GetByApplicationIdAsync(int applicationId, int userId, string role)
     {
         var licenses = await _licenseRepository.FindAsync(x => x.ApplicationId == applicationId);
         var license = licenses.FirstOrDefault();
@@ -224,7 +223,7 @@ public class LicenseService : ILicenseService
         return ApiResponse<LicenseDto>.Ok(dto);
     }
 
-    public async Task ArchiveLicenseAsync(Guid licenseId)
+    public async Task ArchiveLicenseAsync(int licenseId)
     {
         var license = await _licenseRepository.GetByIdAsync(licenseId);
         if (license != null)
@@ -237,7 +236,7 @@ public class LicenseService : ILicenseService
         }
     }
 
-    public async Task<ApiResponse<List<LicenseDto>>> GetUserLicensesAsync(Guid userId, string role)
+    public async Task<ApiResponse<List<LicenseDto>>> GetUserLicensesAsync(int userId, string role)
     {
         // If Applicant role, only return their own licenses
         // If Employee role, can query by userId parameter (for admin/user management)
@@ -265,7 +264,7 @@ public class LicenseService : ILicenseService
         return ApiResponse<List<LicenseDto>>.Ok(dtos);
     }
 
-    public async Task<ApiResponse<List<UpgradeTargetCategoryDto>>> GetUpgradeTargetsAsync(Guid licenseId)
+    public async Task<ApiResponse<List<UpgradeTargetCategoryDto>>> GetUpgradeTargetsAsync(int licenseId)
     {
         var license = await _licenseRepository.GetByIdAsync(licenseId);
         if (license == null) return ApiResponse<List<UpgradeTargetCategoryDto>>.Fail(404, "الرخصة غير موجودة.");

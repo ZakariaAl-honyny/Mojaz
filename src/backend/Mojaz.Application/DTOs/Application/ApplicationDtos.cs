@@ -5,9 +5,9 @@ namespace Mojaz.Application.DTOs.Application;
 
 public class EligibilityCheckRequest
 {
-    public Guid LicenseCategoryId { get; set; }
+    public int LicenseCategoryId { get; set; }
     public ServiceType? ServiceType { get; set; }
-    public Guid? CurrentLicenseId { get; set; }
+    public int? CurrentLicenseId { get; set; }
 }
 
 public class ApplicationFilterRequest
@@ -15,8 +15,8 @@ public class ApplicationFilterRequest
     public ApplicationStatus? Status { get; set; }
     public string? CurrentStage { get; set; }
     public ServiceType? ServiceType { get; set; }
-    public Guid? LicenseCategoryId { get; set; }
-    public Guid? BranchId { get; set; }
+    public int? LicenseCategoryId { get; set; }
+    public int? BranchId { get; set; }
     public string? Search { get; set; }
     public DateTime? From { get; set; }
     public DateTime? To { get; set; }
@@ -38,7 +38,7 @@ public class CreateApplicationRequest
     public ServiceType ServiceType { get; set; }
 
     // Step 2: Category
-    public Guid LicenseCategoryId { get; set; }
+    public int LicenseCategoryId { get; set; }
 
     // Step 3: Personal Information (Updating Applicant profile)
     public string NationalId { get; set; } = string.Empty;
@@ -51,7 +51,7 @@ public class CreateApplicationRequest
     public ApplicantType? ApplicantType { get; set; }
 
     // Step 4: Details
-    public Guid? BranchId { get; set; }
+    public int? BranchId { get; set; }
     public string PreferredLanguage { get; set; } = "ar";
     public string? SpecialNeeds { get; set; }
     
@@ -62,8 +62,8 @@ public class CreateApplicationRequest
 public class UpdateDraftRequest
 {
     public ServiceType? ServiceType { get; set; }
-    public Guid? LicenseCategoryId { get; set; }
-    public Guid? BranchId { get; set; }
+    public int? LicenseCategoryId { get; set; }
+    public int? BranchId { get; set; }
     public string? PreferredLanguage { get; set; }
     public string? SpecialNeeds { get; set; }
 }
@@ -80,28 +80,28 @@ public class CancelApplicationRequest
 
 public class AssignApplicationRequest
 {
-    public Guid StaffId { get; set; }
+    public int? StaffId { get; set; }
     public string? Notes { get; set; }
 }
 
 public class UpdateApplicationRequest
 {
     public ServiceType? ServiceType { get; set; }
-    public Guid? LicenseCategoryId { get; set; }
-    public Guid? BranchId { get; set; }
+    public int? LicenseCategoryId { get; set; }
+    public int? BranchId { get; set; }
     public string? PreferredLanguage { get; set; }
     public string? SpecialNeeds { get; set; }
 }
 
 public class ApplicationDto
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string ApplicationNumber { get; set; } = string.Empty;
     public ServiceType ServiceType { get; set; }
-    public Guid LicenseCategoryId { get; set; }
+    public int LicenseCategoryId { get; set; }
     public string LicenseCategoryNameEn { get; set; } = string.Empty;
     public string LicenseCategoryNameAr { get; set; } = string.Empty;
-    public Guid? BranchId { get; set; }
+    public int? BranchId { get; set; }
     public ApplicationStatus Status { get; set; }
     public string? CurrentStage { get; set; }
     public string PreferredLanguage { get; set; } = "ar";
@@ -112,7 +112,7 @@ public class ApplicationDto
     public DateTime? CancelledAt { get; set; }
     public string? CancellationReason { get; set; }
     public string? RejectionReason { get; set; }
-    public Guid ApplicantId { get; set; }
+    public int ApplicantId { get; set; }
     public string ApplicantName { get; set; } = string.Empty;
     public string LicenseCategoryCode { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
@@ -123,14 +123,14 @@ public class ApplicationDto
     public DateTime? SecurityVerifiedAt { get; set; }
     
     // Staff Assignment fields
-    public Guid? AssignedToId { get; set; }
+    public int? AssignedToId { get; set; }
     public DateTime? AssignedAt { get; set; }
     public string? AssignmentNotes { get; set; }
 }
 
 public class ApplicationListDto
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string ApplicationNumber { get; set; } = string.Empty;
     public ServiceType ServiceType { get; set; }
     public string LicenseCategoryNameEn { get; set; } = string.Empty;
@@ -142,7 +142,7 @@ public class ApplicationListDto
 
 public class ApplicationTimelineDto
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public ApplicationStatus FromStatus { get; set; }
     public ApplicationStatus ToStatus { get; set; }
     public string? Notes { get; set; }
@@ -171,16 +171,16 @@ public class TimelineStageDto
 
 public class ApplicationWorkflowTimelineDto
 {
-    public Guid ApplicationId { get; set; }
+    public int ApplicationId { get; set; }
     public int CurrentStageNumber { get; set; }
     public List<TimelineStageDto> Stages { get; set; } = new();
 }
 
 public class UpgradeApplicationRequest
 {
-    public Guid CurrentLicenseId { get; set; }
-    public Guid TargetCategoryId { get; set; }
-    public Guid BranchId { get; set; }
+    public int CurrentLicenseId { get; set; }
+    public int TargetCategoryId { get; set; }
+    public int BranchId { get; set; }
     public string PreferredLanguage { get; set; } = "ar";
     public bool DataAccuracyConfirmed { get; set; }
 }
@@ -192,7 +192,7 @@ public class UpgradeApplicationRequest
 public class ApplicationWizardDto
 {
     // Identity
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string ApplicationNumber { get; set; } = string.Empty;
     public ApplicationStatus Status { get; set; }
     public string CurrentStage { get; set; } = string.Empty;
@@ -203,7 +203,7 @@ public class ApplicationWizardDto
     public ServiceType ServiceType { get; set; }
 
     // Step 2: Category
-    public Guid LicenseCategoryId { get; set; }
+    public int LicenseCategoryId { get; set; }
     public string LicenseCategoryCode { get; set; } = string.Empty;
     public string LicenseCategoryNameAr { get; set; } = string.Empty;
     public string LicenseCategoryNameEn { get; set; } = string.Empty;
@@ -221,7 +221,7 @@ public class ApplicationWizardDto
     public ApplicantType? ApplicantType { get; set; }
 
     // Step 4: Preferences (from Application entity)
-    public Guid? BranchId { get; set; }
+    public int? BranchId { get; set; }
     public string PreferredLanguage { get; set; } = "ar";
     public string? SpecialNeeds { get; set; }  // from Application entity
     public string? AppointmentPreference { get; set; }  // User.AppointmentPreference
@@ -233,7 +233,7 @@ public class ApplicationWizardDto
 public class UpdateWizardDataRequest
 {
     // Step 2
-    public Guid? LicenseCategoryId { get; set; }
+    public int? LicenseCategoryId { get; set; }
 
     // Step 3 (User fields)
     public string? NationalId { get; set; }
@@ -248,7 +248,7 @@ public class UpdateWizardDataRequest
     public ApplicantType? ApplicantType { get; set; }
 
     // Step 4 (Application + User fields)
-    public Guid? BranchId { get; set; }
+    public int? BranchId { get; set; }
     public string? PreferredLanguage { get; set; }
     public string? SpecialNeeds { get; set; }
     public string? AppointmentPreference { get; set; }
@@ -256,15 +256,15 @@ public class UpdateWizardDataRequest
 
 public class ReplacementApplicationRequest
 {
-    public Guid LicenseId { get; set; }
+    public int LicenseId { get; set; }
     public string Reason { get; set; } = string.Empty;
-    public List<Guid>? DocumentIds { get; set; }
+    public List<int>? DocumentIds { get; set; }
 }
 
 public class ReplacementEligibilityResponse
 {
     public bool IsEligible { get; set; }
-    public Guid LicenseId { get; set; }
+    public int LicenseId { get; set; }
     public string LicenseNumber { get; set; } = string.Empty;
     public DateTime ExpiryDate { get; set; }
     public string? Message { get; set; }
@@ -292,6 +292,6 @@ public class EligibilityResponseDto
 {
     public bool IsEligible { get; set; }
     public string? Message { get; set; }
-    public Guid? ExistingApplicationId { get; set; }
+    public int? ExistingApplicationId { get; set; }
     public string? ExistingApplicationNumber { get; set; }
 }

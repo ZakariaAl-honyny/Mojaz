@@ -5,9 +5,9 @@ namespace Mojaz.Application.Interfaces.Repositories
 {
     public interface IPaymentRepository
     {
-        Task<PaymentTransaction?> GetByIdAsync(Guid id);
+        Task<PaymentTransaction?> GetByIdAsync(int id);
         Task<PaymentTransaction> AddAsync(PaymentTransaction payment);
         Task<PaymentTransaction> UpdateAsync(PaymentTransaction payment);
-        Task<IReadOnlyList<PaymentTransaction>> GetByApplicationIdAsync(Guid applicationId);
+        Task<IReadOnlyList<PaymentTransaction>> GetByApplicationIdAsync(int applicationId);
     }
 }

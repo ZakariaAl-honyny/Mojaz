@@ -42,7 +42,7 @@ namespace Mojaz.Application.Services
             _settingsService = settingsService;
         }
 
-        public async Task<ApiResponse<TheoryTestDto>> SubmitResultAsync(Guid applicationId, SubmitTheoryResultRequest request, Guid examinerId)
+        public async Task<ApiResponse<TheoryTestDto>> SubmitResultAsync(int applicationId, SubmitTheoryResultRequest request, int examinerId)
         {
             // 1. Load application by appId — 404 if not found
             var application = await _applicationRepository.GetByIdAsync(applicationId);
@@ -263,7 +263,7 @@ namespace Mojaz.Application.Services
             return ApiResponse<TheoryTestDto>.Ok(dto, "تم تسجيل نتيجة الاختبار النظري بنجاح.");
         }
 
-        public async Task<ApiResponse<PagedResult<TheoryTestDto>>> GetHistoryAsync(Guid applicationId, Guid userId, string role, int page = 1, int pageSize = 10)
+        public async Task<ApiResponse<PagedResult<TheoryTestDto>>> GetHistoryAsync(int applicationId, int userId, string role, int page = 1, int pageSize = 10)
         {
             // Load application (404 if missing)
             var application = await _applicationRepository.GetByIdAsync(applicationId);
@@ -319,7 +319,7 @@ namespace Mojaz.Application.Services
             return ApiResponse<PagedResult<TheoryTestDto>>.Ok(pagedResult);
         }
 
-        public async Task<bool> IsInCoolingPeriodAsync(Guid applicationId)
+        public async Task<bool> IsInCoolingPeriodAsync(int applicationId)
         {
             // Get the latest failed/absent theory test
             var latestTest = await _theoryRepository.GetLatestByApplicationIdAsync(applicationId);
@@ -344,7 +344,7 @@ namespace Mojaz.Application.Services
             return DateTime.UtcNow < eligibleDate;
         }
 
-        public async Task<bool> HasReachedMaxAttemptsAsync(Guid applicationId)
+        public async Task<bool> HasReachedMaxAttemptsAsync(int applicationId)
         {
             var application = await _applicationRepository.GetByIdAsync(applicationId);
             if (application == null)
@@ -358,7 +358,7 @@ namespace Mojaz.Application.Services
             return application.TheoryAttemptCount >= maxAttempts;
         }
 
-        public async Task<bool> IsTheoryExemptForUpgradeAsync(Guid applicationId)
+        public async Task<bool> IsTheoryExemptForUpgradeAsync(int applicationId)
         {
             var application = await _applicationRepository.GetByIdAsync(applicationId);
             if (application == null)
@@ -377,7 +377,7 @@ namespace Mojaz.Application.Services
             return waiverEnabled?.ToLower() == "true";
         }
 
-        public async Task<ApiResponse<PagedResult<TheoryTestDto>>> GetHistoryByApplicationNumberAsync(string applicationNumber, Guid userId, string role, int page = 1, int pageSize = 10)
+        public async Task<ApiResponse<PagedResult<TheoryTestDto>>> GetHistoryByApplicationNumberAsync(string applicationNumber, int userId, string role, int page = 1, int pageSize = 10)
         {
             if (string.IsNullOrWhiteSpace(applicationNumber))
             {

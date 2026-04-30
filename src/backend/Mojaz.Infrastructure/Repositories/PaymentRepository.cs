@@ -10,7 +10,7 @@ namespace Mojaz.Infrastructure.Persistence.Repositories
         {
         }
 
-        public Task<PaymentTransaction?> GetByIdAsync(Guid id)
+        public Task<PaymentTransaction?> GetByIdAsync(int id)
         {
             return base.GetByIdAsync(id);
         }
@@ -27,7 +27,7 @@ namespace Mojaz.Infrastructure.Persistence.Repositories
             return Task.FromResult(payment);
         }
 
-        public async Task<IReadOnlyList<PaymentTransaction>> GetByApplicationIdAsync(Guid applicationId)
+        public async Task<IReadOnlyList<PaymentTransaction>> GetByApplicationIdAsync(int applicationId)
         {
             return await FindAsync(p => p.ApplicationId == applicationId && !p.IsDeleted);
         }

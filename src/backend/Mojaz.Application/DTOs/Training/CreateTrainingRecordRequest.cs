@@ -4,7 +4,7 @@ namespace Mojaz.Application.DTOs.Training
 {
     public class CreateTrainingRecordRequest
     {
-        public Guid ApplicationId { get; set; }
+        public int ApplicationId { get; set; }
         public string SchoolName { get; set; } = string.Empty;
         public string? CertificateNumber { get; set; }
         public int HoursCompleted { get; set; }

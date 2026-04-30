@@ -665,7 +665,7 @@ return ApiResponse<OtpResponseDto>.Ok(new OtpResponseDto { DestinationMasked = m
         return combined.ToString("D10");
     }
     
-    public async Task<ApiResponse<bool>> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword)
+    public async Task<ApiResponse<bool>> ChangePasswordAsync(int userId, string currentPassword, string newPassword)
     {
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null) return ApiResponse<bool>.Fail(404, "المستخدم غير موجود.");

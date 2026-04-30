@@ -5,9 +5,9 @@ namespace Mojaz.Application.DTOs.Medical;
 
 public class MedicalResultDto
 {
-    public Guid Id { get; set; }
-    public Guid ApplicationId { get; set; }
-    public Guid DoctorId { get; set; }
+    public int Id { get; set; }
+    public int ApplicationId { get; set; }
+    public int DoctorId { get; set; }
     public DateTime ExaminedAt { get; set; }
     public MedicalFitnessResult FitnessResult { get; set; }
     public string? BloodType { get; set; }

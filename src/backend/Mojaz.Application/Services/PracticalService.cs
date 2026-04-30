@@ -48,7 +48,7 @@ public class PracticalService : IPracticalService
         _systemSettingsService = systemSettingsService;
     }
 
-    public async Task<ApiResponse<PracticalTestDto>> SubmitResultAsync(Guid applicationId, SubmitPracticalResultRequest request, Guid examinerId)
+    public async Task<ApiResponse<PracticalTestDto>> SubmitResultAsync(int applicationId, SubmitPracticalResultRequest request, int examinerId)
     {
         // Load application
         var application = await _applicationRepository.GetByIdAsync(applicationId);
@@ -228,7 +228,7 @@ public class PracticalService : IPracticalService
         return ApiResponse<PracticalTestDto>.Created(dto, "تم تسجيل نتيجة الاختبار العملي بنجاح.");
     }
 
-    public async Task<ApiResponse<PagedResult<PracticalTestDto>>> GetHistoryAsync(Guid applicationId, Guid userId, string role, int page = 1, int pageSize = 10)
+    public async Task<ApiResponse<PagedResult<PracticalTestDto>>> GetHistoryAsync(int applicationId, int userId, string role, int page = 1, int pageSize = 10)
     {
         // Load application
         var application = await _applicationRepository.GetByIdAsync(applicationId);
@@ -284,7 +284,7 @@ public class PracticalService : IPracticalService
         return ApiResponse<PagedResult<PracticalTestDto>>.Ok(result);
     }
 
-    public async Task<bool> IsInCoolingPeriodAsync(Guid applicationId)
+    public async Task<bool> IsInCoolingPeriodAsync(int applicationId)
     {
         var latestTest = await _practicalRepository.GetLatestByApplicationIdAsync(applicationId);
         if (latestTest == null || latestTest.Result == TestResult.Pass)
@@ -299,7 +299,7 @@ public class PracticalService : IPracticalService
         return DateTime.UtcNow < coolingPeriodEnd;
     }
 
-    public async Task<bool> HasReachedMaxAttemptsAsync(Guid applicationId)
+    public async Task<bool> HasReachedMaxAttemptsAsync(int applicationId)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null)
@@ -312,7 +312,7 @@ public class PracticalService : IPracticalService
         return application.PracticalAttemptCount >= maxAttempts;
     }
 
-    public async Task<bool> HasAdditionalTrainingRequiredAsync(Guid applicationId)
+    public async Task<bool> HasAdditionalTrainingRequiredAsync(int applicationId)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         return application?.AdditionalTrainingRequired ?? false;
