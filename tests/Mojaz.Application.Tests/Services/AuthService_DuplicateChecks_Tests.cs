@@ -56,7 +56,7 @@ public class AuthService_DuplicateChecks_Tests
 
         // Mock FindAsync to return existing user for email
         _userRepo.Setup(r => r.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((IReadOnlyList<User>)new List<User> { new User { Id = Guid.NewGuid(), Email = email } });
+            .ReturnsAsync((IReadOnlyList<User>)new List<User> { new User { Id = 1, Email = email } });
 
         // Act
         var result = await service.RegisterAsync(request);
@@ -83,7 +83,7 @@ public class AuthService_DuplicateChecks_Tests
 
         // Mock FindAsync to return existing user for phone
         _userRepo.Setup(r => r.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((IReadOnlyList<User>)new List<User> { new User { Id = Guid.NewGuid(), PhoneNumber = phone } });
+            .ReturnsAsync((IReadOnlyList<User>)new List<User> { new User { Id = 1, PhoneNumber = phone } });
 
         // Act
         var result = await service.RegisterAsync(request);

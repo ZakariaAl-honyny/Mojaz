@@ -51,7 +51,7 @@ public class SettingsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<object>), 409)]
     public async Task<IActionResult> CreateAsync([FromBody] CreateSettingRequest request)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
         // Validate request
         if (string.IsNullOrWhiteSpace(request.Key))
@@ -174,7 +174,7 @@ public class SettingsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<object>), 404)]
     public async Task<IActionResult> UpdateAsync(string key, [FromBody] UpdateSettingRequest request)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
         // Check if setting exists
         var settings = await _settingsRepository.FindAsync(s => s.SettingKey == key);
@@ -219,7 +219,7 @@ public class SettingsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<object>), 404)]
     public async Task<IActionResult> ResetAsync(string key)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
         // Check if setting exists
         var settings = await _settingsRepository.FindAsync(s => s.SettingKey == key);
@@ -256,19 +256,18 @@ public class SettingsController : ControllerBase
             UpdatedAt = DateTime.UtcNow
         };
 
-        return Ok(ApiResponse<UpdateSettingResponse>.Ok(response, "تم إعادة تعيين الإعداد للقيمة الافتراضية."));
+        return Ok(ApiResponse<UpdateSettingResponse>.Ok(response, "تم إعادة تعيين الإعداد للقيمة ��لافتراضية."));
     }
 
     /// <summary>
     /// Helper method to log setting changes to audit log.
     /// </summary>
-    private async Task LogSettingChangeAsync(Guid userId, string action, string key, string oldValue, string newValue)
+    private async Task LogSettingChangeAsync(int userId, string action, string key, string oldValue, string newValue)
     {
         try
         {
             var auditLog = new AuditLog
             {
-                Id = Guid.NewGuid(),
                 UserId = userId,
                 ActionType = action,
                 ActionCategory = "Settings",

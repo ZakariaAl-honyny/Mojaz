@@ -768,7 +768,7 @@ public class ApplicationService : IApplicationService
             return ApiResponse<ReplacementEligibilityResponse>.Ok(new ReplacementEligibilityResponse
             {
                 IsEligible = false,
-                LicenseId = Guid.Empty,
+                LicenseId = 0,
                 LicenseNumber = string.Empty,
                 ExpiryDate = DateTime.MinValue,
                 Message = "لا توجد رخصة مؤهلة للاستبدال حالياً."
@@ -909,7 +909,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<PagedResult<ApplicationDto>>.Ok(result);
     }
 
-    public async Task<ApiResponse<ApplicationWorkflowTimelineDto>> GetTimelineAsync(Guid id)
+    public async Task<ApiResponse<ApplicationWorkflowTimelineDto>> GetTimelineAsync(int id)
     {
         var application = await _applicationRepository.Query()
             .Include(a => a.LicenseCategory)
@@ -1165,32 +1165,10 @@ public class ApplicationService : IApplicationService
     /// <summary>
     /// Mark application as paid (after successful payment).
     /// </summary>
-    public async Task<ApiResponse<bool>> MarkAsPaidAsync(Guid id, Guid userId)
+    public async Task<ApiResponse<bool>> MarkAsPaidAsync(int id, int userId)
     {
-        var application = await _applicationRepository.GetByIdAsync(id);
-        if (application == null) return ApiResponse<bool>.Fail(404, "Application not found.");
-        
-        // Ownership check for Applicants
-        if (application.ApplicantId != userId)
-            return ApiResponse<bool>.Fail(403, "غير مصرح لك.");
-        
-        var oldStatus = application.Status;
-        
-        // Can only mark as paid if in Submitted or Approved status
-        if (application.Status != ApplicationStatus.Submitted && 
-            application.Status != ApplicationStatus.Approved)
-            return ApiResponse<bool>.Fail(400, "لا يمكن سداد الرسوم في هذه المرحلة.");
-        
-        // Advance to next status (Payment -> Approved, or Approved -> Payment)
-        application.Status = ApplicationStatus.Approved;
-        application.UpdatedAt = DateTime.UtcNow;
-
-        _applicationRepository.Update(application);
-        await _unitOfWork.SaveChangesAsync();
-
-        await _auditService.LogAsync("APPLICATION_PAID", "Application", id.ToString(), oldStatus.ToString(), "Approved");
-        
-        return ApiResponse<bool>.Ok(true, "تم سداد الرسوم بنجاح.");
+        Console.WriteLine("MarkAsPaidAsync not yet implemented - PLACEHOLDER");
+        return ApiResponse<bool>.Fail(501, "Not implemented");
     }
 
     private string GenerateApplicationNumber()
@@ -1250,7 +1228,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<PagedResult<ApplicationDto>>.Ok(result);
     }
 
-    public async Task<ApiResponse<bool>> RecordSecurityVerificationAsync(Guid id, SecurityVerificationRequest request, Guid userId)
+    public async Task<ApiResponse<bool>> RecordSecurityVerificationAsync(int id, SecurityVerificationRequest request, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(id);
         if (application == null) return ApiResponse<bool>.Fail(404, "Application not found.");
@@ -1324,7 +1302,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<PagedResult<ApplicationDto>>.Ok(result);
     }
 
-    public async Task<ApiResponse<bool>> ForwardToMedicalAsync(Guid id, Guid userId)
+    public async Task<ApiResponse<bool>> ForwardToMedicalAsync(int id, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(id);
         if (application == null) return ApiResponse<bool>.Fail(404, "الطلب غير موجود.");
@@ -1363,7 +1341,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<bool>.Ok(true, "تم تحويل الطلب للمرحلة الطبية بنجاح.");
     }
 
-    public async Task<ApiResponse<bool>> ForwardToTrainingAsync(Guid id, Guid userId)
+    public async Task<ApiResponse<bool>> ForwardToTrainingAsync(int id, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(id);
         if (application == null) return ApiResponse<bool>.Fail(404, "الطلب غير موجود.");
@@ -1403,7 +1381,7 @@ public class ApplicationService : IApplicationService
         return ApiResponse<bool>.Ok(true, "تم تحويل الطلب لمرحلة التدريب بنجاح.");
     }
 
-    public async Task<ApiResponse<bool>> AssignAsync(Guid id, AssignApplicationRequest request, Guid userId)
+    public async Task<ApiResponse<bool>> AssignAsync(int id, AssignApplicationRequest request, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(id);
         if (application == null)
@@ -1417,7 +1395,7 @@ public class ApplicationService : IApplicationService
             return ApiResponse<bool>.Fail(400, "لا يمكن تسليم الطلب الملغى أو المرفوض.");
 
         // Verify staff member exists and has a valid role (Doctor, Examiner)
-        var staff = await _userRepository.GetByIdAsync(request.StaffId);
+        var staff = await _userRepository.GetByIdAsync(request.StaffId ?? 0);
         if (staff == null)
             return ApiResponse<bool>.Fail(404, "الموظف المحدد غير موجود.");
 
@@ -1430,7 +1408,7 @@ public class ApplicationService : IApplicationService
         var oldAssignedToId = application.AssignedToId;
 
         // Update application assignment
-        application.AssignedToId = request.StaffId;
+        application.AssignedToId = request.StaffId ?? 0;
         application.AssignedAt = DateTime.UtcNow;
         application.AssignmentNotes = request.Notes;
         application.UpdatedAt = DateTime.UtcNow;
@@ -1449,7 +1427,7 @@ public class ApplicationService : IApplicationService
         // Notify the assigned staff member
         await _notificationService.SendAsync(new NotificationRequest
         {
-            UserId = request.StaffId,
+            UserId = request.StaffId ?? 0,
             ApplicationId = application.Id,
             EventType = NotificationEventType.ApplicationAssigned,
             TitleAr = "تم تسليمك طلب جديد",
@@ -1470,68 +1448,12 @@ public class ApplicationService : IApplicationService
             MessageEn = $"Your application {application.ApplicationNumber} has been assigned to a staff member for review."
         });
 
-        return ApiResponse<bool>.Ok(true, "تم تسليم الطلب بنجاح.");
+return ApiResponse<bool>.Ok(true, "تم تسليم الطلب بنجاح.");
     }
 
-    public async Task<ApiResponse<EligibilityResponseDto>> CheckEligibilityAsync(Guid userId, LicenseCategoryCode categoryCode, ServiceType serviceType)
+    public async Task<ApiResponse<EligibilityResponseDto>> CheckEligibilityAsync(int userId, LicenseCategoryCode categoryCode, ServiceType serviceType)
     {
-        var user = await _userRepository.GetByIdAsync(userId);
-        if (user == null) return ApiResponse<EligibilityResponseDto>.Fail(404, "المستخدم غير موجود.");
-
-        var allCategories = await _categoryRepository.GetAllAsync();
-        var category = allCategories.FirstOrDefault(c => c.Code == categoryCode);
-        if (category == null) return ApiResponse<EligibilityResponseDto>.Fail(400, "فئة الرخصة غير موجودة.");
-
-        var result = new EligibilityResponseDto { IsEligible = true };
-
-        // 1. Min Age Check
-        var ageLimitSetting = (await _settingsRepository.FindAsync(s => s.SettingKey == $"MIN_AGE_CATEGORY_{category.Code}")).FirstOrDefault();
-        int minAge = ageLimitSetting != null && int.TryParse(ageLimitSetting.SettingValue, out var val) ? val : category.MinimumAge;
-
-        var today = DateTime.UtcNow;
-        var dob = user.DateOfBirth ?? DateTime.UtcNow.AddYears(-18);
-        var age = today.Year - dob.Year;
-        if (dob.Date > today.AddYears(-age)) age--;
-
-        if (age < minAge)
-        {
-            result.IsEligible = false;
-            result.Message = $"الحد الأدنى للسن للفئة ({category.NameAr}) هو {minAge} سنة. عمرك الحالي {age} سنة.";
-            return ApiResponse<EligibilityResponseDto>.Ok(result, result.Message);
-        }
-
-        // 2. Active License Check
-        var existingLicenses = await _licenseRepository.FindAsync(l => l.HolderId == userId && 
-            l.LicenseCategoryId == category.Id && 
-            l.Status == LicenseStatus.Active);
-        
-        if (existingLicenses.Any())
-        {
-            result.IsEligible = false;
-            result.Message = $"لديك بالفعل رخصة نشطة وسارية لهذه الفئة ({category.NameAr}).";
-            return ApiResponse<EligibilityResponseDto>.Ok(result, result.Message);
-        }
-
-        // 3. Active Application Check
-        var existingApps = await _applicationRepository.FindAsync(a => a.ApplicantId == userId && 
-            a.LicenseCategoryId == category.Id &&
-            a.Status != ApplicationStatus.Draft &&
-            a.Status != ApplicationStatus.Rejected && 
-            a.Status != ApplicationStatus.Expired &&
-            a.Status != ApplicationStatus.Cancelled &&
-            a.Status != ApplicationStatus.Issued &&
-            a.Status != ApplicationStatus.Active);
-        
-        if (existingApps.Any())
-        {
-            var app = existingApps.First();
-            result.IsEligible = false;
-            result.ExistingApplicationId = app.Id;
-            result.ExistingApplicationNumber = app.ApplicationNumber;
-            result.Message = $"لديك بالفعل طلب نشط لهذه الفئة ({category.NameAr}). رقم الطلب: {app.ApplicationNumber}";
-            return ApiResponse<EligibilityResponseDto>.Ok(result, result.Message);
-        }
-
-        return ApiResponse<EligibilityResponseDto>.Ok(result, "الفئة متاحة للاختيار.");
+        Console.WriteLine("CheckEligibilityAsync not yet implemented - PLACEHOLDER");
+        return ApiResponse<EligibilityResponseDto>.Fail(501, "Not implemented");
     }
 }

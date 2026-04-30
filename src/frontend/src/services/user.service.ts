@@ -84,7 +84,7 @@ export const userService = {
       });
   },
 
-  async getUserById(userId: string): Promise<UserDto> {
+  async getUserById(userId: number): Promise<UserDto> {
     const response = await apiClient.get<ApiResponse<UserDto>>(`users/${userId}`);
     return response.data.data!;
   },
@@ -104,11 +104,11 @@ export const userService = {
     return response.data.data!;
   },
 
-  async updateUserStatus(userId: string, isActive: boolean): Promise<void> {
+  async updateUserStatus(userId: number, isActive: boolean): Promise<void> {
     await apiClient.patch(`users/${userId}/status`, { isActive });
   },
 
-  async updateUserRole(userId: string, appRole: string): Promise<void> {
+  async updateUserRole(userId: number, appRole: string): Promise<void> {
     await apiClient.patch(`users/${userId}/role`, { appRole });
   },
 };

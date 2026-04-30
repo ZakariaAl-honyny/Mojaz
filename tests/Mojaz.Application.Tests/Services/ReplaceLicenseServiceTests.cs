@@ -69,9 +69,9 @@ public class ReplaceLicenseServiceTests
     public async Task CheckEligibilityAsync_WithActiveLicense_ReturnsEligible()
     {
         // Arrange
-        var applicantId = Guid.NewGuid();
-        var licenseId = Guid.NewGuid();
-        var categoryId = Guid.NewGuid();
+        var applicantId = 1;
+        var licenseId = 2;
+        var categoryId = 3;
         var license = new License
         {
             Id = licenseId,
@@ -87,7 +87,7 @@ public class ReplaceLicenseServiceTests
             .ReturnsAsync(new System.Collections.Generic.List<License> { license });
 
         _licenseCategoryRepositoryMock
-            .Setup(x => x.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<System.Threading.CancellationToken>()))
+            .Setup(x => x.GetByIdAsync(It.IsAny<int>(), It.IsAny<System.Threading.CancellationToken>()))
             .ReturnsAsync(new LicenseCategory { Id = categoryId, NameAr = "خصاصة", NameEn = "Private" });
 
         // Act
@@ -105,7 +105,7 @@ public class ReplaceLicenseServiceTests
     public async Task CheckEligibilityAsync_NoActiveLicense_ReturnsNotEligible()
     {
         // Arrange
-        var applicantId = Guid.NewGuid();
+        var applicantId = 1;
 
         _licenseRepositoryMock
             .Setup(x => x.FindAsync(It.IsAny<Expression<Func<License, bool>>>(), It.IsAny<System.Threading.CancellationToken>()))
@@ -124,10 +124,10 @@ public class ReplaceLicenseServiceTests
     public async Task CheckEligibilityAsync_ExpiredLicense_ReturnsNotEligible()
     {
         // Arrange
-        var applicantId = Guid.NewGuid();
+        var applicantId = 1;
         var license = new License
         {
-            Id = Guid.NewGuid(),
+            Id = 2,
             HolderId = applicantId,
             Status = LicenseStatus.Expired,
             ExpiresAt = DateTime.UtcNow.AddDays(-30)
@@ -154,17 +154,17 @@ public class ReplaceLicenseServiceTests
         // Arrange
         var request = new CreateReplacementRequest
         {
-            LicenseId = Guid.NewGuid(),
+            LicenseId = 2,
             Reason = ReplacementReason.Lost
         };
-        var applicantId = Guid.NewGuid();
+        var applicantId = 1;
 
         var license = new License
         {
             Id = request.LicenseId,
             HolderId = applicantId,
             Status = LicenseStatus.Active,
-            LicenseCategoryId = Guid.NewGuid(),
+            LicenseCategoryId = 3,
             LicenseNumber = "MOJ-2025-12345678"
         };
 
@@ -176,11 +176,11 @@ public class ReplaceLicenseServiceTests
         };
 
         _licenseRepositoryMock
-            .Setup(x => x.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<System.Threading.CancellationToken>()))
+            .Setup(x => x.GetByIdAsync(It.IsAny<int>(), It.IsAny<System.Threading.CancellationToken>()))
             .ReturnsAsync(license);
 
         _licenseCategoryRepositoryMock
-            .Setup(x => x.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<System.Threading.CancellationToken>()))
+            .Setup(x => x.GetByIdAsync(It.IsAny<int>(), It.IsAny<System.Threading.CancellationToken>()))
             .ReturnsAsync(category);
 
         _replacementRepositoryMock
@@ -191,7 +191,7 @@ public class ReplaceLicenseServiceTests
             .Setup(x => x.AddAsync(It.IsAny<ApplicationEntity>(), It.IsAny<System.Threading.CancellationToken>()))
             .ReturnsAsync((ApplicationEntity a, System.Threading.CancellationToken _) => 
             {
-                a.Id = Guid.NewGuid(); // Simulate database generating ID
+                a.Id = 100; // Simulate database generating ID
                 return a;
             });
 
@@ -199,7 +199,7 @@ public class ReplaceLicenseServiceTests
             .Setup(x => x.AddAsync(It.IsAny<LicenseReplacement>(), It.IsAny<System.Threading.CancellationToken>()))
             .ReturnsAsync((LicenseReplacement r, System.Threading.CancellationToken _) => 
             {
-                r.Id = Guid.NewGuid(); // Simulate database generating ID
+                r.Id = 101; // Simulate database generating ID
                 return r;
             });
 
@@ -212,7 +212,7 @@ public class ReplaceLicenseServiceTests
 
         // Assert
         result.Success.Should().BeTrue();
-        result.Data.Should().NotBe(Guid.Empty);
+        result.Data.Should().NotBe(0);
         result.Message.Should().Contain("created successfully");
 
         // Verify Application was created with ServiceType = Replacement
@@ -230,21 +230,21 @@ public class ReplaceLicenseServiceTests
         // Arrange
         var request = new CreateReplacementRequest
         {
-            LicenseId = Guid.NewGuid(),
+            LicenseId = 2,
             Reason = ReplacementReason.Damaged
         };
-        var applicantId = Guid.NewGuid();
+        var applicantId = 1;
 
         var license = new License
         {
             Id = request.LicenseId,
             HolderId = applicantId,
             Status = LicenseStatus.Expired, // Inactive status
-            LicenseCategoryId = Guid.NewGuid()
+            LicenseCategoryId = 3
         };
 
         _licenseRepositoryMock
-            .Setup(x => x.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<System.Threading.CancellationToken>()))
+            .Setup(x => x.GetByIdAsync(It.IsAny<int>(), It.IsAny<System.Threading.CancellationToken>()))
             .ReturnsAsync(license);
 
         // Act

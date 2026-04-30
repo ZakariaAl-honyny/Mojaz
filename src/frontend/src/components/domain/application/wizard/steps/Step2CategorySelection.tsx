@@ -30,7 +30,7 @@ export default function Step2CategorySelection() {
   const activeLicense = userLicenses?.find(l => l.status === 0);
   
   // Fetch upgrade targets for the active license (only if upgrade service and license exists)
-  const { data: upgradeTargets, isLoading: isLoadingUpgradeTargets } = useUpgradeTargets(activeLicense?.id ?? null);
+  const { data: upgradeTargets, isLoading: isLoadingUpgradeTargets } = useUpgradeTargets(activeLicense?.id ? Number(activeLicense.id) : null);
   
   // Determine if we're loading any data
   const isLoading = isLoadingCategories || (isUpgradeService && (isLoadingLicenses || (!!activeLicense && isLoadingUpgradeTargets)));

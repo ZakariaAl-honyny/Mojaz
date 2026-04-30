@@ -4,7 +4,7 @@ namespace Mojaz.Application.Reports.Dtos;
 
 public class DelayedApplicationEntry
 {
-    public Guid ApplicationId { get; set; }
+    public int ApplicationId { get; set; }
     public string ApplicationNumber { get; set; } = string.Empty;
     public string CurrentStatus { get; set; } = string.Empty;
     public int DaysInStage { get; set; }

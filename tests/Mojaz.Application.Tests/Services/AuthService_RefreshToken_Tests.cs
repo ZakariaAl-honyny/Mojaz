@@ -59,7 +59,7 @@ public class AuthService_RefreshToken_Tests
     public async Task RefreshTokenAsync_ValidToken_RotatesTokens()
     {
         // Arrange
-        var userId = Guid.NewGuid();
+        var userId = 1;
         var oldRefreshToken = new RefreshToken 
         { 
             UserId = userId, 

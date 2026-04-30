@@ -53,8 +53,8 @@ export interface MarkAllReadResponse {
 
 // Notification for local store (used in zustand store)
 export interface Notification {
-  id: string;
-  userId: string;
+  id: number;
+  userId: number;
   title: string;
   titleAr: string;
   message: string;
@@ -67,7 +67,7 @@ export interface Notification {
 
 // Notification preferences
 export interface NotificationPreferences {
-  userId: string;
+  userId: number;
   emailEnabled: boolean;
   pushEnabled: boolean;
   smsEnabled: boolean;
@@ -85,8 +85,8 @@ export interface NotificationPreferences {
 
 // Device info for push notifications
 export interface DeviceInfo {
-  id: string;
-  userId: string;
+  id: number;
+  userId: number;
   deviceToken: string;
   platform: 'web' | 'ios' | 'android';
   lastActive: string;

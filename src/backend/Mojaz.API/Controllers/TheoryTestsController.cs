@@ -40,11 +40,11 @@ namespace Mojaz.API.Controllers
         public async Task<IActionResult> SubmitResult(string appIdOrNumber, [FromBody] SubmitTheoryResultRequest request)
         {
             var appId = await ResolveAppIdAsync(appIdOrNumber);
-            if (appId == Guid.Empty)
+            if (appId == 0)
                 return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
             var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(nameIdentifier) || !Guid.TryParse(nameIdentifier, out var examinerId))
+            if (string.IsNullOrEmpty(nameIdentifier) || !int.TryParse(nameIdentifier, out var examinerId))
             {
                 return Unauthorized(ApiResponse<object>.Fail(401, "Invalid user identification."));
             }
@@ -65,11 +65,11 @@ namespace Mojaz.API.Controllers
         public async Task<IActionResult> GetHistory(string appIdOrNumber, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
         {
             var appId = await ResolveAppIdAsync(appIdOrNumber);
-            if (appId == Guid.Empty)
+            if (appId == 0)
                 return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
             var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!Guid.TryParse(userIdStr, out var userId))
+            if (!int.TryParse(userIdStr, out var userId))
                 return Unauthorized(ApiResponse<object>.Fail(401, "User ID not found in token."));
 
             var role = User.FindFirstValue(ClaimTypes.Role) ?? "";
@@ -78,13 +78,13 @@ namespace Mojaz.API.Controllers
         }
 
 
-        private async Task<Guid> ResolveAppIdAsync(string appIdOrNumber)
+        private async Task<int> ResolveAppIdAsync(string appIdOrNumber)
         {
-            if (string.IsNullOrWhiteSpace(appIdOrNumber)) return Guid.Empty;
-            if (Guid.TryParse(appIdOrNumber.Trim(), out var id)) return id;
+            if (string.IsNullOrWhiteSpace(appIdOrNumber)) return 0;
+            if (int.TryParse(appIdOrNumber.Trim(), out var id)) return id;
 
             var result = await _applicationService.GetByApplicationNumberAsync(appIdOrNumber.Trim());
-            return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
+            return result.Data?.FirstOrDefault()?.Id ?? 0;
         }
     }
 }

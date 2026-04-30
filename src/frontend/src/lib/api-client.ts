@@ -76,7 +76,7 @@ const DEMO_LICENSE_CATEGORIES = {
   statusCode: 200,
   data: [
     {
-      id: '11111111-1111-1111-1111-111111111111',
+      id: 1,
       code: 'A',
       nameAr: 'رخصة درجة أولى - دراجة نارية',
       nameEn: 'Motorcycle License',
@@ -84,7 +84,7 @@ const DEMO_LICENSE_CATEGORIES = {
       description: 'رخصة قيادة دراجات نارية بمختلف الأحجام'
     },
     {
-      id: '22222222-2222-2222-2222-222222222222',
+      id: 2,
       code: 'B',
       nameAr: 'رخصة درجة ثانية - سيارة خصوصية',
       nameEn: 'Private Car License',
@@ -92,7 +92,7 @@ const DEMO_LICENSE_CATEGORIES = {
       description: 'رخصة قيادة سيارة خاصة (حد أقصى ٣.٥ طن)'
     },
     {
-      id: '33333333-3333-3333-3333-333333333333',
+      id: 3,
       code: 'C',
       nameAr: 'رخصة درجة ثالثة - مركبة صغيرة',
       nameEn: 'Small Vehicle License',
@@ -100,7 +100,7 @@ const DEMO_LICENSE_CATEGORIES = {
       description: 'رخصة قيادة مركبة صغيرة (من ٣.٥ إلى ٧ طن)'
     },
     {
-      id: '44444444-4444-4444-4444-444444444444',
+      id: 4,
       code: 'D',
       nameAr: 'رخصة درجة رابعة - مركبة كبيرة',
       nameEn: 'Large Vehicle License',
@@ -108,7 +108,7 @@ const DEMO_LICENSE_CATEGORIES = {
       description: 'رخصة قيادة مركبة كبيرة (أكثر من ٧ طن)'
     },
     {
-      id: '55555555-5555-5555-5555-555555555555',
+      id: 5,
       code: 'E',
       nameAr: 'رخصة درجة خامسة - مركبة مقطورة',
       nameEn: 'Trailer License',
@@ -116,7 +116,7 @@ const DEMO_LICENSE_CATEGORIES = {
       description: 'رخصة قيادة مركبة مع مقطورة'
     },
     {
-      id: '66666666-6666-6666-6666-666666666666',
+      id: 6,
       code: 'F',
       nameAr: 'رخصة درجة سادسة - مركبة خاصة',
       nameEn: 'Special Vehicle License',
@@ -211,7 +211,7 @@ const DEMO_USER_PROFILE = {
   message: 'تم جلب بيانات المستخدم بنجاح',
   statusCode: 200,
   data: {
-    id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    id: 1,
     fullName: 'محمد أحمد محمد',
     email: 'demo@mojaz.gov.ye',
     phoneNumber: '+967771234567',
@@ -241,7 +241,7 @@ const DEMO_FEES = {
   statusCode: 200,
   data: [
     {
-      id: 'f1111111-1111-1111-1111-111111111111',
+      id: 1,
       feeType: 0, // ApplicationFee
       feeTypeName: 'رسم تقديم الطلب',
       licenseCategoryId: null,
@@ -255,7 +255,7 @@ const DEMO_FEES = {
       updatedAt: null
     },
     {
-      id: 'f2222222-2222-2222-2222-222222222222',
+      id: 2,
       feeType: 1, // MedicalExamFee
       feeTypeName: 'رسم الفحص الطبي',
       licenseCategoryId: null,
@@ -269,7 +269,7 @@ const DEMO_FEES = {
       updatedAt: null
     },
     {
-      id: 'f3333333-3333-3333-3333-333333333333',
+      id: 3,
       feeType: 2, // TheoryTestFee
       feeTypeName: 'رسم اختبار النظرية',
       licenseCategoryId: null,
@@ -283,7 +283,7 @@ const DEMO_FEES = {
       updatedAt: null
     },
     {
-      id: 'f4444444-4444-4444-4444-444444444444',
+      id: 4,
       feeType: 3, // PracticalTestFee
       feeTypeName: 'رسم اختبار القيادة',
       licenseCategoryId: null,
@@ -297,7 +297,7 @@ const DEMO_FEES = {
       updatedAt: null
     },
     {
-      id: 'f5555555-5555-5555-5555-555555555555',
+      id: 5,
       feeType: 4, // IssuanceFee
       feeTypeName: 'رسم إصدار الرخصة',
       licenseCategoryId: null,
@@ -311,7 +311,7 @@ const DEMO_FEES = {
       updatedAt: null
     },
     {
-      id: 'f6666666-6666-6666-6666-666666666666',
+      id: 6,
       feeType: 5, // RetakeFee
       feeTypeName: 'رسم إعادة الاختبار',
       licenseCategoryId: null,
@@ -325,7 +325,7 @@ const DEMO_FEES = {
       updatedAt: null
     },
     {
-      id: 'f7777777-7777-7777-7777-777777777777',
+      id: 7,
       feeType: 6, // RenewalFee
       feeTypeName: 'رسم تجديد الرخصة',
       licenseCategoryId: null,
@@ -339,7 +339,7 @@ const DEMO_FEES = {
       updatedAt: null
     },
     {
-      id: 'f8888888-8888-8888-8888-888888888888',
+      id: 8,
       feeType: 7, // ReplacementFee
       feeTypeName: 'رسم استبدال الرخصة',
       licenseCategoryId: null,
@@ -353,7 +353,7 @@ const DEMO_FEES = {
       updatedAt: null
     },
     {
-      id: 'f9999999-9999-9999-9999-999999999999',
+      id: 9,
       feeType: 8, // CategoryUpgrade
       feeTypeName: 'رسم ترقية الفئة',
       licenseCategoryId: null,

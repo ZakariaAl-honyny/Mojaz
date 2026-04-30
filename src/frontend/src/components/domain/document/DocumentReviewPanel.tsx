@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'react-hot-toast';
 
 interface DocumentReviewPanelProps {
-  applicationId: string;
+  applicationId: number;
   documents: DocumentDto[];
   onRefresh?: () => void;
 }
@@ -139,7 +139,7 @@ export function DocumentReviewPanel({
         {doc.status === DocumentStatus.Pending ? (
           <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
             <button
-              onClick={() => handleApprove(doc.id)}
+              onClick={() => handleApprove(String(doc.id))}
               disabled={reviewMutation.isPending}
               className="p-1.5 rounded-lg text-green-600 hover:bg-green-50 transition-colors"
               title={t('review.approve')}
@@ -262,8 +262,8 @@ export function DocumentReviewPanel({
         <DocumentLightbox
           document={selectedDocument}
           onClose={() => setSelectedDocument(null)}
-          onApprove={() => handleApprove(selectedDocument.id)}
-          onReject={(reason) => handleReject(selectedDocument.id, reason)}
+          onApprove={() => handleApprove(String(selectedDocument.id))}
+          onReject={(reason) => handleReject(String(selectedDocument.id), reason)}
           isApproving={reviewMutation.isPending}
         />
       )}

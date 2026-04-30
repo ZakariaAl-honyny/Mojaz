@@ -31,7 +31,7 @@ const initialState = {
   },
   step4: {
     applicantType: 'Citizen' as const,
-    preferredCenterId: '',
+    preferredCenterId: null as number | null,
     testLanguage: 'ar' as const,
     appointmentPreference: 'Morning' as const,
     specialNeedsDeclaration: false,
@@ -96,7 +96,7 @@ export const useWizardStore = create<WizardState>()(
         city?: string | null;
         region?: string | null;
         applicantType?: string | null;
-        preferredCenterId?: string | null;
+        preferredCenterId?: number | null;
         testLanguage?: string | null;
         appointmentPreference?: string | null;
         specialNeedsDeclaration?: boolean | null;
@@ -135,7 +135,7 @@ export const useWizardStore = create<WizardState>()(
 
         const newStep4 = { ...state.step4 };
         if (data.applicantType !== undefined) newStep4.applicantType = (data.applicantType ?? 'Citizen') as typeof state.step4.applicantType;
-        if (data.preferredCenterId !== undefined) newStep4.preferredCenterId = data.preferredCenterId ?? '';
+        if (data.preferredCenterId !== undefined) newStep4.preferredCenterId = data.preferredCenterId ?? null;
         if (data.testLanguage !== undefined) newStep4.testLanguage = (data.testLanguage ?? 'ar') as typeof state.step4.testLanguage;
         if (data.appointmentPreference !== undefined) newStep4.appointmentPreference = (data.appointmentPreference ?? 'Morning') as typeof state.step4.appointmentPreference;
         if (data.specialNeedsDeclaration !== undefined) newStep4.specialNeedsDeclaration = data.specialNeedsDeclaration ?? false;

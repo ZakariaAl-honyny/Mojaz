@@ -39,11 +39,11 @@ namespace Mojaz.API.Controllers
         public async Task<IActionResult> CreateMedicalExam(string appIdOrNumber, [FromBody] CreateMedicalResultRequest request)
         {
             var applicationId = await ResolveAppIdAsync(appIdOrNumber);
-            if (applicationId == Guid.Empty)
+            if (applicationId == 0)
                 return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
             var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(nameIdentifier) || !Guid.TryParse(nameIdentifier, out var doctorId))
+            if (string.IsNullOrEmpty(nameIdentifier) || !int.TryParse(nameIdentifier, out var doctorId))
             {
                 return Unauthorized(ApiResponse<object>.Fail(401, "Invalid user identification."));
             }
@@ -64,7 +64,7 @@ namespace Mojaz.API.Controllers
         public async Task<IActionResult> GetByApplicationId(string appIdOrNumber)
         {
             var applicationId = await ResolveAppIdAsync(appIdOrNumber);
-            if (applicationId == Guid.Empty)
+            if (applicationId == 0)
                 return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
             var result = await _medicalService.GetByApplicationIdAsync(applicationId);
@@ -77,19 +77,19 @@ namespace Mojaz.API.Controllers
         [HttpPatch("{id}/result")]
         [Authorize(Roles = "Doctor")]
         [ProducesResponseType(typeof(ApiResponse<MedicalResultDto>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateResult(Guid id, [FromBody] UpdateMedicalResultRequest request)
+        public async Task<IActionResult> UpdateResult(int id, [FromBody] UpdateMedicalResultRequest request)
         {
             var result = await _medicalService.UpdateResultAsync(id, request.Result, request.Notes);
             return StatusCode(result.StatusCode, result);
         }
 
-        private async Task<Guid> ResolveAppIdAsync(string appIdOrNumber)
+        private async Task<int> ResolveAppIdAsync(string appIdOrNumber)
         {
-            if (string.IsNullOrWhiteSpace(appIdOrNumber)) return Guid.Empty;
-            if (Guid.TryParse(appIdOrNumber.Trim(), out var id)) return id;
+            if (string.IsNullOrWhiteSpace(appIdOrNumber)) return 0;
+            if (int.TryParse(appIdOrNumber.Trim(), out var id)) return id;
 
             var result = await _applicationService.GetByApplicationNumberAsync(appIdOrNumber.Trim());
-            return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
+            return result.Data?.FirstOrDefault()?.Id ?? 0;
         }
     }
 

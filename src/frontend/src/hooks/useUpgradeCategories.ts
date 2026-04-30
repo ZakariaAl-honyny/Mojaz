@@ -25,7 +25,7 @@ export function useUserLicenses() {
 /**
  * Hook to get upgrade targets for a specific license
  */
-export function useUpgradeTargets(licenseId: string | null) {
+export function useUpgradeTargets(licenseId: number | null) {
   return useQuery<UpgradeTargetCategory[]>({
     queryKey: [...wizardQueryKeys.upgradeTargets, licenseId] as const,
     queryFn: async () => {

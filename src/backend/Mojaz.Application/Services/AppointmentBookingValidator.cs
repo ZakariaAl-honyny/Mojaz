@@ -167,7 +167,7 @@ public class AppointmentBookingValidator
                 result.IsValid = false;
                 
                 // Get history to find the eligible date for a better error message
-                var history = await _theoryService.GetHistoryAsync(request.ApplicationId, Guid.Empty, "Manager", 1, 1);
+                var history = await _theoryService.GetHistoryAsync(request.ApplicationId, 0, "Manager", 1, 1);
                 var latestResult = history.Data?.Items.FirstOrDefault();
                 var eligibleDate = latestResult?.RetakeEligibleAfter?.ToString("yyyy-MM-dd") ?? "the required cooling period has passed";
 
@@ -201,7 +201,7 @@ public class AppointmentBookingValidator
                 result.IsValid = false;
                 
                 // Get history to find the eligible date for a better error message
-                var history = await _practicalService.GetHistoryAsync(request.ApplicationId, Guid.Empty, "Manager", 1, 1);
+                var history = await _practicalService.GetHistoryAsync(request.ApplicationId, 0, "Manager", 1, 1);
                 var latestResult = history.Data?.Items.FirstOrDefault();
                 var eligibleDate = latestResult?.RetakeEligibleAfter?.ToString("yyyy-MM-dd") ?? "the required cooling period has passed";
 
@@ -213,7 +213,7 @@ public class AppointmentBookingValidator
         return result;
     }
 
-    public async Task<AppointmentValidationResult> ValidateRescheduleAsync(Guid appointmentId, RescheduleAppointmentRequest request, CancellationToken ct = default)
+    public async Task<AppointmentValidationResult> ValidateRescheduleAsync(int appointmentId, RescheduleAppointmentRequest request, CancellationToken ct = default)
     {
         var result = new AppointmentValidationResult { IsValid = true };
 
@@ -266,10 +266,10 @@ public class AppointmentBookingValidator
         }
 
         // Check slot capacity for new slot (if changing branch or time)
-        var branchId = request.NewBranchId ?? appointment.BranchId ?? Guid.Empty;
+        var branchId = request.NewBranchId ?? appointment.BranchId ?? 0;
         var newTimeSlot = request.NewTimeSlot;
         
-        if (branchId != Guid.Empty && !string.IsNullOrEmpty(newTimeSlot))
+        if (branchId != 0 && !string.IsNullOrEmpty(newTimeSlot))
         {
             var maxCapacity = await _systemSettingsService.GetIntAsync("MAX_APPOINTMENTS_PER_SLOT") ?? 2;
             var bookedCount = await _appointmentRepository.GetBookedSlotCountAsync(branchId, request.NewScheduledDate, newTimeSlot, ct);

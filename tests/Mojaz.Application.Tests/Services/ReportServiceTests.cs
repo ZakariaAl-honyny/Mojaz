@@ -89,11 +89,11 @@ public class ReportServiceTests
         // Arrange
         var applications = new List<ApplicationEntity>
         {
-            new() { Id = Guid.NewGuid(), Status = ApplicationStatus.Submitted, IsDeleted = false },
-            new() { Id = Guid.NewGuid(), Status = ApplicationStatus.Submitted, IsDeleted = false },
-            new() { Id = Guid.NewGuid(), Status = ApplicationStatus.Approved, IsDeleted = false },
-            new() { Id = Guid.NewGuid(), Status = ApplicationStatus.Draft, IsDeleted = false },
-            new() { Id = Guid.NewGuid(), Status = ApplicationStatus.Rejected, IsDeleted = false }
+            new() { Id = 1, Status = ApplicationStatus.Submitted, IsDeleted = false },
+            new() { Id = 2, Status = ApplicationStatus.Submitted, IsDeleted = false },
+            new() { Id = 3, Status = ApplicationStatus.Approved, IsDeleted = false },
+            new() { Id = 4, Status = ApplicationStatus.Draft, IsDeleted = false },
+            new() { Id = 5, Status = ApplicationStatus.Rejected, IsDeleted = false }
         }.AsQueryable();
 
         var mockDbSet = CreateMockDbSet(applications);
@@ -134,7 +134,7 @@ public class ReportServiceTests
     public async Task GetStatusDistributionAsync_WithBranchFilter_FiltersCorrectly()
     {
         // Arrange
-        var branchId = Guid.NewGuid();
+        var branchId = 1;
         var filter = new ReportingFilter { BranchId = branchId };
 
         var mockDbSet = new Mock<DbSet<ApplicationEntity>>();
@@ -445,7 +445,7 @@ public class ReportServiceTests
     public async Task GetIssuanceTimelineAsync_WithCategoryFilter_FiltersByCategory()
     {
         // Arrange
-        var categoryId = Guid.NewGuid();
+        var categoryId = 1;
         var filter = new ReportingFilter { LicenseCategoryId = categoryId };
 
         var mockDbSet = new Mock<DbSet<LicenseEntity>>();

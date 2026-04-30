@@ -31,7 +31,7 @@ import { submitPracticalResultSchema, SubmitPracticalResultFormValues } from '@/
 import { cn } from '@/lib/utils';
 
 interface PracticalResultFormProps {
-  applicationId: string;
+  applicationId: number;
   onSuccess?: () => void;
 }
 
@@ -60,7 +60,7 @@ export function PracticalResultForm({ applicationId, onSuccess }: PracticalResul
   const onSubmit = async (data: SubmitPracticalResultFormValues) => {
     try {
       setIsSubmitting(true);
-      const res = await practicalService.submitResult(applicationId, {
+      const res = await practicalService.submitResult(String(applicationId), {
         score: data.score || 0,
         isAbsent: data.isAbsent,
         notes: data.notes,

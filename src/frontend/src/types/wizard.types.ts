@@ -65,7 +65,7 @@ export interface Step3Data {
 
 export interface Step4Data {
   applicantType?: 'Citizen' | 'Resident';
-  preferredCenterId?: string;
+  preferredCenterId?: number;
   testLanguage?: 'ar' | 'en';
   appointmentPreference?: 'Morning' | 'Afternoon' | 'Evening' | 'NoPreference';
   specialNeedsDeclaration?: boolean;
@@ -75,7 +75,7 @@ export interface Step4Data {
 }
 
 export interface LicenseCategoryOption {
-  id: string;
+  id: number;
   code: string; // Backend returns "A", "B", etc. - convert to number using licenseCategoryToNumber
   nameAr: string;
   nameEn: string;
@@ -88,7 +88,7 @@ export interface LicenseCategoryOption {
 }
 
 export interface ExamCenter {
-  id: string;
+  id: number;
   nameAr: string;
   nameEn: string;
   city: string;
@@ -109,7 +109,7 @@ export interface ServiceCardConfig {
 
 export interface WizardState {
   // Application identity
-  applicationId: string | null;
+  applicationId: number | null;
   currentStep: StepId;
   completedSteps: StepId[];
   lastSavedAt: Date | null;
@@ -133,7 +133,7 @@ export interface WizardState {
   setDeclaration: (accepted: boolean) => void;
   goTo: (step: StepId) => void;
   markCompleted: (step: StepId) => void;
-  setApplicationId: (id: string) => void;
+  setApplicationId: (id: number) => void;
   setLastSavedAt: (date: Date) => void;
   setSaving: (saving: boolean) => void;
   incrementSaveFailures: () => void;
@@ -159,7 +159,7 @@ export interface WizardState {
     city?: string | null;
     region?: string | null;
     applicantType?: string | null;
-    preferredCenterId?: string | null;
+    preferredCenterId?: number | null;
     testLanguage?: string | null;
     appointmentPreference?: string | null;
     specialNeedsDeclaration?: boolean | null;

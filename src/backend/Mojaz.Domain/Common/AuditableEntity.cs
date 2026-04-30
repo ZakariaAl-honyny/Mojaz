@@ -4,6 +4,6 @@ namespace Mojaz.Domain.Common;
 
 public abstract class AuditableEntity : BaseEntity
 {
-    public Guid? CreatedBy { get; set; }
-    public Guid? UpdatedBy { get; set; }
+    public int? CreatedBy { get; set; }
+    public int? UpdatedBy { get; set; }
 }

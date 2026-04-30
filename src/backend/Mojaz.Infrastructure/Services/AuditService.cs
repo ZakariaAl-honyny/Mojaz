@@ -38,29 +38,21 @@ public class AuditService : IAuditService
     {
         var context = _httpContextAccessor.HttpContext;
         var userIdString = context?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        Guid? userId = !string.IsNullOrEmpty(userIdString) && Guid.TryParse(userIdString, out var parsedUserId) 
+        int? userId = !string.IsNullOrEmpty(userIdString) && int.TryParse(userIdString, out var parsedUserId) 
             ? parsedUserId 
             : null;
 
-        // Parse entityId if provided
-        Guid entityIdGuid = Guid.Empty;
-        if (!string.IsNullOrEmpty(entityId) && Guid.TryParse(entityId, out var parsedId))
-        {
-            entityIdGuid = parsedId;
-        }
-
-        // Use JsonConvert to properly serialize values (avoids truncation/injection issues)
+        // Use JsonConvert to properly serialize values (avoids truncation/jection issues)
         var payloadObject = new { OldValues = oldValues, NewValues = newValues };
         var payload = JsonConvert.SerializeObject(payloadObject);
 
         var auditLog = new AuditLog
         {
-            Id = Guid.NewGuid(),
             UserId = userId,
             ActionType = action,
-            ActionCategory = actionCategory ?? "DataAccess", // Default to DataAccess if not provided
+            ActionCategory = actionCategory ?? "DataAccess",
             EntityName = entityType ?? "Unknown",
-            EntityId = entityIdGuid.ToString(),
+            EntityId = entityId ?? string.Empty,
             Payload = payload,
             Timestamp = DateTime.UtcNow
         };
@@ -78,16 +70,9 @@ public class AuditService : IAuditService
     // Overload 3: entityType + entityId (full implementation)
     public async Task<IEnumerable<AuditLog>> GetLogsAsync(string? entityType, string? entityId)
     {
-        // Parse entityId to Guid for filtering
-        Guid? entityIdGuid = null;
-        if (!string.IsNullOrEmpty(entityId) && Guid.TryParse(entityId, out var parsedId))
-        {
-            entityIdGuid = parsedId;
-        }
-
         // Basic implementation, usually filtered in a repository method
         return await _unitOfWork.Repository<AuditLog>().FindAsync(x => 
             (string.IsNullOrEmpty(entityType) || x.EntityName == entityType) && 
-            (!entityIdGuid.HasValue || x.EntityId == entityIdGuid.ToString()));
+            (string.IsNullOrEmpty(entityId) || x.EntityId == entityId));
     }
 }

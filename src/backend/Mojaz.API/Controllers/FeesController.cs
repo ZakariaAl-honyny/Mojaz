@@ -39,11 +39,11 @@ public class FeesController : ControllerBase
     /// <summary>
     /// Get a single fee structure by ID.
     /// </summary>
-    [HttpGet("{id:guid}")]
+    [HttpGet("{id:int}")]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ApiResponse<FeeStructureDto>), 200)]
     [ProducesResponseType(typeof(ApiResponse<object>), 404)]
-    public async Task<IActionResult> GetByIdAsync(Guid id)
+    public async Task<IActionResult> GetByIdAsync(int id)
     {
         var result = await _feeStructureService.GetByIdAsync(id);
         return StatusCode(result.StatusCode, result);
@@ -66,12 +66,12 @@ public class FeesController : ControllerBase
     /// <summary>
     /// Update an existing fee structure.
     /// </summary>
-    [HttpPut("{id:guid}")]
+    [HttpPut("{id:int}")]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ApiResponse<FeeStructureDto>), 200)]
     [ProducesResponseType(typeof(ApiResponse<object>), 400)]
     [ProducesResponseType(typeof(ApiResponse<object>), 404)]
-    public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateFeeStructureRequest request)
+    public async Task<IActionResult> UpdateAsync(int id, [FromBody] UpdateFeeStructureRequest request)
     {
         var result = await _feeStructureService.UpdateAsync(id, request);
         return StatusCode(result.StatusCode, result);
@@ -80,11 +80,11 @@ public class FeesController : ControllerBase
     /// <summary>
     /// Delete a fee structure (soft delete).
     /// </summary>
-    [HttpDelete("{id:guid}")]
+    [HttpDelete("{id:int}")]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ApiResponse<object>), 200)]
     [ProducesResponseType(typeof(ApiResponse<object>), 404)]
-    public async Task<IActionResult> DeleteAsync(Guid id)
+    public async Task<IActionResult> DeleteAsync(int id)
     {
         var result = await _feeStructureService.DeleteAsync(id);
         return StatusCode(result.StatusCode, result);

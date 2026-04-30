@@ -67,7 +67,7 @@ public class RenewalService : IRenewalService
         _logger = logger;
     }
 
-    public async Task<ApiResponse<EligibilityResponse>> ValidateEligibilityAsync(Guid applicantId, Guid licenseCategoryId)
+    public async Task<ApiResponse<EligibilityResponse>> ValidateEligibilityAsync(int applicantId, int licenseCategoryId)
     {
         try
         {
@@ -147,7 +147,7 @@ public class RenewalService : IRenewalService
         }
     }
 
-    public async Task<ApiResponse<Guid>> CreateRenewalAsync(CreateRenewalRequest request)
+    public async Task<ApiResponse<int>> CreateRenewalAsync(CreateRenewalRequest request)
     {
         try
         {
@@ -155,14 +155,14 @@ public class RenewalService : IRenewalService
             var oldLicense = await _licenseRepository.GetByIdAsync(request.OldLicenseId);
             if (oldLicense == null)
             {
-                return ApiResponse<Guid>.NotFound("الرخصة القديمة غير موجودة.");
+                return ApiResponse<int>.NotFound("الرخصة القديمة غير موجودة.");
             }
 
             // Validate category
             var category = await _licenseCategoryRepository.GetByIdAsync(request.LicenseCategoryId);
             if (category == null)
             {
-                return ApiResponse<Guid>.NotFound("فئة الرخصة غير موجودة.");
+                return ApiResponse<int>.NotFound("فئة الرخصة غير موجودة.");
             }
 
             // Check for existing pending renewal application (using Draft as initial status)
@@ -173,7 +173,7 @@ public class RenewalService : IRenewalService
 
             if (existingRenewal.Any())
             {
-                return ApiResponse<Guid>.Fail(409, "يوجد طلب تجديد لهذا الطلب بالفعل.");
+                return ApiResponse<int>.Fail(409, "يوجد طلب تجديد لهذا الطلب بالفعل.");
             }
 
             // Create renewal application
@@ -197,16 +197,16 @@ public class RenewalService : IRenewalService
 
             _logger.LogInformation("Renewal application created: {ApplicationId}", renewalApplication.Id);
 
-            return ApiResponse<Guid>.Ok(renewalApplication.Id, "تم إنشاء طلب التجديد بنجاح.");
+            return ApiResponse<int>.Ok(renewalApplication.Id, "تم إنشاء طلب التجديد بنجاح.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error creating renewal application");
-            return ApiResponse<Guid>.Fail(500, "حدث خطأ أثناء إنشاء طلب التجديد.");
+            return ApiResponse<int>.Fail(500, "حدث خطأ أثناء إنشاء طلب التجديد.");
         }
     }
 
-    public async Task<ApiResponse<bool>> ProcessMedicalResultAsync(Guid applicationId, Guid medicalExaminationId)
+    public async Task<ApiResponse<bool>> ProcessMedicalResultAsync(int applicationId, int medicalExaminationId)
     {
         try
         {
@@ -244,7 +244,7 @@ public class RenewalService : IRenewalService
         }
     }
 
-    public async Task<ApiResponse<bool>> PayRenewalFeeAsync(Guid applicationId, PaymentRequest paymentInfo)
+    public async Task<ApiResponse<bool>> PayRenewalFeeAsync(int applicationId, PaymentRequest paymentInfo)
     {
         try
         {
@@ -296,7 +296,7 @@ public class RenewalService : IRenewalService
         }
     }
 
-    public async Task<ApiResponse<IssueLicenseResponse>> IssueLicenseAsync(Guid applicationId)
+    public async Task<ApiResponse<IssueLicenseResponse>> IssueLicenseAsync(int applicationId)
     {
         try
         {
@@ -409,7 +409,7 @@ public class RenewalService : IRenewalService
         return $"MOJ-{year}-{random:D8}";
     }
 
-    private async Task SendLicenseIssuedNotificationAsync(Guid userId, License license, LicenseCategory category)
+    private async Task SendLicenseIssuedNotificationAsync(int userId, License license, LicenseCategory category)
     {
         try
         {

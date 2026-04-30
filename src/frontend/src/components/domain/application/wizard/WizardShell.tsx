@@ -58,7 +58,7 @@ export function WizardShell() {
           <AutoSaveIndicator />
         </div>
         {applicationId && (
-          <span className="font-medium text-[#1a3a8f]">{applicationId.split('-')[0]}</span>
+          <span className="font-medium text-[#1a3a8f]">{String(applicationId)}</span>
         )}
         <span className="text-neutral-400">الخطوة {currentStep}/5</span>
       </div>

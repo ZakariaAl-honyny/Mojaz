@@ -80,14 +80,14 @@ public class AppointmentServiceTests
     {
         // Arrange
         var type = AppointmentType.PracticalTest;
-        var branchId = Guid.NewGuid();
+        var branchId = 1;
         var date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5));
 
         var bookedAppointments = new List<Appointment>
         {
             new Appointment
             {
-                Id = Guid.NewGuid(),
+                Id = 2,
                 BranchId = branchId,
                 ScheduledDate = date,
                 TimeSlot = "09:00",
@@ -144,14 +144,14 @@ public class AppointmentServiceTests
     {
         // Arrange
         var type = AppointmentType.PracticalTest;
-        var branchId = Guid.NewGuid();
+        var branchId = 3;
         var date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5));
 
         // 2 appointments = full capacity
         var bookedAppointments = new List<Appointment>
         {
-            new Appointment { Id = Guid.NewGuid(), BranchId = branchId, ScheduledDate = date, TimeSlot = "09:00", AppointmentType = type, Status = AppointmentStatus.Scheduled },
-            new Appointment { Id = Guid.NewGuid(), BranchId = branchId, ScheduledDate = date, TimeSlot = "09:00", AppointmentType = type, Status = AppointmentStatus.Scheduled }
+            new Appointment { Id = 4, BranchId = branchId, ScheduledDate = date, TimeSlot = "09:00", AppointmentType = type, Status = AppointmentStatus.Scheduled },
+            new Appointment { Id = 5, BranchId = branchId, ScheduledDate = date, TimeSlot = "09:00", AppointmentType = type, Status = AppointmentStatus.Scheduled }
         };
 
         _appointmentRepositoryMock
@@ -196,13 +196,13 @@ public class AppointmentServiceTests
     public async Task CreateAppointmentAsync_ValidationFails_ThrowsException()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 6;
         
         var request = new CreateAppointmentRequest
         {
             ApplicationId = applicationId,
             Type = AppointmentType.PracticalTest,
-            BranchId = Guid.NewGuid(),
+            BranchId = 7,
             ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
             TimeSlot = "09:00"
         };
@@ -222,9 +222,9 @@ public class AppointmentServiceTests
     public async Task CreateAppointmentAsync_Success_ReturnsAppointmentDto()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var branchId = Guid.NewGuid();
-        var appointmentId = Guid.NewGuid();
+        var applicationId = 8;
+        var branchId = 9;
+        var appointmentId = 10;
         var scheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5));
 
         var application = new ApplicationEntity
@@ -329,7 +329,7 @@ public class AppointmentServiceTests
     public async Task RescheduleAppointmentAsync_NotFound_ThrowsException()
     {
         // Arrange
-        var appointmentId = Guid.NewGuid();
+        var appointmentId = 11;
         var request = new RescheduleAppointmentRequest
         {
             NewScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10)),
@@ -340,7 +340,7 @@ public class AppointmentServiceTests
             .Setup(x => x.GetByIdForRescheduleAsync(appointmentId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Appointment?)null);
 
-        var userId = Guid.NewGuid();
+        var userId = 12;
 
         // Act & Assert
         await FluentActions.Invoking(() => _service.RescheduleAppointmentAsync(appointmentId, request, userId, "Applicant"))
@@ -352,12 +352,12 @@ public class AppointmentServiceTests
     public async Task RescheduleAppointmentAsync_ValidationFails_ThrowsException()
     {
         // Arrange
-        var appointmentId = Guid.NewGuid();
+        var appointmentId = 13;
         var appointment = new Appointment
         {
             Id = appointmentId,
             RescheduleCount = 3, // At max
-            BranchId = Guid.NewGuid(),
+            BranchId = 14,
             TimeSlot = "09:00",
             Status = AppointmentStatus.Scheduled
         };
@@ -376,7 +376,7 @@ public class AppointmentServiceTests
             .Setup(x => x.GetIntAsync("MAX_RESCHEDULE_COUNT"))
             .ReturnsAsync(3);
 
-        var userId = Guid.NewGuid();
+        var userId = 15;
 
         // Act & Assert
         await FluentActions.Invoking(() => _service.RescheduleAppointmentAsync(appointmentId, request, userId, "Applicant"))
@@ -388,19 +388,19 @@ public class AppointmentServiceTests
     public async Task RescheduleAppointmentAsync_Success_ReturnsUpdatedDto()
     {
         // Arrange
-        var appointmentId = Guid.NewGuid();
-        var branchId = Guid.NewGuid();
+        var appointmentId = 16;
+        var branchId = 17;
         var newDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10));
         
         var appointment = new Appointment
         {
             Id = appointmentId,
-            ApplicationId = Guid.NewGuid(),
+            ApplicationId = 18,
             RescheduleCount = 1,
             BranchId = branchId,
             TimeSlot = "09:00",
             Status = AppointmentStatus.Scheduled,
-            Application = new ApplicationEntity { Id = Guid.NewGuid(), Status = ApplicationStatus.Submitted },
+            Application = new ApplicationEntity { Id = 19, Status = ApplicationStatus.Submitted },
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -445,7 +445,7 @@ public class AppointmentServiceTests
             .Setup(x => x.GetByIdWithApplicationAsync(appointmentId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(appointment);
 
-        var userId = Guid.NewGuid();
+        var userId = 20;
 
         // Act
         var result = await _service.RescheduleAppointmentAsync(appointmentId, request, userId, "Applicant");
@@ -466,7 +466,7 @@ public class AppointmentServiceTests
     public async Task CancelAppointmentAsync_NotFound_ThrowsException()
     {
         // Arrange
-        var appointmentId = Guid.NewGuid();
+        var appointmentId = 21;
         var request = new CancelAppointmentRequest
         {
             Reason = "Test cancellation"
@@ -476,7 +476,7 @@ public class AppointmentServiceTests
             .Setup(x => x.GetByIdForRescheduleAsync(appointmentId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Appointment?)null);
 
-        var userId = Guid.NewGuid();
+        var userId = 22;
 
         // Act & Assert
         await FluentActions.Invoking(() => _service.CancelAppointmentAsync(appointmentId, request, userId, "Applicant"))
@@ -488,12 +488,12 @@ public class AppointmentServiceTests
     public async Task CancelAppointmentAsync_AlreadyCancelled_ThrowsException()
     {
         // Arrange
-        var appointmentId = Guid.NewGuid();
+        var appointmentId = 23;
         var appointment = new Appointment
         {
             Id = appointmentId,
             Status = AppointmentStatus.Cancelled,
-            Application = new ApplicationEntity { Id = Guid.NewGuid() }
+            Application = new ApplicationEntity { Id = 24 }
         };
 
         var request = new CancelAppointmentRequest
@@ -505,7 +505,7 @@ public class AppointmentServiceTests
             .Setup(x => x.GetByIdForRescheduleAsync(appointmentId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(appointment);
 
-        var userId = Guid.NewGuid();
+        var userId = 25;
 
         // Act & Assert
         await FluentActions.Invoking(() => _service.CancelAppointmentAsync(appointmentId, request, userId, "Applicant"))
@@ -517,17 +517,17 @@ public class AppointmentServiceTests
     public async Task CancelAppointmentAsync_Success_ReturnsCancelledDto()
     {
         // Arrange
-        var appointmentId = Guid.NewGuid();
-        var branchId = Guid.NewGuid();
+        var appointmentId = 26;
+        var branchId = 27;
         
         var appointment = new Appointment
         {
             Id = appointmentId,
-            ApplicationId = Guid.NewGuid(),
+            ApplicationId = 28,
             BranchId = branchId,
             TimeSlot = "09:00",
             Status = AppointmentStatus.Scheduled,
-            Application = new ApplicationEntity { Id = Guid.NewGuid(), Status = ApplicationStatus.Submitted },
+            Application = new ApplicationEntity { Id = 29, Status = ApplicationStatus.Submitted },
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
@@ -551,7 +551,7 @@ public class AppointmentServiceTests
             .Setup(x => x.GetByIdWithApplicationAsync(appointmentId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(appointment);
 
-        var userId = Guid.NewGuid();
+        var userId = 30;
 
         // Act
         var result = await _service.CancelAppointmentAsync(appointmentId, request, userId, "Applicant");

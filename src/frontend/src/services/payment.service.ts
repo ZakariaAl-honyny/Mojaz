@@ -13,13 +13,13 @@ export interface PaymentInitiateRequest {
 }
 
 export interface PaymentConfirmRequest {
-  paymentId: string;
+  paymentId: number;
   paymentMethod?: string;
   isSuccessful: boolean;
 }
 
 // Internal lock for payment confirmations
-const _activeConfirmations = new Set<string>();
+const _activeConfirmations = new Set<number>();
 
 const getBaseUrl = (idOrNumber: string) => `payments/application/${idOrNumber}`;
 
@@ -64,7 +64,7 @@ export const paymentService = {
   /**
    * Get a single payment by ID and its receipt info
    */
-  getPaymentById: async (paymentId: string): Promise<ApiResponse<PaymentDto>> => {
+  getPaymentById: async (paymentId: number): Promise<ApiResponse<PaymentDto>> => {
     const response = await api.get<ApiResponse<PaymentDto>>(`payments/receipt/${paymentId}`);
     return response.data;
   },
@@ -93,7 +93,7 @@ export const paymentService = {
   /**
    * Process payment (simulate success) - for demo
    */
-  processPayment: async (paymentId: string): Promise<ApiResponse<PaymentDto>> => {
+  processPayment: async (paymentId: number): Promise<ApiResponse<PaymentDto>> => {
     try {
       const response = await api.post<ApiResponse<PaymentDto>>(`payments/${paymentId}/process`);
       return response.data;
@@ -101,7 +101,8 @@ export const paymentService = {
       return {
         success: false,
         message: error.response?.data?.message || 'فشل في معالجة الدفع',
-        statusCode: error.response?.statusCode || 500
+        statusCode: error.response?.statusCode || 500,
+        data: null
       };
     }
   },
@@ -109,7 +110,7 @@ export const paymentService = {
   /**
    * Get pending payment for an application
    */
-  getPendingPayment: async (applicationId: string): Promise<ApiResponse<PaymentDto>> => {
+  getPendingPayment: async (applicationId: number): Promise<ApiResponse<PaymentDto>> => {
     try {
       const response = await api.get<ApiResponse<PaymentDto>>(`applications/${applicationId}/pending-payment`);
       return response.data;
@@ -117,7 +118,8 @@ export const paymentService = {
       return {
         success: false,
         message: error.response?.data?.message || 'لم يتم العثور على دفع معلقة',
-        statusCode: 404
+        statusCode: 404,
+        data: null
       };
     }
   },
@@ -125,7 +127,7 @@ export const paymentService = {
   /**
    * Download payment receipt as PDF
    */
-  downloadReceipt: async (paymentId: string) => {
+  downloadReceipt: async (paymentId: number) => {
     const response = await api.get(`payments/${paymentId}/receipt`, {
       responseType: "blob",
     });

@@ -130,7 +130,7 @@ public class ProcessAppointmentRemindersJob
             processedCount, failedCount, appointments.Count);
     }
 
-    private string GetBranchName(Guid? branchId)
+    private string GetBranchName(int? branchId)
     {
         // In a real implementation, this would fetch from a Branches table or SystemSettings
         // For now, return a generic name

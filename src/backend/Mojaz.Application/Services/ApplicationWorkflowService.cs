@@ -38,7 +38,7 @@ public class ApplicationWorkflowService : IApplicationWorkflowService
         _backgroundJobClient = backgroundJobClient;
     }
 
-    public async Task<ApiResponse<bool>> AdvanceStageAsync(Guid applicationId, ApplicationStatus nextStatus, string notes, Guid userId)
+    public async Task<ApiResponse<bool>> AdvanceStageAsync(int applicationId, ApplicationStatus nextStatus, string notes, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null) return ApiResponse<bool>.Fail(404, "الطلب غير موجود.");
@@ -88,7 +88,7 @@ public class ApplicationWorkflowService : IApplicationWorkflowService
         return ApiResponse<bool>.Ok(true, "تم نقل الطلب إلى المرحلة التالية.");
     }
 
-    public async Task<ApiResponse<bool>> RejectAsync(Guid applicationId, string reason, Guid userId)
+    public async Task<ApiResponse<bool>> RejectAsync(int applicationId, string reason, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null) return ApiResponse<bool>.Fail(404, "الطلب غير موجود.");

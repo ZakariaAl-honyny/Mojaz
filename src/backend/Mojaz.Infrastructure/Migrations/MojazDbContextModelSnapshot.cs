@@ -24,15 +24,17 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.Application", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("AdditionalTrainingRequired")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("ApplicantId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ApplicantId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ApplicationNumber")
                         .IsRequired()
@@ -42,15 +44,15 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("AssignedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("AssignedToId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("AssignedToId")
+                        .HasColumnType("int");
 
                     b.Property<string>("AssignmentNotes")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<Guid?>("BranchId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CancellationReason")
                         .HasMaxLength(200)
@@ -62,8 +64,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("CurrentStage")
                         .IsRequired()
@@ -76,8 +78,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ExpiresAt")
                         .HasColumnType("datetime2");
@@ -88,8 +90,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("FinalDecisionAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("FinalDecisionBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("FinalDecisionBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("FinalDecisionReason")
                         .HasMaxLength(1000)
@@ -98,8 +100,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("LicenseCategoryId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("LicenseCategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ManagerNotes")
                         .HasMaxLength(1000)
@@ -128,8 +130,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("ReviewedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ReviewedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("ReviewedBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("SecurityNotes")
                         .HasColumnType("nvarchar(max)");
@@ -140,8 +142,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("SecurityVerifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("SecurityVerifiedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("SecurityVerifiedBy")
+                        .HasColumnType("int");
 
                     b.Property<byte>("ServiceType")
                         .HasColumnType("tinyint");
@@ -164,8 +166,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -186,12 +188,14 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.ApplicationDocument", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ContentType")
                         .IsRequired()
@@ -201,14 +205,14 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
 
                     b.Property<byte>("DocumentType")
                         .HasColumnType("tinyint");
@@ -239,8 +243,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("ReviewedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ReviewedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("ReviewedBy")
+                        .HasColumnType("int");
 
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint");
@@ -253,8 +257,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -269,18 +273,20 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.ApplicationStatusHistory", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ChangedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ChangedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ChangedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -309,21 +315,23 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.Appointment", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<byte>("AppointmentType")
                         .HasColumnType("tinyint");
 
-                    b.Property<Guid?>("AssignedStaffId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("AssignedStaffId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid?>("BranchId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CancellationReason")
                         .HasMaxLength(128)
@@ -338,14 +346,14 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -383,8 +391,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -405,9 +413,11 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.AuditLog", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ActionCategory")
                         .IsRequired()
@@ -447,8 +457,8 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -467,27 +477,29 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.CategoryUpgrade", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<byte>("FromCategory")
                         .HasColumnType("tinyint");
 
-                    b.Property<Guid>("LicenseId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("LicenseId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid?>("ProcessedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("ProcessedBy")
+                        .HasColumnType("int");
 
                     b.Property<byte>("ToCategory")
                         .HasColumnType("tinyint");
@@ -495,8 +507,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpgradedAt")
                         .HasColumnType("datetime2");
@@ -514,15 +526,23 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.EmailLog", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("ErrorMessage")
                         .HasMaxLength(1000)
@@ -558,8 +578,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -571,9 +591,11 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.FeeStructure", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
@@ -581,8 +603,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("Currency")
                         .IsRequired()
@@ -592,8 +614,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("EffectiveFrom")
                         .HasColumnType("datetime2");
@@ -610,15 +632,15 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("LicenseCategoryId")
+                    b.Property<int?>("LicenseCategoryId")
                         .IsRequired()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -631,30 +653,32 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.License", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<string>("BlobUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("BranchId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DownloadedAt")
                         .HasColumnType("datetime2");
@@ -662,8 +686,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("ExpiresAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("HolderId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("HolderId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -671,11 +695,11 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("IssuedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("IssuedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("IssuedBy")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("LicenseCategoryId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("LicenseCategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LicenseNumber")
                         .IsRequired()
@@ -698,8 +722,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -731,9 +755,11 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.LicenseCategory", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<byte>("Code")
                         .HasColumnType("tinyint");
@@ -741,8 +767,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -766,8 +792,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.Property<int>("ValidityYears")
                         .HasColumnType("int");
@@ -784,9 +810,9 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+                            Id = 1,
                             Code = (byte)0,
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 733, DateTimeKind.Utc).AddTicks(9096),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 673, DateTimeKind.Utc).AddTicks(46),
                             IsActive = true,
                             MinimumAge = 16,
                             NameAr = "دراجة نارية",
@@ -796,9 +822,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+                            Id = 2,
                             Code = (byte)1,
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 733, DateTimeKind.Utc).AddTicks(9122),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 673, DateTimeKind.Utc).AddTicks(55),
                             IsActive = true,
                             MinimumAge = 18,
                             NameAr = "خصوصي",
@@ -808,9 +834,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                            Id = 3,
                             Code = (byte)2,
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 733, DateTimeKind.Utc).AddTicks(9126),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 673, DateTimeKind.Utc).AddTicks(57),
                             IsActive = true,
                             MinimumAge = 21,
                             NameAr = "نقل عام",
@@ -820,9 +846,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+                            Id = 4,
                             Code = (byte)3,
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 733, DateTimeKind.Utc).AddTicks(9130),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 673, DateTimeKind.Utc).AddTicks(59),
                             IsActive = true,
                             MinimumAge = 21,
                             NameAr = "مركبات ثقيلة",
@@ -832,9 +858,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000005"),
+                            Id = 5,
                             Code = (byte)4,
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 733, DateTimeKind.Utc).AddTicks(9134),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 673, DateTimeKind.Utc).AddTicks(62),
                             IsActive = true,
                             MinimumAge = 21,
                             NameAr = "مركبات صناعية",
@@ -844,9 +870,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000000006"),
+                            Id = 6,
                             Code = (byte)5,
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 733, DateTimeKind.Utc).AddTicks(9138),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 673, DateTimeKind.Utc).AddTicks(64),
                             IsActive = true,
                             MinimumAge = 18,
                             NameAr = "مركبات زراعية",
@@ -858,27 +884,29 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.LicenseRenewal", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("LicenseId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("LicenseId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("NewExpiresAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ProcessedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("ProcessedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("RenewedAt")
                         .HasColumnType("datetime2");
@@ -886,8 +914,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -902,30 +930,32 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.LicenseReplacement", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsReportVerified")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("LicenseId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("LicenseId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ProcessedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ProcessedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("ProcessedBy")
+                        .HasColumnType("int");
 
                     b.Property<byte>("Reason")
                         .HasMaxLength(256)
@@ -937,8 +967,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -953,12 +983,14 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.MedicalExamination", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<byte?>("BloodType")
                         .HasColumnType("tinyint");
@@ -970,17 +1002,17 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("DoctorId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ExaminedAt")
                         .HasColumnType("datetime2");
@@ -1002,8 +1034,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ValidUntil")
                         .HasColumnType("datetime2");
@@ -1021,12 +1053,14 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.Notification", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid?>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -1050,8 +1084,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("ReadAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("RelatedEntityId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("RelatedEntityId")
+                        .HasColumnType("int");
 
                     b.Property<string>("RelatedEntityType")
                         .HasMaxLength(128)
@@ -1073,8 +1107,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1095,9 +1129,11 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.OtpCode", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AttemptCount")
                         .HasColumnType("int");
@@ -1143,8 +1179,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UsedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1161,21 +1197,23 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.PaymentTransaction", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("Currency")
                         .IsRequired()
@@ -1185,8 +1223,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("FailedAt")
                         .HasColumnType("datetime2");
@@ -1225,8 +1263,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1243,15 +1281,17 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.PracticalTest", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("AdditionalHoursRequired")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<int>("AttemptNumber")
                         .HasColumnType("int");
@@ -1262,17 +1302,17 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ExaminerId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ExaminerId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsAbsent")
                         .HasColumnType("bit");
@@ -1299,8 +1339,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("VehicleUsed")
                         .HasMaxLength(200)
@@ -1319,21 +1359,23 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.PushToken", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("DeviceType")
                         .IsRequired()
@@ -1359,11 +1401,11 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1377,9 +1419,11 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.RefreshToken", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -1409,8 +1453,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1426,12 +1470,14 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.SmsLog", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid?>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<decimal?>("Cost")
                         .HasColumnType("decimal(18,2)");
@@ -1439,8 +1485,14 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("ErrorMessage")
                         .HasMaxLength(1000)
@@ -1469,11 +1521,11 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1493,9 +1545,11 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.SystemSetting", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Category")
                         .HasMaxLength(32)
@@ -1504,8 +1558,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasMaxLength(256)
@@ -1527,8 +1581,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1542,9 +1596,9 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000001001"),
+                            Id = 1,
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6445),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(1913),
                             Description = "OTP validity in minutes for SMS",
                             IsEncrypted = false,
                             SettingKey = "OTP_VALIDITY_MINUTES_SMS",
@@ -1552,9 +1606,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000001002"),
+                            Id = 2,
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6477),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(1927),
                             Description = "OTP validity in minutes for Email",
                             IsEncrypted = false,
                             SettingKey = "OTP_VALIDITY_MINUTES_EMAIL",
@@ -1562,9 +1616,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000001003"),
+                            Id = 3,
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6482),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(1931),
                             Description = "Max OTP verification attempts",
                             IsEncrypted = false,
                             SettingKey = "OTP_MAX_ATTEMPTS",
@@ -1572,9 +1626,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000001004"),
+                            Id = 4,
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6486),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(1932),
                             Description = "Cooldown in seconds before resending OTP",
                             IsEncrypted = false,
                             SettingKey = "OTP_RESEND_COOLDOWN_SECONDS",
@@ -1582,9 +1636,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000001005"),
+                            Id = 5,
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6489),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(1934),
                             Description = "Max OTP resends per hour",
                             IsEncrypted = false,
                             SettingKey = "OTP_MAX_RESEND_PER_HOUR",
@@ -1592,9 +1646,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000007001"),
+                            Id = 11,
                             Category = "Email",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6542),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2029),
                             Description = "Deduplication window in seconds for outgoing emails",
                             IsEncrypted = false,
                             SettingKey = "EMAIL_DEDUP_WINDOW_SECONDS",
@@ -1602,9 +1656,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000007002"),
+                            Id = 12,
                             Category = "Email",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6546),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2032),
                             Description = "Maximum retry attempts for failed emails",
                             IsEncrypted = false,
                             SettingKey = "EMAIL_MAX_RETRIES",
@@ -1612,9 +1666,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000007003"),
+                            Id = 13,
                             Category = "Email",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6551),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2034),
                             Description = "Base delay in seconds for email retry exponential backoff",
                             IsEncrypted = false,
                             SettingKey = "EMAIL_RETRY_BASE_DELAY_SECONDS",
@@ -1622,9 +1676,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000008001"),
+                            Id = 21,
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6563),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2050),
                             Description = "Maximum number of times an applicant can reschedule an appointment",
                             IsEncrypted = false,
                             SettingKey = "MAX_RESCHEDULE_COUNT",
@@ -1632,9 +1686,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000008002"),
+                            Id = 22,
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6632),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2052),
                             Description = "Default duration of an appointment slot in minutes",
                             IsEncrypted = false,
                             SettingKey = "DEFAULT_APPOINTMENT_DURATION_MINUTES",
@@ -1642,9 +1696,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000008003"),
+                            Id = 23,
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6639),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2061),
                             Description = "Maximum number of appointments allowed per time slot per branch",
                             IsEncrypted = false,
                             SettingKey = "MAX_APPOINTMENTS_PER_SLOT",
@@ -1652,9 +1706,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000008004"),
+                            Id = 24,
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6643),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2063),
                             Description = "Buffer time between appointments in minutes",
                             IsEncrypted = false,
                             SettingKey = "SLOT_BUFFER_MINUTES",
@@ -1662,9 +1716,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000008005"),
+                            Id = 25,
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6648),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2065),
                             Description = "Start of working hours for appointments (24-hour format)",
                             IsEncrypted = false,
                             SettingKey = "WORKING_HOURS_START",
@@ -1672,9 +1726,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000008006"),
+                            Id = 26,
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6652),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2067),
                             Description = "End of working hours for appointments (24-hour format)",
                             IsEncrypted = false,
                             SettingKey = "WORKING_HOURS_END",
@@ -1682,9 +1736,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000008007"),
+                            Id = 27,
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6656),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2069),
                             Description = "Hours before appointment to send reminder notification",
                             IsEncrypted = false,
                             SettingKey = "REMINDER_HOURS_BEFORE",
@@ -1692,9 +1746,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000008008"),
+                            Id = 28,
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6660),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2071),
                             Description = "Minimum days in advance an appointment must be booked",
                             IsEncrypted = false,
                             SettingKey = "MIN_BOOKING_DAYS_AHEAD",
@@ -1702,9 +1756,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000008009"),
+                            Id = 29,
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6664),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2073),
                             Description = "Maximum days in advance an appointment can be booked",
                             IsEncrypted = false,
                             SettingKey = "MAX_BOOKING_DAYS_AHEAD",
@@ -1712,9 +1766,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000009001"),
+                            Id = 31,
                             Category = "Training",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6668),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2094),
                             Description = "Minimum training hours for Category A (Motorcycle)",
                             IsEncrypted = false,
                             SettingKey = "MIN_TRAINING_HOURS_CATEGORY_A",
@@ -1722,9 +1776,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000009002"),
+                            Id = 32,
                             Category = "Training",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6672),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2196),
                             Description = "Minimum training hours for Category B (Private)",
                             IsEncrypted = false,
                             SettingKey = "MIN_TRAINING_HOURS_CATEGORY_B",
@@ -1732,9 +1786,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000009003"),
+                            Id = 33,
                             Category = "Training",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6675),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2198),
                             Description = "Minimum training hours for Category C (Public Transport)",
                             IsEncrypted = false,
                             SettingKey = "MIN_TRAINING_HOURS_CATEGORY_C",
@@ -1742,9 +1796,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000009004"),
+                            Id = 34,
                             Category = "Training",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6679),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2201),
                             Description = "Minimum training hours for Category D (Heavy Vehicles)",
                             IsEncrypted = false,
                             SettingKey = "MIN_TRAINING_HOURS_CATEGORY_D",
@@ -1752,9 +1806,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000009005"),
+                            Id = 35,
                             Category = "Training",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6683),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2203),
                             Description = "Minimum training hours for Category E (Industrial)",
                             IsEncrypted = false,
                             SettingKey = "MIN_TRAINING_HOURS_CATEGORY_E",
@@ -1762,9 +1816,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000009006"),
+                            Id = 36,
                             Category = "Training",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6687),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2205),
                             Description = "Minimum training hours for Category F (Agricultural)",
                             IsEncrypted = false,
                             SettingKey = "MIN_TRAINING_HOURS_CATEGORY_F",
@@ -1772,9 +1826,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000009007"),
+                            Id = 37,
                             Category = "Training",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6707),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2248),
                             Description = "Minimum age for Category F (Agricultural)",
                             IsEncrypted = false,
                             SettingKey = "MIN_AGE_CATEGORY_F",
@@ -1782,29 +1836,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000010002"),
+                            Id = 41,
                             Category = "Theory",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7224),
-                            Description = "Number of theory test questions for Category F (Agricultural)",
-                            IsEncrypted = false,
-                            SettingKey = "THEORY_QUESTIONS_CATEGORY_F",
-                            SettingValue = "20"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000011004"),
-                            Category = "License",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7229),
-                            Description = "License validity in years for Category F (Agricultural)",
-                            IsEncrypted = false,
-                            SettingKey = "VALIDITY_YEARS_CATEGORY_F",
-                            SettingValue = "10"
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-0000-000000010001"),
-                            Category = "Theory",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7233),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2271),
                             Description = "Minimum passing score for theory test",
                             IsEncrypted = false,
                             SettingKey = "MIN_PASS_SCORE_THEORY",
@@ -1812,9 +1846,19 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000011001"),
+                            Id = 42,
+                            Category = "Theory",
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2273),
+                            Description = "Number of theory test questions for Category F (Agricultural)",
+                            IsEncrypted = false,
+                            SettingKey = "THEORY_QUESTIONS_CATEGORY_F",
+                            SettingValue = "20"
+                        },
+                        new
+                        {
+                            Id = 51,
                             Category = "Practical",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7236),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2285),
                             Description = "Minimum passing score for practical test",
                             IsEncrypted = false,
                             SettingKey = "MIN_PASS_SCORE_PRACTICAL",
@@ -1822,9 +1866,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000011002"),
+                            Id = 52,
                             Category = "Practical",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7240),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2287),
                             Description = "Maximum number of practical test attempts",
                             IsEncrypted = false,
                             SettingKey = "MAX_PRACTICAL_ATTEMPTS",
@@ -1832,9 +1876,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000011003"),
+                            Id = 53,
                             Category = "Practical",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7244),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2289),
                             Description = "Days applicant must wait before rebooking after practical test failure",
                             IsEncrypted = false,
                             SettingKey = "COOLING_PERIOD_DAYS_PRACTICAL",
@@ -1842,9 +1886,19 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000012001"),
+                            Id = 61,
+                            Category = "License",
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2299),
+                            Description = "License validity in years for Category F (Agricultural)",
+                            IsEncrypted = false,
+                            SettingKey = "VALIDITY_YEARS_CATEGORY_F",
+                            SettingValue = "10"
+                        },
+                        new
+                        {
+                            Id = 71,
                             Category = "Upgrade",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7249),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2305),
                             Description = "Minimum months a license must be held before upgrading",
                             IsEncrypted = false,
                             SettingKey = "MIN_HOLDING_PERIOD_UPGRADE_MONTHS",
@@ -1852,9 +1906,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000012002"),
+                            Id = 72,
                             Category = "Upgrade",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7252),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2307),
                             Description = "Allowed category upgrade paths (Format: FROM-TO, separated by comma)",
                             IsEncrypted = false,
                             SettingKey = "ALLOWED_UPGRADE_PATHS",
@@ -1862,9 +1916,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000012003"),
+                            Id = 73,
                             Category = "Upgrade",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7258),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2313),
                             Description = "Percentage reduction in training hours for category upgrades",
                             IsEncrypted = false,
                             SettingKey = "UPGRADE_TRAINING_REDUCTION_PCNT",
@@ -1872,9 +1926,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000013001"),
+                            Id = 81,
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7263),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2331),
                             Description = "Retention period for Audit Logs in days",
                             IsEncrypted = false,
                             SettingKey = "SECURITY_LOG_RETENTION_DAYS",
@@ -1882,9 +1936,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000013002"),
+                            Id = 82,
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7267),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2333),
                             Description = "Number of permits for authentication endpoints per window",
                             IsEncrypted = false,
                             SettingKey = "RATE_LIMIT_AUTH_PERMIT",
@@ -1892,9 +1946,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000013003"),
+                            Id = 83,
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7270),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2335),
                             Description = "Time window in seconds for authentication rate limiting",
                             IsEncrypted = false,
                             SettingKey = "RATE_LIMIT_AUTH_WINDOW",
@@ -1902,9 +1956,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000013004"),
+                            Id = 84,
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7273),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2337),
                             Description = "Number of permits for global API endpoints per window",
                             IsEncrypted = false,
                             SettingKey = "RATE_LIMIT_GLOBAL_PERMIT",
@@ -1912,9 +1966,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000013005"),
+                            Id = 85,
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7277),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2339),
                             Description = "Time window in seconds for global rate limiting",
                             IsEncrypted = false,
                             SettingKey = "RATE_LIMIT_GLOBAL_WINDOW",
@@ -1922,9 +1976,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000013006"),
+                            Id = 86,
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7280),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2341),
                             Description = "Maximum allowed file size for uploads in bytes (Default 5MB)",
                             IsEncrypted = false,
                             SettingKey = "MAX_FILE_SIZE_BYTES",
@@ -1932,9 +1986,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000013007"),
+                            Id = 87,
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7283),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2346),
                             Description = "Number of failed login attempts before sending security alert",
                             IsEncrypted = false,
                             SettingKey = "SECURITY_ALERT_THRESHOLD",
@@ -1942,9 +1996,9 @@ namespace Mojaz.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("00000000-0000-0000-0000-000000013008"),
+                            Id = 88,
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7287),
+                            CreatedAt = new DateTime(2026, 4, 30, 18, 32, 12, 690, DateTimeKind.Utc).AddTicks(2348),
                             Description = "Time window in minutes for security alert threshold",
                             IsEncrypted = false,
                             SettingKey = "SECURITY_ALERT_WINDOW_MINS",
@@ -1954,12 +2008,14 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.TheoryTest", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<int>("AttemptNumber")
                         .HasColumnType("int");
@@ -1970,17 +2026,17 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ExaminerId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ExaminerId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsAbsent")
                         .HasColumnType("bit");
@@ -2004,8 +2060,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -2020,12 +2076,14 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.TrainingRecord", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("ApplicationId")
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CenterName")
                         .HasMaxLength(200)
@@ -2044,23 +2102,23 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ExemptionApprovedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ExemptionApprovedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("ExemptionApprovedBy")
+                        .HasColumnType("int");
 
-                    b.Property<Guid?>("ExemptionDocumentId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("ExemptionDocumentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ExemptionReason")
                         .HasMaxLength(1000)
@@ -2101,8 +2159,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -2123,9 +2181,11 @@ namespace Mojaz.Infrastructure.Migrations
 
             modelBuilder.Entity("Mojaz.Domain.Entities.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .HasMaxLength(200)
@@ -2151,8 +2211,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -2160,8 +2220,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -2276,8 +2336,8 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

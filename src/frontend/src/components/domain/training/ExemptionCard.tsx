@@ -35,7 +35,7 @@ export function ExemptionCard({ record, onReview, className }: ExemptionCardProp
                   {tp('applicantInfo')}
                 </span>
                 <h3 className="text-base font-bold text-neutral-800">
-                  APP-2025-{record.applicationId.substring(0, 8)}
+                  APP-2025-{record.applicationId}
                 </h3>
               </div>
               <div className="text-end space-y-1">
@@ -64,7 +64,7 @@ export function ExemptionCard({ record, onReview, className }: ExemptionCardProp
                 variant="ghost" 
                 size="sm" 
                 className="text-primary-600 hover:text-primary-700 hover:bg-primary-50 font-bold group"
-                onClick={() => onReview(record.id)}
+                onClick={() => onReview(String(record.id))}
               >
                 Review Request
                 <ArrowRight className="w-4 h-4 ms-2 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180 transition-transform" />

@@ -27,14 +27,14 @@ public class PushNotificationService : IPushNotificationService
         await Task.CompletedTask;
     }
 
-    public async Task SendToUserAsync(Guid userId, PushMessage message)
+    public async Task SendToUserAsync(int userId, PushMessage message)
     {
         // Send push notification to a specific user via Firebase
         // For now, placeholder implementation
         await Task.CompletedTask;
     }
 
-    public async Task RegisterTokenAsync(Guid userId, string token, string deviceType)
+    public async Task RegisterTokenAsync(int userId, string token, string deviceType)
     {
         // Register push token for a user
         // For now, placeholder implementation

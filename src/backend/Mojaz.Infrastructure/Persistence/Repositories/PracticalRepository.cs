@@ -16,7 +16,7 @@ namespace Mojaz.Infrastructure.Persistence.Repositories
         {
         }
 
-        public async Task<PracticalTest?> GetLatestByApplicationIdAsync(Guid applicationId)
+        public async Task<PracticalTest?> GetLatestByApplicationIdAsync(int applicationId)
         {
             return await _context.PracticalTests
                 .Include(t => t.Examiner)
@@ -26,7 +26,7 @@ namespace Mojaz.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IReadOnlyList<PracticalTest>> GetAllByApplicationIdAsync(Guid applicationId)
+        public async Task<IReadOnlyList<PracticalTest>> GetAllByApplicationIdAsync(int applicationId)
         {
             return await _context.PracticalTests
                 .Include(t => t.Examiner)
@@ -36,7 +36,7 @@ namespace Mojaz.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<int> GetAttemptCountAsync(Guid applicationId)
+        public async Task<int> GetAttemptCountAsync(int applicationId)
         {
             return await _context.PracticalTests
                 .Where(t => t.ApplicationId == applicationId)

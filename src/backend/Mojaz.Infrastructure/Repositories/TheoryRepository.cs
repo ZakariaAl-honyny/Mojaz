@@ -17,7 +17,7 @@ namespace Mojaz.Infrastructure.Repositories
         {
         }
 
-        public async Task<TheoryTest?> GetLatestByApplicationIdAsync(Guid applicationId)
+        public async Task<TheoryTest?> GetLatestByApplicationIdAsync(int applicationId)
         {
             return await _context.TheoryTests
                 .Include(t => t.Examiner)
@@ -27,7 +27,7 @@ namespace Mojaz.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<TheoryTest>> GetAllByApplicationIdAsync(Guid applicationId)
+        public async Task<IEnumerable<TheoryTest>> GetAllByApplicationIdAsync(int applicationId)
         {
             return await _context.TheoryTests
                 .Include(t => t.Examiner)
@@ -37,7 +37,7 @@ namespace Mojaz.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<int> GetAttemptCountAsync(Guid applicationId)
+        public async Task<int> GetAttemptCountAsync(int applicationId)
         {
             return await _context.TheoryTests
                 .Where(t => t.ApplicationId == applicationId)

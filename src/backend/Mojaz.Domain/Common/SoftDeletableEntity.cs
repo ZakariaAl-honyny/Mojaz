@@ -5,5 +5,5 @@ namespace Mojaz.Domain.Common;
 public abstract class SoftDeletableEntity : AuditableEntity
 {
     public DateTime? DeletedAt { get; set; }
-    public Guid? DeletedBy { get; set; }
+    public int? DeletedBy { get; set; }
 }

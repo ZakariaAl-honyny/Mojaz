@@ -81,8 +81,8 @@ public class CategoryUpgradeServiceTests
     public async Task CheckHoldingPeriodAsync_HoldingPeriodMet_ReturnsTrue()
     {
         // Arrange
-        var licenseId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
+        var licenseId = 1;
+        var userId = 2;
         var license = new License { HolderId = userId, IssuedAt = DateTime.UtcNow.AddMonths(-13) };
         
         _licenseRepositoryMock.Setup(r => r.GetByIdAsync(licenseId)).ReturnsAsync(license);
@@ -99,8 +99,8 @@ public class CategoryUpgradeServiceTests
     public async Task CheckHoldingPeriodAsync_HoldingPeriodNotMet_ReturnsFalse()
     {
         // Arrange
-        var licenseId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
+        var licenseId = 3;
+        var userId = 4;
         var license = new License { HolderId = userId, IssuedAt = DateTime.UtcNow.AddMonths(-6) };
         
         _licenseRepositoryMock.Setup(r => r.GetByIdAsync(licenseId)).ReturnsAsync(license);
@@ -117,11 +117,11 @@ public class CategoryUpgradeServiceTests
     public async Task CheckHoldingPeriodAsync_LicenseNotFound_ReturnsFalse()
     {
         // Arrange
-        var licenseId = Guid.NewGuid();
+        var licenseId = 5;
         _licenseRepositoryMock.Setup(r => r.GetByIdAsync(licenseId)).ReturnsAsync((License)null!);
 
         // Act
-        var result = await _service.CheckHoldingPeriodAsync(licenseId, Guid.NewGuid());
+        var result = await _service.CheckHoldingPeriodAsync(licenseId, 6);
 
         // Assert
         result.Should().BeFalse();

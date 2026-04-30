@@ -15,17 +15,17 @@ import { UploadDocumentRequest, DocumentReviewRequest } from '@/types/document.t
 export const documentKeys = {
   all: ['documents'] as const,
   lists: () => [...documentKeys.all, 'list'] as const,
-  list: (applicationId: string) => [...documentKeys.lists(), { applicationId }] as const,
-  requirements: (applicationId: string) => [...documentKeys.all, 'requirements', { applicationId }] as const,
+  list: (applicationId: number) => [...documentKeys.lists(), { applicationId }] as const,
+  requirements: (applicationId: number) => [...documentKeys.all, 'requirements', { applicationId }] as const,
 };
 
 /**
  * Hook to get all documents for an application
  */
-export const useGetDocuments = (applicationId: string) => {
+export const useGetDocuments = (applicationId: number) => {
   return useQuery({
     queryKey: documentKeys.list(applicationId),
-    queryFn: () => listDocuments(applicationId),
+    queryFn: () => listDocuments(String(applicationId)),
     enabled: !!applicationId,
   });
 };
@@ -33,10 +33,10 @@ export const useGetDocuments = (applicationId: string) => {
 /**
  * Hook to get document requirements for an application
  */
-export const useGetRequirements = (applicationId: string) => {
+export const useGetRequirements = (applicationId: number) => {
   return useQuery({
     queryKey: documentKeys.requirements(applicationId),
-    queryFn: () => getRequirements(applicationId),
+    queryFn: () => getRequirements(String(applicationId)),
     enabled: !!applicationId,
   });
 };
@@ -44,7 +44,7 @@ export const useGetRequirements = (applicationId: string) => {
 /**
  * Hook to upload a document
  */
-export const useUploadDocument = (applicationId: string) => {
+export const useUploadDocument = (applicationId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -61,12 +61,12 @@ export const useUploadDocument = (applicationId: string) => {
 /**
  * Hook to review (approve/reject) a document
  */
-export const useReviewDocument = (applicationId: string) => {
+export const useReviewDocument = (applicationId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (request: { documentId: string; data: DocumentReviewRequest }) =>
-      reviewDocument(applicationId, request.documentId, request.data),
+      reviewDocument(String(applicationId), request.documentId, request.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: documentKeys.list(applicationId) });
       queryClient.invalidateQueries({ queryKey: documentKeys.requirements(applicationId) });
@@ -77,11 +77,11 @@ export const useReviewDocument = (applicationId: string) => {
 /**
  * Hook to bulk approve all pending documents
  */
-export const useBulkApprove = (applicationId: string) => {
+export const useBulkApprove = (applicationId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => bulkApprove(applicationId),
+    mutationFn: () => bulkApprove(String(applicationId)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: documentKeys.list(applicationId) });
       queryClient.invalidateQueries({ queryKey: documentKeys.requirements(applicationId) });
@@ -92,11 +92,11 @@ export const useBulkApprove = (applicationId: string) => {
 /**
  * Hook to delete a document
  */
-export const useDeleteDocument = (applicationId: string) => {
+export const useDeleteDocument = (applicationId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (documentId: string) => deleteDocument(applicationId, documentId),
+    mutationFn: (documentId: string) => deleteDocument(String(applicationId), documentId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: documentKeys.list(applicationId) });
       queryClient.invalidateQueries({ queryKey: documentKeys.requirements(applicationId) });

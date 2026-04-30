@@ -59,12 +59,12 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task SubmitResultAsync_PassResult_TransitionsToApproved()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var application = new ApplicationEntity { Id = appId, Status = ApplicationStatus.InReview, CurrentStage = ApplicationStages.Practical, PracticalAttemptCount = 0 };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
             _mapperMock.Setup(m => m.Map<PracticalTestDto>(It.IsAny<PracticalTest>())).Returns(new PracticalTestDto());
 
-            var result = await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 80, IsAbsent = false }, Guid.NewGuid());
+            var result = await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 80, IsAbsent = false }, 2);
 
             Assert.True(result.Success);
             Assert.Equal(ApplicationStatus.Approved, application.Status);
@@ -74,12 +74,12 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task SubmitResultAsync_PassResult_SendsPassNotification()
         {
-            var appId = Guid.NewGuid();
-            var application = new ApplicationEntity { Id = appId, ApplicantId = Guid.NewGuid(), Status = ApplicationStatus.InReview, CurrentStage = ApplicationStages.Practical };
+            var appId = 1;
+            var application = new ApplicationEntity { Id = appId, ApplicantId = 2, Status = ApplicationStatus.InReview, CurrentStage = ApplicationStages.Practical };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
             _mapperMock.Setup(m => m.Map<PracticalTestDto>(It.IsAny<PracticalTest>())).Returns(new PracticalTestDto());
 
-            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 80, IsAbsent = false }, Guid.NewGuid());
+            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 80, IsAbsent = false }, 2);
 
             _notificationServiceMock.Verify(n => n.SendAsync(It.Is<NotificationRequest>(r => r.EventType == NotificationEventType.TestResultReady && r.TitleEn.Contains("passed"))), Times.Once);
         }
@@ -87,22 +87,22 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task SubmitResultAsync_PassResult_CreatesAuditLog()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var application = new ApplicationEntity { Id = appId, Status = ApplicationStatus.InReview, CurrentStage = ApplicationStages.Practical };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
             _mapperMock.Setup(m => m.Map<PracticalTestDto>(It.IsAny<PracticalTest>())).Returns(new PracticalTestDto());
 
-            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 80, IsAbsent = false }, Guid.NewGuid());
+            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 80, IsAbsent = false }, 2);
         }
 
         [Fact]
         public async Task SubmitResultAsync_WrongStage_ReturnsBadRequest()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var application = new ApplicationEntity { Id = appId, CurrentStage = ApplicationStages.Theory };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, It.IsAny<CancellationToken>())).ReturnsAsync(application);
 
-            var result = await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 80 }, Guid.NewGuid());
+            var result = await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 80 }, 2);
 
             Assert.False(result.Success);
             Assert.Equal(400, result.StatusCode);
@@ -111,9 +111,9 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task SubmitResultAsync_ApplicationNotFound_ReturnsNotFound()
         {
-            _appRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), default)).ReturnsAsync((ApplicationEntity?)null);
+            _appRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<int>(), default)).ReturnsAsync((ApplicationEntity?)null);
 
-            var result = await _sut.SubmitResultAsync(Guid.NewGuid(), new SubmitPracticalResultRequest { Score = 80 }, Guid.NewGuid());
+            var result = await _sut.SubmitResultAsync(1, new SubmitPracticalResultRequest { Score = 80 }, 2);
 
             Assert.False(result.Success);
             Assert.Equal(404, result.StatusCode);
@@ -122,12 +122,12 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task SubmitResultAsync_FailResultWithAdditionalTraining_SetsAdditionalTrainingRequired()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var application = new ApplicationEntity { Id = appId, Status = ApplicationStatus.InReview, CurrentStage = ApplicationStages.Practical };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
             _mapperMock.Setup(m => m.Map<PracticalTestDto>(It.IsAny<PracticalTest>())).Returns(new PracticalTestDto());
 
-            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 60, IsAbsent = false, RequiresAdditionalTraining = true, AdditionalHoursRequired = 5 }, Guid.NewGuid());
+            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 60, IsAbsent = false, RequiresAdditionalTraining = true, AdditionalHoursRequired = 5 }, 2);
 
             Assert.True(application.AdditionalTrainingRequired);
         }
@@ -135,12 +135,12 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task SubmitResultAsync_FailResultWithAdditionalTraining_RecordsAdditionalHours()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var application = new ApplicationEntity { Id = appId, Status = ApplicationStatus.InReview, CurrentStage = ApplicationStages.Practical };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
             _mapperMock.Setup(m => m.Map<PracticalTestDto>(It.IsAny<PracticalTest>())).Returns(new PracticalTestDto());
 
-            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 60, IsAbsent = false, RequiresAdditionalTraining = true, AdditionalHoursRequired = 5 }, Guid.NewGuid());
+            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 60, IsAbsent = false, RequiresAdditionalTraining = true, AdditionalHoursRequired = 5 }, 2);
 
             _practicalRepoMock.Verify(r => r.AddAsync(It.Is<PracticalTest>(pt => pt.AdditionalHoursRequired == 5), default), Times.Once);
         }
@@ -148,12 +148,12 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task SubmitResultAsync_FailResult_IncrementsPracticalAttemptCount()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var application = new ApplicationEntity { Id = appId, Status = ApplicationStatus.InReview, CurrentStage = ApplicationStages.Practical, PracticalAttemptCount = 0 };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
             _mapperMock.Setup(m => m.Map<PracticalTestDto>(It.IsAny<PracticalTest>())).Returns(new PracticalTestDto());
 
-            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 50 }, Guid.NewGuid());
+            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 50 }, 2);
 
             Assert.Equal(1, application.PracticalAttemptCount);
         }
@@ -161,12 +161,12 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task SubmitResultAsync_FailResult_SendsFailNotification()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var application = new ApplicationEntity { Id = appId, Status = ApplicationStatus.InReview, CurrentStage = ApplicationStages.Practical };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
             _mapperMock.Setup(m => m.Map<PracticalTestDto>(It.IsAny<PracticalTest>())).Returns(new PracticalTestDto());
 
-            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 50 }, Guid.NewGuid());
+            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 50 }, 2);
 
             _notificationServiceMock.Verify(n => n.SendAsync(It.Is<NotificationRequest>(r => r.EventType == NotificationEventType.TestResultReady && r.TitleEn.Contains("did not pass"))), Times.Once);
         }
@@ -174,12 +174,12 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task SubmitResultAsync_AbsentResult_CountsAsFailedAttempt()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var application = new ApplicationEntity { Id = appId, Status = ApplicationStatus.InReview, CurrentStage = ApplicationStages.Practical, PracticalAttemptCount = 0 };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
             _mapperMock.Setup(m => m.Map<PracticalTestDto>(It.IsAny<PracticalTest>())).Returns(new PracticalTestDto());
 
-            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { IsAbsent = true }, Guid.NewGuid());
+            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { IsAbsent = true }, 2);
 
             Assert.Equal(1, application.PracticalAttemptCount);
             _practicalRepoMock.Verify(r => r.AddAsync(It.Is<PracticalTest>(pt => pt.Result == TestResult.Absent), default), Times.Once);
@@ -188,7 +188,7 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task HasAdditionalTrainingRequiredAsync_FlagSet_ReturnsTrue()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var application = new ApplicationEntity { Id = appId, AdditionalTrainingRequired = true };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
 
@@ -200,12 +200,12 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task SubmitResultAsync_TerminalFail_TransitionsToRejected()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var application = new ApplicationEntity { Id = appId, Status = ApplicationStatus.InReview, CurrentStage = ApplicationStages.Practical, PracticalAttemptCount = 2 };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
             _mapperMock.Setup(m => m.Map<PracticalTestDto>(It.IsAny<PracticalTest>())).Returns(new PracticalTestDto());
 
-            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 50 }, Guid.NewGuid());
+            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 50 }, 2);
 
             Assert.Equal(ApplicationStatus.Rejected, application.Status);
             Assert.Equal("MaxPracticalAttemptsReached", application.RejectionReason);
@@ -214,12 +214,12 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task SubmitResultAsync_TerminalFail_SendsRejectionNotification()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var application = new ApplicationEntity { Id = appId, Status = ApplicationStatus.InReview, CurrentStage = ApplicationStages.Practical, PracticalAttemptCount = 2 };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
             _mapperMock.Setup(m => m.Map<PracticalTestDto>(It.IsAny<PracticalTest>())).Returns(new PracticalTestDto());
 
-            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 50 }, Guid.NewGuid());
+            await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 50 }, 2);
 
             _notificationServiceMock.Verify(n => n.SendAsync(It.Is<NotificationRequest>(r => r.EventType == NotificationEventType.ApplicationRejected)), Times.Once);
         }
@@ -227,11 +227,11 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task SubmitResultAsync_AtMaxAttempts_ReturnsBadRequest()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var application = new ApplicationEntity { Id = appId, Status = ApplicationStatus.InReview, CurrentStage = ApplicationStages.Practical, PracticalAttemptCount = 3 };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
 
-            var result = await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 50 }, Guid.NewGuid());
+            var result = await _sut.SubmitResultAsync(appId, new SubmitPracticalResultRequest { Score = 50 }, 2);
 
             Assert.False(result.Success);
             Assert.Equal(400, result.StatusCode);
@@ -240,7 +240,7 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task HasReachedMaxAttemptsAsync_AtLimit_ReturnsTrue()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var application = new ApplicationEntity { Id = appId, PracticalAttemptCount = 3 };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
 
@@ -252,7 +252,7 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task IsInCoolingPeriodAsync_WithinPeriod_ReturnsTrue()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var test = new PracticalTest { ConductedAt = DateTime.UtcNow.AddDays(-3), Result = TestResult.Fail };
             _practicalRepoMock.Setup(r => r.GetLatestByApplicationIdAsync(appId)).ReturnsAsync(test);
 
@@ -264,7 +264,7 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task IsInCoolingPeriodAsync_AfterPeriod_ReturnsFalse()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             var test = new PracticalTest { ConductedAt = DateTime.UtcNow.AddDays(-10), Result = TestResult.Fail };
             _practicalRepoMock.Setup(r => r.GetLatestByApplicationIdAsync(appId)).ReturnsAsync(test);
 
@@ -276,7 +276,7 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task IsInCoolingPeriodAsync_NoPreviousFail_ReturnsFalse()
         {
-            var appId = Guid.NewGuid();
+            var appId = 1;
             _practicalRepoMock.Setup(r => r.GetLatestByApplicationIdAsync(appId)).ReturnsAsync((PracticalTest?)null);
 
             var result = await _sut.IsInCoolingPeriodAsync(appId);
@@ -287,8 +287,8 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task GetHistoryAsync_Applicant_ReturnsOwnHistory()
         {
-            var appId = Guid.NewGuid();
-            var applicantId = Guid.NewGuid();
+            var appId = 1;
+            var applicantId = 2;
             var application = new ApplicationEntity { Id = appId, ApplicantId = applicantId, Status = ApplicationStatus.InReview };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
 
@@ -305,11 +305,11 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task GetHistoryAsync_OtherApplicant_ReturnsForbidden()
         {
-            var appId = Guid.NewGuid();
-            var application = new ApplicationEntity { Id = appId, ApplicantId = Guid.NewGuid() };
+            var appId = 1;
+            var application = new ApplicationEntity { Id = appId, ApplicantId = 2 };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
 
-            var result = await _sut.GetHistoryAsync(appId, Guid.NewGuid(), "Applicant");
+            var result = await _sut.GetHistoryAsync(appId, 3, "Applicant");
 
             Assert.False(result.Success);
             Assert.Equal(403, result.StatusCode);
@@ -318,13 +318,13 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task GetHistoryAsync_Manager_ReturnsFullHistory()
         {
-            var appId = Guid.NewGuid();
-            var application = new ApplicationEntity { Id = appId, ApplicantId = Guid.NewGuid(), Status = ApplicationStatus.InReview };
+            var appId = 1;
+            var application = new ApplicationEntity { Id = appId, ApplicantId = 2, Status = ApplicationStatus.InReview };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
             _practicalRepoMock.Setup(r => r.GetAllByApplicationIdAsync(appId)).ReturnsAsync(new List<PracticalTest> { new PracticalTest() });
             _mapperMock.Setup(m => m.Map<PracticalTestDto>(It.IsAny<PracticalTest>())).Returns(new PracticalTestDto());
 
-            var result = await _sut.GetHistoryAsync(appId, Guid.NewGuid(), "Manager");
+            var result = await _sut.GetHistoryAsync(appId, 3, "Manager");
 
             Assert.True(result.Success);
             Assert.Single(result.Data!.Items);
@@ -333,12 +333,12 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task GetHistoryAsync_NoRecords_ReturnsEmptyPagedResult()
         {
-            var appId = Guid.NewGuid();
-            var application = new ApplicationEntity { Id = appId, ApplicantId = Guid.NewGuid(), Status = ApplicationStatus.InReview };
+            var appId = 1;
+            var application = new ApplicationEntity { Id = appId, ApplicantId = 2, Status = ApplicationStatus.InReview };
             _appRepoMock.Setup(r => r.GetByIdAsync(appId, default)).ReturnsAsync(application);
             _practicalRepoMock.Setup(r => r.GetAllByApplicationIdAsync(appId)).ReturnsAsync(new List<PracticalTest>());
 
-            var result = await _sut.GetHistoryAsync(appId, Guid.NewGuid(), "Manager");
+            var result = await _sut.GetHistoryAsync(appId, 3, "Manager");
 
             Assert.True(result.Success);
             Assert.Empty(result.Data!.Items);
@@ -347,9 +347,9 @@ namespace Mojaz.Application.Tests.Services
         [Fact]
         public async Task GetHistoryAsync_ApplicationNotFound_Returns404()
         {
-            _appRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), default)).ReturnsAsync((ApplicationEntity?)null);
+            _appRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<int>(), default)).ReturnsAsync((ApplicationEntity?)null);
 
-            var result = await _sut.GetHistoryAsync(Guid.NewGuid(), Guid.NewGuid(), "Applicant");
+            var result = await _sut.GetHistoryAsync(1, 2, "Applicant");
 
             Assert.False(result.Success);
             Assert.Equal(404, result.StatusCode);

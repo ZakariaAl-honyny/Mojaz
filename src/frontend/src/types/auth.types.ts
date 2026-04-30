@@ -36,7 +36,7 @@ export interface RegisterRequest {
 }
 
 export interface RegisterResponse {
-  userId: string;
+  userId: number;
   requiresVerification: boolean;
   message: string;
 }

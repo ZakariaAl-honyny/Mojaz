@@ -58,7 +58,7 @@ public DocumentService(
     _notificationService = notificationService;
 }
 
-public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, UploadDocumentRequest request, Guid userId)
+public async Task<ApiResponse<DocumentDto>> UploadAsync(int applicationId, UploadDocumentRequest request, int userId)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null) return ApiResponse<DocumentDto>.Fail(404, "الطلب غير موجود.");
@@ -69,7 +69,7 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
         return await UploadInternalAsync(application, request, userId);
     }
 
-    public async Task<ApiResponse<DocumentDto>> UploadByApplicationNumberAsync(string applicationNumber, UploadDocumentRequest request, Guid userId)
+    public async Task<ApiResponse<DocumentDto>> UploadByApplicationNumberAsync(string applicationNumber, UploadDocumentRequest request, int userId)
     {
         var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
         var application = applications.FirstOrDefault();
@@ -82,7 +82,7 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
         return await UploadInternalAsync(application, request, userId);
     }
 
-    private async Task<ApiResponse<DocumentDto>> UploadInternalAsync(ApplicationEntity application, UploadDocumentRequest request, Guid userId)
+    private async Task<ApiResponse<DocumentDto>> UploadInternalAsync(ApplicationEntity application, UploadDocumentRequest request, int userId)
     {
         // Validate file
         if (request.File == null) return ApiResponse<DocumentDto>.Fail(400, "الملف مطلوب.");
@@ -137,7 +137,7 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
         });
     }
 
-public async Task<ApiResponse<IEnumerable<DocumentDto>>> GetByApplicationIdAsync(Guid applicationId, Guid userId, string role)
+public async Task<ApiResponse<IEnumerable<DocumentDto>>> GetByApplicationIdAsync(int applicationId, int userId, string role)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null)
@@ -166,7 +166,7 @@ public async Task<ApiResponse<IEnumerable<DocumentDto>>> GetByApplicationIdAsync
         }));
     }
 
-public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequirementsAsync(Guid applicationId, Guid userId, string role)
+public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequirementsAsync(int applicationId, int userId, string role)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null) return ApiResponse<IEnumerable<DocumentRequirementDto>>.Fail(404, "Application not found.");
@@ -248,7 +248,7 @@ public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequireme
         return ApiResponse<IEnumerable<DocumentRequirementDto>>.Ok(requirements);
     }
 
-    public async Task<ApiResponse<IEnumerable<DocumentDto>>> GetByApplicationNumberAsync(string applicationNumber, Guid userId, string role)
+    public async Task<ApiResponse<IEnumerable<DocumentDto>>> GetByApplicationNumberAsync(string applicationNumber, int userId, string role)
     {
         var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
         var application = applications.FirstOrDefault();
@@ -278,7 +278,7 @@ public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequireme
         }));
     }
 
-    public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequirementsByApplicationNumberAsync(string applicationNumber, Guid userId, string role)
+    public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequirementsByApplicationNumberAsync(string applicationNumber, int userId, string role)
     {
         var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
         var application = applications.FirstOrDefault();
@@ -357,7 +357,7 @@ public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequireme
         return ApiResponse<IEnumerable<DocumentRequirementDto>>.Ok(requirements);
     }
 
-    public async Task<ApiResponse<DocumentDto>> ReviewAsync(Guid documentId, DocumentReviewRequest request, Guid reviewerId)
+    public async Task<ApiResponse<DocumentDto>> ReviewAsync(int documentId, DocumentReviewRequest request, int reviewerId)
     {
         var document = await _documentRepository.GetByIdAsync(documentId);
         if (document == null) return ApiResponse<DocumentDto>.Fail(404, "Document not found.");
@@ -432,7 +432,7 @@ public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequireme
         });
     }
 
-    public async Task<ApiResponse<BulkApproveResponse>> BulkApproveAsync(Guid applicationId, Guid reviewerId)
+    public async Task<ApiResponse<BulkApproveResponse>> BulkApproveAsync(int applicationId, int reviewerId)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null) return ApiResponse<BulkApproveResponse>.Fail(404, "Application not found.");
@@ -441,10 +441,10 @@ public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequireme
         
         if (!pendingDocs.Any())
         {
-            return ApiResponse<BulkApproveResponse>.Ok(new BulkApproveResponse { ApprovedCount = 0, ApprovedDocumentIds = new List<Guid>() });
+            return ApiResponse<BulkApproveResponse>.Ok(new BulkApproveResponse { ApprovedCount = 0, ApprovedDocumentIds = new List<int>() });
         }
 
-        var approvedIds = new List<Guid>();
+        var approvedIds = new List<int>();
         foreach (var doc in pendingDocs)
         {
             doc.Status = DocumentStatus.Approved;
@@ -465,7 +465,7 @@ public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequireme
         });
     }
 
-    public async Task<ApiResponse<bool>> NotifyMissingDocumentsAsync(Guid applicationId, List<string> missingAr, List<string> missingEn, DateTime deadline)
+    public async Task<ApiResponse<bool>> NotifyMissingDocumentsAsync(int applicationId, List<string> missingAr, List<string> missingEn, DateTime deadline)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null) return ApiResponse<bool>.Fail(404, "Application not found.");
@@ -499,7 +499,7 @@ public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequireme
         return ApiResponse<bool>.Ok(true, "تم إرسال إشعار المستندات المفقودة.");
     }
 
-    public async Task<ApiResponse<bool>> DeleteAsync(Guid documentId, Guid userId)
+    public async Task<ApiResponse<bool>> DeleteAsync(int documentId, int userId)
     {
         var document = await _documentRepository.GetByIdAsync(documentId);
         if (document == null) return ApiResponse<bool>.Fail(404, "Document not found.");
@@ -527,7 +527,7 @@ public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequireme
         return ApiResponse<bool>.Ok(true, "تم حذف المستند بنجاح.");
     }
 
-    public async Task<(Stream content, string contentType, string fileName)> DownloadAsync(Guid documentId, Guid userId, string role)
+    public async Task<(Stream content, string contentType, string fileName)> DownloadAsync(int documentId, int userId, string role)
     {
         var document = await _documentRepository.GetByIdAsync(documentId);
         if (document == null) throw new Exception("Document not found.");
@@ -549,7 +549,7 @@ public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequireme
         return (stream, document.ContentType, document.OriginalFileName);
     }
 
-    public async Task<ApiResponse<BulkApproveResponse>> BulkApproveByApplicationNumberAsync(string applicationNumber, Guid reviewerId)
+    public async Task<ApiResponse<BulkApproveResponse>> BulkApproveByApplicationNumberAsync(string applicationNumber, int reviewerId)
     {
         var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
         var application = applications.FirstOrDefault();
@@ -560,10 +560,10 @@ public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequireme
         
         if (!pendingDocs.Any())
         {
-            return ApiResponse<BulkApproveResponse>.Ok(new BulkApproveResponse { ApprovedCount = 0, ApprovedDocumentIds = new List<Guid>() });
+            return ApiResponse<BulkApproveResponse>.Ok(new BulkApproveResponse { ApprovedCount = 0, ApprovedDocumentIds = new List<int>() });
         }
 
-        var approvedIds = new List<Guid>();
+        var approvedIds = new List<int>();
         foreach (var doc in pendingDocs)
         {
             doc.Status = DocumentStatus.Approved;
@@ -584,7 +584,7 @@ public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequireme
         });
     }
 
-    public async Task<ApiResponse<bool>> DeleteByApplicationNumberAsync(string applicationNumber, Guid documentId, Guid userId)
+    public async Task<ApiResponse<bool>> DeleteByApplicationNumberAsync(string applicationNumber, int documentId, int userId)
     {
         var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
         var application = applications.FirstOrDefault();
@@ -617,7 +617,7 @@ public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequireme
         return ApiResponse<bool>.Ok(true, "Document deleted successfully.");
     }
 
-    public async Task<(Stream content, string contentType, string fileName)> DownloadByApplicationNumberAsync(string applicationNumber, Guid documentId, Guid userId, string role)
+    public async Task<(Stream content, string contentType, string fileName)> DownloadByApplicationNumberAsync(string applicationNumber, int documentId, int userId, string role)
     {
         var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
         var application = applications.FirstOrDefault();

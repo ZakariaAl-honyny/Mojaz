@@ -13,7 +13,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FinalApprovalPanelProps {
-  applicationId: string;
+  applicationId: number;
   isEditable?: boolean;
 }
 
@@ -29,7 +29,7 @@ export function FinalApprovalPanel({ applicationId, isEditable = true }: FinalAp
     refetch
   } = useQuery<Gate4ValidationResult>({
     queryKey: ["gate4", applicationId],
-    queryFn: () => finalApprovalService.getGate4Status(applicationId),
+    queryFn: () => finalApprovalService.getGate4Status(String(applicationId)),
     enabled: !!applicationId,
     refetchOnMount: true,
   });

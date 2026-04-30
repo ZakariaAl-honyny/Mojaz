@@ -21,7 +21,7 @@ export interface PaginatedResult<T> {
 }
 
 export interface LicenseCategory {
-  id: string;
+  id: number;
   code: string;
   nameAr: string;
   nameEn: string;
@@ -34,9 +34,9 @@ export interface LicenseCategory {
 
 // Application DTOs
 export interface ApplicationDto {
-  id: string;
+  id: number;
   applicationNumber: string;
-  applicantId: string;
+  applicantId: number;
   applicantFullName: string;
   nationalId: string;
   dateOfBirth: string;
@@ -45,7 +45,7 @@ export interface ApplicationDto {
   address: string;
   city: string;
   region: string;
-  licenseCategoryId: string;
+  licenseCategoryId: number;
   categoryCode: string;
   categoryNameAr: string;
   categoryNameEn: string;
@@ -64,8 +64,8 @@ export interface ApplicationDto {
 
 // Document DTOs
 export interface DocumentDto {
-  id: string;
-  applicationId: string;
+  id: number;
+  applicationId: number;
   documentType: string;
   fileName: string;
   filePath: string;
@@ -75,27 +75,27 @@ export interface DocumentDto {
   rejectionReason?: string;
   uploadedAt: string;
   reviewedAt?: string;
-  reviewedBy?: string;
+  reviewedBy?: number;
 }
 
 // Timeline DTOs
 export interface TimelineEventDto {
-  id: string;
-  applicationId: string;
+  id: number;
+  applicationId: number;
   stageNumber: number;
   stageName: string;
   status: number;
   remarks?: string;
   createdAt: string;
   completedAt?: string;
-  completedBy?: string;
+  completedBy?: number;
 }
 
 // Medical Exam DTOs
 export interface MedicalExamDto {
-  id: string;
-  applicationId: string;
-  examinerId: string;
+  id: number;
+  applicationId: number;
+  examinerId: number;
   examinerName: string;
   visionStatus: number;
   hearingStatus: number;
@@ -110,9 +110,9 @@ export interface MedicalExamDto {
 
 // Theory Test DTOs
 export interface TheoryTestDto {
-  id: string;
-  applicationId: string;
-  examinerId?: string;
+  id: number;
+  applicationId: number;
+  examinerId?: number;
   examinerName?: string;
   score: number;
   totalQuestions: number;
@@ -128,9 +128,9 @@ export interface TheoryTestDto {
 
 // Practical Test DTOs
 export interface PracticalTestDto {
-  id: string;
-  applicationId: string;
-  examinerId?: string;
+  id: number;
+  applicationId: number;
+  examinerId?: number;
   examinerName?: string;
   vehicleType: string;
   score: number;
@@ -145,11 +145,11 @@ export interface PracticalTestDto {
 
 // Training Record DTOs
 export interface TrainingRecordDto {
-  id: string;
-  applicationId: string;
-  trainingCenterId: string;
+  id: number;
+  applicationId: number;
+  trainingCenterId: number;
   trainingCenterName: string;
-  instructorId: string;
+  instructorId: number;
   instructorName: string;
   trainingType: number;
   startDate: string;
@@ -162,7 +162,7 @@ export interface TrainingRecordDto {
 
 // User DTOs (additional fields)
 export interface UserDto {
-  id: string;
+  id: number;
   fullName: string;
   email?: string;
   phone?: string;
@@ -190,7 +190,7 @@ export interface QueryParams {
 
 // Center DTOs
 export interface CenterDto {
-  id: string;
+  id: number;
   name: string;
   nameAr: string;
   nameEn: string;
@@ -206,7 +206,7 @@ export interface CenterDto {
 
 // Service DTOs
 export interface ServiceDto {
-  id: string;
+  id: number;
   code: string;
   nameAr: string;
   nameEn: string;

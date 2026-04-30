@@ -14,7 +14,7 @@ import { Loader2, CheckCircle, XCircle, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FinalDecisionModalProps {
-  applicationId: string;
+  applicationId: number;
   decision: FinalDecisionType;
   gate4Passed: boolean;
   onClose: () => void;
@@ -47,7 +47,7 @@ export function FinalDecisionModal({
 
   const mutation = useMutation({
     mutationFn: (data: FinalizeApplicationRequest) =>
-      finalApprovalService.finalize(applicationId, data),
+      finalApprovalService.finalize(String(applicationId), data),
     onSuccess: () => {
       setStep("success");
     },

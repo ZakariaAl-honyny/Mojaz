@@ -1,9 +1,9 @@
 // No imports needed for literals below
 
 export interface PracticalTestDto {
-  id: string;
-  applicationId: string;
-  examinerId: string;
+  id: number;
+  applicationId: number;
+  examinerId: number;
   examinerName?: string;
   attemptNumber: number;
   conductedAt: string;

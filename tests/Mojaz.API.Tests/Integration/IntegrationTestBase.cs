@@ -92,12 +92,12 @@ public class IntegrationTestBase : IDisposable
         {
             var categories = new[]
             {
-                new Mojaz.Domain.Entities.LicenseCategory { Id = Guid.NewGuid(), Code = Mojaz.Domain.Enums.LicenseCategoryCode.A, NameAr = "دراجة نارية", NameEn = "Motorcycle", MinimumAge = 16, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
-                new Mojaz.Domain.Entities.LicenseCategory { Id = Guid.NewGuid(), Code = Mojaz.Domain.Enums.LicenseCategoryCode.B, NameAr = "سيارة خاصة", NameEn = "Private Car", MinimumAge = 18, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
-                new Mojaz.Domain.Entities.LicenseCategory { Id = Guid.NewGuid(), Code = Mojaz.Domain.Enums.LicenseCategoryCode.C, NameAr = "شاحنة خفيفة", NameEn = "Light Truck", MinimumAge = 21, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
-                new Mojaz.Domain.Entities.LicenseCategory { Id = Guid.NewGuid(), Code = Mojaz.Domain.Enums.LicenseCategoryCode.D, NameAr = "شاحنة ثقيلة", NameEn = "Heavy Truck", MinimumAge = 21, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
-                new Mojaz.Domain.Entities.LicenseCategory { Id = Guid.NewGuid(), Code = Mojaz.Domain.Enums.LicenseCategoryCode.E, NameAr = "حافلة", NameEn = "Bus", MinimumAge = 21, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
-                new Mojaz.Domain.Entities.LicenseCategory { Id = Guid.NewGuid(), Code = Mojaz.Domain.Enums.LicenseCategoryCode.F, NameAr = "TRACTOR", NameEn = "Tractor", MinimumAge = 18, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.LicenseCategory { Id = 1, Code = Mojaz.Domain.Enums.LicenseCategoryCode.A, NameAr = "دراجة نارية", NameEn = "Motorcycle", MinimumAge = 16, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.LicenseCategory { Id = 2, Code = Mojaz.Domain.Enums.LicenseCategoryCode.B, NameAr = "سيارة خاصة", NameEn = "Private Car", MinimumAge = 18, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.LicenseCategory { Id = 3, Code = Mojaz.Domain.Enums.LicenseCategoryCode.C, NameAr = "شاحنة خفيفة", NameEn = "Light Truck", MinimumAge = 21, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.LicenseCategory { Id = 4, Code = Mojaz.Domain.Enums.LicenseCategoryCode.D, NameAr = "شاحنة ثقيلة", NameEn = "Heavy Truck", MinimumAge = 21, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.LicenseCategory { Id = 5, Code = Mojaz.Domain.Enums.LicenseCategoryCode.E, NameAr = "حافلة", NameEn = "Bus", MinimumAge = 21, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
+                new Mojaz.Domain.Entities.LicenseCategory { Id = 6, Code = Mojaz.Domain.Enums.LicenseCategoryCode.F, NameAr = "TRACTOR", NameEn = "Tractor", MinimumAge = 18, ValidityYears = 10, IsActive = true, CreatedAt = DateTime.UtcNow },
             };
             DbContext.LicenseCategories.AddRange(categories);
             await DbContext.SaveChangesAsync();
@@ -124,7 +124,7 @@ public class IntegrationTestBase : IDisposable
         }
     }
 
-    protected async Task AuthenticateAsUserAsync(Guid userId, string role = "Applicant")
+    protected async Task AuthenticateAsUserAsync(int userId, string role = "Applicant")
     {
         // This generates a test token that the TestAuthHandler recognizes
         // Format: test-token-{userId}-{role}

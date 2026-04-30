@@ -114,7 +114,6 @@ public class SystemSettingsService : ISystemSettingsService
 
         var setting = new SystemSetting
         {
-            Id = Guid.NewGuid(),
             SettingKey = request.Key,
             SettingValue = request.Value,
             Category = request.Category,

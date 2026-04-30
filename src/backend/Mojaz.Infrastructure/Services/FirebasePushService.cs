@@ -31,7 +31,7 @@ public class FirebasePushService : IPushNotificationService
 
     public Task SendAsync(PushMessage message) => Task.CompletedTask; // Generic broadcast not implemented in MVP
 
-    public async Task SendToUserAsync(Guid userId, PushMessage message)
+    public async Task SendToUserAsync(int userId, PushMessage message)
     {
         var tokens = await _pushTokenRepository.FindAsync(t => t.UserId == userId && t.IsActive);
         if (!tokens.Any()) return;
@@ -69,7 +69,7 @@ public class FirebasePushService : IPushNotificationService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task RegisterTokenAsync(Guid userId, string token, string deviceType)
+    public async Task RegisterTokenAsync(int userId, string token, string deviceType)
     {
         var existingTokens = await _pushTokenRepository.FindAsync(t => t.UserId == userId && t.Token == token);
         var existing = existingTokens.FirstOrDefault();
@@ -93,7 +93,7 @@ public class FirebasePushService : IPushNotificationService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task UnregisterTokenAsync(Guid userId, string token)
+    public async Task UnregisterTokenAsync(int userId, string token)
     {
         var existingTokens = await _pushTokenRepository.FindAsync(t => t.UserId == userId && t.Token == token);
         var existing = existingTokens.FirstOrDefault();

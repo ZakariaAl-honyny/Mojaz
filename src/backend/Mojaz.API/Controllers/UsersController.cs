@@ -117,7 +117,7 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Activate or deactivate a user.
     /// </summary>
-    [HttpPatch("{userId:guid}/status")]
+    [HttpPatch("{userId:int}/status")]
     [Authorize(Policy = RolePolicies.AdminOnly)]
     [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
@@ -138,7 +138,7 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Update user role.
     /// </summary>
-    [HttpPatch("{userId:guid}/role")]
+    [HttpPatch("{userId:int}/role")]
     [Authorize(Policy = RolePolicies.AdminOnly)]
     [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
@@ -159,7 +159,7 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Unlock a locked user account. Resets failed attempts and removes lockout.
     /// </summary>
-    [HttpPost("{userId:guid}/unlock")]
+    [HttpPost("{userId:int}/unlock")]
     [Authorize(Policy = RolePolicies.AdminOnly)]
     [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]

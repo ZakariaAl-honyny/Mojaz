@@ -16,7 +16,7 @@ export interface UpdateDraftRequest {
   
   // Step 2: License Category
   licenseCategoryCode?: LicenseCategoryCode | string | null;
-  licenseCategoryId?: string | null;
+  licenseCategoryId?: number | null;
   
   // Step 3: Personal Information
   nationalId?: string | null;
@@ -31,8 +31,8 @@ export interface UpdateDraftRequest {
   
   // Step 4: Application Details
   applicantType?: number | null; // Mapped to backend enum (Private, Public, etc.)
-  preferredCenterId?: string | null;
-  branchId?: string | null;
+  preferredCenterId?: number | null;
+  branchId?: number | null;
   testLanguage?: string | null;
   preferredLanguage?: string | null;
   appointmentPreference?: string | null;
@@ -40,9 +40,9 @@ export interface UpdateDraftRequest {
 }
 
 interface UseApplicationMutationReturn {
-  submitApplicationAsync: (id: string) => Promise<void>;
-  updateDraftAsync: (id: string, data: UpdateDraftRequest) => Promise<ApplicationDraftDto | null>;
-  createDraftAsync: (serviceType: ServiceType) => Promise<string>;
+  submitApplicationAsync: (id: number) => Promise<void>;
+  updateDraftAsync: (id: number, data: UpdateDraftRequest) => Promise<ApplicationDraftDto | null>;
+  createDraftAsync: (serviceType: ServiceType) => Promise<number>;
 }
 
 export function useApplicationMutation(): UseApplicationMutationReturn {
@@ -67,16 +67,15 @@ export function useApplicationMutation(): UseApplicationMutationReturn {
   });
 
   const updateDraftMutation = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: UpdateDraftRequest }) => {
+    mutationFn: async ({ id, data }: { id: number; data: UpdateDraftRequest }) => {
       // Clean up common 400-causing issues
       const cleanedData: any = { ...data };
 
-      // 1. Backend wants Guid? BranchId, frontend uses preferredCenterId or branchId
-      // Ensure we send branchId as a valid GUID string or null
+      // 1. BranchId is now a number (auto-increment), frontend uses preferredCenterId or branchId
+      // Ensure we send branchId as a valid number or null
       const branchId = cleanedData.branchId || cleanedData.preferredCenterId;
-      const guidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
       
-      if (!branchId || branchId === "" || !guidRegex.test(branchId)) {
+      if (!branchId || typeof branchId !== 'number') {
         cleanedData.branchId = null;
       } else {
         cleanedData.branchId = branchId;
@@ -154,8 +153,8 @@ export function useApplicationMutation(): UseApplicationMutationReturn {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["applications"] });
-      // Sync API response back to wizard store (handles server-applied defaults / computed fields)
-      if (data) {
+// Sync API response back to wizard store (handles server-applied defaults / computed fields)
+        if (data) {
         useWizardStore.getState().loadFromApi({
           serviceType: data.serviceType,
           licenseCategoryCode: data.licenseCategoryCode,
@@ -169,7 +168,7 @@ export function useApplicationMutation(): UseApplicationMutationReturn {
           city: data.city,
           region: data.region,
           applicantType: data.applicantType,
-          preferredCenterId: data.preferredCenterId,
+          preferredCenterId: data.preferredCenterId ? Number(data.preferredCenterId) : undefined,
           testLanguage: data.testLanguage,
           appointmentPreference: data.appointmentPreference,
           specialNeedsDeclaration: data.specialNeedsDeclaration,
@@ -182,7 +181,7 @@ export function useApplicationMutation(): UseApplicationMutationReturn {
   });
 
   const submitMutation = useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (id: number) => {
       const response = await ApplicationService.submitApplication(id);
       if (!response.success) {
         throw new Error(response.message || "فشل في إرسال الطلب النهائي.");
@@ -197,16 +196,16 @@ export function useApplicationMutation(): UseApplicationMutationReturn {
     },
   });
 
-  const createDraftAsync = async (serviceType: ServiceType): Promise<string> => {
+  const createDraftAsync = async (serviceType: ServiceType): Promise<number> => {
     const data = await createDraftMutation.mutateAsync(serviceType);
     return data.id;
   };
 
-  const updateDraftAsync = async (id: string, data: UpdateDraftRequest): Promise<ApplicationDraftDto | null> => {
+  const updateDraftAsync = async (id: number, data: UpdateDraftRequest): Promise<ApplicationDraftDto | null> => {
     return await updateDraftMutation.mutateAsync({ id, data });
   };
 
-  const submitApplicationAsync = async (id: string): Promise<void> => {
+  const submitApplicationAsync = async (id: number): Promise<void> => {
     await submitMutation.mutateAsync(id);
   };
 

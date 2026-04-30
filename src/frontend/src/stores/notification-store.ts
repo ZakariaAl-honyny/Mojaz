@@ -18,9 +18,9 @@ interface NotificationState {
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   addNotification: (notification: Notification) => void;
-  markAsRead: (id: string) => void;
+  markAsRead: (id: number) => void;
   markAllAsRead: () => void;
-  removeNotification: (id: string) => void;
+  removeNotification: (id: number) => void;
 }
 
 export const useNotificationStore = create<NotificationState>()(

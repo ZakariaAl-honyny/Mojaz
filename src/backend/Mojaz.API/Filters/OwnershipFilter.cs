@@ -44,10 +44,10 @@ public class OwnershipFilter : IAsyncAuthorizationFilter
         if (routeValues.TryGetValue("applicationId", out var applicationIdObj) || 
             routeValues.TryGetValue("id", out applicationIdObj))
         {
-            if (applicationIdObj is Guid applicationId)
+            if (applicationIdObj is int applicationId || (applicationIdObj is string s && int.TryParse(s, out applicationId)))
             {
                 var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (!string.IsNullOrEmpty(userIdClaim) && Guid.TryParse(userIdClaim, out var userId))
+                if (!string.IsNullOrEmpty(userIdClaim) && int.TryParse(userIdClaim, out var userId))
                 {
                     var application = await _applicationRepository.GetByIdAsync(applicationId);
                     if (application != null && application.ApplicantId != userId)
@@ -79,7 +79,7 @@ public class LicenseOwnershipFilter : IAsyncAuthorizationFilter
         var user = context.HttpContext.User;
         var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         
-        if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
         {
             context.Result = new UnauthorizedResult();
             return;
@@ -90,7 +90,7 @@ public class LicenseOwnershipFilter : IAsyncAuthorizationFilter
         
         if (routeValues.TryGetValue("oldLicenseId", out var licenseIdObj))
         {
-            if (licenseIdObj is Guid licenseId)
+            if (licenseIdObj is int licenseId || (licenseIdObj is string s && int.TryParse(s, out licenseId)))
             {
                 var license = await _licenseRepository.GetByIdAsync(licenseId);
                 if (license != null && license.HolderId != userId)

@@ -11,7 +11,8 @@ import { Loader2, PlusCircle, History, FileText, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface TrainingEntryFormProps {
-  applicationId: string;
+  applicationId: number;
+  applicationNumber?: string;
   recordId?: string;
   onSuccess?: () => void;
   onSubmit: (values: TrainingEntryFormValues) => Promise<any>;
@@ -24,6 +25,7 @@ interface TrainingEntryFormProps {
  */
 export function TrainingEntryForm({
   applicationId,
+  applicationNumber,
   recordId,
   onSuccess,
   onSubmit,
@@ -151,7 +153,7 @@ export function TrainingEntryForm({
            <History className="w-3 h-3" />
            <span className="text-[10px] font-black font-mono">MOJAZ-TRN-ENTRY-CORE</span>
         </div>
-        <span className="text-[10px] font-black font-mono text-start">رقم الطلب المرجعي: {applicationId.substring(0, 10).toUpperCase()}</span>
+        <span className="text-[10px] font-black font-mono text-start">رقم الطلب المرجعي: {applicationNumber || String(applicationId)}</span>
       </div>
     </form>
   );

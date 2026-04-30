@@ -57,8 +57,8 @@ public class DocumentServiceTests
     {
         // Arrange
         var service = CreateService();
-        var applicationId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
+        var applicationId = 1;
+        var userId = 2;
         
         var application = new ApplicationEntity
         {
@@ -107,8 +107,8 @@ public class DocumentServiceTests
     {
         // Arrange
         var service = CreateService();
-        var applicationId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
+        var applicationId = 3;
+        var userId = 4;
         
         var application = new ApplicationEntity
         {
@@ -146,8 +146,8 @@ public class DocumentServiceTests
     {
         // Arrange
         var service = CreateService();
-        var applicationId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
+        var applicationId = 5;
+        var userId = 6;
         
         var application = new ApplicationEntity
         {
@@ -182,9 +182,9 @@ public class DocumentServiceTests
     {
         // Arrange
         var service = CreateService();
-        var applicationId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
-        var otherUserId = Guid.NewGuid();
+        var applicationId = 7;
+        var userId = 8;
+        var otherUserId = 9;
         
         var application = new ApplicationEntity
         {
@@ -223,13 +223,13 @@ public class DocumentServiceTests
     {
         // Arrange
         var service = CreateService();
-        var documentId = Guid.NewGuid();
-        var reviewerId = Guid.NewGuid();
+        var documentId = 10;
+        var reviewerId = 11;
 
         var document = new ApplicationDocument
         {
             Id = documentId,
-            ApplicationId = Guid.NewGuid(),
+            ApplicationId = 12,
             Status = DocumentStatus.Pending
         };
 
@@ -251,13 +251,13 @@ public class DocumentServiceTests
     {
         // Arrange
         var service = CreateService();
-        var documentId = Guid.NewGuid();
-        var reviewerId = Guid.NewGuid();
+        var documentId = 13;
+        var reviewerId = 14;
 
         var document = new ApplicationDocument
         {
             Id = documentId,
-            ApplicationId = Guid.NewGuid(),
+            ApplicationId = 15,
             Status = DocumentStatus.Pending
         };
 
@@ -279,13 +279,13 @@ public class DocumentServiceTests
     {
         // Arrange
         var service = CreateService();
-        var documentId = Guid.NewGuid();
-        var reviewerId = Guid.NewGuid();
+        var documentId = 16;
+        var reviewerId = 17;
 
         var document = new ApplicationDocument
         {
             Id = documentId,
-            ApplicationId = Guid.NewGuid(),
+            ApplicationId = 18,
             Status = DocumentStatus.Pending
         };
 
@@ -316,8 +316,8 @@ public class DocumentServiceTests
     {
         // Arrange
         var service = CreateService();
-        var applicationId = Guid.NewGuid();
-        var reviewerId = Guid.NewGuid();
+        var applicationId = 19;
+        var reviewerId = 20;
 
         var application = new ApplicationEntity
         {
@@ -327,8 +327,8 @@ public class DocumentServiceTests
 
         var pendingDocs = new List<ApplicationDocument>
         {
-            new ApplicationDocument { Id = Guid.NewGuid(), ApplicationId = applicationId, Status = DocumentStatus.Pending },
-            new ApplicationDocument { Id = Guid.NewGuid(), ApplicationId = applicationId, Status = DocumentStatus.Pending }
+            new ApplicationDocument { Id = 21, ApplicationId = applicationId, Status = DocumentStatus.Pending },
+            new ApplicationDocument { Id = 22, ApplicationId = applicationId, Status = DocumentStatus.Pending }
         };
 
         _applicationRepo.Setup(r => r.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
@@ -350,8 +350,8 @@ public class DocumentServiceTests
     {
         // Arrange
         var service = CreateService();
-        var applicationId = Guid.NewGuid();
-        var reviewerId = Guid.NewGuid();
+        var applicationId = 23;
+        var reviewerId = 24;
 
         var application = new ApplicationEntity { Id = applicationId };
         
@@ -378,9 +378,9 @@ public class DocumentServiceTests
     {
         // Arrange
         var service = CreateService();
-        var documentId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
-        var applicationId = Guid.NewGuid();
+        var documentId = 25;
+        var userId = 26;
+        var applicationId = 27;
 
         var document = new ApplicationDocument
         {
@@ -414,9 +414,9 @@ public class DocumentServiceTests
     {
         // Arrange
         var service = CreateService();
-        var documentId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
-        var applicationId = Guid.NewGuid();
+        var documentId = 28;
+        var userId = 29;
+        var applicationId = 30;
 
         var document = new ApplicationDocument
         {
@@ -454,8 +454,8 @@ public class DocumentServiceTests
     {
         // Arrange
         var service = CreateService();
-        var applicationId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
+        var applicationId = 31;
+        var userId = 32;
 
         var application = new ApplicationEntity
         {
@@ -490,8 +490,8 @@ public class DocumentServiceTests
     {
         // Arrange
         var service = CreateService();
-        var applicationId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
+        var applicationId = 33;
+        var userId = 34;
 
         var application = new ApplicationEntity
         {

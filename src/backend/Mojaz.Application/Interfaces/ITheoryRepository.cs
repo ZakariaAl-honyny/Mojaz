@@ -9,8 +9,8 @@ namespace Mojaz.Application.Interfaces
 {
     public interface ITheoryRepository : IRepository<TheoryTest>
     {
-        Task<TheoryTest?> GetLatestByApplicationIdAsync(Guid applicationId);
-        Task<IEnumerable<TheoryTest>> GetAllByApplicationIdAsync(Guid applicationId);
-        Task<int> GetAttemptCountAsync(Guid applicationId);
+        Task<TheoryTest?> GetLatestByApplicationIdAsync(int applicationId);
+        Task<IEnumerable<TheoryTest>> GetAllByApplicationIdAsync(int applicationId);
+        Task<int> GetAttemptCountAsync(int applicationId);
     }
 }

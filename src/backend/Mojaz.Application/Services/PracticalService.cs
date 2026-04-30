@@ -99,7 +99,6 @@ public class PracticalService : IPracticalService
         // Create practical test record
         var practicalTest = new PracticalTest
         {
-            Id = Guid.NewGuid(),
             ApplicationId = applicationId,
             ExaminerId = examinerId,
             AttemptNumber = application.PracticalAttemptCount,

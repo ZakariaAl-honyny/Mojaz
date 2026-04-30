@@ -33,7 +33,7 @@ namespace Mojaz.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), 401)]
         public async Task<IActionResult> GetNotifications([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _notificationService.GetUserNotificationsAsync(userId, page, pageSize);
             return StatusCode(result.StatusCode, result);
         }
@@ -48,7 +48,7 @@ namespace Mojaz.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), 401)]
         public async Task<IActionResult> GetUnreadCount()
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _notificationService.GetUnreadCountAsync(userId);
             return StatusCode(result.StatusCode, result);
         }
@@ -63,9 +63,9 @@ namespace Mojaz.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), 200)]
         [ProducesResponseType(typeof(ApiResponse<object>), 401)]
         [ProducesResponseType(typeof(ApiResponse<object>), 404)]
-        public async Task<IActionResult> MarkAsRead(Guid id)
+        public async Task<IActionResult> MarkAsRead(int id)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _notificationService.MarkAsReadAsync(userId, id);
             return Ok(new { Success = result });
         }
@@ -78,7 +78,7 @@ namespace Mojaz.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), 200)]
         public async Task<IActionResult> MarkAllAsRead()
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _notificationService.MarkAllAsReadAsync(userId);
             if (result)
             {

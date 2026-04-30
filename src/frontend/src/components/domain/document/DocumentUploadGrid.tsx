@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
 interface DocumentUploadGridProps {
-  applicationId: string;
+  applicationId: number;
   requirements: DocumentRequirementDto[];
   documents: DocumentDto[];
 }
@@ -103,7 +103,7 @@ export function DocumentUploadGrid({
               requirement={requirement}
               document={document}
               onUpload={(file) => handleUpload(requirement.documentType, file)}
-              onDelete={document ? () => handleDelete(document.id) : undefined}
+              onDelete={document ? () => handleDelete(String(document.id)) : undefined}
               isUploading={isUploading}
               uploadProgress={progress}
             />

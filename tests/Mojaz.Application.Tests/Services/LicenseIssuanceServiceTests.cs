@@ -76,10 +76,10 @@ public class LicenseServiceTests
     public async Task IssueLicenseAsync_WhenPayloadValid_ShouldGenerateCorrectLicenseNumber()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var categoryId = Guid.NewGuid();
-        var applicantId = Guid.NewGuid();
-        var issuerId = Guid.NewGuid();
+        var applicationId = 1;
+        var categoryId = 2;
+        var applicantId = 3;
+        var issuerId = 4;
         var application = new ApplicationEntity
         {
             Id = applicationId,
@@ -105,7 +105,7 @@ public class LicenseServiceTests
         };
         var paidPayment = new PaymentTransaction
         {
-            Id = Guid.NewGuid(),
+            Id = 5,
             ApplicationId = applicationId,
             FeeType = FeeType.IssuanceFee,
             Amount = 200,
@@ -128,7 +128,7 @@ public class LicenseServiceTests
         _fileStorageServiceMock.Setup(x => x.SaveAsync(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<string>()))
             .ReturnsAsync("licenses/2026/04/MOJ-2026-12345678.pdf");
         _mapperMock.Setup(x => x.Map<LicenseDto>(It.IsAny<License>()))
-            .Returns(new LicenseDto { Id = Guid.NewGuid(), LicenseNumber = "MOJ-2025-00000001" });
+            .Returns(new LicenseDto { Id = 10, LicenseNumber = "MOJ-2025-00000001" });
 
         // Act
         var result = await _service.IssueLicenseAsync(applicationId, issuerId);
@@ -142,7 +142,7 @@ public class LicenseServiceTests
     public async Task IssueLicenseAsync_WhenAlreadyIssued_ShouldReturnConflict()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 1;
         var application = new ApplicationEntity
         {
             Id = applicationId,
@@ -157,7 +157,7 @@ public class LicenseServiceTests
             .ReturnsAsync(true);
 
         // Act
-        var result = await _service.IssueLicenseAsync(applicationId, Guid.NewGuid());
+        var result = await _service.IssueLicenseAsync(applicationId, 2);
 
         // Assert
         result.Success.Should().BeFalse();
@@ -169,7 +169,7 @@ public class LicenseServiceTests
     public async Task IssueLicenseAsync_WhenNotApproved_ShouldReturnBadRequest()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 1;
         var application = new ApplicationEntity
         {
             Id = applicationId,
@@ -180,7 +180,7 @@ public class LicenseServiceTests
             .ReturnsAsync(application);
 
         // Act
-        var result = await _service.IssueLicenseAsync(applicationId, Guid.NewGuid());
+        var result = await _service.IssueLicenseAsync(applicationId, 2);
 
         // Assert
         result.Success.Should().BeFalse();
@@ -192,7 +192,7 @@ public class LicenseServiceTests
     public async Task IssueLicenseAsync_WhenIssuancePaymentNotCompleted_ShouldReturnBadRequest()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 1;
         var application = new ApplicationEntity
         {
             Id = applicationId,
@@ -209,7 +209,7 @@ public class LicenseServiceTests
             .ReturnsAsync(new List<PaymentTransaction>());
 
         // Act
-        var result = await _service.IssueLicenseAsync(applicationId, Guid.NewGuid());
+        var result = await _service.IssueLicenseAsync(applicationId, 2);
 
         // Assert
         result.Success.Should().BeFalse();

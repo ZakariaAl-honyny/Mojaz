@@ -14,7 +14,7 @@ public class LicenseRepository : ILicenseRepository
         _context = context;
     }
 
-    public async Task<License?> GetByIdAsync(Guid id)
+    public async Task<License?> GetByIdAsync(int id)
     {
         return await _context.Licenses
             .Include(l => l.LicenseCategory)

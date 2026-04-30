@@ -51,10 +51,10 @@ public class LicensesController : ControllerBase
     public async Task<IActionResult> IssueAsync(string appIdOrNumber)
     {
         var applicationId = await ResolveIdAsync(appIdOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var issuerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var issuerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _licenseService.IssueLicenseAsync(applicationId, issuerId);
         return StatusCode(result.StatusCode, result);
     }
@@ -65,14 +65,14 @@ public class LicensesController : ControllerBase
     /// </summary>
     [HttpPost("application/{appIdOrNumber}/issue-replacement")]
     [Authorize(Roles = "Manager,Admin")]
-    [ProducesResponseType(typeof(ApiResponse<Guid>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<int>), 200)]
     public async Task<IActionResult> IssueReplacementAsync(string appIdOrNumber)
     {
         var applicationId = await ResolveIdAsync(appIdOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var issuerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var issuerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _replaceLicenseService.IssueReplacementAsync(applicationId, issuerId);
         return StatusCode(result.StatusCode, result);
     }
@@ -82,9 +82,9 @@ public class LicensesController : ControllerBase
     /// </summary>
     [HttpGet("{id}/download")]
     [Authorize]
-    public async Task<IActionResult> DownloadAsync(Guid id)
+    public async Task<IActionResult> DownloadAsync(int id)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
 
         var licenseResult = await _licenseService.GetByIdAsync(id, userId, role);
@@ -128,7 +128,7 @@ public class LicensesController : ControllerBase
     [Authorize(Roles = "Applicant")]
     public async Task<IActionResult> GetMyLicensesAsync()
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
         var result = await _licenseService.GetUserLicensesAsync(userId, role);
         return StatusCode(result.StatusCode, result);
@@ -139,18 +139,18 @@ public class LicensesController : ControllerBase
     /// </summary>
     [HttpGet("{id}/upgrade-targets")]
     [Authorize(Roles = "Applicant")]
-    public async Task<IActionResult> GetUpgradeTargetsAsync(Guid id)
+    public async Task<IActionResult> GetUpgradeTargetsAsync(int id)
     {
         var result = await _licenseService.GetUpgradeTargetsAsync(id);
         return StatusCode(result.StatusCode, result);
     }
 
-    private async Task<Guid> ResolveIdAsync(string idOrNumber)
+    private async Task<int> ResolveIdAsync(string idOrNumber)
     {
-        if (Guid.TryParse(idOrNumber, out var id))
+        if (int.TryParse(idOrNumber, out var id))
             return id;
 
         var result = await _applicationService.GetByApplicationNumberAsync(idOrNumber);
-        return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
+        return result.Data?.FirstOrDefault()?.Id ?? 0;
     }
 }

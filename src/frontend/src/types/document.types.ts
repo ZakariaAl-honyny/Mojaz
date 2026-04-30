@@ -21,8 +21,8 @@ export enum DocumentType {
 
 // Document DTO (response from API)
 export interface DocumentDto {
-  id: string;
-  applicationId: string;
+  id: number;
+  applicationId: number;
   documentType: DocumentType;
   documentTypeName: string;
   originalFileName: string;
@@ -30,7 +30,7 @@ export interface DocumentDto {
   contentType: string;
   status: DocumentStatus;
   rejectionReason?: string;
-  reviewedBy?: string;
+  reviewedBy?: number;
   reviewedAt?: string;
   createdAt: string;
   downloadUrl: string;
@@ -45,7 +45,7 @@ export interface DocumentRequirementDto {
   conditionDescription?: string;
   hasUpload: boolean;
   status?: DocumentStatus;
-  documentId?: string;
+  documentId?: number;
 }
 
 // Upload document request
@@ -63,7 +63,7 @@ export interface DocumentReviewRequest {
 // Bulk approve response
 export interface BulkApproveResponse {
   approvedCount: number;
-  approvedDocumentIds: string[];
+  approvedDocumentIds: number[];
 }
 
 // API Response wrappers

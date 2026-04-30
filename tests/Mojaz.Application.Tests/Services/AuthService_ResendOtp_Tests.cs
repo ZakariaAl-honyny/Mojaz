@@ -60,7 +60,7 @@ public class AuthService_ResendOtp_Tests
     {
         // Arrange
         var service = CreateService();
-        var user = new User { Id = Guid.NewGuid(), Email = "test@resend.com" };
+        var user = new User { Id = 1, Email = "test@resend.com" };
         _userRepo.Setup(r => r.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>()))
                  .ReturnsAsync((IReadOnlyList<User>)new List<User> { user });
 
@@ -82,7 +82,7 @@ public class AuthService_ResendOtp_Tests
     {
         // Arrange
         var service = CreateService();
-        var user = new User { Id = Guid.NewGuid(), Email = "test@resend.com" };
+        var user = new User { Id = 1, Email = "test@resend.com" };
         _userRepo.Setup(r => r.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>()))
                  .ReturnsAsync((IReadOnlyList<User>)new List<User> { user });
 

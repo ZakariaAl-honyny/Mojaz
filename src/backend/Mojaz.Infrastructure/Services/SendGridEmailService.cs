@@ -72,7 +72,6 @@ namespace Mojaz.Infrastructure.Services
 
             var emailLog = new EmailLog
             {
-                Id = Guid.NewGuid(),
                 RecipientEmail = request.RecipientEmail,
                 TemplateName = request.TemplateName,
                 ReferenceId = request.ReferenceId,

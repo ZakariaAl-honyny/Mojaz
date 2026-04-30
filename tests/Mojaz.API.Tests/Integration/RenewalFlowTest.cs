@@ -16,9 +16,9 @@ public class RenewalFlowTest : IntegrationTestBase
     public async Task FullRenewalFlow_Succeeds()
     {
         // 1. Arrange: Seed data
-        var userId = Guid.NewGuid();
-        var categoryId = Guid.NewGuid();
-        var oldLicenseId = Guid.NewGuid();
+        var userId = 1;
+        var categoryId = 2;
+        var oldLicenseId = 1;
 
         DbContext.Users.Add(new User { Id = userId, NationalId = "1234567890", FullNameAr = "User", FullNameEn = "User" });
         DbContext.LicenseCategories.Add(new LicenseCategory { Id = categoryId, NameAr = "B", NameEn = "B", Code = LicenseCategoryCode.B, ValidityYears = 10 });
@@ -41,12 +41,12 @@ public class RenewalFlowTest : IntegrationTestBase
         var createResponse = await Client.PostAsJsonAsync("/api/v1/licenses/renewal", createRequest);
         createResponse.EnsureSuccessStatusCode();
         
-        var createResult = await createResponse.Content.ReadFromJsonAsync<ApiResponse<Guid>>();
+        var createResult = await createResponse.Content.ReadFromJsonAsync<ApiResponse<int>>();
         var applicationId = createResult!.Data;
 
         // 3. Submit Medical Result (as Doctor)
-        await AuthenticateAsUserAsync(Guid.NewGuid(), "Doctor");
-        var medicalExamId = Guid.NewGuid();
+        await AuthenticateAsUserAsync(2, "Doctor");
+        var medicalExamId = 1;
         DbContext.MedicalExaminations.Add(new MedicalExamination { Id = medicalExamId, ApplicationId = applicationId, FitnessResult = MedicalFitnessResult.Fit, ExaminedAt = DateTime.UtcNow });
         await DbContext.SaveChangesAsync();
         
@@ -60,7 +60,7 @@ public class RenewalFlowTest : IntegrationTestBase
         payResponse.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
 
         // 5. Issue License (as Manager)
-        await AuthenticateAsUserAsync(Guid.NewGuid(), "Manager");
+        await AuthenticateAsUserAsync(3, "Manager");
         var issueResponse = await Client.PostAsync($"/api/v1/licenses/renewal/{applicationId}/issue", null);
         issueResponse.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
 

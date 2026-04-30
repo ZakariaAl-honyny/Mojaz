@@ -33,7 +33,7 @@ const theoryResultSchema = z.object({
 });
 
 interface TheoryResultFormProps {
-  applicationId: string;
+  applicationId: number;
   applicantName: string;
   onSuccess?: () => void;
 }
@@ -60,7 +60,7 @@ export function TheoryResultForm({ applicationId, applicantName, onSuccess }: Th
     setIsSubmitting(true);
     setServerError(null);
     try {
-      const response = await theoryService.submitResult(applicationId, values as SubmitTheoryResultRequest);
+      const response = await theoryService.submitResult(String(applicationId), values as SubmitTheoryResultRequest);
       if (response.success) {
         toast.success("تم رصد نتيجة الاختبار النظري بنجاح.");
         onSuccess?.();

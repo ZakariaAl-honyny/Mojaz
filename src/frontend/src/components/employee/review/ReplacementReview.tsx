@@ -50,7 +50,7 @@ export default function ReplacementReview({ application }: ReplacementReviewProp
   const params = useParams();
   const router = useRouter();
   const t = useTranslations('application');
-  const applicationId = params.id as string;
+  const applicationId = parseInt(params.id as string, 10);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<VerifyFormValues>({

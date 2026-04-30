@@ -19,7 +19,7 @@ import { Loader2, XCircle, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 
 interface ApplicationActionButtonsProps {
-  applicationId: string;
+  applicationId: number;
   applicationStatus: string;
   token?: string;
 }
@@ -53,7 +53,7 @@ export function ApplicationActionButtons({ applicationId, applicationStatus, tok
 
     setIsCancelling(true);
     try {
-      const result = await ApplicationService.cancelApplication(applicationId, cancelReason, token);
+      const result = await ApplicationService.cancelApplication(String(applicationId), cancelReason, token);
       if (result.success) {
         toast.success("تم إلغاء الطلب بنجاح");
         setShowCancelDialog(false);

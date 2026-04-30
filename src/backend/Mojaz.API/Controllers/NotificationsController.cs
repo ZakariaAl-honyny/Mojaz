@@ -41,7 +41,7 @@ namespace Mojaz.API.Controllers
         {
             try
             {
-                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
                 var result = await _notificationService.GetUserNotificationsAsync(userId, page, pageSize);
                 return StatusCode(result.StatusCode, result);
             }
@@ -65,7 +65,7 @@ namespace Mojaz.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetUnreadCount()
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _notificationService.GetUnreadCountAsync(userId);
             var response = new UnreadCountResponse { UnreadCount = result.Success ? result.Data : 0 };
             return Ok(ApiResponse<UnreadCountResponse>.Ok(response, "Unread count retrieved"));
@@ -85,7 +85,7 @@ namespace Mojaz.API.Controllers
         {
             try
             {
-                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
                 var success = await _notificationService.MarkAllAsReadAsync(userId);
                 if (success)
                 {
@@ -116,11 +116,11 @@ namespace Mojaz.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> MarkAsRead(Guid id)
+        public async Task<IActionResult> MarkAsRead(int id)
         {
             try
             {
-                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
                 var success = await _notificationService.MarkAsReadAsync(userId, id);
                 if (success)
                 {
@@ -148,7 +148,7 @@ namespace Mojaz.API.Controllers
         [Authorize]
         public async Task<IActionResult> RegisterToken([FromBody] RegisterPushTokenRequest request)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             await _pushNotificationService.RegisterTokenAsync(userId, request.Token, request.DeviceType);
             return Ok(new { Success = true });
         }
@@ -167,7 +167,7 @@ namespace Mojaz.API.Controllers
         [Authorize]
         public async Task<IActionResult> UnregisterToken([FromQuery] string token)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             await _pushNotificationService.RegisterTokenAsync(userId, token, "");
             return Ok(new { Success = true });
         }

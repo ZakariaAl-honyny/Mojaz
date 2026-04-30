@@ -2,7 +2,7 @@ using Mojaz.Domain.Enums;
 
 namespace Mojaz.Domain.Entities
 {
-    public class EmailLog : AuditableEntity
+    public class EmailLog : SoftDeletableEntity
     {
         public required string RecipientEmail { get; set; }
         public required string TemplateName { get; set; }

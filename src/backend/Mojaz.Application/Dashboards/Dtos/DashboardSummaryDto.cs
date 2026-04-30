@@ -14,7 +14,7 @@ public class DashboardSummaryDto
 
 public class RecentNotificationDto
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Message { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
@@ -29,7 +29,7 @@ public class UserDashboardStats
 
 public class AppointmentSummaryDto
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public DateTime AppointmentDate { get; set; }
     public string ServiceType { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;

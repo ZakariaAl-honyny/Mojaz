@@ -42,10 +42,10 @@ namespace Mojaz.API.Controllers
         public async Task<IActionResult> UploadAsync(string appIdOrNumber, [FromForm] UploadDocumentRequest request)
         {
             var applicationId = await ResolveAppIdAsync(appIdOrNumber);
-            if (applicationId == Guid.Empty)
+            if (applicationId == 0)
                 return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _documentService.UploadAsync(applicationId, request, userId);
             return StatusCode(result.StatusCode, result);
         }
@@ -60,10 +60,10 @@ namespace Mojaz.API.Controllers
         public async Task<IActionResult> GetByApplicationIdAsync(string appIdOrNumber)
         {
             var applicationId = await ResolveAppIdAsync(appIdOrNumber);
-            if (applicationId == Guid.Empty)
+            if (applicationId == 0)
                 return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var role = User.FindFirstValue(ClaimTypes.Role)!;
             var result = await _documentService.GetByApplicationIdAsync(applicationId, userId, role);
             return StatusCode(result.StatusCode, result);
@@ -79,10 +79,10 @@ namespace Mojaz.API.Controllers
         public async Task<IActionResult> GetRequirementsAsync(string appIdOrNumber)
         {
             var applicationId = await ResolveAppIdAsync(appIdOrNumber);
-            if (applicationId == Guid.Empty)
+            if (applicationId == 0)
                 return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var role = User.FindFirstValue(ClaimTypes.Role)!;
             var result = await _documentService.GetRequirementsAsync(applicationId, userId, role);
             return StatusCode(result.StatusCode, result);
@@ -98,10 +98,10 @@ namespace Mojaz.API.Controllers
         public async Task<IActionResult> BulkApproveAsync(string appIdOrNumber)
         {
             var applicationId = await ResolveAppIdAsync(appIdOrNumber);
-            if (applicationId == Guid.Empty)
+            if (applicationId == 0)
                 return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-            var reviewerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var reviewerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _documentService.BulkApproveAsync(applicationId, reviewerId);
             return StatusCode(result.StatusCode, result);
         }
@@ -114,9 +114,9 @@ namespace Mojaz.API.Controllers
         [Authorize(Roles = "Receptionist,Manager")]
         [ProducesResponseType(typeof(ApiResponse<DocumentDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ReviewAsync(string appIdOrNumber, Guid documentId, [FromBody] DocumentReviewRequest request)
+        public async Task<IActionResult> ReviewAsync(string appIdOrNumber, int documentId, [FromBody] DocumentReviewRequest request)
         {
-            var reviewerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var reviewerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _documentService.ReviewAsync(documentId, request, reviewerId);
             return StatusCode(result.StatusCode, result);
         }
@@ -127,9 +127,9 @@ namespace Mojaz.API.Controllers
         [HttpDelete("{documentId}")]
         [Authorize(Roles = "Applicant,Receptionist")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> DeleteAsync(Guid documentId)
+        public async Task<IActionResult> DeleteAsync(int documentId)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _documentService.DeleteAsync(documentId, userId);
             return StatusCode(result.StatusCode, result);
         }
@@ -145,7 +145,7 @@ namespace Mojaz.API.Controllers
         public async Task<IActionResult> RequestMissingDocumentsAsync(string appIdOrNumber, [FromBody] RequestMissingDocumentsRequest request)
         {
             var applicationId = await ResolveAppIdAsync(appIdOrNumber);
-            if (applicationId == Guid.Empty)
+            if (applicationId == 0)
                 return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
             var deadline = request.Deadline ?? DateTime.UtcNow.AddDays(7);
@@ -165,11 +165,11 @@ namespace Mojaz.API.Controllers
         [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DownloadAsync(Guid documentId)
+        public async Task<IActionResult> DownloadAsync(int documentId)
         {
             try
             {
-                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
                 var role = User.FindFirstValue(ClaimTypes.Role)!;
                 var (content, contentType, fileName) = await _documentService.DownloadAsync(documentId, userId, role);
                 
@@ -187,13 +187,13 @@ namespace Mojaz.API.Controllers
             }
         }
 
-        private async Task<Guid> ResolveAppIdAsync(string appIdOrNumber)
+        private async Task<int> ResolveAppIdAsync(string appIdOrNumber)
         {
-            if (string.IsNullOrWhiteSpace(appIdOrNumber)) return Guid.Empty;
-            if (Guid.TryParse(appIdOrNumber.Trim(), out var id)) return id;
+            if (string.IsNullOrWhiteSpace(appIdOrNumber)) return 0;
+            if (int.TryParse(appIdOrNumber.Trim(), out var id)) return id;
 
             var result = await _applicationService.GetByApplicationNumberAsync(appIdOrNumber.Trim());
-            return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
+            return result.Data?.FirstOrDefault()?.Id ?? 0;
         }
     }
 }

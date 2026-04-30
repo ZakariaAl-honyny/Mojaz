@@ -60,9 +60,9 @@ public class AppointmentBookingValidatorTests
         // Arrange
         var request = new CreateAppointmentRequest
         {
-            ApplicationId = Guid.NewGuid(),
+            ApplicationId = 1,
             Type = AppointmentType.PracticalTest,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
             TimeSlot = "09:00"
         };
@@ -83,7 +83,7 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateBookingAsync_ApplicationNotInCorrectStatus_ReturnsError()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 1;
         var application = new ApplicationEntity
         {
             Id = applicationId,
@@ -94,7 +94,7 @@ public class AppointmentBookingValidatorTests
         {
             ApplicationId = applicationId,
             Type = AppointmentType.PracticalTest,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
             TimeSlot = "09:00"
         };
@@ -115,8 +115,8 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateBookingAsync_ExistingActiveAppointment_ReturnsError()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var branchId = Guid.NewGuid();
+        var applicationId = 1;
+        var branchId = 2;
         
         var application = new ApplicationEntity
         {
@@ -126,7 +126,7 @@ public class AppointmentBookingValidatorTests
 
         var existingAppointment = new Appointment
         {
-            Id = Guid.NewGuid(),
+            Id = 3,
             ApplicationId = applicationId,
             AppointmentType = AppointmentType.PracticalTest,
             Status = AppointmentStatus.Scheduled
@@ -161,7 +161,7 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateBookingAsync_PastDate_ReturnsError()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 1;
         var application = new ApplicationEntity
         {
             Id = applicationId,
@@ -172,7 +172,7 @@ public class AppointmentBookingValidatorTests
         {
             ApplicationId = applicationId,
             Type = AppointmentType.PracticalTest,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1)), // Past date
             TimeSlot = "09:00"
         };
@@ -197,8 +197,8 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateBookingAsync_SlotFull_ReturnsError()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var branchId = Guid.NewGuid();
+        var applicationId = 1;
+        var branchId = 2;
         var scheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5));
         
         var application = new ApplicationEntity
@@ -253,8 +253,8 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateBookingAsync_ValidRequest_ReturnsSuccess()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var branchId = Guid.NewGuid();
+        var applicationId = 1;
+        var branchId = 2;
         var scheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5));
         
         var application = new ApplicationEntity
@@ -325,8 +325,8 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateBookingAsync_TheoryTest_IncompleteTraining_ReturnsError()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var branchId = Guid.NewGuid();
+        var applicationId = 1;
+        var branchId = 2;
         var scheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5));
         
         var application = new ApplicationEntity
@@ -393,8 +393,8 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateBookingAsync_PracticalTest_IncompleteTraining_ReturnsError()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var branchId = Guid.NewGuid();
+        var applicationId = 1;
+        var branchId = 2;
         var scheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5));
         
         var application = new ApplicationEntity
@@ -461,8 +461,8 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateBookingAsync_MedicalExam_IncompleteTraining_ReturnsSuccess()
     {
         // Arrange - Medical exam does NOT require training completion
-        var applicationId = Guid.NewGuid();
-        var branchId = Guid.NewGuid();
+        var applicationId = 1;
+        var branchId = 2;
         var scheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5));
         
         var application = new ApplicationEntity
@@ -533,12 +533,12 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateBookingAsync_TheoryTest_ReachedMaxAttempts_ReturnsError()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 1;
         var request = new CreateAppointmentRequest
         {
             ApplicationId = applicationId,
             Type = AppointmentType.TheoryTest,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
             TimeSlot = "09:00"
         };
@@ -561,12 +561,12 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateBookingAsync_TheoryTest_InCoolingPeriod_ReturnsError()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 1;
         var request = new CreateAppointmentRequest
         {
             ApplicationId = applicationId,
             Type = AppointmentType.TheoryTest,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
             TimeSlot = "09:00"
         };
@@ -586,7 +586,7 @@ public class AppointmentBookingValidatorTests
                 new TheoryTestDto { RetakeEligibleAfter = DateTime.UtcNow.AddDays(4) } 
             }
         });
-        _theoryServiceMock.Setup(x => x.GetHistoryAsync(applicationId, Guid.Empty, "Manager", 1, 1)).ReturnsAsync(history);
+        _theoryServiceMock.Setup(x => x.GetHistoryAsync(applicationId, 0, "Manager", 1, 1)).ReturnsAsync(history);
 
         // Act
         var result = await _validator.ValidateBookingAsync(request);
@@ -604,12 +604,12 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateBookingAsync_PracticalTest_ReachedMaxAttempts_ReturnsError()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 1;
         var request = new CreateAppointmentRequest
         {
             ApplicationId = applicationId,
             Type = AppointmentType.PracticalTest,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
             TimeSlot = "09:00"
         };
@@ -632,12 +632,12 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateBookingAsync_PracticalTest_InCoolingPeriod_ReturnsError()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 1;
         var request = new CreateAppointmentRequest
         {
             ApplicationId = applicationId,
             Type = AppointmentType.PracticalTest,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
             TimeSlot = "09:00"
         };
@@ -657,7 +657,7 @@ public class AppointmentBookingValidatorTests
                 new PracticalTestDto { RetakeEligibleAfter = DateTime.UtcNow.AddDays(4) } 
             }
         });
-        _practicalServiceMock.Setup(x => x.GetHistoryAsync(applicationId, Guid.Empty, "Manager", 1, 1)).ReturnsAsync(history);
+        _practicalServiceMock.Setup(x => x.GetHistoryAsync(applicationId, 0, "Manager", 1, 1)).ReturnsAsync(history);
 
         // Act
         var result = await _validator.ValidateBookingAsync(request);
@@ -671,12 +671,12 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateBookingAsync_PracticalTest_AdditionalTrainingRequired_ReturnsError()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 1;
         var request = new CreateAppointmentRequest
         {
             ApplicationId = applicationId,
             Type = AppointmentType.PracticalTest,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5)),
             TimeSlot = "09:00"
         };
@@ -704,7 +704,7 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateRescheduleAsync_AppointmentNotFound_ReturnsError()
     {
         // Arrange
-        var appointmentId = Guid.NewGuid();
+        var appointmentId = 1;
         var request = new RescheduleAppointmentRequest
         {
             NewScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(10)),
@@ -727,12 +727,12 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateRescheduleAsync_MaxRescheduleReached_ReturnsError()
     {
         // Arrange
-        var appointmentId = Guid.NewGuid();
+        var appointmentId = 1;
         var appointment = new Appointment
         {
             Id = appointmentId,
             RescheduleCount = 3, // Reached max
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             TimeSlot = "09:00",
             Status = AppointmentStatus.Scheduled
         };
@@ -763,12 +763,12 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateRescheduleAsync_CancelledAppointment_ReturnsError()
     {
         // Arrange
-        var appointmentId = Guid.NewGuid();
+        var appointmentId = 1;
         var appointment = new Appointment
         {
             Id = appointmentId,
             RescheduleCount = 0,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             TimeSlot = "09:00",
             Status = AppointmentStatus.Cancelled // Already cancelled
         };
@@ -799,8 +799,8 @@ public class AppointmentBookingValidatorTests
     public async Task ValidateRescheduleAsync_ValidRequest_ReturnsSuccess()
     {
         // Arrange
-        var appointmentId = Guid.NewGuid();
-        var branchId = Guid.NewGuid();
+        var appointmentId = 1;
+        var branchId = 2;
         
         var appointment = new Appointment
         {

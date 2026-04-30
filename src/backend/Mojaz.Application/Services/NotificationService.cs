@@ -152,7 +152,7 @@ public class NotificationService : INotificationService
         return ApiResponse<int>.Ok(count);
     }
 
-    public async Task<bool> MarkAsReadAsync(Guid userId, Guid notificationId)
+    public async Task<bool> MarkAsReadAsync(int userId, int notificationId)
     {
         var notification = await _notificationRepository.GetByIdAsync(notificationId);
         if (notification != null && notification.UserId == userId)
@@ -165,7 +165,7 @@ public class NotificationService : INotificationService
         return false;
     }
 
-    public async Task<bool> MarkAllAsReadAsync(Guid userId)
+    public async Task<bool> MarkAllAsReadAsync(int userId)
     {
         var notifications = await _notificationRepository.FindAsync(n => n.UserId == userId && !n.IsRead);
         if (notifications.Any())

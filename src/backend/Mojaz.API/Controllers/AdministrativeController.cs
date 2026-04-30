@@ -40,10 +40,10 @@ public class AdministrativeController : ControllerBase
         [FromBody] VerifyStolenReportRequest request)
     {
         var applicationId = await ResolveIdAsync(idOrNumber);
-        if (applicationId == Guid.Empty)
+        if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var reviewerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var reviewerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _replaceLicenseService.UpdateReportVerificationAsync(
             applicationId, 
             request.IsVerified, 
@@ -52,13 +52,13 @@ public class AdministrativeController : ControllerBase
         return StatusCode(result.StatusCode, result);
     }
 
-    private async Task<Guid> ResolveIdAsync(string idOrNumber)
+    private async Task<int> ResolveIdAsync(string idOrNumber)
     {
-        if (Guid.TryParse(idOrNumber, out var id))
+        if (int.TryParse(idOrNumber, out var id))
             return id;
 
         var result = await _applicationService.GetByApplicationNumberAsync(idOrNumber);
-        return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
+        return result.Data?.FirstOrDefault()?.Id ?? 0;
     }
 }
 

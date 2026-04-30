@@ -35,10 +35,10 @@ namespace Mojaz.API.Controllers
         public async Task<IActionResult> GetByApplicationAsync(string appIdOrNumber)
         {
             var appId = await ResolveAppIdAsync(appIdOrNumber);
-            if (appId == Guid.Empty)
+            if (appId == 0)
                 return NotFound(ApiResponse<object>.Fail(404, "الطلب غير موجود."));
 
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var role = User.FindFirstValue(ClaimTypes.Role)!;
             var result = await _appointmentService.GetAppointmentsByApplicationAsync(appId, userId, role);
             return Ok(new ApiResponse<List<AppointmentDto>> { Success = true, Data = result });
@@ -54,7 +54,7 @@ namespace Mojaz.API.Controllers
         public async Task<IActionResult> CreateAsync(string appIdOrNumber, [FromBody] CreateAppointmentRequest request)
         {
             var appId = await ResolveAppIdAsync(appIdOrNumber);
-            if (appId == Guid.Empty)
+            if (appId == 0)
                 return NotFound(ApiResponse<object>.Fail(404, "الطلب غير موجود."));
 
             if (request == null)
@@ -89,7 +89,7 @@ namespace Mojaz.API.Controllers
         /// </summary>
         [HttpGet("available-slots")]
         [Authorize]
-        public async Task<IActionResult> GetAvailableSlotsAsync([FromQuery] AppointmentType type, [FromQuery] Guid branchId, [FromQuery] DateOnly date)
+        public async Task<IActionResult> GetAvailableSlotsAsync([FromQuery] AppointmentType type, [FromQuery] int branchId, [FromQuery] DateOnly date)
         {
             var result = await _appointmentService.GetAvailableSlotsAsync(type, branchId, date);
             return Ok(ApiResponse<List<DaySlotsDto>>.Ok(result));
@@ -102,12 +102,12 @@ namespace Mojaz.API.Controllers
         [Authorize(Roles = "Receptionist,Security,Manager,Admin")]
         [ProducesResponseType(typeof(ApiResponse<List<AppointmentDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetAttendanceAsync([FromQuery] DateOnly date, [FromQuery] Guid? branchId = null)
+        public async Task<IActionResult> GetAttendanceAsync([FromQuery] DateOnly date, [FromQuery] int? branchId = null)
         {
             if (date == default)
                 return BadRequest(ApiResponse<object>.Fail(400, "التاريخ مطلوب."));
 
-            var result = await _appointmentService.GetAttendanceAsync(date, branchId ?? Guid.Empty);
+            var result = await _appointmentService.GetAttendanceAsync(date, branchId ?? 0);
             return Ok(ApiResponse<List<AppointmentDto>>.Ok(result));
         }
 
@@ -118,7 +118,7 @@ namespace Mojaz.API.Controllers
         [Authorize(Roles = "Applicant")]
         public async Task<IActionResult> GetMyAppointmentsAsync()
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _appointmentService.GetMyAppointmentsAsync(userId);
             return Ok(ApiResponse<List<AppointmentDto>>.Ok(result));
         }
@@ -140,7 +140,7 @@ namespace Mojaz.API.Controllers
         [HttpPatch("{id}/check-in")]
         [Authorize(Roles = "Receptionist,Security,Doctor,Examiner,Manager,Admin")]
         [ProducesResponseType(typeof(ApiResponse<AppointmentDto>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> CheckInAsync(Guid id) 
+        public async Task<IActionResult> CheckInAsync(int id) 
         {
             var result = await _appointmentService.CheckInAsync(id);
             return Ok(ApiResponse<AppointmentDto>.Ok(result));
@@ -148,9 +148,9 @@ namespace Mojaz.API.Controllers
 
         [HttpPatch("{id}/reschedule")]
         [Authorize(Roles = "Applicant,Receptionist,Examiner,Manager")]
-        public async Task<IActionResult> RescheduleAsync(Guid id, [FromBody] RescheduleAppointmentRequest request)
+        public async Task<IActionResult> RescheduleAsync(int id, [FromBody] RescheduleAppointmentRequest request)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var role = User.FindFirstValue(ClaimTypes.Role)!;
             var result = await _appointmentService.RescheduleAppointmentAsync(id, request, userId, role);
             return Ok(ApiResponse<AppointmentDto>.Ok(result));
@@ -158,21 +158,21 @@ namespace Mojaz.API.Controllers
 
         [HttpPatch("{id}/cancel")]
         [Authorize(Roles = "Applicant,Receptionist")]
-        public async Task<IActionResult> CancelAsync(Guid id, [FromBody] CancelAppointmentRequest request)
+        public async Task<IActionResult> CancelAsync(int id, [FromBody] CancelAppointmentRequest request)
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var role = User.FindFirstValue(ClaimTypes.Role)!;
             var result = await _appointmentService.CancelAppointmentAsync(id, request, userId, role);
             return Ok(ApiResponse<AppointmentDto>.Ok(result));
         }
 
-        private async Task<Guid> ResolveAppIdAsync(string appIdOrNumber)
+        private async Task<int> ResolveAppIdAsync(string appIdOrNumber)
         {
-            if (string.IsNullOrWhiteSpace(appIdOrNumber)) return Guid.Empty;
-            if (Guid.TryParse(appIdOrNumber.Trim(), out var id)) return id;
+            if (string.IsNullOrWhiteSpace(appIdOrNumber)) return 0;
+            if (int.TryParse(appIdOrNumber.Trim(), out var id)) return id;
 
             var result = await _applicationService.GetByApplicationNumberAsync(appIdOrNumber.Trim());
-            return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
+            return result.Data?.FirstOrDefault()?.Id ?? 0;
         }
     }
 }

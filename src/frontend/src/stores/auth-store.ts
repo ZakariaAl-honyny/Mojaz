@@ -21,7 +21,7 @@ function getTokenExpiry(token: string): Date {
 }
 
 interface User {
-  id: string;
+  id: number;
   fullName: string;
   email: string;
   role: UserRole;

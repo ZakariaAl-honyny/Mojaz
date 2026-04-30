@@ -3,8 +3,8 @@ import { ApiResponse } from '@/types/api.types';
 import { AppointmentType } from '@/lib/enums';
 
 export interface AppointmentDto {
-  id: string;
-  applicationId: string;
+  id: number;
+  applicationId: number;
   applicationNumber?: string;
   applicantName?: string;
   nationalId?: string;
@@ -12,13 +12,13 @@ export interface AppointmentDto {
   appointmentType: AppointmentType;
   scheduledDate: string;
   timeSlot: string;
-  branchId: string | null;
+  branchId: number | null;
   branchName: string | null;
-  assignedStaffId: string | null;
+  assignedStaffId: number | null;
   status: string;
   notes: string | null;
   cancellationReason: string | null;
-  checkInTime: string | null;
+  checkInTime?: string | null;
   rescheduleCount: number;
   reminderSent: boolean;
   createdAt: string;
@@ -168,7 +168,7 @@ const AppointmentService = {
       return response.data?.data?.value || null;
     } catch {
       // If setting not found, return a default placeholder
-      return '00000000-0000-0000-0000-000000000001';
+      return null;
     }
   }
 };

@@ -9,13 +9,13 @@ namespace Mojaz.Domain.Interfaces;
 
 public interface IAppointmentRepository : IRepository<Appointment>
 {
-    Task<Appointment?> GetByIdWithApplicationAsync(Guid id, CancellationToken ct = default);
-    Task<Appointment?> GetByApplicationIdAsync(Guid applicationId, AppointmentType type, CancellationToken ct = default);
-    Task<IReadOnlyList<Appointment>> GetByApplicationIdAsync(Guid applicationId, CancellationToken ct = default);
-    Task<IReadOnlyList<Appointment>> GetByApplicationIdsAsync(List<Guid> applicationIds, CancellationToken ct = default);
-    Task<IReadOnlyList<Appointment>> GetByBranchAndDateAsync(Guid branchId, DateOnly date, CancellationToken ct = default);
-    Task<IReadOnlyList<Appointment>> GetByBranchAndDateRangeAsync(Guid branchId, DateOnly startDate, DateOnly endDate, CancellationToken ct = default);
-    Task<int> GetBookedSlotCountAsync(Guid branchId, DateOnly date, string timeSlot, CancellationToken ct = default);
-    Task<Appointment?> GetByIdForRescheduleAsync(Guid id, CancellationToken ct = default);
+    Task<Appointment?> GetByIdWithApplicationAsync(int id, CancellationToken ct = default);
+    Task<Appointment?> GetByApplicationIdAsync(int applicationId, AppointmentType type, CancellationToken ct = default);
+    Task<IReadOnlyList<Appointment>> GetByApplicationIdAsync(int applicationId, CancellationToken ct = default);
+    Task<IReadOnlyList<Appointment>> GetByApplicationIdsAsync(List<int> applicationIds, CancellationToken ct = default);
+    Task<IReadOnlyList<Appointment>> GetByBranchAndDateAsync(int branchId, DateOnly date, CancellationToken ct = default);
+    Task<IReadOnlyList<Appointment>> GetByBranchAndDateRangeAsync(int branchId, DateOnly startDate, DateOnly endDate, CancellationToken ct = default);
+    Task<int> GetBookedSlotCountAsync(int branchId, DateOnly date, string timeSlot, CancellationToken ct = default);
+    Task<Appointment?> GetByIdForRescheduleAsync(int id, CancellationToken ct = default);
     Task<IReadOnlyList<Appointment>> GetUpcomingWithRemindersAsync(int hoursAhead, int hoursWindow, CancellationToken ct = default);
 }

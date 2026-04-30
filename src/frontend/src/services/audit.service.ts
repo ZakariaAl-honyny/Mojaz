@@ -74,7 +74,7 @@ export const auditService = {
     return response.data.data;
   },
 
-  async getAuditLogById(id: string): Promise<AuditLogDto> {
+  async getAuditLogById(id: number): Promise<AuditLogDto> {
     const response = await axios.get<{ data: AuditLogDto }>(`audit-logs/${id}`);
     return response.data.data;
   },

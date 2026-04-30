@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Mojaz.Application.DTOs.Renewal;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Shared;
-using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -36,9 +35,9 @@ public class RenewalController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<EligibilityResponse>), 200)]
     [ProducesResponseType(typeof(ApiResponse<object>), 400)]
     [ProducesResponseType(typeof(ApiResponse<object>), 401)]
-    public async Task<IActionResult> CheckEligibility(Guid categoryId)
+    public async Task<IActionResult> CheckEligibility(int categoryId)
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _renewalService.ValidateEligibilityAsync(userId, categoryId);
         return StatusCode(result.StatusCode, result);
     }
@@ -50,7 +49,7 @@ public class RenewalController : ControllerBase
     /// <returns>The created application ID.</returns>
     [HttpPost]
     [Authorize(Roles = "Applicant")]
-    [ProducesResponseType(typeof(ApiResponse<Guid>), 201)]
+    [ProducesResponseType(typeof(ApiResponse<int>), 201)]
     [ProducesResponseType(typeof(ApiResponse<object>), 400)]
     [ProducesResponseType(typeof(ApiResponse<object>), 409)]
     public async Task<IActionResult> CreateRenewal([FromBody] CreateRenewalRequest request)
@@ -70,7 +69,7 @@ public class RenewalController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
     [ProducesResponseType(typeof(ApiResponse<object>), 400)]
     [ProducesResponseType(typeof(ApiResponse<object>), 404)]
-    public async Task<IActionResult> SubmitMedicalResult(Guid applicationId, Guid medicalExaminationId)
+    public async Task<IActionResult> SubmitMedicalResult(int applicationId, int medicalExaminationId)
     {
         var result = await _renewalService.ProcessMedicalResultAsync(applicationId, medicalExaminationId);
         return StatusCode(result.StatusCode, result);
@@ -87,7 +86,7 @@ public class RenewalController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
     [ProducesResponseType(typeof(ApiResponse<object>), 400)]
     [ProducesResponseType(typeof(ApiResponse<object>), 404)]
-    public async Task<IActionResult> PayRenewalFee(Guid applicationId, [FromBody] PaymentRequest paymentInfo)
+    public async Task<IActionResult> PayRenewalFee(int applicationId, [FromBody] PaymentRequest paymentInfo)
     {
         var result = await _renewalService.PayRenewalFeeAsync(applicationId, paymentInfo);
         return StatusCode(result.StatusCode, result);
@@ -103,7 +102,7 @@ public class RenewalController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<IssueLicenseResponse>), 200)]
     [ProducesResponseType(typeof(ApiResponse<object>), 400)]
     [ProducesResponseType(typeof(ApiResponse<object>), 404)]
-    public async Task<IActionResult> IssueLicense(Guid applicationId)
+    public async Task<IActionResult> IssueLicense(int applicationId)
     {
         var result = await _renewalService.IssueLicenseAsync(applicationId);
         return StatusCode(result.StatusCode, result);

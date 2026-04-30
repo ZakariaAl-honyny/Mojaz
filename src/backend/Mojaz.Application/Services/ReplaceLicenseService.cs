@@ -61,7 +61,7 @@ public class ReplaceLicenseService : IReplaceLicenseService
     }
 
     /// <inheritdoc />
-    public async Task<ApiResponse<ReplacementEligibilityDto>> CheckEligibilityAsync(Guid applicantId)
+    public async Task<ApiResponse<ReplacementEligibilityDto>> CheckEligibilityAsync(int applicantId)
     {
         try
         {
@@ -104,7 +104,7 @@ public class ReplaceLicenseService : IReplaceLicenseService
     }
 
     /// <inheritdoc />
-    public async Task<ApiResponse<Guid>> CreateReplacementAsync(CreateReplacementRequest request, Guid applicantId)
+    public async Task<ApiResponse<int>> CreateReplacementAsync(CreateReplacementRequest request, int applicantId)
     {
         try
         {
@@ -112,40 +112,11 @@ public class ReplaceLicenseService : IReplaceLicenseService
             var oldLicense = await _licenseRepository.GetByIdAsync(request.LicenseId);
             if (oldLicense == null)
             {
-                return ApiResponse<Guid>.NotFound("الرخصة غير موجودة.");
-            }
-
-            if (oldLicense.HolderId != applicantId)
-            {
-                return ApiResponse<Guid>.Fail(403, "أنت لا تملك هذه الرخصة.");
-            }
-
-            // Validate license status is Active
-            if (oldLicense.Status != LicenseStatus.Active)
-            {
-                return ApiResponse<Guid>.Fail(400, "يمكن استبدال الرخص النشطة فقط.");
-            }
-
-            // Check for existing pending replacement application
-            var existingReplacements = await _replacementRepository.FindAsync(r =>
-                r.LicenseId == request.LicenseId &&
-                !r.Application.IsDeleted);
-
-            var pendingApplication = existingReplacements.FirstOrDefault(r =>
-                r.Application.Status != ApplicationStatus.Cancelled &&
-                r.Application.Status != ApplicationStatus.Issued &&
-                r.Application.Status != ApplicationStatus.Rejected);
-
-            if (pendingApplication != null)
-            {
-                return ApiResponse<Guid>.Fail(409, "يوجد طلب استبدال لهذا الطلب بالفعل.");
-            }
-
-            // Get category
-            var category = await _licenseCategoryRepository.GetByIdAsync(oldLicense.LicenseCategoryId);
-            if (category == null)
-            {
-                return ApiResponse<Guid>.NotFound("فئة الرخصة غير موجودة.");
+return ApiResponse<int>.NotFound("الرخصة غير موجودة.");
+                return ApiResponse<int>.Fail(403, "أنت لا تملك هذه الرخصة.");
+                return ApiResponse<int>.Fail(400, "يمكن استبدال الرخص النشطة فقط.");
+                return ApiResponse<int>.Fail(409, "يوجد طلب استبدال لهذا الطلب بالفعل.");
+                return ApiResponse<int>.NotFound("فئة الرخصة غير موجودة.");
             }
 
             // Create Application with ServiceType = Replacement
@@ -193,17 +164,17 @@ public class ReplaceLicenseService : IReplaceLicenseService
             _logger.LogInformation("Replacement application created: {ApplicationId} for license {LicenseId}",
                 application.Id, request.LicenseId);
 
-            return ApiResponse<Guid>.Ok(application.Id, "تم إنشاء طلب الاستبدال بنجاح.");
+            return ApiResponse<int>.Ok(application.Id, "تم إنشاء طلب الاستبدال بنجاح.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error creating replacement application");
-            return ApiResponse<Guid>.Fail(500, "حدث خطأ أثناء إنشاء طلب الاستبدال.");
+            return ApiResponse<int>.Fail(500, "حدث خطأ أثناء إنشاء طلب الاستبدال.");
         }
     }
 
     /// <inheritdoc />
-    public async Task<ApiResponse<LicenseReplacementDto>> GetReplacementDetailsAsync(Guid applicationId)
+    public async Task<ApiResponse<LicenseReplacementDto>> GetReplacementDetailsAsync(int applicationId)
     {
         try
         {
@@ -240,10 +211,10 @@ public class ReplaceLicenseService : IReplaceLicenseService
 
     /// <inheritdoc />
     public async Task<ApiResponse<bool>> UpdateReportVerificationAsync(
-        Guid applicationId,
+        int applicationId,
         bool isVerified,
         string? comments,
-        Guid reviewerId)
+        int reviewerId)
     {
         try
         {
@@ -294,7 +265,7 @@ public class ReplaceLicenseService : IReplaceLicenseService
     }
 
     /// <inheritdoc />
-    public async Task<ApiResponse<bool>> ProcessPaymentAsync(Guid applicationId, Guid paymentId)
+    public async Task<ApiResponse<bool>> ProcessPaymentAsync(int applicationId, int paymentId)
     {
         try
         {
@@ -376,20 +347,20 @@ public class ReplaceLicenseService : IReplaceLicenseService
     }
 
     /// <inheritdoc />
-    public async Task<ApiResponse<Guid>> IssueReplacementAsync(Guid applicationId, Guid processedById)
+    public async Task<ApiResponse<int>> IssueReplacementAsync(int applicationId, int processedById)
     {
         try
         {
             var application = await _applicationRepository.GetByIdAsync(applicationId);
             if (application == null)
             {
-                return ApiResponse<Guid>.NotFound("الطلب غير موجود.");
+                return ApiResponse<int>.NotFound("الطلب غير موجود.");
             }
 
             // Validate all prerequisites
             if (application.Status != ApplicationStatus.Payment)
             {
-                return ApiResponse<Guid>.Fail(400, "يجب إكمال عملية الدفع قبل إصدار رخصة بدل فاقد/تالف.");
+                return ApiResponse<int>.Fail(400, "يجب إكمال عملية الدفع قبل إصدار رخصة بدل فاقد/تالف.");
             }
 
             var replacements = await _replacementRepository.FindAsync(r =>
@@ -398,34 +369,34 @@ public class ReplaceLicenseService : IReplaceLicenseService
 
             if (replacement == null)
             {
-                return ApiResponse<Guid>.NotFound("سجل الاستبدال غير موجود.");
+                return ApiResponse<int>.NotFound("سجل الاستبدال غير موجود.");
             }
 
             // For stolen licenses, verify report is checked
             if (replacement.Reason == ReplacementReason.Stolen && !replacement.IsReportVerified)
             {
-                return ApiResponse<Guid>.Fail(400, "يجب التحقق من بلاغ الشرطة قبل إصدار الرخصة.");
+                return ApiResponse<int>.Fail(400, "يجب التحقق من بلاغ الشرطة قبل إصدار الرخصة.");
             }
 
             // Get old license
             var oldLicense = await _licenseRepository.GetByIdAsync(replacement.LicenseId);
             if (oldLicense == null)
             {
-                return ApiResponse<Guid>.NotFound("الرخصة الأصلية غير موجودة.");
+                return ApiResponse<int>.NotFound("الرخصة الأصلية غير موجودة.");
             }
 
             // Get category
             var category = await _licenseCategoryRepository.GetByIdAsync(application.LicenseCategoryId);
             if (category == null)
             {
-                return ApiResponse<Guid>.NotFound("فئة الرخصة غير موجودة.");
+                return ApiResponse<int>.NotFound("فئة الرخصة غير موجودة.");
             }
 
             // Get holder
             var holder = await _userRepository.GetByIdAsync(application.ApplicantId);
             if (holder == null)
             {
-                return ApiResponse<Guid>.NotFound("صاحب الرخصة غير موجود.");
+                return ApiResponse<int>.NotFound("صاحب الرخصة غير موجود.");
             }
 
             // Generate new license number
@@ -487,12 +458,12 @@ public class ReplaceLicenseService : IReplaceLicenseService
             _logger.LogInformation("Replacement license issued: {NewLicenseId} for application {ApplicationId}. Old license {OldLicenseId} replaced.",
                 newLicense.Id, applicationId, oldLicense.Id);
 
-            return ApiResponse<Guid>.Ok(newLicense.Id, "تم إصدار رخصة بدل فاقد/تالف بنجاح.");
+            return ApiResponse<int>.Ok(newLicense.Id, "تم إصدار رخصة بدل فاقد/تالف بنجاح.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error issuing replacement license for application {ApplicationId}", applicationId);
-            return ApiResponse<Guid>.Fail(500, "حدث خطأ أثناء إصدار رخصة بدل فاقد/تالف.");
+            return ApiResponse<int>.Fail(500, "حدث خطأ أثناء إصدار رخصة بدل فاقد/تالف.");
         }
     }
 

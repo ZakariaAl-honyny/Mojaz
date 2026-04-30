@@ -12,7 +12,7 @@ export { ApplicationStatus, ReplacementReason } from '@/lib/enums';
 // ============================================================
 
 export interface ApplicationSummaryDto {
-  id: string;
+  id: number;
   applicationNumber: string;
   applicantName: string;
   licenseCategoryCode: string;  // Changed from number to string to match backend
@@ -22,7 +22,7 @@ export interface ApplicationSummaryDto {
   submittedDate: string;
   updatedAt: string;
   // Additional fields from backend ApplicationDto
-  licenseCategoryId?: string;
+  licenseCategoryId?: number;
   licenseCategoryNameAr?: string;
   licenseCategoryNameEn?: string;
   createdAt?: string;
@@ -40,13 +40,13 @@ export interface TimelineStageDto {
 }
 
 export interface ApplicationTimelineDto {
-  applicationId: string;
+  applicationId: number;
   currentStageNumber: number;
   stages: TimelineStageDto[];
 }
 
 export interface RecentNotificationDto {
-  id: string;
+  id: number;
   title: string;
   message: string;
   createdAt: string;
@@ -64,7 +64,7 @@ export interface DashboardSummaryDto {
 }
 
 export interface AppointmentSummaryDto {
-  id: string;
+  id: number;
   appointmentDate: string;
   serviceType: string;
   status: string;
@@ -136,7 +136,7 @@ export interface WeeklyTrend {
 }
 
 export interface ActivityItem {
-  id: string;
+  id: number;
   type: 'application' | 'license' | 'payment' | 'user';
   title: string;
   description: string;

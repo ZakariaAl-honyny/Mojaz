@@ -5,7 +5,7 @@ namespace Mojaz.Application.Reports.Dtos;
 
 public class BranchThroughputDto
 {
-    public Guid BranchId { get; set; }
+    public int BranchId { get; set; }
     public string BranchName { get; set; } = string.Empty;
     public List<DailyLoadDto> DailyCounts { get; set; } = new();
     public int TotalIssued { get; set; }

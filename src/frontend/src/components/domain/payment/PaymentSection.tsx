@@ -12,7 +12,7 @@ import { usePaymentStore } from "@/stores/payment-store";
 import { cn } from "@/lib/utils";
 
 interface PaymentSectionProps {
-  applicationId: string;
+  applicationId: number;
   applicationNumber: string;
   licenseCategoryId?: string;
   amount: number;

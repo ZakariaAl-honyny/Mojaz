@@ -59,7 +59,7 @@ export default function FeeFormPage() {
   const t = useTranslations('admin');
   const params = useParams();
   const router = useRouter();
-  const feeId = params.id as string;
+  const feeId = parseInt(params.id as string, 10);
   const isEditMode = feeId && feeId !== 'new';
 
   const [loading, setLoading] = useState(isEditMode);

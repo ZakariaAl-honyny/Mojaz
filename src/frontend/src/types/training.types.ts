@@ -8,8 +8,8 @@ export enum TrainingStatus {
 export type TrainingStatusString = 'Required' | 'InProgress' | 'Completed' | 'ExemptionPending' | 'Exempted';
 
 export interface TrainingRecordDto {
-  id: string;
-  applicationId: string;
+  id: number;
+  applicationId: number;
   schoolName: string;
   centerName?: string;
   trainerName?: string;
@@ -21,7 +21,7 @@ export interface TrainingRecordDto {
   trainingDate?: string;
   isExempted: boolean;
   exemptionReason?: string;
-  exemptionApprovedBy?: string;
+  exemptionApprovedBy?: number;
   exemptionApprovedAt?: string;
   exemptionRejectionReason?: string;
   createdAt: string;
@@ -29,7 +29,7 @@ export interface TrainingRecordDto {
 }
 
 export interface CreateTrainingRecordRequest {
-  applicationId: string;
+  applicationId: number;
   schoolName: string;
   certificateNumber?: string;
   hoursCompleted: number;
@@ -45,23 +45,23 @@ export interface UpdateTrainingHoursRequest {
 }
 
 export interface CreateExemptionRequest {
-  applicationId: string;
+  applicationId: number;
   exemptionReason: string;
-  exemptionDocumentId: string;
+  exemptionDocumentId: number;
 }
 
 export interface ExemptionActionRequest {
-  actionBy: string;
+  actionBy: number;
   notes: string;
 }
 
 export interface PendingExemptionDto {
-  id: string;
-  applicationId: string;
+  id: number;
+  applicationId: number;
   applicationNumber: string;
   applicantName: string;
   exemptionReason: string;
-  documentId: string;
+  documentId: number;
   submittedAt: string;
   status: TrainingStatus;
 }

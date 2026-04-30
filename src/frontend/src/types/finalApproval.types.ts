@@ -8,7 +8,7 @@ export interface Gate4Condition {
 }
 
 export interface Gate4ValidationResult {
-  applicationId: string;
+  applicationId: number;
   isFullyPassed: boolean;
   conditions: Gate4Condition[];
 }
@@ -27,11 +27,11 @@ export enum FinalDecisionType {
 }
 
 export interface ApplicationDecision {
-  applicationId: string;
+  applicationId: number;
   applicationNumber: string;
   newStatus: string;
   decision: FinalDecisionType;
   decisionAt: string;
-  decisionBy: string;
+  decisionBy: number;
   gate4Result: Gate4ValidationResult;
 }

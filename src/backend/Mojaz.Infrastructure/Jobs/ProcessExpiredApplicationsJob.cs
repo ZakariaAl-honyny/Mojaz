@@ -28,7 +28,7 @@ public class ProcessExpiredApplicationsJob
     /// <summary>
     /// System user ID used for audit logging when action is performed by system (no user context).
     /// </summary>
-    private static readonly Guid SystemUserId = Guid.Empty;
+    private static readonly int SystemUserId = 0;
 
     /// <summary>
     /// Application statuses that should NOT be expired (terminal or already expired states).
@@ -100,7 +100,6 @@ public class ProcessExpiredApplicationsJob
                 // Create status history record
                 var statusHistory = new ApplicationStatusHistory
                 {
-                    Id = Guid.NewGuid(),
                     ApplicationId = application.Id,
                     FromStatus = previousStatus,
                     ToStatus = ApplicationStatus.Expired,

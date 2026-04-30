@@ -9,7 +9,7 @@ namespace Mojaz.Application.Services;
 public interface IAuditLogService
 {
     Task<AuditLogResponse> GetAuditLogsAsync(AuditLogQueryRequest request);
-    Task<AuditLogDto?> GetAuditLogByIdAsync(Guid id);
+    Task<AuditLogDto?> GetAuditLogByIdAsync(int id);
 }
 
 public class AuditLogService : IAuditLogService
@@ -91,7 +91,7 @@ public class AuditLogService : IAuditLogService
         };
     }
 
-    public async Task<AuditLogDto?> GetAuditLogByIdAsync(Guid id)
+    public async Task<AuditLogDto?> GetAuditLogByIdAsync(int id)
     {
         var log = await _auditLogRepository.GetByIdAsync(id);
         if (log == null) return null;

@@ -98,7 +98,7 @@ public class AppointmentService : IAppointmentService
         };
     }
 
-    public async Task<List<DaySlotsDto>> GetAvailableSlotsAsync(AppointmentType type, Guid branchId, DateOnly date, CancellationToken ct = default)
+    public async Task<List<DaySlotsDto>> GetAvailableSlotsAsync(AppointmentType type, int branchId, DateOnly date, CancellationToken ct = default)
     {
         var result = new List<DaySlotsDto>();
         var daySlots = new DaySlotsDto { Date = date };
@@ -177,7 +177,7 @@ public class AppointmentService : IAppointmentService
         return _mapper.Map<AppointmentDto>(appointment);
     }
 
-    public async Task<AppointmentDto?> GetAppointmentByIdAsync(Guid id, Guid userId, string role, CancellationToken ct = default)
+    public async Task<AppointmentDto?> GetAppointmentByIdAsync(int id, int userId, string role, CancellationToken ct = default)
     {
         var appointment = await _appointmentRepository.GetByIdWithApplicationAsync(id, ct);
         if (appointment == null) return null;
@@ -189,7 +189,7 @@ public class AppointmentService : IAppointmentService
         return appointment != null ? _mapper.Map<AppointmentDto>(appointment) : null;
     }
 
-    public async Task<List<AppointmentDto>> GetAppointmentsByApplicationAsync(Guid applicationId, Guid userId, string role, CancellationToken ct = default)
+    public async Task<List<AppointmentDto>> GetAppointmentsByApplicationAsync(int applicationId, int userId, string role, CancellationToken ct = default)
     {
         // Get application to check ownership
         var application = await _applicationRepository.GetByIdAsync(applicationId, ct);
@@ -203,7 +203,7 @@ public class AppointmentService : IAppointmentService
         return _mapper.Map<List<AppointmentDto>>(appointments);
     }
 
-    public async Task<AppointmentDto> RescheduleAppointmentAsync(Guid appointmentId, RescheduleAppointmentRequest request, Guid userId, string role, CancellationToken ct = default)
+    public async Task<AppointmentDto> RescheduleAppointmentAsync(int appointmentId, RescheduleAppointmentRequest request, int userId, string role, CancellationToken ct = default)
     {
         // Validate reschedule first
         var validation = await _bookingValidator.ValidateRescheduleAsync(appointmentId, request, ct);
@@ -243,7 +243,7 @@ public class AppointmentService : IAppointmentService
         return _mapper.Map<AppointmentDto>(updatedAppointment);
     }
 
-    public async Task<AppointmentDto> CancelAppointmentAsync(Guid appointmentId, CancelAppointmentRequest request, Guid userId, string role, CancellationToken ct = default)
+    public async Task<AppointmentDto> CancelAppointmentAsync(int appointmentId, CancelAppointmentRequest request, int userId, string role, CancellationToken ct = default)
     {
         var appointment = await _appointmentRepository.GetByIdForRescheduleAsync(appointmentId, ct);
         if (appointment == null)
@@ -281,7 +281,7 @@ public class AppointmentService : IAppointmentService
         return await _bookingValidator.ValidateBookingAsync(request, ct);
     }
 
-    public async Task<List<AppointmentDto>> GetMyAppointmentsAsync(Guid userId, CancellationToken ct = default)
+    public async Task<List<AppointmentDto>> GetMyAppointmentsAsync(int userId, CancellationToken ct = default)
     {
         // Get all applications submitted by this user that have pending appointments
         var applicationIds = await _applicationRepository.Query()
@@ -298,13 +298,13 @@ public class AppointmentService : IAppointmentService
         return _mapper.Map<List<AppointmentDto>>(appointments);
     }
 
-    public async Task<List<AppointmentDto>> GetAttendanceAsync(DateOnly date, Guid branchId, CancellationToken ct = default)
+    public async Task<List<AppointmentDto>> GetAttendanceAsync(DateOnly date, int branchId, CancellationToken ct = default)
     {
         var appointments = await _appointmentRepository.GetByBranchAndDateAsync(branchId, date, ct);
         return _mapper.Map<List<AppointmentDto>>(appointments);
     }
 
-    public async Task<AppointmentDto> CheckInAsync(Guid appointmentId, CancellationToken ct = default)
+    public async Task<AppointmentDto> CheckInAsync(int appointmentId, CancellationToken ct = default)
     {
         var appointment = await _appointmentRepository.GetByIdForRescheduleAsync(appointmentId, ct);
         if (appointment == null)

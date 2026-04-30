@@ -238,7 +238,7 @@ export function Step2LicenseCategory() {
               <div className="space-y-1">
                 <p className="text-xl font-black text-red-900 leading-none">غير متاح حالياً</p>
                 <p className="text-sm font-bold text-red-800/80 leading-relaxed max-w-3xl">
-                  {eligibilityData.message}
+                  {(eligibilityData as any)?.message || 'لا يمكنك التقديم لهذه الفئة في الوقت الحالي'}
                 </p>
               </div>
 
@@ -342,7 +342,7 @@ export function Step2LicenseCategory() {
                       errors.categoryCode.message?.startsWith('AGE_ERROR:')
                         ? `يتطلب هذا المسار بلوغ سن ${errors.categoryCode.message.split(':')[1]} عاماً على الأقل وفقاً للائحة.`
                         : errors.categoryCode.message
-                    ) : eligibilityData?.message}
+                    ) : (eligibilityData as any)?.message}
                   </p>
                 </div>
 
@@ -351,7 +351,7 @@ export function Step2LicenseCategory() {
                     href={`/${locale}/applicant/applications/${existingAppId}`}
                     className="inline-flex items-center gap-2 text-xs font-black text-red-600 hover:underline"
                   >
-                    <span>عرض المعاملة الحالية #{eligibilityData.existingApplicationNumber}</span>
+                    <span>عرض المعاملة الحالية #{(eligibilityData as any)?.existingApplicationNumber}</span>
                     <ArrowLeft className="w-3 h-3 rtl:rotate-180" />
                   </Link>
                 )}

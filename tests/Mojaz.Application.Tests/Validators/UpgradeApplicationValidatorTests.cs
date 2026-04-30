@@ -27,17 +27,17 @@ public class UpgradeApplicationValidatorTests
     public async Task Should_Have_Error_When_Upgrade_From_F_To_C()
     {
         // Arrange
-        var licenseId = Guid.NewGuid();
+        var licenseId = 1;
         var categoryF = new LicenseCategory 
         { 
-            Id = Guid.NewGuid(), 
+            Id = 6, 
             Code = LicenseCategoryCode.F, 
             NameAr = "مركبات زراعية",
             NameEn = "Agricultural Vehicles"
         };
         var categoryC = new LicenseCategory 
         { 
-            Id = Guid.NewGuid(), 
+            Id = 3, 
             Code = LicenseCategoryCode.C, 
             NameAr = "حافلة",
             NameEn = "Public Bus"
@@ -61,7 +61,7 @@ public class UpgradeApplicationValidatorTests
         {
             CurrentLicenseId = licenseId,
             TargetCategoryId = categoryC.Id,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             PreferredLanguage = "ar",
             DataAccuracyConfirmed = true
         };
@@ -78,17 +78,17 @@ public class UpgradeApplicationValidatorTests
     public async Task Should_Have_Error_When_Upgrade_From_F_To_D()
     {
         // Arrange
-        var licenseId = Guid.NewGuid();
+        var licenseId = 1;
         var categoryF = new LicenseCategory 
         { 
-            Id = Guid.NewGuid(), 
+            Id = 6, 
             Code = LicenseCategoryCode.F, 
             NameAr = "مركبات زراعية",
             NameEn = "Agricultural Vehicles"
         };
         var categoryD = new LicenseCategory 
         { 
-            Id = Guid.NewGuid(), 
+            Id = 4, 
             Code = LicenseCategoryCode.D, 
             NameAr = "شاحنة ثقيلة",
             NameEn = "Heavy Truck"
@@ -112,7 +112,7 @@ public class UpgradeApplicationValidatorTests
         {
             CurrentLicenseId = licenseId,
             TargetCategoryId = categoryD.Id,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             PreferredLanguage = "ar",
             DataAccuracyConfirmed = true
         };
@@ -129,17 +129,17 @@ public class UpgradeApplicationValidatorTests
     public async Task Should_Not_Have_Error_When_Upgrade_From_F_To_B()
     {
         // Arrange
-        var licenseId = Guid.NewGuid();
+        var licenseId = 1;
         var categoryF = new LicenseCategory 
         { 
-            Id = Guid.NewGuid(), 
+            Id = 6, 
             Code = LicenseCategoryCode.F, 
             NameAr = "مركبات زراعية",
             NameEn = "Agricultural Vehicles"
         };
         var categoryB = new LicenseCategory 
         { 
-            Id = Guid.NewGuid(), 
+            Id = 2, 
             Code = LicenseCategoryCode.B, 
             NameAr = "خصوصي",
             NameEn = "Private Car"
@@ -163,7 +163,7 @@ public class UpgradeApplicationValidatorTests
         {
             CurrentLicenseId = licenseId,
             TargetCategoryId = categoryB.Id,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             PreferredLanguage = "ar",
             DataAccuracyConfirmed = true
         };
@@ -179,17 +179,17 @@ public class UpgradeApplicationValidatorTests
     public async Task Should_Have_Error_When_License_Not_Active()
     {
         // Arrange
-        var licenseId = Guid.NewGuid();
+        var licenseId = 1;
         var categoryF = new LicenseCategory 
         { 
-            Id = Guid.NewGuid(), 
+            Id = 6, 
             Code = LicenseCategoryCode.F, 
             NameAr = "مركبات زراعية",
             NameEn = "Agricultural Vehicles"
         };
         var categoryB = new LicenseCategory 
         { 
-            Id = Guid.NewGuid(), 
+            Id = 2, 
             Code = LicenseCategoryCode.B, 
             NameAr = "خصوصي",
             NameEn = "Private Car"
@@ -214,7 +214,7 @@ public class UpgradeApplicationValidatorTests
         {
             CurrentLicenseId = licenseId,
             TargetCategoryId = categoryB.Id,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             PreferredLanguage = "ar",
             DataAccuracyConfirmed = true
         };
@@ -231,10 +231,10 @@ public class UpgradeApplicationValidatorTests
     public async Task Should_Have_Error_When_License_Does_Not_Exist()
     {
         // Arrange
-        var licenseId = Guid.NewGuid();
+        var licenseId = 1;
         var categoryB = new LicenseCategory 
         { 
-            Id = Guid.NewGuid(), 
+            Id = 2, 
             Code = LicenseCategoryCode.B, 
             NameAr = "خصوصي",
             NameEn = "Private Car"
@@ -250,7 +250,7 @@ public class UpgradeApplicationValidatorTests
         {
             CurrentLicenseId = licenseId,
             TargetCategoryId = categoryB.Id,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             PreferredLanguage = "ar",
             DataAccuracyConfirmed = true
         };

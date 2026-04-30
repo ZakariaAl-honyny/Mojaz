@@ -61,9 +61,9 @@ public class ProcessExpiredApplicationsJobTests
         var now = DateTime.UtcNow;
         var expiredApps = new List<DomainApplication>
         {
-            new DomainApplication { Id = Guid.NewGuid(), Status = ApplicationStatus.Draft, ExpiresAt = now.AddDays(-1) },
-            new DomainApplication { Id = Guid.NewGuid(), Status = ApplicationStatus.Submitted, ExpiresAt = now.AddDays(-2) },
-            new DomainApplication { Id = Guid.NewGuid(), Status = ApplicationStatus.InReview, ExpiresAt = now.AddDays(-3) }
+            new DomainApplication { Id = 1, Status = ApplicationStatus.Draft, ExpiresAt = now.AddDays(-1) },
+            new DomainApplication { Id = 2, Status = ApplicationStatus.Submitted, ExpiresAt = now.AddDays(-2) },
+            new DomainApplication { Id = 3, Status = ApplicationStatus.InReview, ExpiresAt = now.AddDays(-3) }
         };
 
         _applicationRepo.Setup(r => r.FindAsync(
@@ -95,7 +95,7 @@ public class ProcessExpiredApplicationsJobTests
         var now = DateTime.UtcNow;
         var expiredApps = new List<DomainApplication>
         {
-            new DomainApplication { Id = Guid.NewGuid(), Status = ApplicationStatus.Expired, ExpiresAt = now.AddDays(-1) } // Already expired
+            new DomainApplication { Id = 1, Status = ApplicationStatus.Expired, ExpiresAt = now.AddDays(-1) } // Already expired
         };
 
         _applicationRepo.Setup(r => r.FindAsync(
@@ -119,7 +119,7 @@ public class ProcessExpiredApplicationsJobTests
         var now = DateTime.UtcNow;
         var expiredApps = new List<DomainApplication>
         {
-            new DomainApplication { Id = Guid.NewGuid(), Status = ApplicationStatus.Cancelled, ExpiresAt = now.AddDays(-1) } // Terminal state
+            new DomainApplication { Id = 1, Status = ApplicationStatus.Cancelled, ExpiresAt = now.AddDays(-1) } // Terminal state
         };
 
         _applicationRepo.Setup(r => r.FindAsync(
@@ -140,7 +140,7 @@ public class ProcessExpiredApplicationsJobTests
         // Arrange
         var job = CreateJob();
         var now = DateTime.UtcNow;
-        var appId = Guid.NewGuid();
+        var appId = 1;
         var expiredApps = new List<DomainApplication>
         {
             new DomainApplication { Id = appId, Status = ApplicationStatus.Draft, ExpiresAt = now.AddDays(-1), ApplicationNumber = "MOJ-2026-12345678" }

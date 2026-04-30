@@ -1,9 +1,9 @@
 # Mojaz Platform — Master Product Requirements Document
 
-**Document ID:** MOJAZ-PRD-2025-001  
-**Version:** 3.0 — Final Merged Edition  
-**Date:** June 2025  
-**Status:** Approved for Implementation  
+**Document ID:** MOJAZ-PRD-2025-001
+**Version:** 4.0 — Integer ID Migration Edition
+**Date:** April 2026
+**Status:** Approved for Implementation
 **Classification:** Restricted  
 **Release Type:** MVP - Version 1.0  
 
@@ -31,7 +31,7 @@
 18. [Landing Page](#18-landing-page)
 19. [UI Screens by Role](#19-ui-screens-by-role)
 20. [Permission Matrix](#20-permission-matrix)
-21. [Database Schema](#21-database-schema-21-tables)
+21. [Database Schema](#21-database-schema-25-tables)
 22. [API Architecture](#22-api-architecture)
 23. [API Endpoints](#23-api-endpoints)
 24. [Sprint Plan](#24-sprint-plan)
@@ -75,8 +75,9 @@ The driving license issuance system is an integrated government electronic platf
 | Real Integrations | 3 (Email + SMS + Push) |
 | Application Form Fields | 21 |
 | Required Documents | 8 |
-| Database Tables | 24 |
+| Database Tables | 25 |
 | API Endpoints | ~52 |
+| Screens/Pages | 21 |
 | UI Screens | 21 |
 | Core Reports | 7 |
 | Email Templates | 10 |
@@ -1362,484 +1363,487 @@ User can control notification channels from account settings:
 
 ---
 
-## 21. Database Schema (24 Tables)
+## 21. Database Schema (25 Tables)
 
-> **ملاحظة:** جميع أعمدة الـ Enum مخزنة كـ `TINYINT` في قاعدة البيانات لتحسين الأداء وكفاءة التخزين.
-> يتم التحويل من/إلى نص في طبقة العرض (Frontend) فقط.
+> **ملاحظة:** All primary keys use **Integer Auto-Increment** (`int IDENTITY(1,1)`) for optimal performance and human-readable IDs.
+> All foreign keys reference `int` columns.
+> All audit columns (`CreatedBy`, `UpdatedBy`, `DeletedBy`) are `int?` references to Users.
+> Enum columns are stored as `TINYINT` in the database.
 
 ### Base Entity Inheritance
 
 ```sql
--- BaseEntity (All tables inherit)
-Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
+-- BaseEntity (Root entity)
+Id              INT IDENTITY(1,1) PK
 CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt       DATETIME2 NULL
 
 -- AuditableEntity (Inherits BaseEntity)
-CreatedBy       UNIQUEIDENTIFIER FK → Users NULL
-UpdatedBy       UNIQUEIDENTIFIER FK → Users NULL
+CreatedBy       INT FK → Users NULL
+UpdatedBy      INT FK → Users NULL
 
 -- SoftDeletableEntity (Inherits AuditableEntity)
-IsDeleted       BIT DEFAULT 0
-DeletedAt       DATETIME2 NULL
-DeletedBy       UNIQUEIDENTIFIER FK → Users NULL
+IsDeleted      BIT DEFAULT 0
+DeletedAt      DATETIME2 NULL
+DeletedBy      INT FK → Users NULL
 ```
 
 ### 21.1 Users — المستخدمون
 
 ```sql
-Id                      UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-FullNameAr              NVARCHAR(200) NOT NULL
-FullNameEn              NVARCHAR(200) NOT NULL
-NationalId              NVARCHAR(20) NOT NULL
-Email                   NVARCHAR(200) NOT NULL
+Id                      INT IDENTITY(1,1) PK
+FullNameAr              NVARCHAR(100) NOT NULL
+FullNameEn              NVARCHAR(100) NOT NULL
+NationalId              NVARCHAR(20) NOT NULL UNIQUE
+Email                   NVARCHAR(100) NOT NULL
 PhoneNumber             NVARCHAR(20) NOT NULL
-PasswordHash            NVARCHAR(500) NOT NULL
+PasswordHash            NVARCHAR(256) NOT NULL
 Role                    TINYINT NOT NULL            -- Enum: UserRole
 AppRole                 TINYINT NULL                -- Enum: AppRole
-DateOfBirth             DATE NULL
-Gender                  TINYINT NULL                -- Enum: GenderEnum
-Nationality             NVARCHAR(100) NULL
+DateOfBirth             DATETIME2 NULL
+Gender                  TINYINT NULL               -- Enum: GenderEnum
+Nationality             NVARCHAR(50) NULL
 BloodType               TINYINT NULL                -- Enum: BloodTypeEnum
-Address                 NVARCHAR(500) NULL
-City                    NVARCHAR(100) NULL
-Region                  NVARCHAR(100) NULL
+Address                 NVARCHAR(200) NULL
+City                    NVARCHAR(50) NULL
+Region                  NVARCHAR(50) NULL
 ApplicantType           TINYINT NULL                -- Enum: ApplicantType
 PreferredLanguage       NVARCHAR(10) DEFAULT 'ar'
-AppointmentPreference   NVARCHAR(100) NULL
-NotificationPreferences NVARCHAR(MAX) NULL
+AppointmentPreference NVARCHAR(MAX) NULL
+NotificationPreferences NVARCHAR(200) NULL
 RegistrationMethod      TINYINT NOT NULL            -- Enum: RegistrationMethod
-IsEmailVerified         BIT DEFAULT 0
+IsEmailVerified        BIT DEFAULT 0
 IsPhoneVerified         BIT DEFAULT 0
 EmailVerifiedAt         DATETIME2 NULL
-PhoneVerifiedAt         DATETIME2 NULL
-IsActive                BIT DEFAULT 1
-IsLocked                BIT DEFAULT 0
-RequiresPasswordReset   BIT DEFAULT 0
-EnableEmail             BIT DEFAULT 1
-EnableSms               BIT DEFAULT 1
-EnablePush              BIT DEFAULT 1
-IsSecurityBlocked       BIT DEFAULT 0
-FailedLoginAttempts     INT DEFAULT 0
-LockoutEnd               DATETIME2 NULL
-LastLoginAt              DATETIME2 NULL
+PhoneVerifiedAt        DATETIME2 NULL
+IsActive               BIT DEFAULT 1
+IsLocked               BIT DEFAULT 0
+RequiresPasswordReset  BIT DEFAULT 0
+EnableEmail            BIT DEFAULT 1
+EnableSms              BIT DEFAULT 1
+EnablePush             BIT DEFAULT 1
+IsSecurityBlocked      BIT DEFAULT 0
+FailedLoginAttempts   INT DEFAULT 0
+LockoutEnd             DATETIME2 NULL
+LastLoginAt             DATETIME2 NULL
+CreatedAt              DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt              DATETIME2 NULL
+IsDeleted              BIT DEFAULT 0
+DeletedAt              DATETIME2 NULL
+DeletedBy              INT NULL
+CreatedBy              INT NULL
+UpdatedBy              INT NULL
+```
+
+### 21.2 Applications — الطلبات
+```sql
+Id                          INT IDENTITY(1,1) PK
+ApplicationNumber           NVARCHAR(20) NOT NULL UNIQUE    -- MOJ-2025-XXXXXXXX
+ApplicantId                  INT FK → Users
+ServiceType                 TINYINT NOT NULL          -- Enum: ServiceType
+LicenseCategoryId           INT FK → LicenseCategories
+BranchId                   INT NULL
+Status                    TINYINT NOT NULL DEFAULT 0  -- Enum: ApplicationStatus
+CurrentStage               NVARCHAR(50) NOT NULL
+PreferredLanguage        NVARCHAR(10) DEFAULT 'ar'
+SpecialNeeds             NVARCHAR(200) NULL
+DataAccuracyConfirmed    BIT DEFAULT 0
+SubmittedAt               DATETIME2 NULL
+ReviewedBy                INT NULL
+ReviewedAt                DATETIME2 NULL
+Notes                    NVARCHAR(500) NULL
+RejectionReason           NVARCHAR(200) NULL
+ExpiresAt                DATETIME2 NULL
+CancelledAt             DATETIME2 NULL
+CancellationReason      NVARCHAR(200) NULL
+TheoryAttemptCount       INT DEFAULT 0
+PracticalAttemptCount    INT DEFAULT 0
+AdditionalTrainingRequired BIT DEFAULT 0
+FinalDecision            TINYINT NULL             -- Enum: FinalDecisionType
+FinalDecisionBy          INT NULL
+FinalDecisionAt          DATETIME2 NULL
+FinalDecisionReason    NVARCHAR(1,000) NULL
+ReturnToStage           NVARCHAR(50) NULL
+ManagerNotes            NVARCHAR(1,000) NULL
+SecurityStatus         TINYINT DEFAULT 0
+SecurityVerifiedBy    INT NULL
+SecurityVerifiedAt    DATETIME2 NULL
+SecurityNotes         NVARCHAR(MAX) NULL
+AssignedToId           INT NULL
+AssignedAt             DATETIME2 NULL
+AssignmentNotes       NVARCHAR(500) NULL
 CreatedAt               DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt               DATETIME2 NULL
 IsDeleted               BIT DEFAULT 0
 DeletedAt               DATETIME2 NULL
-DeletedBy               UNIQUEIDENTIFIER NULL
-CreatedBy               UNIQUEIDENTIFIER NULL
-UpdatedBy               UNIQUEIDENTIFIER NULL
-```
-
-### 21.2 Applications — الطلبات
-
-```sql
-Id                          UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-ApplicationNumber           NVARCHAR(20) NOT NULL UNIQUE    -- MOJ-2025-XXXXXXXX
-ApplicantId                  UNIQUEIDENTIFIER FK → Users
-ServiceType                 TINYINT NOT NULL          -- Enum: ServiceType
-LicenseCategoryId           UNIQUEIDENTIFIER FK → LicenseCategories
-BranchId                    UNIQUEIDENTIFIER NULL
-Status                      TINYINT NOT NULL DEFAULT 0  -- Enum: ApplicationStatus
-CurrentStage                NVARCHAR(50) NOT NULL
-PreferredLanguage           NVARCHAR(10) DEFAULT 'ar'
-SpecialNeeds                NVARCHAR(500) NULL
-DataAccuracyConfirmed       BIT DEFAULT 0
-SubmittedAt                 DATETIME2 NULL
-ReviewedBy                  UNIQUEIDENTIFIER NULL
-ReviewedAt                  DATETIME2 NULL
-Notes                       NVARCHAR(MAX) NULL
-RejectionReason             NVARCHAR(500) NULL
-ExpiresAt                   DATETIME2 NULL
-CancelledAt                 DATETIME2 NULL
-CancellationReason          NVARCHAR(500) NULL
-TheoryAttemptCount          INT DEFAULT 0
-PracticalAttemptCount       INT DEFAULT 0
-AdditionalTrainingRequired  BIT DEFAULT 0
-FinalDecision               TINYINT NULL                -- Enum: FinalDecisionType
-FinalDecisionBy             UNIQUEIDENTIFIER NULL
-FinalDecisionAt             DATETIME2 NULL
-FinalDecisionReason         NVARCHAR(500) NULL
-ReturnToStage               NVARCHAR(50) NULL
-ManagerNotes                NVARCHAR(500) NULL
-CreatedAt                   DATETIME2 DEFAULT GETUTCDATE()
-UpdatedAt                   DATETIME2 NULL
-IsDeleted                   BIT DEFAULT 0
-DeletedAt                   DATETIME2 NULL
-DeletedBy                   UNIQUEIDENTIFIER NULL
-CreatedBy                   UNIQUEIDENTIFIER NULL
-UpdatedBy                   UNIQUEIDENTIFIER NULL
+DeletedBy               INT NULL
+CreatedBy               INT NULL
+UpdatedBy               INT NULL
 ```
 
 ### 21.3 LicenseCategories — فئات الرخص
-
 ```sql
-Id               UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-Code             TINYINT NOT NULL UNIQUE          -- Enum: LicenseCategoryCode
-NameAr           NVARCHAR(100) NOT NULL
-NameEn           NVARCHAR(100) NOT NULL
+Id               INT IDENTITY(1,1) PK
+Code             TINYINT NOT NULL UNIQUE      -- Enum: LicenseCategoryCode (A=0..F=5)
+NameAr           NVARCHAR(64) NOT NULL
+NameEn           NVARCHAR(64) NOT NULL
 MinimumAge       INT NOT NULL
 RequiresTraining BIT DEFAULT 1
-IsActive         BIT DEFAULT 1
+IsActive          BIT DEFAULT 1
 ValidityYears    INT NOT NULL
 CreatedAt        DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt        DATETIME2 NULL
-CreatedBy        UNIQUEIDENTIFIER NULL
-UpdatedBy        UNIQUEIDENTIFIER NULL
+CreatedBy        INT NULL
+UpdatedBy        INT NULL
 ```
 
 ### 21.4 ApplicationDocuments — مستندات الطلب
-
 ```sql
-Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-ApplicationId   UNIQUEIDENTIFIER FK → Applications
+Id              INT IDENTITY(1,1) PK
+ApplicationId   INT FK → Applications
 DocumentType    TINYINT NOT NULL           -- Enum: DocumentType
-OriginalFileName NVARCHAR(255) NOT NULL
-StoredFileName   NVARCHAR(255) NOT NULL
-FilePath         NVARCHAR(500) NOT NULL
-FileSizeBytes    BIGINT NOT NULL
-ContentType      NVARCHAR(100) NOT NULL
-IsRequired       BIT DEFAULT 1
-Status           TINYINT DEFAULT 0          -- Enum: DocumentStatus
-ReviewedBy       UNIQUEIDENTIFIER NULL
-ReviewedAt       DATETIME2 NULL
-RejectionReason NVARCHAR(500) NULL
+OriginalFileName NVARCHAR(128) NOT NULL
+StoredFileName   NVARCHAR(128) NOT NULL
+FilePath         NVARCHAR(256) NOT NULL
+FileSizeBytes   BIGINT NOT NULL
+ContentType     NVARCHAR(64) NOT NULL
+IsRequired      BIT DEFAULT 1
+Status          TINYINT DEFAULT 0         -- Enum: DocumentStatus
+ReviewedBy      INT NULL
+ReviewedAt      DATETIME2 NULL
+RejectionReason NVARCHAR(256) NULL
 CreatedAt        DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt        DATETIME2 NULL
 IsDeleted        BIT DEFAULT 0
 DeletedAt        DATETIME2 NULL
-DeletedBy        UNIQUEIDENTIFIER NULL
-CreatedBy        UNIQUEIDENTIFIER NULL
-UpdatedBy        UNIQUEIDENTIFIER NULL
+DeletedBy        INT NULL
+CreatedBy        INT NULL
+UpdatedBy        INT NULL
 ```
 
 ### 21.5 Appointments — المواعيد
-
 ```sql
-Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-ApplicationId       UNIQUEIDENTIFIER FK → Applications
-AppointmentType     TINYINT NOT NULL          -- Enum: AppointmentType
-ScheduledDate       DATE NOT NULL
-TimeSlot            NVARCHAR(20) NOT NULL
-BranchId            UNIQUEIDENTIFIER NULL
-AssignedStaffId     UNIQUEIDENTIFIER NULL
-Status              TINYINT DEFAULT 0         -- Enum: AppointmentStatus
-Notes               NVARCHAR(500) NULL
-CancelledAt         DATETIME2 NULL
-CancellationReason  NVARCHAR(500) NULL
-CheckInTime         TIME NULL
-RescheduleCount     INT DEFAULT 0
-ReminderSent        BIT DEFAULT 0
-RowVersion          TIMESTAMP NULL
+Id                  INT IDENTITY(1,1) PK
+ApplicationId       INT FK → Applications
+AppointmentType    TINYINT NOT NULL          -- Enum: AppointmentType
+ScheduledDate      DATE NOT NULL
+TimeSlot           NVARCHAR(16) NOT NULL
+BranchId           INT NULL
+AssignedStaffId    INT NULL
+Status             TINYINT DEFAULT 0         -- Enum: AppointmentStatus
+Notes             NVARCHAR(256) NULL
+CancelledAt       DATETIME2 NULL
+CancellationReason NVARCHAR(128) NULL
+CheckInTime        TIME NULL
+RescheduleCount    INT DEFAULT 0
+ReminderSent      BIT DEFAULT 0
+RowVersion         ROWVERSION NULL
 CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt           DATETIME2 NULL
 IsDeleted           BIT DEFAULT 0
 DeletedAt           DATETIME2 NULL
-DeletedBy           UNIQUEIDENTIFIER NULL
-CreatedBy           UNIQUEIDENTIFIER NULL
-UpdatedBy           UNIQUEIDENTIFIER NULL
+DeletedBy           INT NULL
+CreatedBy           INT NULL
+UpdatedBy           INT NULL
 ```
 
 ### 21.6 MedicalExaminations — الفحوصات الطبية
-
 ```sql
-Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-ApplicationId   UNIQUEIDENTIFIER FK → Applications
-DoctorId        UNIQUEIDENTIFIER FK → Users
+Id              INT IDENTITY(1,1) PK
+ApplicationId   INT FK → Applications
+DoctorId        INT FK → Users
 ExaminedAt      DATETIME2 NOT NULL DEFAULT GETUTCDATE()
 FitnessResult   TINYINT NOT NULL          -- Enum: MedicalFitnessResult
 BloodType       TINYINT NULL               -- Enum: BloodTypeEnum
-Notes           NVARCHAR(MAX) NULL
-ReportReference NVARCHAR(100) NULL
+Notes           NVARCHAR(512) NULL
+ReportReference NVARCHAR(128) NULL
 ValidUntil      DATETIME2 NULL
-CertificatePath NVARCHAR(500) NULL
-CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
-UpdatedAt       DATETIME2 NULL
-IsDeleted       BIT DEFAULT 0
-DeletedAt       DATETIME2 NULL
-DeletedBy       UNIQUEIDENTIFIER NULL
-CreatedBy       UNIQUEIDENTIFIER NULL
-UpdatedBy       UNIQUEIDENTIFIER NULL
-```
-
-### 21.7 TrainingRecords — سجلات التدريب
-
-```sql
-Id                      UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-ApplicationId           UNIQUEIDENTIFIER FK → Applications
-SchoolName              NVARCHAR(200) NOT NULL
-CertificateNumber       NVARCHAR(100) NULL
-CompletedHours          INT NOT NULL
-TotalHoursRequired      INT NOT NULL
-TrainingStatus          TINYINT NOT NULL DEFAULT 0  -- Enum: TrainingStatus
-IsExempted              BIT DEFAULT 0
-ExemptionReason         NVARCHAR(500) NULL
-ExemptionDocumentId     UNIQUEIDENTIFIER NULL
-ExemptionApprovedBy     UNIQUEIDENTIFIER NULL
-ExemptionApprovedAt     DATETIME2 NULL
-ExemptionRejectionReason NVARCHAR(500) NULL
-CompletedAt             DATETIME2 NULL
-TrainingDate            DATE NULL
-TrainerName             NVARCHAR(200) NULL
-CenterName              NVARCHAR(200) NULL
-CreatedAt               DATETIME2 DEFAULT GETUTCDATE()
-UpdatedAt               DATETIME2 NULL
-IsDeleted               BIT DEFAULT 0
-DeletedAt               DATETIME2 NULL
-DeletedBy               UNIQUEIDENTIFIER NULL
-CreatedBy               UNIQUEIDENTIFIER NULL
-UpdatedBy               UNIQUEIDENTIFIER NULL
-```
-
-### 21.8 TheoryTests — الاختبارات النظرية
-
-```sql
-Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-ApplicationId   UNIQUEIDENTIFIER FK → Applications
-ExaminerId       UNIQUEIDENTIFIER FK → Users
-AttemptNumber    INT NOT NULL
-ConductedAt      DATETIME2 NOT NULL DEFAULT GETUTCDATE()
-Score            INT NULL
-PassingScore     INT NOT NULL
-Result           TINYINT NOT NULL          -- Enum: TestResult
-IsAbsent         BIT DEFAULT 0
-Notes            NVARCHAR(MAX) NULL
+CertificatePath NVARCHAR(256) NULL
 CreatedAt        DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt        DATETIME2 NULL
 IsDeleted        BIT DEFAULT 0
 DeletedAt        DATETIME2 NULL
-DeletedBy        UNIQUEIDENTIFIER NULL
-CreatedBy        UNIQUEIDENTIFIER NULL
-UpdatedBy        UNIQUEIDENTIFIER NULL
+DeletedBy        INT NULL
+CreatedBy        INT NULL
+UpdatedBy        INT NULL
+```
+
+### 21.7 TrainingRecords — سجلات التدريب
+```sql
+Id                      INT IDENTITY(1,1) PK
+ApplicationId           INT FK → Applications
+SchoolName              NVARCHAR(200) NOT NULL
+CertificateNumber     NVARCHAR(64) NULL
+CompletedHours          INT NOT NULL
+TotalHoursRequired      INT NOT NULL
+TrainingStatus         TINYINT NOT NULL DEFAULT 0   -- Enum: TrainingStatus
+IsExempted             BIT DEFAULT 0
+ExemptionReason        NVARCHAR(1,000) NULL
+ExemptionDocumentId   INT FK → ApplicationDocuments NULL
+ExemptionApprovedBy    INT FK → Users NULL
+ExemptionApprovedAt    DATETIME2 NULL
+ExemptionRejectionReason NVARCHAR(1,000) NULL
+CompletedAt           DATETIME2 NULL
+TrainingDate          DATETIME2 NULL
+TrainerName           NVARCHAR(200) NULL
+CenterName            NVARCHAR(200) NULL
+CreatedAt              DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt              DATETIME2 NULL
+CreatedBy              INT NULL
+UpdatedBy              INT NULL
+IsDeleted              BIT DEFAULT 0
+DeletedAt              DATETIME2 NULL
+DeletedBy              INT NULL
+```
+
+### 21.8 TheoryTests — الاختبارات النظرية
+```sql
+Id              INT IDENTITY(1,1) PK
+ApplicationId   INT FK → Applications
+ExaminerId      INT FK → Users
+AttemptNumber  INT NOT NULL
+ConductedAt     DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+Score          INT NULL
+PassingScore   INT NOT NULL
+Result         TINYINT NOT NULL           -- Enum: TestResult
+IsAbsent       BIT DEFAULT 0
+Notes          NVARCHAR(500) NULL
+CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt       DATETIME2 NULL
+IsDeleted       BIT DEFAULT 0
+DeletedAt       DATETIME2 NULL
+DeletedBy       INT NULL
+CreatedBy       INT NULL
+UpdatedBy       INT NULL
 ```
 
 ### 21.9 PracticalTests — الاختبارات العملية
-
 ```sql
-Id                          UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-ApplicationId               UNIQUEIDENTIFIER FK → Applications
-ExaminerId                   UNIQUEIDENTIFIER FK → Users
+Id                          INT IDENTITY(1,1) PK
+ApplicationId               INT FK → Applications
+ExaminerId                   INT FK → Users
 AttemptNumber                INT NOT NULL
 ConductedAt                  DATETIME2 NOT NULL DEFAULT GETUTCDATE()
 Score                        INT NULL
 PassingScore                 INT NOT NULL
-IsAbsent                     BIT DEFAULT 0
-Result                       TINYINT NOT NULL          -- Enum: TestResult
-Notes                       NVARCHAR(MAX) NULL
-VehicleUsed                  NVARCHAR(100) NULL
-RequiresAdditionalTraining   BIT DEFAULT 0
-AdditionalHoursRequired      INT NULL
+IsAbsent                    BIT DEFAULT 0
+Result                      TINYINT NOT NULL           -- Enum: TestResult
+Notes                      NVARCHAR(1,000) NULL
+VehicleUsed                NVARCHAR(200) NULL
+RequiresAdditionalTraining BIT DEFAULT 0
+AdditionalHoursRequired     INT NULL
 CreatedAt                    DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt                    DATETIME2 NULL
 IsDeleted                    BIT DEFAULT 0
 DeletedAt                    DATETIME2 NULL
-DeletedBy                    UNIQUEIDENTIFIER NULL
-CreatedBy                    UNIQUEIDENTIFIER NULL
-UpdatedBy                    UNIQUEIDENTIFIER NULL
+DeletedBy                    INT NULL
+CreatedBy                    INT NULL
+UpdatedBy                    INT NULL
 ```
 
 ### 21.10 PaymentTransactions — المعاملات المالية
-
 ```sql
-Id                      UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-ApplicationId           UNIQUEIDENTIFIER FK → Applications
-FeeType                 TINYINT NOT NULL         -- Enum: FeeType
-Amount                  DECIMAL(18,2) NOT NULL
-Currency                NVARCHAR(5) DEFAULT 'SAR'
-Status                  TINYINT NOT NULL DEFAULT 0  -- Enum: PaymentStatus
-PaymentMethod           NVARCHAR(50) NULL
-TransactionReference    NVARCHAR(100) NULL
-PaidAt                  DATETIME2 NULL
-FailedAt                DATETIME2 NULL
-FailureReason           NVARCHAR(500) NULL
-ReceiptPath             NVARCHAR(500) NULL
-ReceiptNumber           NVARCHAR(100) NULL
-CreatedAt               DATETIME2 DEFAULT GETUTCDATE()
-UpdatedAt               DATETIME2 NULL
-IsDeleted               BIT DEFAULT 0
-DeletedAt               DATETIME2 NULL
-DeletedBy               UNIQUEIDENTIFIER NULL
-CreatedBy               UNIQUEIDENTIFIER NULL
-UpdatedBy               UNIQUEIDENTIFIER NULL
+Id                      INT IDENTITY(1,1) PK
+ApplicationId           INT FK → Applications
+FeeType               TINYINT NOT NULL          -- Enum: FeeType
+Amount                DECIMAL(18,2) NOT NULL
+Currency              NVARCHAR(10) DEFAULT 'SAR'
+Status                TINYINT NOT NULL DEFAULT 0  -- Enum: PaymentStatus
+PaymentMethod         NVARCHAR(100) NULL
+TransactionReference NVARCHAR(100) NULL UNIQUE
+PaidAt                 DATETIME2 NULL
+FailedAt               DATETIME2 NULL
+FailureReason        NVARCHAR(500) NULL
+ReceiptPath          NVARCHAR(500) NULL
+ReceiptNumber       NVARCHAR(MAX) NULL
+CreatedAt              DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt              DATETIME2 NULL
+IsDeleted              BIT DEFAULT 0
+DeletedAt              DATETIME2 NULL
+DeletedBy              INT NULL
+CreatedBy              INT NULL
+UpdatedBy              INT NULL
 ```
 
 ### 21.11 FeeStructures — هيكل الرسوم
-
 ```sql
-Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-FeeType             TINYINT NOT NULL          -- Enum: FeeType
-LicenseCategoryId   UNIQUEIDENTIFIER FK → LicenseCategories NULL
+Id                  INT IDENTITY(1,1) PK
+FeeType            TINYINT NOT NULL           -- Enum: FeeType
+LicenseCategoryId   INT FK → LicenseCategories NOT NULL
 Amount              DECIMAL(18,2) NOT NULL
-Currency            NVARCHAR(5) DEFAULT 'SAR'
-EffectiveFrom       DATETIME2 NOT NULL
-EffectiveTo         DATETIME2 NULL
-IsActive            BIT DEFAULT 1
+Currency            NVARCHAR(8) DEFAULT 'SAR'
+EffectiveFrom     DATETIME2 NOT NULL
+EffectiveTo       DATETIME2 NULL
+IsActive           BIT DEFAULT 1
 CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt           DATETIME2 NULL
-CreatedBy           UNIQUEIDENTIFIER NULL
-UpdatedBy           UNIQUEIDENTIFIER NULL
+CreatedBy           INT NULL
+UpdatedBy           INT NULL
+IsDeleted           BIT DEFAULT 0
+DeletedAt           DATETIME2 NULL
+DeletedBy           INT NULL
 ```
 
 ### 21.12 Licenses — الرخص المصدرة
 
 ```sql
-Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-LicenseNumber   NVARCHAR(20) NOT NULL UNIQUE    -- MOJ-2025-XXXXXXXX
-ApplicationId   UNIQUEIDENTIFIER FK → Applications
-HolderId        UNIQUEIDENTIFIER FK → Users
-LicenseCategoryId UNIQUEIDENTIFIER FK → LicenseCategories
-BranchId        UNIQUEIDENTIFIER NULL
+Id              INT IDENTITY(1,1) PK
+LicenseNumber   NVARCHAR(32) NOT NULL UNIQUE     -- MOJ-2025-XXXXXXXX
+ApplicationId   INT FK → Applications
+HolderId        INT FK → Users
+LicenseCategoryId INT FK → LicenseCategories
+BranchId        INT NULL
 IssuedAt        DATETIME2 NOT NULL DEFAULT GETUTCDATE()
 ExpiresAt       DATETIME2 NOT NULL
-IssuedBy        UNIQUEIDENTIFIER NULL
-Status          TINYINT NOT NULL DEFAULT 0  -- Enum: LicenseStatus
-QrCode          NVARCHAR(500) NULL
-BlobUrl         NVARCHAR(500) NULL
-PrintedAt       DATETIME2 NULL
-DownloadedAt    DATETIME2 NULL
+IssuedBy        INT NULL
+Status          TINYINT NOT NULL DEFAULT 0   -- Enum: LicenseStatus
+QrCode          NVARCHAR(512) NULL
+BlobUrl         NVARCHAR(MAX) NULL
+PrintedAt      DATETIME2 NULL
+DownloadedAt   DATETIME2 NULL
+ReplacementCount INT DEFAULT 0
 CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt       DATETIME2 NULL
 IsDeleted       BIT DEFAULT 0
 DeletedAt       DATETIME2 NULL
-DeletedBy       UNIQUEIDENTIFIER NULL
-CreatedBy       UNIQUEIDENTIFIER NULL
-UpdatedBy       UNIQUEIDENTIFIER NULL
+DeletedBy       INT NULL
+CreatedBy       INT NULL
+UpdatedBy       INT NULL
 ```
 
 ### 21.13 LicenseRenewals — تجديد الرخصة
 
 ```sql
-Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-LicenseId       UNIQUEIDENTIFIER FK → Licenses
-ApplicationId   UNIQUEIDENTIFIER FK → Applications
-RenewedAt       DATETIME2 NOT NULL DEFAULT GETUTCDATE()
-NewExpiresAt    DATETIME2 NOT NULL
-ProcessedBy     UNIQUEIDENTIFIER NULL
+Id              INT IDENTITY(1,1) PK
+LicenseId       INT FK → Licenses
+ApplicationId   INT FK → Applications
+RenewedAt      DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+NewExpiresAt   DATETIME2 NOT NULL
+ProcessedBy   INT NULL
 CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt       DATETIME2 NULL
-CreatedBy       UNIQUEIDENTIFIER NULL
-UpdatedBy       UNIQUEIDENTIFIER NULL
+CreatedBy       INT NULL
+UpdatedBy       INT NULL
 ```
 
 ### 21.14 LicenseReplacements — بدل الرخصة
 
 ```sql
-Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-LicenseId       UNIQUEIDENTIFIER FK → Licenses
-ApplicationId   UNIQUEIDENTIFIER FK → Applications
+Id              INT IDENTITY(1,1) PK
+LicenseId       INT FK → Licenses
+ApplicationId   INT FK → Applications
 Reason          TINYINT NOT NULL          -- Enum: ReplacementReason
 IsReportVerified BIT DEFAULT 0
-ReviewComments  NVARCHAR(500) NULL
+ReviewComments  NVARCHAR(MAX) NULL
 ProcessedAt     DATETIME2 NOT NULL DEFAULT GETUTCDATE()
-ProcessedBy     UNIQUEIDENTIFIER NULL
+ProcessedBy   INT NULL
 CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt       DATETIME2 NULL
-CreatedBy       UNIQUEIDENTIFIER NULL
-UpdatedBy       UNIQUEIDENTIFIER NULL
+CreatedBy       INT NULL
+UpdatedBy       INT NULL
 ```
 
 ### 21.15 CategoryUpgrades — ترقية الفئة
 
 ```sql
-Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-LicenseId       UNIQUEIDENTIFIER FK → Licenses
-ApplicationId   UNIQUEIDENTIFIER FK → Applications
+Id              INT IDENTITY(1,1) PK
+LicenseId       INT FK → Licenses
+ApplicationId   INT FK → Applications
 FromCategory    TINYINT NOT NULL          -- Enum: LicenseCategoryCode
-ToCategory      TINYINT NOT NULL          -- Enum: LicenseCategoryCode
+ToCategory      TINYINT NOT NULL        -- Enum: LicenseCategoryCode
 UpgradedAt      DATETIME2 NOT NULL DEFAULT GETUTCDATE()
-ProcessedBy     UNIQUEIDENTIFIER NULL
+ProcessedBy    INT NULL
 CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt       DATETIME2 NULL
-CreatedBy       UNIQUEIDENTIFIER NULL
-UpdatedBy       UNIQUEIDENTIFIER NULL
+CreatedBy       INT NULL
+UpdatedBy       INT NULL
 ```
 
 ### 21.16 Notifications — الإشعارات الداخلية
 
 ```sql
-Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-UserId              UNIQUEIDENTIFIER FK → Users
-ApplicationId       UNIQUEIDENTIFIER NULL
-EventType           TINYINT NOT NULL          -- Enum: NotificationEventType
-TitleAr             NVARCHAR(200) NOT NULL
-TitleEn             NVARCHAR(200) NOT NULL
-MessageAr           NVARCHAR(1000) NOT NULL
-MessageEn           NVARCHAR(1000) NOT NULL
-IsRead              BIT DEFAULT 0
-ReadAt              DATETIME2 NULL
-SentAt              DATETIME2 NOT NULL DEFAULT GETUTCDATE()
-RelatedEntityId      UNIQUEIDENTIFIER NULL
-RelatedEntityType    NVARCHAR(100) NULL
-CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
-UpdatedAt           DATETIME2 NULL
+Id                  INT IDENTITY(1,1) PK
+UserId              INT FK → Users
+ApplicationId       INT NULL
+EventType          TINYINT NOT NULL      -- Enum: NotificationEventType
+TitleAr            NVARCHAR(256) NOT NULL
+TitleEn            NVARCHAR(256) NOT NULL
+MessageAr          NVARCHAR(10,000) NOT NULL
+MessageEn          NVARCHAR(10,000) NOT NULL
+IsRead             BIT DEFAULT 0
+ReadAt             DATETIME2 NULL
+SentAt             DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+RelatedEntityId   INT NULL
+RelatedEntityType NVARCHAR(128) NULL
+CreatedAt          DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt          DATETIME2 NULL
 ```
 
 ### 21.17 PushTokens — توكنات الإشعارات
 
 ```sql
-Id          UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-UserId      UNIQUEIDENTIFIER FK → Users
-Token       NVARCHAR(500) NOT NULL
+Id          INT IDENTITY(1,1) PK
+UserId      INT FK → Users
+Token       NVARCHAR(500) NOT NULL UNIQUE
 DeviceType  NVARCHAR(50) NOT NULL
 LastUsedAt  DATETIME2 NULL
 IsActive    BIT DEFAULT 1
 CreatedAt   DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt   DATETIME2 NULL
+CreatedBy   INT NULL
+UpdatedBy   INT NULL
 IsDeleted   BIT DEFAULT 0
 DeletedAt   DATETIME2 NULL
-DeletedBy   UNIQUEIDENTIFIER NULL
-CreatedBy   UNIQUEIDENTIFIER NULL
-UpdatedBy   UNIQUEIDENTIFIER NULL
+DeletedBy   INT NULL
 ```
 
 ### 21.18 AuditLogs — سجلات التدقيق
 
 ```sql
-Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-UserId          UNIQUEIDENTIFIER NULL
-ActionType      NVARCHAR(100) NOT NULL
-ActionCategory  NVARCHAR(100) NOT NULL
-EntityName      NVARCHAR(100) NOT NULL
-EntityId        NVARCHAR(100) NOT NULL
-Payload         NVARCHAR(MAX) NOT NULL    -- JSON
-IpAddress       NVARCHAR(50) NULL
-UserAgent       NVARCHAR(500) NULL
+Id              INT IDENTITY(1,1) PK
+UserId          INT NULL
+ActionType      NVARCHAR(500) NOT NULL
+ActionCategory NVARCHAR(128) NOT NULL
+EntityName      NVARCHAR(128) NOT NULL
+EntityId        NVARCHAR(64) NOT NULL
+Payload         NVARCHAR(MAX) NOT NULL     -- JSON
+IpAddress       NVARCHAR(64) NULL
+UserAgent       NVARCHAR(256) NULL
 IsSuccess       BIT DEFAULT 1
-Timestamp       DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+Timestamp      DATETIME2 NOT NULL DEFAULT GETUTCDATE()
 ```
 
 ### 21.19 SystemSettings — إعدادات النظام
 
 ```sql
-Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-SettingKey      NVARCHAR(100) NOT NULL UNIQUE
-SettingValue    NVARCHAR(1000) NOT NULL
-Category        NVARCHAR(100) NULL
-Description     NVARCHAR(500) NULL
-IsEncrypted     BIT DEFAULT 0
-CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
-UpdatedAt       DATETIME2 NULL
-CreatedBy       UNIQUEIDENTIFIER NULL
-UpdatedBy       UNIQUEIDENTIFIER NULL
+Id              INT IDENTITY(1,1) PK
+SettingKey      NVARCHAR(64) NOT NULL UNIQUE
+SettingValue    NVARCHAR(256) NOT NULL
+Category       NVARCHAR(32) NULL
+Description    NVARCHAR(256) NULL
+IsEncrypted   BIT DEFAULT 0
+CreatedAt      DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt      DATETIME2 NULL
+CreatedBy      INT NULL
+UpdatedBy      INT NULL
 ```
 
 ### 21.20 OtpCodes — رموز التحقق
 
 ```sql
-Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-UserId              UNIQUEIDENTIFIER NOT NULL
-Destination         NVARCHAR(200) NOT NULL
-DestinationType     TINYINT NOT NULL          -- Enum: DestinationType
-CodeHash            NVARCHAR(500) NOT NULL   -- Hashed OTP
-Purpose             TINYINT NOT NULL          -- Enum: OtpPurpose
+Id                  INT IDENTITY(1,1) PK
+UserId              INT NOT NULL
+Destination         NVARCHAR(128) NOT NULL
+DestinationType     TINYINT NOT NULL        -- Enum: DestinationType
+CodeHash            NVARCHAR(128) NOT NULL -- Hashed OTP
+Purpose             TINYINT NOT NULL       -- Enum: OtpPurpose
 ExpiresAt           DATETIME2 NOT NULL
 IsUsed              BIT DEFAULT 0
 UsedAt              DATETIME2 NULL
 IsInvalidated       BIT DEFAULT 0
 AttemptCount        INT DEFAULT 0
 MaxAttempts         INT DEFAULT 3
-IpAddress           NVARCHAR(50) NULL
+IpAddress           NVARCHAR(64) NULL
 CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt           DATETIME2 NULL
 ```
@@ -1847,14 +1851,14 @@ UpdatedAt           DATETIME2 NULL
 ### 21.21 RefreshTokens — توكنات التحديث
 
 ```sql
-Id                   UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-UserId              UNIQUEIDENTIFIER NOT NULL
-Token               NVARCHAR(500) NOT NULL UNIQUE
-ExpiresAt           DATETIME2 NOT NULL
-IsRevoked           BIT DEFAULT 0
-RevokedAt           DATETIME2 NULL
-ReplacedByToken     NVARCHAR(500) NULL
-CreatedByIp         NVARCHAR(50) NULL
+Id                   INT IDENTITY(1,1) PK
+UserId               INT NOT NULL
+Token                NVARCHAR(256) NOT NULL UNIQUE
+ExpiresAt            DATETIME2 NOT NULL
+IsRevoked            BIT DEFAULT 0
+RevokedAt            DATETIME2 NULL
+ReplacedByToken     NVARCHAR(256) NULL
+CreatedByIp         NVARCHAR(64) NULL
 CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt           DATETIME2 NULL
 ```
@@ -1862,49 +1866,53 @@ UpdatedAt           DATETIME2 NULL
 ### 21.22 EmailLogs — سجل رسائل البريد
 
 ```sql
-Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-RecipientEmail       NVARCHAR(200) NOT NULL
-TemplateName         NVARCHAR(100) NOT NULL
-ReferenceId          NVARCHAR(100) NOT NULL
-Status               TINYINT NOT NULL          -- Enum: EmailStatus
-RetryCount           INT DEFAULT 0
-SentAt               DATETIME2 NOT NULL
-ErrorMessage         NVARCHAR(500) NULL
-IsDeleted            BIT DEFAULT 0
-CreatedAt            DATETIME2 DEFAULT GETUTCDATE()
-UpdatedAt            DATETIME2 NULL
-CreatedBy            UNIQUEIDENTIFIER NULL
-UpdatedBy            UNIQUEIDENTIFIER NULL
+Id                  INT IDENTITY(1,1) PK
+RecipientEmail      NVARCHAR(256) NOT NULL
+TemplateName        NVARCHAR(100) NOT NULL
+ReferenceId         NVARCHAR(100) NOT NULL
+Status              TINYINT NOT NULL       -- Enum: EmailStatus
+RetryCount          INT DEFAULT 0
+SentAt              DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+ErrorMessage        NVARCHAR(1,000) NULL
+CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt           DATETIME2 NULL
+CreatedBy           INT NULL
+UpdatedBy           INT NULL
+IsDeleted           BIT DEFAULT 0
+DeletedAt           DATETIME2 NULL
+DeletedBy           INT NULL
 ```
 
 ### 21.23 SmsLogs — سجل الرسائل النصية
 
 ```sql
-Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-ApplicationId        UNIQUEIDENTIFIER NULL
-UserId              UNIQUEIDENTIFIER NOT NULL
-RecipientNumber      NVARCHAR(20) NOT NULL
-TemplateType         NVARCHAR(100) NOT NULL
-Status               TINYINT NOT NULL          -- Enum: SmsStatus
-TwilioMessageId      NVARCHAR(200) NULL
-Cost                 DECIMAL(10,4) NULL
-ErrorMessage         NVARCHAR(500) NULL
-IsDeleted            BIT DEFAULT 0
-CreatedAt            DATETIME2 DEFAULT GETUTCDATE()
-UpdatedAt            DATETIME2 NULL
-CreatedBy            UNIQUEIDENTIFIER NULL
-UpdatedBy            UNIQUEIDENTIFIER NULL
+Id                  INT IDENTITY(1,1) PK
+ApplicationId       INT NULL
+UserId              INT NOT NULL
+RecipientNumber     NVARCHAR(20) NOT NULL
+TemplateType        NVARCHAR(50) NOT NULL
+Status              TINYINT NOT NULL       -- Enum: SmsStatus
+TwilioMessageId    NVARCHAR(100) NULL
+Cost                DECIMAL(18,4) NULL
+ErrorMessage        NVARCHAR(1,000) NULL
+CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt           DATETIME2 NULL
+CreatedBy           INT NULL
+UpdatedBy           INT NULL
+IsDeleted           BIT DEFAULT 0
+DeletedAt           DATETIME2 NULL
+DeletedBy           INT NULL
 ```
 
 ### 21.24 ApplicationStatusHistory — تاريخ حالة الطلب
 
 ```sql
-Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-ApplicationId   UNIQUEIDENTIFIER NOT NULL
+Id              INT IDENTITY(1,1) PK
+ApplicationId   INT NOT NULL
 FromStatus      TINYINT NOT NULL          -- Enum: ApplicationStatus
 ToStatus        TINYINT NOT NULL          -- Enum: ApplicationStatus
-ChangedBy       UNIQUEIDENTIFIER NOT NULL
-Notes           NVARCHAR(500) NULL
+ChangedBy       INT NOT NULL
+Notes           NVARCHAR(256) NULL
 ChangedAt       DATETIME2 NOT NULL DEFAULT GETUTCDATE()
 CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt       DATETIME2 NULL
@@ -2241,7 +2249,7 @@ GET    /api/v1/audit-logs/{entityType}/{entityId}
 | **Real Integration Points** | **3 (Email + SMS + Push)** |
 | Application Form Fields | 21 |
 | Required Documents | 8 |
-| Database Tables | 24 |
+| Database Tables | 25 |
 | API Endpoints | ~52 |
 | Screens/Pages | 21 |
 | Core Reports | 7 |

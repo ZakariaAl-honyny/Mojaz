@@ -48,7 +48,7 @@ public class CategoryUpgradeService : ICategoryUpgradeService
         return allowedPaths.Contains(requestedPath);
     }
 
-    public async Task<bool> CheckHoldingPeriodAsync(Guid licenseId, Guid currentUserId)
+    public async Task<bool> CheckHoldingPeriodAsync(int licenseId, int currentUserId)
     {
         var license = await _licenseRepository.GetByIdAsync(licenseId);
         if (license == null || license.HolderId != currentUserId) return false;
@@ -90,7 +90,7 @@ public class CategoryUpgradeService : ICategoryUpgradeService
         return (int)Math.Ceiling(reducedHours);
     }
 
-     public async Task<bool> ArchiveExistingLicenseAsync(Guid licenseId)
+     public async Task<bool> ArchiveExistingLicenseAsync(int licenseId)
      {
          var license = await _licenseRepository.GetByIdAsync(licenseId);
          if (license != null)

@@ -12,14 +12,14 @@ namespace Mojaz.API.Tests.Integration;
 
 public class ReplacementTests : IntegrationTestBase
 {
-    private async Task<List<Guid>> CreateMockDocumentsAsync(int count = 1)
+    private async Task<List<int>> CreateMockDocumentsAsync(int count = 1)
     {
-        var docIds = new List<Guid>();
+        var docIds = new List<int>();
         for (int i = 0; i < count; i++)
         {
             var doc = new ApplicationDocument 
             { 
-                Id = Guid.NewGuid(), 
+                Id = i + 1, 
                 OriginalFileName = $"doc_{i}.pdf", 
                 FilePath = $"http://storage/doc_{i}.pdf",
                 CreatedAt = DateTime.UtcNow,
@@ -32,11 +32,11 @@ public class ReplacementTests : IntegrationTestBase
         return docIds;
     }
 
-    private async Task<Guid> CreateMockPaymentAsync(Guid applicationId, decimal amount = 100m)
+    private async Task<int> CreateMockPaymentAsync(int applicationId, decimal amount = 100m)
     {
         var payment = new PaymentTransaction 
         { 
-            Id = Guid.NewGuid(), 
+            Id = 1, 
             ApplicationId = applicationId, 
             Amount = amount, 
             Status = PaymentStatus.Pending,
@@ -48,12 +48,12 @@ public class ReplacementTests : IntegrationTestBase
         return payment.Id;
     }
 
-    [Fact(Skip = "Integration test requires full API context - to be fixed in dedicated sprint")]
+[Fact(Skip = "Integration test requires full API context - to be fixed in dedicated sprint")]
     public async Task FullReplacementFlow_LostLicense_IssuesNewLicense()
     {
         // 1. Setup: Create user and active license
-        var userId = Guid.NewGuid();
-        var oldLicenseId = Guid.NewGuid();
+        var userId = 1;
+        var oldLicenseId = 1;
         
         var license = new License 
         { 
@@ -92,14 +92,14 @@ public class ReplacementTests : IntegrationTestBase
         application!.CurrentStage.Should().Be("UnderReview");
 
         // 5. Receptionist Verifies Police Report
-        var receptionistId = Guid.NewGuid();
+        var receptionistId = 2;
         await AuthenticateAsUserAsync(receptionistId, "Receptionist");
         
         var verifyResult = await PatchAsJsonAsync($"/api/v1/administrative/applications/{applicationId}/verify-stolen-report", new { IsVerified = true });
         verifyResult.StatusCode.Should().Be(HttpStatusCode.OK);
 
         // 6. Administrator Issues License
-        var adminId = Guid.NewGuid();
+        var adminId = 3;
         await AuthenticateAsUserAsync(adminId, "Admin");
         var issueResult = await PostAsJsonAsync<ApiResponse<object>>($"/api/v1/licenses/issue-replacement/{applicationId}", new { IssuerId = adminId });
         issueResult.Success.Should().BeTrue();
@@ -113,8 +113,8 @@ public class ReplacementTests : IntegrationTestBase
     public async Task CreateReplacement_AlreadyReplacedLicense_ReturnsBadRequest()
     {
         // Setup: License already replaced
-        var userId = Guid.NewGuid();
-        var oldLicenseId = Guid.NewGuid();
+        var userId = 1;
+        var oldLicenseId = 1;
         DbContext.Licenses.Add(new License { Id = oldLicenseId, HolderId = userId, Status = LicenseStatus.Replaced });
         await DbContext.SaveChangesAsync();
         
@@ -136,8 +136,8 @@ public class ReplacementTests : IntegrationTestBase
     public async Task IssueLicense_UnpaidApplication_ReturnsBadRequest()
     {
         // Setup: Application created but not paid
-        var userId = Guid.NewGuid();
-        var oldLicenseId = Guid.NewGuid();
+        var userId = 1;
+        var oldLicenseId = 1;
         DbContext.Licenses.Add(new License { Id = oldLicenseId, HolderId = userId, Status = LicenseStatus.Active });
         await DbContext.SaveChangesAsync();
         
@@ -153,7 +153,7 @@ public class ReplacementTests : IntegrationTestBase
         var applicationId = submitResult.Data!.ApplicationId;
 
         // Try to issue without payment
-        var adminId = Guid.NewGuid();
+        var adminId = 2;
         await AuthenticateAsUserAsync(adminId, "Admin");
         var response = await Client.PostAsJsonAsync($"/api/v1/licenses/issue-replacement/{applicationId}", new { IssuerId = adminId });
         
@@ -164,8 +164,8 @@ public class ReplacementTests : IntegrationTestBase
     public async Task IssueLicense_UnverifiedStolenReport_ReturnsBadRequest()
     {
         // Setup: Stolen application, paid, but not verified
-        var userId = Guid.NewGuid();
-        var oldLicenseId = Guid.NewGuid();
+        var userId = 1;
+        var oldLicenseId = 1;
         DbContext.Licenses.Add(new License { Id = oldLicenseId, HolderId = userId, Status = LicenseStatus.Active });
         await DbContext.SaveChangesAsync();
         
@@ -184,7 +184,7 @@ public class ReplacementTests : IntegrationTestBase
         await PostAsJsonAsync<ApiResponse<object>>($"/api/v1/applications/{applicationId}/process-payment", new PaymentConfirmRequest { PaymentId = paymentId });
 
         // Try to issue without verification
-        var adminId = Guid.NewGuid();
+        var adminId = 2;
         await AuthenticateAsUserAsync(adminId, "Admin");
         var response = await Client.PostAsJsonAsync($"/api/v1/licenses/issue-replacement/{applicationId}", new { IssuerId = adminId });
         

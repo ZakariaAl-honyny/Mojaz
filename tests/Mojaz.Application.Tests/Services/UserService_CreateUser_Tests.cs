@@ -46,7 +46,7 @@ public class UserService_CreateUser_Tests
             .ReturnsAsync(new List<User>()); // No existing user
 
         // Setup AddAsync to return a user with an Id
-        var testUserId = Guid.NewGuid();
+        var testUserId = 1;
         _userRepo.Setup(r => r.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((User user, CancellationToken ct) => 
             {
@@ -59,7 +59,7 @@ public class UserService_CreateUser_Tests
 
         // Assert
         result.Should().NotBeNull();
-        result.UserId.Should().NotBeEmpty();
+        result.UserId.Should().BeGreaterThan(0);
         result.TemporaryPassword.Should().NotBeNullOrWhiteSpace();
 
         // Verify user was added with correct properties
@@ -91,7 +91,7 @@ public class UserService_CreateUser_Tests
             AppRole = AppRole.Doctor
         };
 
-        var existingUser = new User { Id = Guid.NewGuid(), Email = request.Email };
+        var existingUser = new User { Id = 2, Email = request.Email };
         _userRepo.Setup(r => r.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<User> { existingUser });
 

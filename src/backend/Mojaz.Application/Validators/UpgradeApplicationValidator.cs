@@ -34,13 +34,13 @@ public class UpgradeApplicationValidator : AbstractValidator<UpgradeApplicationR
             .MustAsync(BeValidUpgradeTarget).WithMessage("This upgrade path is not allowed. Category F can only be upgraded to Category B (Private Car).");
     }
 
-    private async Task<bool> HaveValidActiveLicense(Guid licenseId, CancellationToken cancellationToken)
+    private async Task<bool> HaveValidActiveLicense(int licenseId, CancellationToken cancellationToken)
     {
         var license = await _licenseRepository.GetByIdAsync(licenseId);
         return license != null && license.Status == LicenseStatus.Active && !license.IsDeleted;
     }
 
-    private async Task<bool> BeValidUpgradeTarget(UpgradeApplicationRequest request, Guid targetCategoryId, CancellationToken cancellationToken)
+    private async Task<bool> BeValidUpgradeTarget(UpgradeApplicationRequest request, int targetCategoryId, CancellationToken cancellationToken)
     {
         // Get current license to find source category
         var currentLicense = await _licenseRepository.GetByIdAsync(request.CurrentLicenseId, cancellationToken);

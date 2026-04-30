@@ -8,7 +8,7 @@ import { Download, Loader2, FileCheck } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 interface ReceiptDownloadButtonProps {
-  paymentId: string;
+  paymentId: number;
   variant?: "default" | "outline" | "secondary" | "ghost" | "link";
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;

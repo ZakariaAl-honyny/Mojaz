@@ -47,7 +47,7 @@ public class ApplicationWorkflowServiceTests
     public void ValidateWorkflow_WithValidApplication_ShouldSucceed()
     {
         // Arrange
-        var appId = Guid.NewGuid();
+        var appId = 1;
         var application = new Domain.Entities.Application 
         { 
             Id = appId, 

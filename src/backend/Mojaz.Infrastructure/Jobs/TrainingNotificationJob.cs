@@ -28,7 +28,7 @@ public class TrainingNotificationJob
     /// Send notification when training is completed.
     /// </summary>
     [AutomaticRetry(Attempts = 3, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-    public async Task NotifyTrainingCompletedAsync(Guid userId, Guid applicationId)
+    public async Task NotifyTrainingCompletedAsync(int userId, int applicationId)
     {
         _logger.LogInformation("Sending training completed notification to user {UserId}", userId);
 
@@ -54,7 +54,7 @@ public class TrainingNotificationJob
     /// Send notification when training exemption is approved.
     /// </summary>
     [AutomaticRetry(Attempts = 3, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-    public async Task NotifyExemptionApprovedAsync(Guid userId, Guid applicationId)
+    public async Task NotifyExemptionApprovedAsync(int userId, int applicationId)
     {
         _logger.LogInformation("Sending exemption approved notification to user {UserId}", userId);
 
@@ -80,7 +80,7 @@ public class TrainingNotificationJob
     /// Send notification when training exemption is rejected.
     /// </summary>
     [AutomaticRetry(Attempts = 3, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
-    public async Task NotifyExemptionRejectedAsync(Guid userId, Guid applicationId, string reason)
+    public async Task NotifyExemptionRejectedAsync(int userId, int applicationId, string reason)
     {
         _logger.LogInformation("Sending exemption rejected notification to user {UserId}", userId);
 

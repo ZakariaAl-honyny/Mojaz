@@ -8,13 +8,13 @@ import { History, Calendar, CheckCircle2, XCircle, User, AlertCircle, Bookmark }
 import { motion } from 'framer-motion';
 
 interface TheoryTestHistoryProps {
-  applicationId: string;
+  applicationId: number;
 }
 
 export function TheoryTestHistory({ applicationId }: TheoryTestHistoryProps) {
   const { data, isLoading } = useQuery({
     queryKey: ['theory-history', applicationId],
-    queryFn: () => theoryService.getHistory(applicationId),
+    queryFn: () => theoryService.getHistory(String(applicationId)),
   });
 
   if (isLoading) {

@@ -40,7 +40,7 @@ export function PaymentSimModal({
 
   const { isProcessing, startProcessing, stopProcessing, clearSession } = usePaymentStore();
   const [step, setStep] = useState<"processing" | "success" | "failure">("processing");
-  const [paymentId, setPaymentId] = useState<string | null>(null);
+  const [paymentId, setPaymentId] = useState<number | null>(null);
   const hasInitiatedRef = useRef(false);
 
   useEffect(() => {

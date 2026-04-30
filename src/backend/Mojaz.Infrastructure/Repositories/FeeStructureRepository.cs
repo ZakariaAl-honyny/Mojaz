@@ -14,7 +14,7 @@ namespace Mojaz.Infrastructure.Persistence.Repositories
         {
         }
 
-        public async Task<FeeStructure?> GetActiveFeeAsync(FeeType feeType, Guid? licenseCategoryId = null)
+        public async Task<FeeStructure?> GetActiveFeeAsync(FeeType feeType, int? licenseCategoryId = null)
         {
             var now = DateTime.UtcNow;
             

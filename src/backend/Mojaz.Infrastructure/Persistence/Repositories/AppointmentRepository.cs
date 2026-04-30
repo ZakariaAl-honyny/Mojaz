@@ -18,14 +18,14 @@ public class AppointmentRepository : Repository<Appointment>, IAppointmentReposi
     {
     }
 
-    public async Task<Appointment?> GetByIdWithApplicationAsync(Guid id, CancellationToken ct = default)
+    public async Task<Appointment?> GetByIdWithApplicationAsync(int id, CancellationToken ct = default)
     {
         return await _dbSet
             .Include(x => x.Application)
             .FirstOrDefaultAsync(x => x.Id == id, ct);
     }
 
-    public async Task<Appointment?> GetByApplicationIdAsync(Guid applicationId, AppointmentType type, CancellationToken ct = default)
+    public async Task<Appointment?> GetByApplicationIdAsync(int applicationId, AppointmentType type, CancellationToken ct = default)
     {
         return await _dbSet
             .FirstOrDefaultAsync(x => 
@@ -34,7 +34,7 @@ public class AppointmentRepository : Repository<Appointment>, IAppointmentReposi
                 !x.IsDeleted, ct);
     }
 
-    public async Task<IReadOnlyList<Appointment>> GetByApplicationIdAsync(Guid applicationId, CancellationToken ct = default)
+    public async Task<IReadOnlyList<Appointment>> GetByApplicationIdAsync(int applicationId, CancellationToken ct = default)
     {
         return await _dbSet
             .Where(x => x.ApplicationId == applicationId && !x.IsDeleted)
@@ -43,7 +43,7 @@ public class AppointmentRepository : Repository<Appointment>, IAppointmentReposi
             .ToListAsync(ct);
     }
 
-    public async Task<IReadOnlyList<Appointment>> GetByApplicationIdsAsync(List<Guid> applicationIds, CancellationToken ct = default)
+    public async Task<IReadOnlyList<Appointment>> GetByApplicationIdsAsync(List<int> applicationIds, CancellationToken ct = default)
     {
         if (applicationIds == null || !applicationIds.Any())
         {
@@ -57,7 +57,7 @@ public class AppointmentRepository : Repository<Appointment>, IAppointmentReposi
             .ToListAsync(ct);
     }
 
-    public async Task<IReadOnlyList<Appointment>> GetByBranchAndDateAsync(Guid branchId, DateOnly date, CancellationToken ct = default)
+    public async Task<IReadOnlyList<Appointment>> GetByBranchAndDateAsync(int branchId, DateOnly date, CancellationToken ct = default)
     {
         return await _dbSet
             .Where(x => 
@@ -68,7 +68,7 @@ public class AppointmentRepository : Repository<Appointment>, IAppointmentReposi
             .ToListAsync(ct);
     }
 
-    public async Task<IReadOnlyList<Appointment>> GetByBranchAndDateRangeAsync(Guid branchId, DateOnly startDate, DateOnly endDate, CancellationToken ct = default)
+    public async Task<IReadOnlyList<Appointment>> GetByBranchAndDateRangeAsync(int branchId, DateOnly startDate, DateOnly endDate, CancellationToken ct = default)
     {
         return await _dbSet
             .Where(x => 
@@ -82,7 +82,7 @@ public class AppointmentRepository : Repository<Appointment>, IAppointmentReposi
             .ToListAsync(ct);
     }
 
-    public async Task<int> GetBookedSlotCountAsync(Guid branchId, DateOnly date, string timeSlot, CancellationToken ct = default)
+    public async Task<int> GetBookedSlotCountAsync(int branchId, DateOnly date, string timeSlot, CancellationToken ct = default)
     {
         return await _dbSet
             .CountAsync(x => 
@@ -93,7 +93,7 @@ public class AppointmentRepository : Repository<Appointment>, IAppointmentReposi
                 !x.IsDeleted, ct);
     }
 
-    public async Task<Appointment?> GetByIdForRescheduleAsync(Guid id, CancellationToken ct = default)
+    public async Task<Appointment?> GetByIdForRescheduleAsync(int id, CancellationToken ct = default)
     {
         return await _dbSet
             .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted, ct);

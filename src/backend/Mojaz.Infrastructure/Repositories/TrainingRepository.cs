@@ -16,7 +16,7 @@ namespace Mojaz.Infrastructure.Repositories
         {
         }
 
-        public async Task<TrainingRecord?> GetByApplicationIdAsync(Guid applicationId)
+        public async Task<TrainingRecord?> GetByApplicationIdAsync(int applicationId)
         {
             return await _context.TrainingRecords
                 .Include(t => t.Application)

@@ -56,7 +56,7 @@ export default function ReplacementWizard() {
   const [applicationNumber, setApplicationNumber] = useState<string | null>(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isEligible, setIsEligible] = useState<boolean | null>(null);
-  const [licenseInfo, setLicenseInfo] = useState<{ id: string; number: string } | null>(null);
+  const [licenseInfo, setLicenseInfo] = useState<{ id: number; number: string } | null>(null);
   const [isLoadingEligibility, setIsLoadingEligibility] = useState(true);
 
   const {
@@ -87,7 +87,7 @@ export default function ReplacementWizard() {
         const res = await LicenseService.checkReplacementEligibility();
         if (res.success && res.data?.isEligible) {
           setIsEligible(true);
-          setLicenseInfo({ id: res.data.licenseId, number: res.data.licenseNumber });
+          setLicenseInfo({ id: Number(res.data.licenseId), number: res.data.licenseNumber });
         } else {
           setIsEligible(false);
           toast.error(res.message || "عذراً، أنت غير مؤهل حالياً لطلب بدل تالف/مفقود.");

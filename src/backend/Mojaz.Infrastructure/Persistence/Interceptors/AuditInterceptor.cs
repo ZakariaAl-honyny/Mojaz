@@ -89,7 +89,7 @@ namespace Mojaz.Infrastructure.Persistence.Interceptors
             }
         }
 
-        private Guid? GetUserId(DbContext? context)
+        private int? GetUserId(DbContext? context)
         {
             return null;
         }

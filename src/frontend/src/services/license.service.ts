@@ -4,7 +4,7 @@ import { LicenseStatus } from '@/lib/enums';
 import { ReplacementReason } from '@/lib/enums';
 
 export interface LicenseDto {
-  id: string;
+  id: number;
   licenseNumber: string;
   licenseCategoryCode: string;
   licenseCategoryNameEn: string;
@@ -15,7 +15,7 @@ export interface LicenseDto {
 }
 
 export interface UpgradeTargetCategory {
-  id: string;
+  id: number;
   code: string;
   nameEn: string;
   nameAr: string;
@@ -28,7 +28,7 @@ export interface UpgradeTargetCategory {
 export interface RenewalEligibilityResponse {
   isEligible: boolean;
   reason?: string;
-  licenseId?: string;
+  licenseId?: number;
   licenseNumber?: string;
   licenseCategoryCode?: string;
   licenseCategoryName?: string;
@@ -38,7 +38,7 @@ export interface RenewalEligibilityResponse {
 }
 
 export interface LicenseCategoryOption {
-  id: string;
+  id: number;
   code: string;
   nameAr: string;
   nameEn: string;
@@ -60,7 +60,7 @@ const LicenseService = {
   /**
    * Get available upgrade targets for a specific license
    */
-  async getUpgradeTargets(currentLicenseId: string): Promise<ApiResponse<UpgradeTargetCategory[]>> {
+  async getUpgradeTargets(currentLicenseId: number): Promise<ApiResponse<UpgradeTargetCategory[]>> {
     const response = await apiClient.get(`licenses/${currentLicenseId}/upgrade-targets`);
     return response.data;
   },
@@ -68,11 +68,11 @@ const LicenseService = {
   /**
    * Submit an upgrade application
    */
-  async submitUpgrade(licenseId: string, targetCategoryId: string, branchId: string): Promise<ApiResponse<{ id: string; applicationNumber: string }>> {
+  async submitUpgrade(licenseId: number, targetCategoryid: number, branchid: number): Promise<ApiResponse<{ id: number; applicationNumber: string }>> {
     const response = await apiClient.post('applications/upgrade', {
-      currentLicenseId: licenseId,
-      targetCategoryId,
-      branchId,
+      currentLicenseid: licenseId,
+      targetCategoryid,
+      branchid,
     });
     return response.data;
   },
@@ -82,7 +82,7 @@ const LicenseService = {
    */
   async checkReplacementEligibility(): Promise<ApiResponse<{
     isEligible: boolean;
-    licenseId: string;
+    licenseId: number;
     licenseNumber: string;
     expiryDate: string;
     message?: string;
@@ -95,10 +95,10 @@ const LicenseService = {
    * Submit a replacement application
    */
   async submitReplacement(data: {
-    licenseId: string;
+    licenseId: number;
     reason: ReplacementReason;
     documentIds?: string[];
-  }): Promise<ApiResponse<{ id: string; applicationNumber: string }>> {
+  }): Promise<ApiResponse<{ id: number; applicationNumber: string }>> {
     const response = await apiClient.post('applications/replacement', data);
     return response.data;
   },
@@ -106,7 +106,7 @@ const LicenseService = {
   /**
    * Check eligibility for license renewal
    */
-  async checkRenewalEligibility(categoryId: string): Promise<ApiResponse<RenewalEligibilityResponse>> {
+  async checkRenewalEligibility(categoryId: number): Promise<ApiResponse<RenewalEligibilityResponse>> {
     const response = await apiClient.get('licenses/renewal/eligibility', {
       params: { categoryId }
     });
@@ -117,9 +117,9 @@ const LicenseService = {
    * Create a renewal application
    */
   async createRenewal(data: {
-    oldLicenseId: string;
-    licenseCategoryId: string;
-  }): Promise<ApiResponse<{ id: string; applicationNumber: string }>> {
+    oldLicenseId: number;
+    licenseCategoryId: number;
+  }): Promise<ApiResponse<{ id: number; applicationNumber: string }>> {
     const response = await apiClient.post('licenses/renewal', data);
     return response.data;
   },
@@ -149,7 +149,7 @@ const LicenseService = {
   /**
    * Issue a license for an application
    */
-  async issueLicense(applicationId: string): Promise<ApiResponse<LicenseDto>> {
+  async issueLicense(applicationId: number): Promise<ApiResponse<LicenseDto>> {
     const response = await apiClient.post(`licenses/application/${applicationId}/issue`);
     return response.data;
   },

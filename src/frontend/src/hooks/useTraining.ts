@@ -11,16 +11,16 @@ import {
 export const trainingKeys = {
   all: ['training'] as const,
   records: () => [...trainingKeys.all, 'records'] as const,
-  record: (applicationId: string) => [...trainingKeys.records(), { applicationId }] as const,
+  record: (applicationId: number) => [...trainingKeys.records(), { applicationId }] as const,
   exemptions: () => [...trainingKeys.all, 'exemptions'] as const,
   pendingExemptions: (params?: { status?: string }) => [...trainingKeys.exemptions(), 'pending', { ...params }] as const,
-  status: (applicationId: string) => [...trainingKeys.all, 'status', applicationId] as const,
+  status: (applicationId: number) => [...trainingKeys.all, 'status', applicationId] as const,
 };
 
 /**
  * Hook to fetch training record for an application
  */
-export const useTrainingRecord = (applicationId: string) => {
+export const useTrainingRecord = (applicationId: number) => {
   return useQuery({
     queryKey: trainingKeys.record(applicationId),
     queryFn: () => TrainingService.getRecordByApplicationId(applicationId),
@@ -31,11 +31,11 @@ export const useTrainingRecord = (applicationId: string) => {
 /**
  * Hook to update training hours (or create if missing)
  */
-export const useUpdateTrainingHours = (applicationId: string) => {
+export const useUpdateTrainingHours = (applicationId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (request: { id?: string; data: CreateTrainingRecordRequest | UpdateTrainingHoursRequest }) => {
+    mutationFn: async (request: { id?: number; data: CreateTrainingRecordRequest | UpdateTrainingHoursRequest }) => {
       if (request.id) {
         return TrainingService.addHours(request.id, request.data as UpdateTrainingHoursRequest);
       } else {
@@ -52,7 +52,7 @@ export const useUpdateTrainingHours = (applicationId: string) => {
 /**
  * Hook to submit an exemption request
  */
-export const useSubmitExemption = (applicationId: string) => {
+export const useSubmitExemption = (applicationId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -67,11 +67,11 @@ export const useSubmitExemption = (applicationId: string) => {
 /**
  * Hook to approve an exemption (Manager only)
  */
-export const useApproveExemption = (applicationId?: string) => {
+export const useApproveExemption = (applicationId?: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (vars: { id: string; data: ExemptionActionRequest }) => 
+    mutationFn: (vars: { id: number; data: ExemptionActionRequest }) => 
       TrainingService.approveExemption(vars.id, vars.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: trainingKeys.records() });
@@ -90,7 +90,7 @@ export const useRejectExemption = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (request: { id: string; data: ExemptionActionRequest }) => 
+    mutationFn: (request: { id: number; data: ExemptionActionRequest }) => 
       TrainingService.rejectExemption(request.id, request.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: trainingKeys.records() });
@@ -102,7 +102,7 @@ export const useRejectExemption = () => {
 /**
  * Hook to fetch training completion status
  */
-export const useTrainingStatus = (applicationId: string) => {
+export const useTrainingStatus = (applicationId: number) => {
   return useQuery({
     queryKey: trainingKeys.status(applicationId),
     queryFn: () => TrainingService.getStatus(applicationId),

@@ -3,11 +3,11 @@ import { devtools } from 'zustand/middleware';
 
 interface PaymentSessionState {
   isProcessing: boolean;
-  activePaymentId: string | null;
+  activePaymentId: number | null;
   lockTimestamp: number | null;
   
   // Actions
-  startProcessing: (paymentId: string) => void;
+  startProcessing: (paymentId: number) => void;
   stopProcessing: () => void;
   clearSession: () => void;
 }
@@ -19,7 +19,7 @@ export const usePaymentStore = create<PaymentSessionState>()(
       activePaymentId: null,
       lockTimestamp: null,
 
-      startProcessing: (paymentId: string) => 
+      startProcessing: (paymentId: number) => 
         set({ 
           isProcessing: true, 
           activePaymentId: paymentId, 

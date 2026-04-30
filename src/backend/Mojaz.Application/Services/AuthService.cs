@@ -67,7 +67,6 @@ public class AuthService : IAuthService
 
         var user = new User
         {
-            Id = Guid.NewGuid(),
             FullNameAr = request.FullName ?? string.Empty,
             FullNameEn = request.FullName ?? string.Empty,
             NationalId = GenerateNationalId(),
@@ -212,7 +211,6 @@ public class AuthService : IAuthService
                 // For testing ONLY - create emergency temp user
                 user = new User
                 {
-                    Id = Guid.NewGuid(),
                     FullNameAr = "اختبار نظام",
                     FullNameEn = "System Test",
                     Email = identifier,

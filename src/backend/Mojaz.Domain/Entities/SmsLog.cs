@@ -2,7 +2,7 @@ using Mojaz.Domain.Enums;
 
 namespace Mojaz.Domain.Entities
 {
-    public class SmsLog : AuditableEntity
+    public class SmsLog : SoftDeletableEntity
     {
         public int? ApplicationId { get; set; }
         public int UserId { get; set; }

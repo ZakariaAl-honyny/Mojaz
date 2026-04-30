@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const step4Schema = z.object({
   applicantType: z.enum(['Citizen', 'Resident']),
-  preferredCenterId: z.string().min(1, 'يرجى تحديد مركز الفحص المفضل من القائمة.'),
+  preferredCenterId: z.number().min(1, 'يرجى تحديد مركز الفحص المفضل من القائمة.'),
   testLanguage: z.enum(['ar', 'en']),
   appointmentPreference: z.enum(['Morning', 'Afternoon', 'Evening', 'NoPreference']),
   specialNeedsDeclaration: z.boolean(),

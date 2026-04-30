@@ -266,7 +266,7 @@ public class ReportService : IReportService
         var grouped = await query.GroupBy(a => a.FinalDecisionBy)
             .Select(g => new
             {
-                EmployeeId = g.Key ?? Guid.Empty,
+                EmployeeId = g.Key ?? 0,
                 Count = g.Count()
             })
             .ToListAsync();

@@ -14,15 +14,15 @@ public interface IPracticalRepository : IRepository<PracticalTest>
     /// <summary>
     /// Gets the latest practical test for an application
     /// </summary>
-    Task<PracticalTest?> GetLatestByApplicationIdAsync(Guid applicationId);
+    Task<PracticalTest?> GetLatestByApplicationIdAsync(int applicationId);
 
     /// <summary>
     /// Gets all practical tests for an application
     /// </summary>
-    Task<IReadOnlyList<PracticalTest>> GetAllByApplicationIdAsync(Guid applicationId);
+    Task<IReadOnlyList<PracticalTest>> GetAllByApplicationIdAsync(int applicationId);
 
     /// <summary>
     /// Gets the count of practical tests for an application
     /// </summary>
-    Task<int> GetAttemptCountAsync(Guid applicationId);
+    Task<int> GetAttemptCountAsync(int applicationId);
 }

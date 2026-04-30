@@ -3,8 +3,8 @@ import { ApiResponse, PaginatedResult } from './api.types';
 export type TestResultType = 'Pass' | 'Fail' | 'Absent';
 
 export interface TheoryTestDto {
-  id: string;
-  applicationId: string;
+  id: number;
+  applicationId: number;
   attemptNumber: number;
   score: number | null;
   passingScore: number;
@@ -12,7 +12,7 @@ export interface TheoryTestDto {
   isPassed: boolean;
   isAbsent: boolean;
   conductedAt: string;
-  examinerId: string;
+  examinerId: number;
   examinerName?: string;
   notes?: string;
   retakeEligibleAfter?: string;

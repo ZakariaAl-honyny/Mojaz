@@ -4,9 +4,9 @@ import { ApiResponse, PaginatedResult } from './api.types';
 export interface ReportFilter {
   startDate?: string;
   endDate?: string;
-  branchId?: string;
-  licenseCategoryId?: string;
-  examinerId?: string;
+  branchId?: number;
+  licenseCategoryId?: number;
+  examinerId?: number;
 }
 
 // Status distribution DTO
@@ -34,7 +34,7 @@ export interface TestPerformanceDto {
 
 // Branch throughput DTO
 export interface BranchThroughputDto {
-  branchId: string;
+  branchId: number;
   branchName: string;
   processed: number;
   completed: number;
@@ -43,7 +43,7 @@ export interface BranchThroughputDto {
 
 // Employee activity DTO
 export interface EmployeeActivityDto {
-  employeeId: string;
+  employeeId: number;
   employeeName: string;
   role: string;
   processed: number;
@@ -60,7 +60,7 @@ export interface IssuanceTimelineDto {
 
 // Delayed application entry
 export interface DelayedApplicationEntry {
-  applicationId: string;
+  applicationId: number;
   applicationNumber: string;
   applicantName: string;
   currentStatus: string;

@@ -26,7 +26,7 @@ public class CreateApplicationValidatorTests
     public async Task Should_Have_Error_When_Age_Under_18_For_Category_F()
     {
         // Arrange
-        var categoryId = Guid.NewGuid();
+        var categoryId = 6;
         var categoryF = new LicenseCategory 
         { 
             Id = categoryId, 
@@ -51,7 +51,7 @@ public class CreateApplicationValidatorTests
             City = "Riyadh",
             Region = "Riyadh",
             ApplicantType = ApplicantType.Private,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             PreferredLanguage = "ar",
             DataAccuracyConfirmed = true
         };
@@ -68,7 +68,7 @@ public class CreateApplicationValidatorTests
     public async Task Should_Not_Have_Error_When_Age_18_Or_Over_For_Category_F()
     {
         // Arrange
-        var categoryId = Guid.NewGuid();
+        var categoryId = 6;
         var categoryF = new LicenseCategory 
         { 
             Id = categoryId, 
@@ -93,7 +93,7 @@ public class CreateApplicationValidatorTests
             City = "Riyadh",
             Region = "Riyadh",
             ApplicantType = ApplicantType.Private,
-            BranchId = Guid.NewGuid(),
+            BranchId = 2,
             PreferredLanguage = "ar",
             DataAccuracyConfirmed = true
         };

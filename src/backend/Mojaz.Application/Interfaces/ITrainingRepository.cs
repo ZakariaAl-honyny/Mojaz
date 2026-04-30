@@ -7,6 +7,6 @@ namespace Mojaz.Application.Interfaces
 {
     public interface ITrainingRepository : IRepository<TrainingRecord>
     {
-        Task<TrainingRecord?> GetByApplicationIdAsync(Guid applicationId);
+        Task<TrainingRecord?> GetByApplicationIdAsync(int applicationId);
     }
 }

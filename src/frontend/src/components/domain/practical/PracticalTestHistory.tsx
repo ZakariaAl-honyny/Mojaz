@@ -9,13 +9,13 @@ import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
 interface PracticalTestHistoryProps {
-  applicationId: string;
+  applicationId: number;
 }
 
 export function PracticalTestHistory({ applicationId }: PracticalTestHistoryProps) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['practicalHistory', applicationId],
-    queryFn: () => practicalService.getHistory(applicationId),
+    queryFn: () => practicalService.getHistory(String(applicationId)),
   });
 
   if (isLoading) {

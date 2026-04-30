@@ -47,8 +47,8 @@ public class Gate4ValidationServiceTests
     public async Task ValidateAsync_WhenAllConditionsPassed_ShouldReturnFullyPassed()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var applicantId = Guid.NewGuid();
+        var applicationId = 1;
+        var applicantId = 2;
         var application = new Mojaz.Domain.Entities.Application { Id = applicationId, ApplicantId = applicantId };
         var applicant = new Mojaz.Domain.Entities.User { Id = applicantId, NationalId = "1234567890", IsSecurityBlocked = false };
 
@@ -67,8 +67,8 @@ public class Gate4ValidationServiceTests
     public async Task ValidateAsync_WhenTheoryTestFailed_ShouldReturnNotFullyPassed()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var applicantId = Guid.NewGuid();
+        var applicationId = 3;
+        var applicantId = 4;
         var application = new Mojaz.Domain.Entities.Application { Id = applicationId, ApplicantId = applicantId };
         var applicant = new Mojaz.Domain.Entities.User { Id = applicantId, NationalId = "1234567890", IsSecurityBlocked = false };
 
@@ -86,8 +86,8 @@ public class Gate4ValidationServiceTests
     public async Task ValidateAsync_WhenSecurityBlocked_ShouldReturnNotFullyPassed()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var applicantId = Guid.NewGuid();
+        var applicationId = 5;
+        var applicantId = 6;
         var application = new Mojaz.Domain.Entities.Application { Id = applicationId, ApplicantId = applicantId };
         var applicant = new Mojaz.Domain.Entities.User { Id = applicantId, NationalId = "1234567890", IsSecurityBlocked = true };
 
@@ -105,8 +105,8 @@ public class Gate4ValidationServiceTests
     public async Task ValidateAsync_WhenMedicalExpired_ShouldReturnNotFullyPassed()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var applicantId = Guid.NewGuid();
+        var applicationId = 7;
+        var applicantId = 8;
         var application = new Mojaz.Domain.Entities.Application { Id = applicationId, ApplicantId = applicantId };
         var applicant = new Mojaz.Domain.Entities.User { Id = applicantId, NationalId = "1234567890", IsSecurityBlocked = false };
 
@@ -120,7 +120,7 @@ public class Gate4ValidationServiceTests
         result.Conditions.First(c => c.Key == "MedicalCertificateValid").IsPassed.Should().BeFalse();
     }
 
-    private void SetupMocks(Guid applicationId, Mojaz.Domain.Entities.Application application, Mojaz.Domain.Entities.User applicant, 
+    private void SetupMocks(int applicationId, Mojaz.Domain.Entities.Application application, Mojaz.Domain.Entities.User applicant, 
         bool theoryPass, bool practicalPass, bool securityClean, bool identityValid, bool medicalValid, bool paymentsCleared)
     {
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>())).ReturnsAsync(application);

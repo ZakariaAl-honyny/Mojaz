@@ -50,7 +50,7 @@ public class DevController : ControllerBase
                 FeeTypeAr = "رسوم رخصة قيادة", FeeTypeEn = "Driving License Fee", 
                 PaymentDateAr = "2025-05-01", PaymentDateEn = "2025-05-01" },
             "documents-missing" => new DocumentsMissingEmailData { 
-                ApplicationId = Guid.NewGuid().ToString(), ApplicationNumber = "MOJ-2025-99", 
+                ApplicationId = Random.Shared.Next(10000000, 99999999).ToString(), ApplicationNumber = "MOJ-2025-99", 
                 MissingDocumentsAr = new List<string> { "البطاقة الشخصية مصورة", "فصيلة الدم من مركز معتمد" }, 
                 MissingDocumentsEn = new List<string> { "Personal ID Copy", "Blood Type Certificate" }, 
                 DeadlineDateAr = "2025-06-01", DeadlineDateEn = "2025-06-01" },

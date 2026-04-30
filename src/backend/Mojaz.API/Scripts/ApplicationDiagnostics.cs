@@ -14,7 +14,7 @@ public class ApplicationDiagnostics
 {
     public static async Task Run(IServiceProvider services)
     {
-        var appId = Guid.Parse("b0d15d6d-1bba-4bea-b336-08dea4f6ee2c");
+        var appId = 1;
         using var scope = services.CreateScope();
         var applicationRepo = scope.ServiceProvider.GetRequiredService<IRepository<Mojaz.Domain.Entities.Application>>();
         var paymentRepo = scope.ServiceProvider.GetRequiredService<IRepository<PaymentTransaction>>();

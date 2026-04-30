@@ -18,7 +18,7 @@ const getBaseUrl = (idOrNumber: string) => `documents/application/${idOrNumber}`
  * Upload a document for an application
  */
 export const uploadDocument = async (
-  idOrNumber: string,
+  idOrNumber: number,
   request: UploadDocumentRequest,
   onUploadProgress?: (progress: number) => void
 ): Promise<ApiResponse<DocumentDto>> => {
@@ -27,7 +27,7 @@ export const uploadDocument = async (
   formData.append('file', request.file);
 
   const response = await axios.post<ApiResponse<DocumentDto>>(
-    `${getBaseUrl(idOrNumber)}/upload`,
+    `${getBaseUrl(String(idOrNumber))}/upload`,
     formData,
     {
       headers: {

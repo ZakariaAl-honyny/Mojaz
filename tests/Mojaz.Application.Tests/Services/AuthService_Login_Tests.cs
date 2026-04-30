@@ -59,7 +59,7 @@ public class AuthService_Login_Tests
     public async Task LoginAsync_AccountLocked_ReturnsForbidden()
     {
         // Arrange
-        var user = new User { Id = Guid.NewGuid(), Email = "locked@test.com", LockoutEnd = DateTime.UtcNow.AddMinutes(10) };
+        var user = new User { Id = 1, Email = "locked@test.com", LockoutEnd = DateTime.UtcNow.AddMinutes(10) };
         _userRepo.Setup(r => r.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>()))
                  .ReturnsAsync((IReadOnlyList<User>)new List<User> { user });
 
@@ -77,7 +77,7 @@ public class AuthService_Login_Tests
     public async Task LoginAsync_InvalidPassword_IncrementsFailedAttemptsAndEventuallyLocks()
     {
         // Arrange
-        var user = new User { Id = Guid.NewGuid(), Email = "fail@test.com", PasswordHash = BCrypt.Net.BCrypt.HashPassword("RealPassword"), FailedLoginAttempts = 4 };
+        var user = new User { Id = 2, Email = "fail@test.com", PasswordHash = BCrypt.Net.BCrypt.HashPassword("RealPassword"), FailedLoginAttempts = 4 };
         _userRepo.Setup(r => r.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>()))
                  .ReturnsAsync((IReadOnlyList<User>)new List<User> { user });
 
@@ -100,7 +100,7 @@ public class AuthService_Login_Tests
         // Arrange
         var user = new User 
         { 
-            Id = Guid.NewGuid(), 
+            Id = 3, 
             Email = "success@test.com", 
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("CorrectPassword"), 
             IsActive = true, 

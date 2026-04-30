@@ -16,8 +16,8 @@ export enum PaymentMethod {
 }
 
 export interface PaymentDto {
-  id: string;
-  applicationId: string;
+  id: number;
+  applicationId: number;
   applicationNumber: string;
   applicantFullName: string;
   feeType: FeeType;
@@ -42,7 +42,7 @@ export interface InitiatePaymentRequest {
 }
 
 export interface PaymentReceiptDto {
-  id: string;
+  id: number;
   applicationNumber: string;
   applicantFullName: string;
   feeType: FeeType;

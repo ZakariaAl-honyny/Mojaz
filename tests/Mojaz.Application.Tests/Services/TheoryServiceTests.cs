@@ -62,15 +62,15 @@ public class TheoryServiceTests
     public async Task SubmitResultAsync_WhenPassed_ShouldAdvanceStageToPractical()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var examinerId = Guid.NewGuid();
+        var applicationId = 1;
+        var examinerId = 2;
         var application = new Domain.Entities.Application
         {
             Id = applicationId,
             CurrentStage = ApplicationStages.Theory,
             TheoryAttemptCount = 0,
             Status = ApplicationStatus.TheoryTest,
-            ApplicantId = Guid.NewGuid()
+            ApplicantId = 3
         };
 
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
@@ -104,15 +104,15 @@ public class TheoryServiceTests
     public async Task SubmitResultAsync_WhenFailed_ShouldMaintainStageAndIncrementCount()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var examinerId = Guid.NewGuid();
+        var applicationId = 4;
+        var examinerId = 5;
         var application = new Domain.Entities.Application
         {
             Id = applicationId,
             CurrentStage = ApplicationStages.Theory,
             TheoryAttemptCount = 0,
             Status = ApplicationStatus.TheoryTest,
-            ApplicantId = Guid.NewGuid()
+            ApplicantId = 6
         };
 
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
@@ -146,15 +146,15 @@ public class TheoryServiceTests
     public async Task SubmitResultAsync_WhenMaxAttemptsReached_ShouldRejectApplication()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var examinerId = Guid.NewGuid();
+        var applicationId = 7;
+        var examinerId = 8;
         var application = new Domain.Entities.Application
         {
             Id = applicationId,
             CurrentStage = ApplicationStages.Theory,
             TheoryAttemptCount = 2,
             Status = ApplicationStatus.TheoryTest,
-            ApplicantId = Guid.NewGuid()
+            ApplicantId = 9
         };
 
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
@@ -186,15 +186,15 @@ public class TheoryServiceTests
     public async Task SubmitResultAsync_WhenAbsent_ShouldCountAsFail()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var examinerId = Guid.NewGuid();
+        var applicationId = 10;
+        var examinerId = 11;
         var application = new Domain.Entities.Application
         {
             Id = applicationId,
             CurrentStage = ApplicationStages.Theory,
             TheoryAttemptCount = 0,
             Status = ApplicationStatus.TheoryTest,
-            ApplicantId = Guid.NewGuid()
+            ApplicantId = 12
         };
 
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
@@ -229,7 +229,7 @@ public class TheoryServiceTests
     public async Task IsInCoolingPeriodAsync_WhenWithinLimit_ShouldReturnTrue()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 13;
         var latestTest = new TheoryTest
         {
             Result = TestResult.Fail,
@@ -252,7 +252,7 @@ public class TheoryServiceTests
     public async Task IsInCoolingPeriodAsync_WhenAtThreshold_ShouldReturnFalse()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 14;
         var latestTest = new TheoryTest
         {
             Result = TestResult.Fail,
@@ -279,14 +279,14 @@ public class TheoryServiceTests
     public async Task GetHistoryAsync_WhenApplicantIsOwner_ShouldReturnHistory()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var applicantId = Guid.NewGuid();
+        var applicationId = 15;
+        var applicantId = 16;
         var application = new Domain.Entities.Application { Id = applicationId, ApplicantId = applicantId };
         
         var tests = new List<TheoryTest>
         {
-            new TheoryTest { Id = Guid.NewGuid(), AttemptNumber = 1, Result = TestResult.Fail, ConductedAt = DateTime.UtcNow.AddDays(-10) },
-            new TheoryTest { Id = Guid.NewGuid(), AttemptNumber = 2, Result = TestResult.Pass, ConductedAt = DateTime.UtcNow.AddDays(-5) }
+            new TheoryTest { Id = 17, AttemptNumber = 1, Result = TestResult.Fail, ConductedAt = DateTime.UtcNow.AddDays(-10) },
+            new TheoryTest { Id = 18, AttemptNumber = 2, Result = TestResult.Pass, ConductedAt = DateTime.UtcNow.AddDays(-5) }
         };
 
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>())).ReturnsAsync(application);
@@ -306,9 +306,9 @@ public class TheoryServiceTests
     public async Task GetHistoryAsync_WhenApplicantIsNotOwner_ShouldReturnForbidden()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var ownerId = Guid.NewGuid();
-        var otherId = Guid.NewGuid();
+        var applicationId = 19;
+        var ownerId = 20;
+        var otherId = 21;
         var application = new Domain.Entities.Application { Id = applicationId, ApplicantId = ownerId };
 
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>())).ReturnsAsync(application);
@@ -325,12 +325,12 @@ public class TheoryServiceTests
     public async Task GetHistoryAsync_WhenManager_ShouldReturnHistoryRegardlessOfOwner()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var applicantId = Guid.NewGuid();
-        var managerId = Guid.NewGuid();
+        var applicationId = 22;
+        var applicantId = 23;
+        var managerId = 24;
         var application = new Domain.Entities.Application { Id = applicationId, ApplicantId = applicantId };
         
-        var tests = new List<TheoryTest> { new TheoryTest { Id = Guid.NewGuid(), AttemptNumber = 1 } };
+        var tests = new List<TheoryTest> { new TheoryTest { Id = 25, AttemptNumber = 1 } };
 
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>())).ReturnsAsync(application);
         _theoryRepositoryMock.Setup(x => x.GetAllByApplicationIdAsync(applicationId)).ReturnsAsync(tests);
@@ -349,7 +349,7 @@ public class TheoryServiceTests
     public async Task IsTheoryExemptForUpgradeAsync_WhenCategoryUpgradeAndWaiverEnabled_ShouldReturnTrue()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 26;
         var application = new Domain.Entities.Application
         {
             Id = applicationId,
@@ -372,7 +372,7 @@ public class TheoryServiceTests
     public async Task IsTheoryExemptForUpgradeAsync_WhenCategoryUpgradeAndWaiverDisabled_ShouldReturnFalse()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 27;
         var application = new Domain.Entities.Application
         {
             Id = applicationId,
@@ -395,7 +395,7 @@ public class TheoryServiceTests
     public async Task IsTheoryExemptForUpgradeAsync_WhenNewLicense_ShouldReturnFalse()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 28;
         var application = new Domain.Entities.Application
         {
             Id = applicationId,
@@ -416,7 +416,7 @@ public class TheoryServiceTests
     public async Task IsTheoryExemptForUpgradeAsync_WhenApplicationNotFound_ShouldReturnFalse()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
+        var applicationId = 29;
 
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Domain.Entities.Application?)null);
@@ -436,8 +436,8 @@ public class TheoryServiceTests
     public async Task SubmitResultAsync_WhenExempt_ShouldAutoPassAndAdvanceToPractical()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var examinerId = Guid.NewGuid();
+        var applicationId = 30;
+        var examinerId = 31;
         var application = new Domain.Entities.Application
         {
             Id = applicationId,
@@ -445,7 +445,7 @@ public class TheoryServiceTests
             TheoryAttemptCount = 0,
             Status = ApplicationStatus.TheoryTest,
             ServiceType = ServiceType.CategoryUpgrade,
-            ApplicantId = Guid.NewGuid()
+            ApplicantId = 32
         };
 
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
@@ -476,8 +476,8 @@ public class TheoryServiceTests
     public async Task SubmitResultAsync_WhenCategoryUpgradeButWaiverDisabled_ShouldNotExempt()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var examinerId = Guid.NewGuid();
+        var applicationId = 33;
+        var examinerId = 34;
         var application = new Domain.Entities.Application
         {
             Id = applicationId,
@@ -485,7 +485,7 @@ public class TheoryServiceTests
             TheoryAttemptCount = 0,
             Status = ApplicationStatus.TheoryTest,
             ServiceType = ServiceType.CategoryUpgrade,
-            ApplicantId = Guid.NewGuid()
+            ApplicantId = 35
         };
 
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))

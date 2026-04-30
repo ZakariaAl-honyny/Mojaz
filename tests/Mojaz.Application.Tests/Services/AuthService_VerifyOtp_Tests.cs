@@ -61,7 +61,7 @@ public class AuthService_VerifyOtp_Tests
     {
         // Arrange
         var service = CreateService();
-        var user = new User { Id = Guid.NewGuid(), Email = "test@resend.com", RegistrationMethod = RegistrationMethod.Email, IsActive = false };
+        var user = new User { Id = 1, Email = "test@resend.com", RegistrationMethod = RegistrationMethod.Email, IsActive = false };
         var otp = new OtpCode 
         { 
             CodeHash = BCrypt.Net.BCrypt.HashPassword("123456"), 

@@ -34,7 +34,7 @@ public class Gate4ValidationService : IGate4ValidationService
         _paymentRepository = paymentRepository;
     }
 
-    public async Task<Gate4ValidationResult> ValidateAsync(Guid applicationId)
+    public async Task<Gate4ValidationResult> ValidateAsync(int applicationId)
     {
         var conditions = new List<Gate4Condition>();
         

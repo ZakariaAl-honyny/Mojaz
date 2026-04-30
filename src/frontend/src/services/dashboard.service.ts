@@ -5,7 +5,7 @@ import { DashboardSummaryDto, ManagerKpiDto, AdminKpiDto, ApplicationSummaryDto 
 
 // Map backend ApplicationDto to frontend ApplicationSummaryDto
 interface BackendApplicationDto {
-  id: string;
+  id: number;
   applicationNumber: string;
   applicantName: string;
   licenseCategoryCode: string;

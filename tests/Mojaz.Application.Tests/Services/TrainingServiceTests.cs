@@ -65,8 +65,8 @@ public class TrainingServiceTests
     public async Task UpdateHoursAsync_WhenRequirementMet_ShouldAdvanceStageToTheory()
     {
         // Arrange
-        var trainingId = Guid.NewGuid();
-        var applicationId = Guid.NewGuid();
+        var trainingId = 1;
+        var applicationId = 2;
         var trainingRecord = new TrainingRecord
         {
             Id = trainingId,
@@ -104,8 +104,8 @@ public class TrainingServiceTests
     public async Task ApproveExemptionAsync_ShouldAdvanceStageToTheory()
     {
         // Arrange
-        var trainingId = Guid.NewGuid();
-        var applicationId = Guid.NewGuid();
+        var trainingId = 1;
+        var applicationId = 2;
         var trainingRecord = new TrainingRecord
         {
             Id = trainingId,
@@ -125,7 +125,7 @@ public class TrainingServiceTests
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(application);
 
-        var request = new ExemptionActionRequest { ActionBy = Guid.NewGuid(), Notes = "Approved" };
+        var request = new ExemptionActionRequest { ActionBy = 3, Notes = "Approved" };
 
         // Act
         var result = await _service.ApproveExemptionAsync(trainingId, request);
@@ -142,8 +142,8 @@ public class TrainingServiceTests
     public async Task CreateAsync_ShouldFetchRequiredHoursFromSettings()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var categoryId = Guid.NewGuid();
+        var applicationId = 1;
+        var categoryId = 2;
         var application = new Domain.Entities.Application { Id = applicationId, LicenseCategoryId = categoryId };
         var category = new LicenseCategory { Id = categoryId, Code = LicenseCategoryCode.B };
 

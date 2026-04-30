@@ -28,7 +28,7 @@ public class DashboardsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<DashboardSummaryDto>), 200)]
     public async Task<IActionResult> GetApplicantDashboardAsync()
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _dashboardService.GetApplicantDashboardAsync(userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -65,7 +65,7 @@ public class DashboardsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<EmployeeDashboardDto>), 200)]
     public async Task<IActionResult> GetEmployeeDashboardAsync()
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _dashboardService.GetEmployeeDashboardAsync(userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -78,7 +78,7 @@ public class DashboardsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<ReceptionistDashboardDto>), 200)]
     public async Task<IActionResult> GetReceptionistDashboardAsync()
     {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _dashboardService.GetReceptionistDashboardAsync(userId);
         return StatusCode(result.StatusCode, result);
     }
@@ -96,7 +96,7 @@ public class DashboardsController : ControllerBase
         // Route to appropriate dashboard based on role
         if (userRole == "Applicant")
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _dashboardService.GetApplicantDashboardAsync(userId);
             return StatusCode(result.StatusCode, result);
         }
@@ -112,7 +112,7 @@ public class DashboardsController : ControllerBase
         }
         else
         {
-            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _dashboardService.GetEmployeeDashboardAsync(userId);
             return StatusCode(result.StatusCode, result);
         }

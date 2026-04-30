@@ -11,7 +11,7 @@ import {
 } from '@/types/document.types';
 
 export interface ApplicationDraftDto {
-  id: string;
+  id: number;
   applicationNumber: string;
   status: string;
   currentStage?: string;
@@ -119,6 +119,13 @@ export interface EligibilityResponseDto {
   existingApplicationNumber?: string;
 }
 
+export interface EligibilityResponse {
+  isEligible: boolean;
+  message?: string;
+  existingApplicationId?: number;
+  existingApplicationNumber?: string;
+}
+
 /**
  * Application Service - handles all application-related API calls
  */
@@ -160,7 +167,7 @@ const ApplicationService = {
   /**
    * Update an existing draft application (auto-save and Next button)
    */
-  async updateApplication(id: string, data: Partial<ApplicationDraftDto>): Promise<ApiResponse<ApplicationDraftDto>> {
+  async updateApplication(id: number, data: Partial<ApplicationDraftDto>): Promise<ApiResponse<ApplicationDraftDto>> {
     const response = await apiClient.put(`/applications/${id}/wizard-data`, data);
     return response.data;
   },
@@ -168,7 +175,7 @@ const ApplicationService = {
 /**
     * Final submission of the application
     */
-  async submitApplication(id: string): Promise<ApiResponse<ApplicationDraftDto>> {
+  async submitApplication(id: number): Promise<ApiResponse<ApplicationDraftDto>> {
     const response = await apiClient.post(`/applications/${id}/submit`);
     return response.data;
   },
@@ -176,7 +183,7 @@ const ApplicationService = {
 /**
     * Mark application as paid (after successful payment)
     */
-  async payApplication(id: string): Promise<ApiResponse<boolean>> {
+  async payApplication(id: number): Promise<ApiResponse<boolean>> {
     try {
       const response = await apiClient.post(`/applications/${id}/pay`, {});
       return response.data;
@@ -248,7 +255,7 @@ const ApplicationService = {
   /**
    * Verify stolen report for license replacement
    */
-  async verifyStolenReport(id: string, data: VerifyStolenReportRequest): Promise<ApiResponse<VerifyStolenReportResponse>> {
+  async verifyStolenReport(id: number, data: VerifyStolenReportRequest): Promise<ApiResponse<VerifyStolenReportResponse>> {
     const response = await apiClient.patch(`/administrative/applications/${id}/verify-stolen-report`, data);
     return response.data;
   },
@@ -309,7 +316,7 @@ const ApplicationService = {
   /**
    * Get full application details with applicant info and documents
    */
-  async getApplicationDetails(id: string): Promise<ApiResponse<ApplicationWithDetailsDto>> {
+  async getApplicationDetails(id: number): Promise<ApiResponse<ApplicationWithDetailsDto>> {
     const response = await apiClient.get(`/applications/${id}/details`);
     return response.data;
   },
@@ -321,7 +328,7 @@ const ApplicationService = {
    * @param reason - Optional reason (required for rejection)
    */
   async updateApplicationStatus(
-    id: string, 
+    id: number, 
     newStatus: string, 
     reason?: string
   ): Promise<ApiResponse<ApplicationDraftDto>> {
@@ -335,7 +342,7 @@ const ApplicationService = {
    * Approve application and move to next stage
    */
   async approveApplication(
-    id: string, 
+    id: number, 
     reason?: string
   ): Promise<ApiResponse<ApplicationDraftDto>> {
     const response = await apiClient.patch(
@@ -348,7 +355,7 @@ const ApplicationService = {
    * Reject application with reason
    */
   async rejectApplication(
-    id: string, 
+    id: number, 
     reason: string
   ): Promise<ApiResponse<ApplicationDraftDto>> {
     const response = await apiClient.patch(
@@ -360,7 +367,7 @@ const ApplicationService = {
   /**
    * Get documents for an application
    */
-  async getApplicationDocuments(applicationId: string): Promise<ApiResponse<DocumentDto[]>> {
+  async getApplicationDocuments(applicationId: number): Promise<ApiResponse<DocumentDto[]>> {
     const response = await apiClient.get(`/applications/${applicationId}/documents`);
     return response.data;
   },
@@ -369,7 +376,7 @@ const ApplicationService = {
    * Review a single document
    */
   async reviewDocument(
-    applicationId: string,
+    applicationId: number,
     documentId: string,
     review: DocumentReviewRequest
   ): Promise<ApiResponse<DocumentDto>> {
@@ -384,7 +391,7 @@ const ApplicationService = {
    * Review all documents for an application (bulk approve)
    */
   async reviewAllDocuments(
-    applicationId: string,
+    applicationId: number,
     approved: boolean,
     rejectionReason?: string
   ): Promise<ApiResponse<{ reviewResults: DocumentDto[] }>> {
@@ -398,7 +405,7 @@ const ApplicationService = {
   /**
    * Get application timeline with all stages
    */
-  async getTimeline(applicationId: string): Promise<ApiResponse<ApplicationTimelineDto>> {
+  async getTimeline(applicationId: number): Promise<ApiResponse<ApplicationTimelineDto>> {
     const response = await apiClient.get(`/applications/${applicationId}/timeline`);
     return response.data;
   },
@@ -406,7 +413,7 @@ const ApplicationService = {
   /**
    * Get application details by ID
    */
-  async getApplicationById(id: string): Promise<ApiResponse<ApplicationDraftDto>> {
+  async getApplicationById(id: number): Promise<ApiResponse<ApplicationDraftDto>> {
     const response = await apiClient.get(`/applications/${id}`);
     return response.data;
   },
@@ -414,7 +421,7 @@ const ApplicationService = {
   /**
    * Get application details by ID (alias)
    */
-  async getById(id: string): Promise<ApiResponse<ApplicationDraftDto>> {
+  async getById(id: number): Promise<ApiResponse<ApplicationDraftDto>> {
     const response = await apiClient.get(`/applications/${id}`);
     return response.data;
   },
@@ -422,7 +429,7 @@ const ApplicationService = {
   /**
    * Delete (soft delete) an application
    */
-  async deleteApplication(id: string): Promise<ApiResponse<void>> {
+  async deleteApplication(id: number): Promise<ApiResponse<void>> {
     const response = await apiClient.delete(`/applications/${id}`);
     return response.data;
   },

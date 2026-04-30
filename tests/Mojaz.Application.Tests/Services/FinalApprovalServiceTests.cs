@@ -72,9 +72,9 @@ public class FinalApprovalServiceTests
     public async Task FinalizeAsync_WhenApprovedAndGate4Passed_ShouldSucceed()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var managerId = Guid.NewGuid();
-        var categoryId = Guid.NewGuid();
+        var applicationId = 1;
+        var managerId = 2;
+        var categoryId = 3;
         var application = new Mojaz.Domain.Entities.Application 
         { 
             Id = applicationId, 
@@ -111,8 +111,8 @@ public class FinalApprovalServiceTests
     public async Task FinalizeAsync_WhenApprovedButGate4Failed_ShouldFail()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var managerId = Guid.NewGuid();
+        var applicationId = 4;
+        var managerId = 5;
         var application = new Mojaz.Domain.Entities.Application 
         { 
             Id = applicationId, 
@@ -145,8 +145,8 @@ public class FinalApprovalServiceTests
     public async Task FinalizeAsync_WhenRejected_ShouldSucceedAndMaintainStage()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var managerId = Guid.NewGuid();
+        var applicationId = 6;
+        var managerId = 7;
         var application = new Mojaz.Domain.Entities.Application 
         { 
             Id = applicationId, 
@@ -178,8 +178,8 @@ public class FinalApprovalServiceTests
     public async Task FinalizeAsync_WhenReturned_ShouldSucceedAndTransitionToRequestedStage()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var managerId = Guid.NewGuid();
+        var applicationId = 8;
+        var managerId = 9;
         var application = new Mojaz.Domain.Entities.Application 
         { 
             Id = applicationId, 
@@ -212,8 +212,8 @@ public class FinalApprovalServiceTests
     public async Task FinalizeAsync_WhenAlreadyFinalized_ShouldReturnConflict()
     {
         // Arrange
-        var applicationId = Guid.NewGuid();
-        var managerId = Guid.NewGuid();
+        var applicationId = 10;
+        var managerId = 11;
         var application = new Mojaz.Domain.Entities.Application 
         { 
             Id = applicationId, 

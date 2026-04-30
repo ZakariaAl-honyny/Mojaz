@@ -46,7 +46,7 @@ public class TestRetakeService : ITestRetakeService
         _logger = logger;
     }
 
-    public async Task<ApiResponse<RetakeEligibilityDto>> CheckEligibilityAsync(Guid applicationId)
+    public async Task<ApiResponse<RetakeEligibilityDto>> CheckEligibilityAsync(int applicationId)
     {
         try
         {
@@ -193,7 +193,7 @@ public class TestRetakeService : ITestRetakeService
         }
     }
 
-    public async Task<ApiResponse<bool>> RequestRetakeAsync(Guid applicationId, RetakeRequest request)
+    public async Task<ApiResponse<bool>> RequestRetakeAsync(int applicationId, RetakeRequest request)
     {
         try
         {

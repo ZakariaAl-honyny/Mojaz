@@ -39,7 +39,7 @@ export function ExemptionModal({
   const handleApprove = async () => {
     setIsSubmitting(true);
     try {
-      await onApprove(record.id);
+      await onApprove(String(record.id));
       onClose();
     } catch (e) {
       console.error(e);
@@ -52,7 +52,7 @@ export function ExemptionModal({
     if (!rejectionReason.trim()) return;
     setIsSubmitting(true);
     try {
-      await onReject(record.id, rejectionReason);
+      await onReject(String(record.id), rejectionReason);
       onClose();
     } catch (e) {
       console.error(e);
@@ -80,7 +80,7 @@ export function ExemptionModal({
           <div className="bg-neutral-50 p-4 rounded-lg border border-neutral-100">
             <h4 className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.2em] mb-2">{th('applicantInfo')}</h4>
             <div className="flex justify-between items-center text-sm">
-              <span className="font-bold text-neutral-700">APP-2025-{record.applicationId.substring(0,8)}</span>
+              <span className="font-bold text-neutral-700">APP-2025-{record.applicationId}</span>
               <span className="text-neutral-500">{record.schoolName}</span>
             </div>
           </div>
