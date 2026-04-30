@@ -256,6 +256,30 @@ TestResults/
 # ─── Playwright ────────────────────────────────
 test-results/
 playwright-report/
-blob-report/
+blob-Report/
 playwright/.cache/
 playwright/.auth/
+.playwright-mcp/
+
+# ─── AI Agent Files ──────────────────────────────
+.agents/
+opencode. json
+agents. md
+AGENTS. md
+.mcp/
+
+# ─── Temporary / Scripts ──────────────────────
+*_token. txt
+*_login*. json
+login. json
+scratch/
+nul
+*.sql
+check-*.ps1
+fix-*.ps1
+get-*.ps1
+list-*.ps1
+test-*.ps1
+test_*.ps1
+*.docx
+*.pdf
