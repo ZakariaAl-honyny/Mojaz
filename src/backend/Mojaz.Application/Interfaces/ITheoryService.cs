@@ -12,5 +12,6 @@ namespace Mojaz.Application.Interfaces
         Task<ApiResponse<PagedResult<TheoryTestDto>>> GetHistoryByApplicationNumberAsync(string applicationNumber, Guid userId, string role, int page = 1, int pageSize = 10);
         Task<bool> IsInCoolingPeriodAsync(Guid applicationId);
         Task<bool> HasReachedMaxAttemptsAsync(Guid applicationId);
+        Task<bool> IsTheoryExemptForUpgradeAsync(Guid applicationId);
     }
 }

@@ -31,11 +31,13 @@ export const wizardQueryKeys = {
   examCenters: ['exam-centers'] as const,
   nationalities: ['lookups', 'nationalities'] as const,
   regions: ['lookups', 'regions'] as const,
+  userLicenses: ['user', 'licenses'] as const,
+  upgradeTargets: ['licenses', 'upgrade-targets'] as const,
 };
 
 // Institutional Color Tokens - Royal King Blue
-export const PRIMARY_COLOR = '#1a3a8f'; 
-export const SECONDARY_COLOR = '#D4A017'; 
+export const PRIMARY_COLOR = '#1a3a8f';
+export const SECONDARY_COLOR = '#D4A017';
 
 // Services config - matches backend ServiceType enum (numeric values 0-7)
 // Note: Future services (8+) are not yet defined in backend and marked as unavailable
@@ -94,6 +96,13 @@ export const SERVICES_CONFIG = [
     title: 'رخصة مؤقتة',
     description: 'إصدار رخصة قيادة مؤقتة لفترة محددة.',
     icon: 'Clock',
+    availableInMvp: true,
+  },
+  {
+    type: ServiceType.TestRetake,
+    title: 'إعادة الاختبار',
+    description: 'إعادة التقدم بعد الرسوب في الاختبار النظري أو العملي.',
+    icon: 'RefreshCw',
     availableInMvp: true,
   },
 ];

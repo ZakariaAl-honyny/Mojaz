@@ -43,7 +43,7 @@ export default function UpgradePage() {
         setLicenses(activeLicenses);
       }
     } catch (err) {
-      setError('Failed to load your licenses');
+      setError('فشل في تحميل بيانات الرخص الخاصة بك.');
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +63,7 @@ export default function UpgradePage() {
         }
       } catch (err) {
         if (isMounted) {
-          setError('Failed to load your licenses');
+          setError('فشل في تحميل بيانات الرخص الخاصة بك.');
         }
       } finally {
         if (isMounted) {
@@ -86,7 +86,7 @@ export default function UpgradePage() {
         setUpgradeTargets(response.data);
       }
     } catch (err) {
-      setError('Failed to load available upgrades');
+      setError('فشل في تحميل فئات الترقية المتاحة حالياً.');
     }
   };
 
@@ -116,10 +116,10 @@ export default function UpgradePage() {
       if (response.success) {
         router.push('/applications');
       } else {
-        setError(response.message || 'Failed to submit upgrade application');
+        setError(response.message || 'فشل في تقديم طلب الترقية.');
       }
     } catch (err) {
-      setError('Failed to submit upgrade application');
+      setError('فشل في تقديم طلب الترقية.');
     } finally {
       setIsSubmitting(false);
     }
@@ -208,7 +208,7 @@ export default function UpgradePage() {
                       </div>
                       <div className="text-start">
                         <h3 className="font-semibold text-lg">
-                          {license.licenseCategoryNameEn}
+                          {license.licenseCategoryNameAr}
                         </h3>
                         <p className="text-sm text-neutral-500">
                           {t('licenseNumber')}: {license.licenseNumber}
@@ -233,7 +233,7 @@ export default function UpgradePage() {
           <CardContent>
             <div className="mb-6 p-4 bg-primary-50 rounded-xl">
               <p className="text-sm text-primary-700">
-                {t('upgradingFrom')} <strong>{selectedLicense?.licenseCategoryNameEn}</strong>
+                {t('upgradingFrom')} <strong>{selectedLicense?.licenseCategoryNameAr}</strong>
               </p>
             </div>
             
@@ -255,7 +255,7 @@ export default function UpgradePage() {
                         <CarFront className="w-6 h-6" />
                       </div>
                       <div className="text-start">
-                        <h3 className="font-semibold text-lg">{target.nameEn}</h3>
+                        <h3 className="font-semibold text-lg">{target.nameAr}</h3>
                         <p className="text-sm text-neutral-500">{t('minAge')}: {target.minAge}</p>
                         {target.requiresFieldTest && (
                           <span className="text-xs text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full">
@@ -300,11 +300,11 @@ export default function UpgradePage() {
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <span className="text-neutral-500 block text-sm">{t('currentLicense')}</span>
-                  <span className="font-medium">{selectedLicense?.licenseCategoryNameEn}</span>
+                  <span className="font-medium">{selectedLicense?.licenseCategoryNameAr}</span>
                 </div>
                 <div>
                   <span className="text-neutral-500 block text-sm">{t('targetCategory')}</span>
-                  <span className="font-medium">{selectedTarget.nameEn}</span>
+                  <span className="font-medium">{selectedTarget.nameAr}</span>
                 </div>
                 <div>
                   <span className="text-neutral-500 block text-sm">{t('licenseNumber')}</span>

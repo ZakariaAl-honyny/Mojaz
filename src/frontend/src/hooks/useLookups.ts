@@ -7,7 +7,7 @@ export function useNationalities() {
     queryKey: wizardQueryKeys.nationalities,
     queryFn: async () => {
       const response = await ApplicationService.getNationalities();
-      if (!response.success || !response.data) throw new Error('Failed to load nationalities');
+      if (!response.success || !response.data) throw new Error('فشل في تحميل قائمة الجنسيات.');
       return response.data;
     },
     staleTime: 24 * 60 * 60 * 1000,
@@ -19,7 +19,7 @@ export function useRegions() {
     queryKey: wizardQueryKeys.regions,
     queryFn: async () => {
       const response = await ApplicationService.getRegions();
-      if (!response.success || !response.data) throw new Error('Failed to load regions');
+      if (!response.success || !response.data) throw new Error('فشل في تحميل قائمة المحافظات.');
       return response.data;
     },
     staleTime: 24 * 60 * 60 * 1000,

@@ -150,7 +150,7 @@ export function AppointmentCalendar({
         {weekdays.map((day) => (
           <div 
             key={day} 
-            className="h-10 flex items-center justify-center text-xs font-black text-neutral-300 uppercase tracking-widest"
+            className="h-10 flex items-center justify-center text-xs font-black text-neutral-300"
           >
             {day}
           </div>

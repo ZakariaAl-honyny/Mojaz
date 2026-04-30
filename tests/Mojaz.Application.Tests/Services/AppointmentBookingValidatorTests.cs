@@ -25,6 +25,7 @@ public class AppointmentBookingValidatorTests
 {
     private readonly Mock<IAppointmentRepository> _appointmentRepositoryMock;
     private readonly Mock<IRepository<ApplicationEntity>> _applicationRepositoryMock;
+    private readonly Mock<IRepository<PaymentTransaction>> _paymentRepositoryMock;
     private readonly Mock<ISystemSettingsService> _systemSettingsServiceMock;
     private readonly Mock<ITrainingService> _trainingServiceMock;
     private readonly Mock<ITheoryService> _theoryServiceMock;
@@ -35,6 +36,7 @@ public class AppointmentBookingValidatorTests
     {
         _appointmentRepositoryMock = new Mock<IAppointmentRepository>();
         _applicationRepositoryMock = new Mock<IRepository<ApplicationEntity>>();
+        _paymentRepositoryMock = new Mock<IRepository<PaymentTransaction>>();
         _systemSettingsServiceMock = new Mock<ISystemSettingsService>();
         _trainingServiceMock = new Mock<ITrainingService>();
         _theoryServiceMock = new Mock<ITheoryService>();
@@ -43,6 +45,7 @@ public class AppointmentBookingValidatorTests
         _validator = new AppointmentBookingValidator(
             _appointmentRepositoryMock.Object,
             _applicationRepositoryMock.Object,
+            _paymentRepositoryMock.Object,
             _systemSettingsServiceMock.Object,
             _trainingServiceMock.Object,
             _theoryServiceMock.Object,

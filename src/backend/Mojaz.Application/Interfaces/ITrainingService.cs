@@ -7,6 +7,7 @@ namespace Mojaz.Application.Interfaces
     {
         Task<ApiResponse<TrainingRecordDto>> CreateAsync(CreateTrainingRecordRequest request);
         Task<ApiResponse<TrainingRecordDto>> GetByApplicationIdAsync(Guid applicationId, Guid? currentUserId = null, string? currentUserRole = null);
+        Task<ApiResponse<PagedResult<TrainingRecordDto>>> GetAllAsync(Guid userId, string role, int page = 1, int pageSize = 20, string? search = null, string? status = null);
         Task<ApiResponse<TrainingRecordDto>> UpdateHoursAsync(Guid id, UpdateTrainingHoursRequest request);
         Task<ApiResponse<TrainingRecordDto>> CreateExemptionAsync(CreateExemptionRequest request);
         Task<ApiResponse<TrainingRecordDto>> ApproveExemptionAsync(Guid id, ExemptionActionRequest request);

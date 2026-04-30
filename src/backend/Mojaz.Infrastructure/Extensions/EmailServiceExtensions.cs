@@ -17,10 +17,18 @@ namespace Mojaz.Infrastructure.Extensions
             services.Configure<SendGridSettings>(configuration.GetSection("SendGridSettings"));
             services.Configure<EmailDedupSettings>(configuration.GetSection("EmailDedupSettings"));
             
-            services.AddScoped<SendGridClient>(sp => 
+            services.AddScoped<ISendGridClient>(sp => 
             {
                 var settings = configuration.GetSection("SendGridSettings").Get<SendGridSettings>();
-                return new SendGridClient(settings?.ApiKey ?? "");
+                var apiKey = settings?.ApiKey;
+                
+                // Ensure we never pass null or empty to SendGridClient to prevent DI resolution crashes
+                if (string.IsNullOrWhiteSpace(apiKey))
+                {
+                    apiKey = "SG.DEVELOPMENT_PLACEHOLDER_KEY";
+                }
+                
+                return new SendGridClient(apiKey);
             });
             
             services.AddScoped<IEmailService, SendGridEmailService>();
@@ -29,10 +37,20 @@ namespace Mojaz.Infrastructure.Extensions
             services.AddSingleton<IRazorLightEngine>(_ => 
             {
                 var baseDir = AppContext.BaseDirectory;
-                var templatePath = Path.Combine(baseDir, "..", "..", "..", "Mojaz.Infrastructure", "EmailTemplates");
+                // Try different possible locations for EmailTemplates
+                string templatePath = Path.Combine(baseDir, "..", "..", "..", "Mojaz.Infrastructure", "EmailTemplates");
+                if (!Directory.Exists(templatePath))
+                {
+                    templatePath = Path.Combine(baseDir, "..", "..", "Mojaz.Infrastructure", "EmailTemplates");
+                }
                 if (!Directory.Exists(templatePath))
                 {
                     templatePath = Path.Combine(baseDir, "EmailTemplates");
+                }
+                if (!Directory.Exists(templatePath))
+                {
+                    // Final fallback - use absolute path
+                    templatePath = @"C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\backend\Mojaz.Infrastructure\EmailTemplates";
                 }
                 return new RazorLightEngineBuilder()
                     .UseFileSystemProject(templatePath)

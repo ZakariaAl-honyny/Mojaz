@@ -1,13 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mojaz.Application.DTOs.Training;
 using Mojaz.Application.Interfaces;
+using Mojaz.Application.Interfaces.Services;
 using Mojaz.Shared;
 using Mojaz.Shared.Constants;
 using Microsoft.AspNetCore.RateLimiting;
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Mojaz.API.Controllers;
 
@@ -22,25 +25,62 @@ namespace Mojaz.API.Controllers;
 public class TrainingController : ControllerBase
 {
     private readonly ITrainingService _trainingService;
+    private readonly IApplicationService _applicationService;
 
-    public TrainingController(ITrainingService trainingService)
+    public TrainingController(ITrainingService trainingService, IApplicationService applicationService)
     {
         _trainingService = trainingService;
+        _applicationService = applicationService;
     }
 
     /// <summary>
-    /// Get training record by application ID.
+    /// Get training record by application ID or Number.
     /// </summary>
-    /// <param name="applicationId">The application unique identifier</param>
-    [HttpGet("application/{applicationId}")]
+    [HttpGet("application/{appIdOrNumber}")]
     [Authorize(Roles = "Applicant,Doctor,Manager,Admin")]
     [ProducesResponseType(typeof(ApiResponse<TrainingRecordDto>), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
-    public async Task<IActionResult> GetByApplicationId(Guid applicationId)
+    public async Task<IActionResult> GetByApplicationId(string appIdOrNumber)
     {
+        var applicationId = await ResolveIdAsync(appIdOrNumber);
+        if (applicationId == Guid.Empty)
+            return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
+
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
         var result = await _trainingService.GetByApplicationIdAsync(applicationId, userId, role);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Get training completion status for an application ID or Number.
+    /// </summary>
+    [HttpGet("application/{appIdOrNumber}/status")]
+    [Authorize(Roles = "Applicant,Doctor,Manager,Admin")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+    public async Task<IActionResult> GetStatus(string appIdOrNumber)
+    {
+        var applicationId = await ResolveIdAsync(appIdOrNumber);
+        if (applicationId == Guid.Empty)
+            return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
+
+        var result = await _trainingService.IsTrainingCompleteAsync(applicationId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Get all training records (paginated).
+    /// </summary>
+    [HttpGet]
+    [Authorize(Roles = "Manager,Admin,Receptionist,Doctor")]
+    public async Task<IActionResult> GetAll(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        [FromQuery] string? search = null,
+        [FromQuery] string? status = null)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var role = User.FindFirstValue(ClaimTypes.Role)!;
+        var result = await _trainingService.GetAllAsync(userId, role, page, pageSize, search, status);
         return StatusCode(result.StatusCode, result);
     }
 
@@ -49,8 +89,6 @@ public class TrainingController : ControllerBase
     /// </summary>
     [HttpPost]
     [Authorize(Roles = "Examiner,Receptionist,Admin")]
-    [ProducesResponseType(typeof(ApiResponse<TrainingRecordDto>), 201)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
     public async Task<IActionResult> Create([FromBody] CreateTrainingRecordRequest request)
     {
         var result = await _trainingService.CreateAsync(request);
@@ -62,9 +100,6 @@ public class TrainingController : ControllerBase
     /// </summary>
     [HttpPatch("{id}/hours")]
     [Authorize(Roles = "Examiner,Admin")]
-    [ProducesResponseType(typeof(ApiResponse<TrainingRecordDto>), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
     public async Task<IActionResult> UpdateHours(Guid id, [FromBody] UpdateTrainingHoursRequest request)
     {
         var result = await _trainingService.UpdateHoursAsync(id, request);
@@ -76,8 +111,6 @@ public class TrainingController : ControllerBase
     /// </summary>
     [HttpPost("exemption")]
     [Authorize(Roles = "Applicant,Receptionist,Admin")]
-    [ProducesResponseType(typeof(ApiResponse<TrainingRecordDto>), 201)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
     public async Task<IActionResult> RequestExemption([FromBody] CreateExemptionRequest request)
     {
         var result = await _trainingService.CreateExemptionAsync(request);
@@ -85,26 +118,10 @@ public class TrainingController : ControllerBase
     }
 
     /// <summary>
-    /// Get all pending exemption requests.
-    /// </summary>
-    [HttpGet("exemptions/pending")]
-    [Authorize(Roles = "Manager,Admin")]
-    [ProducesResponseType(typeof(ApiResponse<List<TrainingRecordDto>>), 200)]
-    public async Task<IActionResult> GetPendingExemptions()
-    {
-        var result = await _trainingService.GetPendingExemptionsAsync();
-        return StatusCode(result.StatusCode, result);
-    }
-
-    /// <summary>
     /// Approve a training exemption request.
     /// </summary>
-    /// <param name="id">The training record unique identifier</param>
     [HttpPatch("{id}/exemption/approve")]
     [Authorize(Roles = "Manager,Admin")]
-    [ProducesResponseType(typeof(ApiResponse<TrainingRecordDto>), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
     public async Task<IActionResult> ApproveExemption(Guid id, [FromBody] ExemptionActionRequest request)
     {
         var result = await _trainingService.ApproveExemptionAsync(id, request);
@@ -114,28 +131,20 @@ public class TrainingController : ControllerBase
     /// <summary>
     /// Reject a training exemption request.
     /// </summary>
-    /// <param name="id">The training record unique identifier</param>
     [HttpPatch("{id}/exemption/reject")]
     [Authorize(Roles = "Manager,Admin")]
-    [ProducesResponseType(typeof(ApiResponse<TrainingRecordDto>), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
     public async Task<IActionResult> RejectExemption(Guid id, [FromBody] ExemptionActionRequest request)
     {
         var result = await _trainingService.RejectExemptionAsync(id, request);
         return StatusCode(result.StatusCode, result);
     }
 
-    /// <summary>
-    /// Get training completion status for an application.
-    /// </summary>
-    /// <param name="applicationId">The application unique identifier</param>
-    [HttpGet("application/{applicationId}/status")]
-    [Authorize(Roles = "Applicant,Doctor,Manager,Admin")]
-    [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
-    public async Task<IActionResult> GetStatus(Guid applicationId)
+    private async Task<Guid> ResolveIdAsync(string idOrNumber)
     {
-        var result = await _trainingService.IsTrainingCompleteAsync(applicationId);
-        return StatusCode(result.StatusCode, result);
+        if (Guid.TryParse(idOrNumber, out var id))
+            return id;
+
+        var result = await _applicationService.GetByApplicationNumberAsync(idOrNumber);
+        return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
     }
 }

@@ -8,7 +8,7 @@ import { LicenseCategoryCode } from '@/types/wizard.types';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface CategoryCardProps {
-  code: LicenseCategoryCode;
+  code: string;
   nameAr: string;
   minAge: number;
   descriptionAr: string;
@@ -28,7 +28,7 @@ export default function CategoryCard({
   iconName = 'Car',
   disabled = false,
 }: CategoryCardProps) {
-  const Icon = (LucideIcons as any)[iconName] || LucideIcons.Car;
+  const Icon = (LucideIcons[iconName as keyof typeof LucideIcons] as React.ElementType) || LucideIcons.Car;
 
   return (
     <Card

@@ -52,13 +52,13 @@ const genderFromDisplayValue = (value: string): Gender => {
 };
 
 export default function Step3PersonalInfo() {
-  const { step3, setStep3 } = useWizardStore();
+  const { step3, setStep3, setStepValidator } = useWizardStore();
 
   const { data: nationalitiesData, isLoading: loadingNationalities, error: nationalitiesError, refetch: refetchNationalities } = useQuery({
     queryKey: wizardQueryKeys.nationalities,
     queryFn: async () => {
       const response = await ApplicationService.getNationalities();
-      if (!response.success || !response.data) throw new Error('Failed to load nationalities');
+      if (!response.success || !response.data) throw new Error('فشل في تحميل قائمة الجنسيات المعتمدة.');
       return response.data;
     },
     staleTime: 24 * 60 * 60 * 1000,
@@ -68,7 +68,7 @@ export default function Step3PersonalInfo() {
     queryKey: wizardQueryKeys.regions,
     queryFn: async () => {
       const response = await ApplicationService.getRegions();
-      if (!response.success || !response.data) throw new Error('Failed to load regions');
+      if (!response.success || !response.data) throw new Error('فشل في تحميل قائمة المحافظات.');
       return response.data;
     },
     staleTime: 24 * 60 * 60 * 1000,
@@ -76,7 +76,7 @@ export default function Step3PersonalInfo() {
 
   const isLoading = loadingNationalities || loadingRegions;
 
-  const { register, getValues, setValue, trigger, setFocus, watch, formState: { errors } } = useForm({
+  const { register, getValues, setValue, trigger, setFocus, watch, formState: { errors, isValid } } = useForm({
     resolver: zodResolver(step3Schema),
     defaultValues: {
       nationalId: step3.nationalId,
@@ -93,12 +93,13 @@ export default function Step3PersonalInfo() {
     mode: 'onBlur',
   });
 
+  // Register form on global store
   useEffect(() => {
-    (window as any).__step3Form = { trigger, setFocus };
+    setStepValidator(3, { trigger, setFocus });
     return () => {
-      delete (window as any).__step3Form;
+      setStepValidator(3, null);
     };
-  }, [trigger, setFocus]);
+  }, [trigger, setFocus, setStepValidator]);
 
   useEffect(() => {
     const values = getValues();
@@ -120,7 +121,7 @@ export default function Step3PersonalInfo() {
   // Handle gender change from RadioGroup - set numeric enum value
   const handleGenderChange = (value: string) => {
     const genderValue = value === 'Female' ? Gender.Female : Gender.Male;
-    setValue('gender', genderValue as any);
+    setValue('gender', genderValue);
     setStep3({
       ...step3,
       gender: genderValue,
@@ -203,9 +204,11 @@ export default function Step3PersonalInfo() {
              <User2 className="w-5 h-5 text-[#1a3a8f]/40" />
              تحديد النوع
           </Label>
-<RadioGroup 
+          <RadioGroup 
+              id="gender"
+              name="gender"
               value={genderToDisplayValue(watch('gender'))} 
-              onValueChange={(val) => setValue('gender', genderFromDisplayValue(val) as any)}
+              onValueChange={handleGenderChange}
               className="flex gap-10 bg-white p-6 rounded-3xl border border-neutral-100 shadow-sm"
            >
             <div className="flex items-center space-x-4 rtl:space-x-reverse cursor-pointer group">
@@ -229,7 +232,6 @@ export default function Step3PersonalInfo() {
         >
           <Input 
             placeholder="7XXXXXXXX" 
-            dir="ltr" 
             className="h-16 rounded-2xl bg-white focus:ring-4 focus:ring-[#1a3a8f]/5"
             {...register('mobileNumber')} 
           />
@@ -245,7 +247,6 @@ export default function Step3PersonalInfo() {
           <Input 
             type="email" 
             placeholder="example@domain.com" 
-            dir="ltr" 
             className="h-16 rounded-2xl bg-white focus:ring-4 focus:ring-[#1a3a8f]/5"
             {...register('email')} 
           />

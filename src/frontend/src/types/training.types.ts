@@ -54,3 +54,14 @@ export interface ExemptionActionRequest {
   actionBy: string;
   notes: string;
 }
+
+export interface PendingExemptionDto {
+  id: string;
+  applicationId: string;
+  applicationNumber: string;
+  applicantName: string;
+  exemptionReason: string;
+  documentId: string;
+  submittedAt: string;
+  status: TrainingStatus;
+}

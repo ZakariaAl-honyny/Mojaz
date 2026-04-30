@@ -114,7 +114,34 @@
       "total": "Total"
     }
   },
-  "upgrade": {
+  "renewal": {
+    "eligibility": {
+      "title": "Renewal Eligibility Check",
+      "currentLicense": "Current License",
+      "licenseNumber": "License Number",
+      "category": "Category",
+      "expiryDate": "Expiry Date",
+      "status": "Status",
+      "active": "Active",
+      "expired": "Expired",
+      "expiredWithinGrace": "Expired (Within Grace Period)",
+      "gracePeriod": "Grace Period",
+      "renewalFee": "Renewal Fee",
+      "days": "day",
+      "daysRemaining": "{{days}} days",
+      "proceed": "Start Renewal",
+      "back": "Back to Services",
+      "notEligible": "Not Eligible for Renewal",
+      "ineligibleReason": "Reason",
+      "loading": "Checking eligibility...",
+      "currency": "SAR",
+      "expiresIn": "Remaining",
+      "selectCategory": "Select Category",
+      "gracePeriodEnded": "Grace period has ended",
+      "noActiveLicense": "No active license for this category",
+      "error": "Error checking eligibility"
+    }
+  },
     "title": "Upgrade Your License",
     "subtitle": "Select your current license and choose a target category to upgrade",
     "steps": {
@@ -154,6 +181,16 @@
   },
   "timeline": {
     "stages": {
+      "01": { "title": "Application Submission", "desc": "Create application and fill information" },
+      "02": { "title": "Documents", "desc": "Upload documents and verification" },
+      "03": { "title": "Fee Payment", "desc": "Pay initial fees" },
+      "04": { "title": "Medical Exam", "desc": "Medical fitness confirmation" },
+      "05": { "title": "Training", "desc": "Complete driving training" },
+      "06": { "title": "Theory Test", "desc": "Pass theory test" },
+      "07": { "title": "Practical Test", "desc": "Pass practical test" },
+      "08": { "title": "Final Approval", "desc": "Review and approval" },
+      "09": { "title": "Issuance Payment", "desc": "Pay issuance fees" },
+      "10": { "title": "License Issuance", "desc": "Issue and deliver license" },
       "creation": "Application Creation",
       "documentReview": "Document Review",
       "training": "Training Stage",
@@ -168,7 +205,11 @@
       "completed": "Completed",
       "current": "In Progress",
       "pending": "Pending",
-      "failed": "Failed"
+      "failed": "Not Completed",
+      "completedDesc": "Completed successfully",
+      "currentDesc": "Under review and processing",
+      "pendingDesc": "Awaiting",
+      "failedDesc": "Failed at this stage"
     }
   }
 }

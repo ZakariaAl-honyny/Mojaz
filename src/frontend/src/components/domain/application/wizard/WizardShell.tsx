@@ -13,7 +13,6 @@ import Step3PersonalInfo from './steps/Step3PersonalInfo';
 import Step4ApplicationDetails from './steps/Step4ApplicationDetails';
 import { Step5ReviewSubmit } from './steps/Step5ReviewSubmit';
 import { AutoSaveIndicator } from './shared/AutoSaveIndicator';
-import { ShieldCheck, Info } from 'lucide-react';
 
 const steps = [
   Step1ServiceSelection,
@@ -24,13 +23,13 @@ const steps = [
 ];
 
 export function WizardShell() {
-  const { currentStep, isSaving } = useWizardStore();
+  const currentStep = useWizardStore(state => state.currentStep);
+  const applicationId = useWizardStore(state => state.applicationId);
+  const isSaving = useWizardStore(state => state.isSaving);
   const { goTo, direction } = useApplicationWizard();
   
-  // Initialize auto-save functionality
   useWizardAutoSave();
 
-  // Prevent accidental navigation
   const handleBeforeUnload = useCallback((e: BeforeUnloadEvent) => {
     if (isSaving) {
       e.preventDefault();
@@ -44,57 +43,47 @@ export function WizardShell() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [handleBeforeUnload]);
 
-  // Get step component
   const StepComponent = steps[currentStep - 1];
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 md:p-6 font-arabic" dir="rtl">
-      {/* Progress Architecture */}
-      <div className="mb-10 md:mb-12 lg:mb-16 space-y-6 md:space-y-10">
+    <div className="w-full max-w-2xl mx-auto px-1 py-2 font-arabic" dir="rtl">
+      {/* Progress Bar */}
+      <div className="mb-2">
         <WizardProgressBar currentStep={currentStep} onStepClick={goTo} />
-        
-        {/* Institutional Feedback Row */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 px-4 md:px-8 py-3 md:py-4 bg-white border border-neutral-100 rounded-xl md:rounded-2xl lg:rounded-[2rem] shadow-sm">
-            <div className="flex items-center gap-3 md:gap-4 text-[10px] md:text-xs font-black text-neutral-400">
-                <ShieldCheck className="w-4 h-4 md:w-5 md:h-5 text-emerald-500" />
-                <span>نظام توثيق البيانات الموحد نشط</span>
-            </div>
-            <div className="h-5 md:h-6">
-                <AutoSaveIndicator />
-            </div>
-            <div className="flex items-center gap-2 md:gap-3 text-[10px] md:text-xs font-black text-[#1a3a8f]/60">
-                <Info className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                <span>الخطوة {currentStep} من ٥</span>
-            </div>
-        </div>
       </div>
 
-       {/* Master Stage Content */}
-       <div className="mb-16 md:mb-20 lg:mb-24 min-h-[500px] md:min-h-[600px] relative">
-         <AnimatePresence mode="wait" custom={direction}>
-           <motion.div
-             key={currentStep}
-             custom={direction}
-             initial={{ opacity: 0, x: direction * 80, scale: 0.98 }}
-             animate={{ opacity: 1, x: 0, scale: 1 }}
-             exit={{ opacity: 0, x: direction * -80, scale: 0.98 }}
-             transition={{ 
-               type: "spring",
-               stiffness: 300,
-               damping: 30,
-             }}
-             className="w-full"
-           >
-             {StepComponent && <StepComponent />}
-           </motion.div>
-         </AnimatePresence>
-       </div>
+      {/* Status Bar */}
+      <div className="flex items-center justify-between gap-2 px-2 py-1.5 bg-white border border-neutral-100 rounded text-[9px] mb-2">
+        <div className="flex items-center gap-1 text-neutral-400">
+          <AutoSaveIndicator />
+        </div>
+        {applicationId && (
+          <span className="font-medium text-[#1a3a8f]">{applicationId.split('-')[0]}</span>
+        )}
+        <span className="text-neutral-400">الخطوة {currentStep}/5</span>
+      </div>
 
-      {/* Control Actions */}
-      <div className="sticky bottom-10 z-30">
-          {/* Subtle Glow Background for Sticky Buttons */}
-          <div className="absolute -inset-x-20 bottom-0 h-40 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/80 to-transparent -z-10 pointer-events-none" />
+      {/* Step Content */}
+      <div className="mb-14 min-h-[300px] relative">
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.div
+            key={currentStep}
+            custom={direction}
+            initial={{ opacity: 0, x: direction * 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: direction * -30 }}
+            className="w-full"
+          >
+            {StepComponent && <StepComponent />}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Navigation - Fixed Bottom */}
+      <div className="fixed bottom-0 left-0 right-0 z-30 bg-white/90 pt-2 pb-2 px-2 border-t border-neutral-100">
+        <div className="max-w-2xl mx-auto">
           <WizardNavButtons />
+        </div>
       </div>
     </div>
   );

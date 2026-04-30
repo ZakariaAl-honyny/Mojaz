@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ApplicationStatus } from "@/types/api.types";
+import { ApplicationStatus } from "@/lib/enums";
 import { StatusBadge } from "./StatusBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { FileText, ChevronLeft, Activity, Calendar, Fingerprint } from "lucide-react";
@@ -41,9 +41,9 @@ export function ApplicationCard({
         {/* Subtle decorative edge with King Blue */}
         <div className={cn(
           "absolute right-0 top-0 bottom-0 w-1.5 transition-all duration-500",
-          status === "Draft" ? "bg-neutral-200" :
-          status === "Rejected" || status === "Cancelled" ? "bg-red-500" :
-          status === "Issued" || status === "Approved" || status === "Paid" ? "bg-emerald-500" :
+          status === ApplicationStatus.Draft ? "bg-neutral-200" :
+          status === ApplicationStatus.Rejected || status === ApplicationStatus.Cancelled ? "bg-red-500" :
+          status === ApplicationStatus.Issued || status === ApplicationStatus.Approved || status === ApplicationStatus.Payment ? "bg-emerald-500" :
           "bg-[#1a3a8f]"
         )} />
         

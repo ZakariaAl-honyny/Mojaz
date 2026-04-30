@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mojaz.Application.DTOs.Practical;
 using Mojaz.Application.Interfaces;
+using Mojaz.Application.Interfaces.Services;
 using Mojaz.Shared;
 using System;
 using System.Security.Claims;
@@ -17,22 +18,28 @@ namespace Mojaz.API.Controllers;
 public class PracticalTestsController : ControllerBase
 {
     private readonly IPracticalService _practicalService;
+    private readonly IApplicationService _applicationService;
 
-    public PracticalTestsController(IPracticalService practicalService)
+    public PracticalTestsController(IPracticalService practicalService, IApplicationService applicationService)
     {
         _practicalService = practicalService;
+        _applicationService = applicationService;
     }
 
     /// <summary>
     /// Submits a practical test result for an application
+    /// Route: api/v1/practical-tests/application/{appIdOrNumber}/submit
     /// </summary>
-    [HttpPost("applications/{applicationId}/submit")]
-    [Authorize(Roles = "Examiner,Manager")]
+    [HttpPost("application/{appIdOrNumber}/submit")]
+    [Authorize(Roles = "Examiner")]
     [ProducesResponseType(typeof(ApiResponse<PracticalTestDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> SubmitResult(Guid applicationId, [FromBody] SubmitPracticalResultRequest request)
+    public async Task<IActionResult> SubmitResult(string appIdOrNumber, [FromBody] SubmitPracticalResultRequest request)
     {
+        var applicationId = await ResolveAppIdAsync(appIdOrNumber);
+        if (applicationId == Guid.Empty)
+            return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
         var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(nameIdentifier) || !Guid.TryParse(nameIdentifier, out var examinerId))
         {
@@ -45,17 +52,21 @@ public class PracticalTestsController : ControllerBase
 
     /// <summary>
     /// Gets the practical test history for an application
+    /// Route: api/v1/practical-tests/application/{appIdOrNumber}/history
     /// </summary>
-    [HttpGet("applications/{applicationId}/history")]
-    [Authorize(Roles = "Applicant,Examiner,Manager")]
+    [HttpGet("application/{appIdOrNumber}/history")]
+    [Authorize(Roles = "Applicant,Receptionist,Doctor,Examiner,Manager,Security,Admin")]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<PracticalTestDto>>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetHistory(
-        Guid applicationId,
+        string appIdOrNumber,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
+        var applicationId = await ResolveAppIdAsync(appIdOrNumber);
+        if (applicationId == Guid.Empty)
+            return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
         var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(nameIdentifier) || !Guid.TryParse(nameIdentifier, out var userId))
         {
@@ -66,4 +77,15 @@ public class PracticalTestsController : ControllerBase
         var result = await _practicalService.GetHistoryAsync(applicationId, userId, role, page, pageSize);
         return StatusCode(result.StatusCode, result);
     }
+
+    private async Task<Guid> ResolveAppIdAsync(string appIdOrNumber)
+    {
+        if (string.IsNullOrWhiteSpace(appIdOrNumber)) return Guid.Empty;
+        if (Guid.TryParse(appIdOrNumber, out var id)) return id;
+
+        var result = await _applicationService.GetByApplicationNumberAsync(appIdOrNumber.Trim());
+        return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
+    }
+
 }
+

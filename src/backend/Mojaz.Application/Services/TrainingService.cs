@@ -52,10 +52,10 @@ namespace Mojaz.Application.Services
         public async Task<ApiResponse<TrainingRecordDto>> CreateAsync(CreateTrainingRecordRequest request)
         {
             var application = await _applicationRepository.GetByIdAsync(request.ApplicationId);
-            if (application == null) return ApiResponse<TrainingRecordDto>.Fail(404, "Application not found.");
+            if (application == null) return ApiResponse<TrainingRecordDto>.Fail(404, "الطلب غير موجود.");
 
             if (await _trainingRepository.ExistsAsync(x => x.ApplicationId == request.ApplicationId))
-                return ApiResponse<TrainingRecordDto>.Fail(400, "Training record already exists for this application.");
+                return ApiResponse<TrainingRecordDto>.Fail(400, "يوجد سجل تدريبي لهذا الطلب بالفعل.");
 
             int requiredHours;
             if (application.ServiceType == ServiceType.CategoryUpgrade)
@@ -64,13 +64,13 @@ namespace Mojaz.Application.Services
                 var activeLicense = (await licenseRepo.FindAsync(x => x.HolderId == application.ApplicantId && x.Status == LicenseStatus.Active)).FirstOrDefault();
                 
                 if (activeLicense == null)
-                    return ApiResponse<TrainingRecordDto>.Fail(400, "No active license found for category upgrade.");
+                    return ApiResponse<TrainingRecordDto>.Fail(400, "لا توجد رخصة نشطة لترقية الفئة.");
 
                 var toCategoryEntity = await _categoryRepository.GetByIdAsync(application.LicenseCategoryId);
                 var fromCategoryEntity = await _categoryRepository.GetByIdAsync(activeLicense.LicenseCategoryId);
 
                 if (toCategoryEntity == null || fromCategoryEntity == null)
-                    return ApiResponse<TrainingRecordDto>.Fail(400, "License categories not found.");
+                    return ApiResponse<TrainingRecordDto>.Fail(400, "فئات الرخصة غير موجودة.");
 
                 requiredHours = await _categoryUpgradeService.GetReducedTrainingHoursAsync(fromCategoryEntity.Code, toCategoryEntity.Code);
             }
@@ -101,37 +101,84 @@ namespace Mojaz.Application.Services
 
             await _auditService.LogAsync("CREATE_TRAINING_RECORD", "TrainingRecord", trainingRecord.Id.ToString(), null, $"Hours: {request.HoursCompleted}/{requiredHours}");
 
-            return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(trainingRecord), "Training record created successfully.");
+            return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(trainingRecord), "تم إنشاء سجل التدريب بنجاح.");
         }
 
         public async Task<ApiResponse<TrainingRecordDto>> GetByApplicationIdAsync(Guid applicationId, Guid? currentUserId = null, string? currentUserRole = null)
         {
             var trainingRecord = await _trainingRepository.GetByApplicationIdAsync(applicationId);
-            if (trainingRecord == null) return ApiResponse<TrainingRecordDto>.Fail(404, "Training record not found.");
+            if (trainingRecord == null) return ApiResponse<TrainingRecordDto>.Fail(404, "سجل التدريب غير موجود.");
 
             // Ownership check for Applicants
             if (currentUserRole == "Applicant" && currentUserId.HasValue)
             {
                 var application = await _applicationRepository.GetByIdAsync(applicationId);
-                if (application == null) return ApiResponse<TrainingRecordDto>.Fail(404, "Application not found.");
+                if (application == null) return ApiResponse<TrainingRecordDto>.Fail(404, "الطلب غير موجود.");
                 
                 // Applicants can only see their own training records
                 if (application.ApplicantId != currentUserId.Value)
                 {
-                    return ApiResponse<TrainingRecordDto>.Fail(403, "You do not have permission to view this training record.");
+                    return ApiResponse<TrainingRecordDto>.Fail(403, "ليس لديك صلاحية لعرض هذا السجل.");
                 }
             }
 
             return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(trainingRecord));
         }
 
+        public async Task<ApiResponse<PagedResult<TrainingRecordDto>>> GetAllAsync(Guid userId, string role, int page = 1, int pageSize = 20, string? search = null, string? status = null)
+        {
+            // Only allow managers/admins to see all training records
+            if (role != "Manager" && role != "Admin" && role != "Receptionist")
+            {
+                return ApiResponse<PagedResult<TrainingRecordDto>>.Fail(403, "ليس لديك صلاحية لعرض جميع سجلات التدريب.");
+            }
+
+            var query = _trainingRepository.Query().Where(x => !x.IsDeleted);
+
+            // Apply filters
+            if (!string.IsNullOrEmpty(status) && Enum.TryParse<TrainingStatus>(status, true, out var trainingStatus))
+            {
+                query = query.Where(x => x.TrainingStatus == trainingStatus);
+            }
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(x => 
+                    x.SchoolName.Contains(search) || 
+                    x.CertificateNumber.Contains(search) ||
+                    x.CenterName.Contains(search) ||
+                    x.TrainerName.Contains(search));
+            }
+
+            var totalCount = query.Count();
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+            var items = query.OrderByDescending(x => x.CreatedAt)
+                .AsEnumerable()
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var pagedResult = new PagedResult<TrainingRecordDto>
+            {
+                Items = _mapper.Map<List<TrainingRecordDto>>(items),
+                TotalCount = totalCount,
+                Page = page,
+                PageSize = pageSize,
+                TotalPages = totalPages,
+                HasPreviousPage = page > 1,
+                HasNextPage = page < totalPages
+            };
+
+            return ApiResponse<PagedResult<TrainingRecordDto>>.Ok(pagedResult);
+        }
+
         public async Task<ApiResponse<TrainingRecordDto>> UpdateHoursAsync(Guid id, UpdateTrainingHoursRequest request)
         {
             var trainingRecord = await _trainingRepository.GetByIdAsync(id);
-            if (trainingRecord == null) return ApiResponse<TrainingRecordDto>.Fail(404, "Training record not found.");
+            if (trainingRecord == null) return ApiResponse<TrainingRecordDto>.Fail(404, "سجل التدريب غير موجود.");
 
             if (trainingRecord.IsExempted)
-                return ApiResponse<TrainingRecordDto>.Fail(400, "Cannot update hours for an exempted training.");
+                return ApiResponse<TrainingRecordDto>.Fail(400, "لا يمكن تحديث الساعات لتدريب تم الإعفاء منه.");
 
             var oldHours = trainingRecord.CompletedHours;
             trainingRecord.CompletedHours += request.HoursToAdd;
@@ -176,17 +223,17 @@ namespace Mojaz.Application.Services
                 });
             }
 
-            return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(trainingRecord), "Training hours updated.");
+            return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(trainingRecord), "تم تحديث ساعات التدريب.");
         }
 
         public async Task<ApiResponse<TrainingRecordDto>> CreateExemptionAsync(CreateExemptionRequest request)
         {
             var application = await _applicationRepository.GetByIdAsync(request.ApplicationId);
-            if (application == null) return ApiResponse<TrainingRecordDto>.Fail(404, "Application not found.");
+            if (application == null) return ApiResponse<TrainingRecordDto>.Fail(404, "الطلب غير موجود.");
 
             var existing = await _trainingRepository.GetByApplicationIdAsync(request.ApplicationId);
             if (existing != null && existing.TrainingStatus == TrainingStatus.Completed)
-                return ApiResponse<TrainingRecordDto>.Fail(400, "Training is already completed. Exemption not needed.");
+                return ApiResponse<TrainingRecordDto>.Fail(400, "التدريب مكتمل بالفعل. لا حاجة للإعفاء.");
 
             var category = await _categoryRepository.GetByIdAsync(application.LicenseCategoryId);
             var categoryCode = category?.Code.ToString() ?? "B";
@@ -216,16 +263,16 @@ namespace Mojaz.Application.Services
 
             await _auditService.LogAsync("REQUEST_EXEMPTION", "TrainingRecord", existing.Id.ToString(), null, request.ExemptionReason);
 
-            return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(existing), "Exemption request submitted.");
+            return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(existing), "تم تقديم طلب الإعفاء.");
         }
 
         public async Task<ApiResponse<TrainingRecordDto>> ApproveExemptionAsync(Guid id, ExemptionActionRequest request)
         {
             var trainingRecord = await _trainingRepository.GetByIdAsync(id);
-            if (trainingRecord == null) return ApiResponse<TrainingRecordDto>.Fail(404, "Training record not found.");
+            if (trainingRecord == null) return ApiResponse<TrainingRecordDto>.Fail(404, "سجل التدريب غير موجود.");
 
             if (trainingRecord.TrainingStatus != TrainingStatus.ExemptionPending)
-                return ApiResponse<TrainingRecordDto>.Fail(400, "Training is not in exemption pending state.");
+                return ApiResponse<TrainingRecordDto>.Fail(400, "التدريب ليس في حالة انتظار الإعفاء.");
 
             trainingRecord.IsExempted = true;
             trainingRecord.TrainingStatus = TrainingStatus.Completed;
@@ -263,16 +310,16 @@ namespace Mojaz.Application.Services
                 });
             }
 
-            return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(trainingRecord), "Exemption approved.");
+            return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(trainingRecord), "تمت الموافقة على الإعفاء.");
         }
 
         public async Task<ApiResponse<TrainingRecordDto>> RejectExemptionAsync(Guid id, ExemptionActionRequest request)
         {
             var trainingRecord = await _trainingRepository.GetByIdAsync(id);
-            if (trainingRecord == null) return ApiResponse<TrainingRecordDto>.Fail(404, "Training record not found.");
+            if (trainingRecord == null) return ApiResponse<TrainingRecordDto>.Fail(404, "سجل التدريب غير موجود.");
 
             if (trainingRecord.TrainingStatus != TrainingStatus.ExemptionPending)
-                return ApiResponse<TrainingRecordDto>.Fail(400, "Training is not in exemption pending state.");
+                return ApiResponse<TrainingRecordDto>.Fail(400, "التدريب ليس في حالة انتظار الإعفاء.");
 
             trainingRecord.IsExempted = false;
             trainingRecord.TrainingStatus = TrainingStatus.InProgress;
@@ -300,7 +347,7 @@ namespace Mojaz.Application.Services
                 });
             }
 
-            return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(trainingRecord), "Exemption rejected.");
+            return ApiResponse<TrainingRecordDto>.Ok(_mapper.Map<TrainingRecordDto>(trainingRecord), "تم رفض الإعفاء.");
         }
 
         public async Task<ApiResponse<bool>> IsTrainingCompleteAsync(Guid applicationId)
@@ -320,7 +367,7 @@ namespace Mojaz.Application.Services
                 !x.IsDeleted);
 
             var dtos = _mapper.Map<List<TrainingRecordDto>>(pendingExemptions);
-            return ApiResponse<List<TrainingRecordDto>>.Ok(dtos, $"Found {dtos.Count} pending exemptions.");
+            return ApiResponse<List<TrainingRecordDto>>.Ok(dtos, $"تم العثور على {dtos.Count} طلبات إعفاء معلقة.");
         }
     }
 }

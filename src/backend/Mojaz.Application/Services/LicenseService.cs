@@ -9,10 +9,12 @@ using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Shared;
+using Mojaz.Shared.Constants;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 using ApplicationEntity = Mojaz.Domain.Entities.Application;
 using ApplicationEmailService = Mojaz.Application.Interfaces.Services.IEmailService;
@@ -25,6 +27,7 @@ public class LicenseService : ILicenseService
     private readonly IRepository<ApplicationEntity> _applicationRepository;
     private readonly IRepository<LicenseCategory> _licenseCategoryRepository;
     private readonly IRepository<User> _userRepository;
+    private readonly IRepository<PaymentTransaction> _paymentRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly INotificationService _notificationService;
     private readonly ApplicationEmailService _emailService;
@@ -39,6 +42,7 @@ public class LicenseService : ILicenseService
         IRepository<ApplicationEntity> applicationRepository,
         IRepository<LicenseCategory> licenseCategoryRepository,
         IRepository<User> userRepository,
+        IRepository<PaymentTransaction> paymentRepository,
         IUnitOfWork unitOfWork,
         INotificationService notificationService,
         ApplicationEmailService emailService,
@@ -52,6 +56,7 @@ public class LicenseService : ILicenseService
         _applicationRepository = applicationRepository;
         _licenseCategoryRepository = licenseCategoryRepository;
         _userRepository = userRepository;
+        _paymentRepository = paymentRepository;
         _unitOfWork = unitOfWork;
         _notificationService = notificationService;
         _emailService = emailService;
@@ -68,26 +73,37 @@ public class LicenseService : ILicenseService
         var existingLicense = await _licenseRepository.ExistsAsync(x => x.ApplicationId == applicationId);
         if (existingLicense)
         {
-            return ApiResponse<LicenseDto>.Fail(409, "A license has already been issued for this application.");
+            return ApiResponse<LicenseDto>.Fail(409, "تم إصدار رخصة لهذا الطلب بالفعل.");
         }
 
         // 2. Load Application
         var application = await _applicationRepository.GetByIdAsync(applicationId);
-        if (application == null) return ApiResponse<LicenseDto>.NotFound("Application not found.");
+        if (application == null) return ApiResponse<LicenseDto>.NotFound("الطلب غير موجود.");
 
         // 3. Validation: Status must be Approved
         if (application.Status != ApplicationStatus.Approved)
         {
-            return ApiResponse<LicenseDto>.Fail(400, "License can only be issued for approved applications.");
+            return ApiResponse<LicenseDto>.Fail(400, "يمكن إصدار الرخصة للطلبات المقبولة فقط.");
+        }
+
+        // 3.1 Check issuance payment is completed first
+        var paidPayments = await _paymentRepository.FindAsync(p => 
+            p.ApplicationId == applicationId && 
+            p.FeeType == FeeType.IssuanceFee &&
+            p.Status == PaymentStatus.Paid);
+
+        if (paidPayments == null || !paidPayments.Any())
+        {
+            return ApiResponse<LicenseDto>.Fail(400, "يرجى سداد رسوم الإصدار أولاً.");
         }
 
         // 4. Load Category for validity years
         var category = await _licenseCategoryRepository.GetByIdAsync(application.LicenseCategoryId);
-        if (category == null) return ApiResponse<LicenseDto>.Fail(400, "License category not found.");
+        if (category == null) return ApiResponse<LicenseDto>.Fail(400, "فئة الرخصة غير موجودة.");
 
         // 5. Load Holder User
         var holder = await _userRepository.GetByIdAsync(application.ApplicantId);
-        if (holder == null) return ApiResponse<LicenseDto>.Fail(400, "License holder user not found.");
+        if (holder == null) return ApiResponse<LicenseDto>.Fail(400, "صاحب الرخصة غير موجود.");
 
         // 6. Generate Metadata
         var licenseNumber = GenerateLicenseNumber();
@@ -138,7 +154,7 @@ public class LicenseService : ILicenseService
         }
 
         application.Status = ApplicationStatus.Issued;
-        application.CurrentStage = "10-Active";
+        application.CurrentStage = ApplicationStages.Stage10Issuance;
         _applicationRepository.Update(application);
         
         await _unitOfWork.SaveChangesAsync();
@@ -178,23 +194,31 @@ public class LicenseService : ILicenseService
         }
 
         var resultDto = _mapper.Map<LicenseDto>(license);
-        return ApiResponse<LicenseDto>.Ok(resultDto, "License issued successfully.");
+        return ApiResponse<LicenseDto>.Ok(resultDto, "تم إصدار الرخصة بنجاح.");
     }
 
-    public async Task<ApiResponse<LicenseDto>> GetByIdAsync(Guid id)
+    public async Task<ApiResponse<LicenseDto>> GetByIdAsync(Guid id, Guid userId, string role)
     {
         var license = await _licenseRepository.GetByIdAsync(id);
-        if (license == null) return ApiResponse<LicenseDto>.NotFound("License not found.");
+        if (license == null) return ApiResponse<LicenseDto>.NotFound("الرخصة غير موجودة.");
+        
+        // Ownership check for Applicants - can only see their own licenses
+        if (role == "Applicant" && license.HolderId != userId)
+            return ApiResponse<LicenseDto>.Fail(403, "غير مصرح لك.");
         
         var dto = _mapper.Map<LicenseDto>(license);
         return ApiResponse<LicenseDto>.Ok(dto);
     }
 
-    public async Task<ApiResponse<LicenseDto>> GetByApplicationIdAsync(Guid applicationId)
+    public async Task<ApiResponse<LicenseDto>> GetByApplicationIdAsync(Guid applicationId, Guid userId, string role)
     {
         var licenses = await _licenseRepository.FindAsync(x => x.ApplicationId == applicationId);
         var license = licenses.FirstOrDefault();
-        if (license == null) return ApiResponse<LicenseDto>.NotFound("No license found for this application.");
+        if (license == null) return ApiResponse<LicenseDto>.NotFound("لم يتم العثور على رخصة لهذا الطلب.");
+        
+        // Ownership check for Applicants
+        if (role == "Applicant" && license.HolderId != userId)
+            return ApiResponse<LicenseDto>.Fail(403, "غير مصرح لك.");
         
         var dto = _mapper.Map<LicenseDto>(license);
         return ApiResponse<LicenseDto>.Ok(dto);
@@ -213,9 +237,30 @@ public class LicenseService : ILicenseService
         }
     }
 
-    public async Task<ApiResponse<List<LicenseDto>>> GetUserLicensesAsync(Guid userId)
+    public async Task<ApiResponse<List<LicenseDto>>> GetUserLicensesAsync(Guid userId, string role)
     {
-        var licenses = await _licenseRepository.FindAsync(x => x.HolderId == userId);
+        // If Applicant role, only return their own licenses
+        // If Employee role, can query by userId parameter (for admin/user management)
+        
+        List<License> licenses;
+        
+        if (role == "Applicant")
+        {
+            // Applicants can only see their own licenses
+            licenses = await _licenseRepository.Query()
+                .Include(x => x.LicenseCategory)
+                .Where(x => x.HolderId == userId)
+                .ToListAsync();
+        }
+        else
+        {
+            // Employees query by userId parameter
+            licenses = await _licenseRepository.Query()
+                .Include(x => x.LicenseCategory)
+                .Where(x => x.HolderId == userId)
+                .ToListAsync();
+        }
+        
         var dtos = _mapper.Map<List<LicenseDto>>(licenses);
         return ApiResponse<List<LicenseDto>>.Ok(dtos);
     }
@@ -223,7 +268,7 @@ public class LicenseService : ILicenseService
     public async Task<ApiResponse<List<UpgradeTargetCategoryDto>>> GetUpgradeTargetsAsync(Guid licenseId)
     {
         var license = await _licenseRepository.GetByIdAsync(licenseId);
-        if (license == null) return ApiResponse<List<UpgradeTargetCategoryDto>>.Fail(404, "License not found.");
+        if (license == null) return ApiResponse<List<UpgradeTargetCategoryDto>>.Fail(404, "الرخصة غير موجودة.");
 
         var allCategories = await _licenseCategoryRepository.GetAllAsync();
         var targets = new List<UpgradeTargetCategoryDto>();

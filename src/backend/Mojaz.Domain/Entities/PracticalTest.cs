@@ -1,13 +1,11 @@
-using Mojaz.Domain.Common;
 using Mojaz.Domain.Enums;
-using System;
 
 namespace Mojaz.Domain.Entities;
 
 public class PracticalTest : SoftDeletableEntity
 {
-    public Guid ApplicationId { get; set; }
-    public Guid ExaminerId { get; set; }
+    public int ApplicationId { get; set; }
+    public int ExaminerId { get; set; }
     public int AttemptNumber { get; set; }
     public DateTime ConductedAt { get; set; } = DateTime.UtcNow;
     public int? Score { get; set; }

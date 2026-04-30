@@ -179,7 +179,7 @@ function useToast() {
         listeners.splice(index, 1)
       }
     }
-  }, [state])
+  }, []) // Empty deps - run once on mount, not on every state change
 
   return {
     ...state,

@@ -13,7 +13,7 @@ export const trainingKeys = {
   records: () => [...trainingKeys.all, 'records'] as const,
   record: (applicationId: string) => [...trainingKeys.records(), { applicationId }] as const,
   exemptions: () => [...trainingKeys.all, 'exemptions'] as const,
-  pendingExemptions: (params?: any) => [...trainingKeys.exemptions(), 'pending', { ...params }] as const,
+  pendingExemptions: (params?: { status?: string }) => [...trainingKeys.exemptions(), 'pending', { ...params }] as const,
   status: (applicationId: string) => [...trainingKeys.all, 'status', applicationId] as const,
 };
 
@@ -35,7 +35,7 @@ export const useUpdateTrainingHours = (applicationId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (request: { id?: string; data: any }) => {
+    mutationFn: async (request: { id?: string; data: CreateTrainingRecordRequest | UpdateTrainingHoursRequest }) => {
       if (request.id) {
         return TrainingService.addHours(request.id, request.data as UpdateTrainingHoursRequest);
       } else {

@@ -1,0 +1,1614 @@
+================================================================================
+                    مخطط علاقات الكيانات (ERD)
+                  لمنصة مُجاز - رخصة القيادة الحكومية
+================================================================================
+
+================================================================================
+                            المقدمة
+================================================================================
+
+يوضح هذا المستند مخطط علاقات الكيانات لقاعدة بيانات منصة مُجاز، وهي منصة حكومية
+متخصصة في إدارة إجراءات إصدار رخص القيادة. يعتمد التصميم على نمط Clean Architecture
+ويستخدم Entity Framework Core مع SQL Server.
+
+يتضمن المخطط 21 جدولاً تمثل الكيانات الأساسية والفرعية للمنصة.
+
+================================================================================
+                    1. الكيانات الرئيسية (Main Entities)
+================================================================================
+
+--------------------------------------------------------------------------------
+1.1 جدول Users (المستخدمون)
+--------------------------------------------------------------------------------
+
+الاسم:              Users
+الوصف:             جدول المستخدمين الرئيسي للنظام يدعم جميع الأدوار
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ FullNameAr             │ nvarchar(200)    │ NOT NULL                       │
+│ FullNameEn             │ nvarchar(200)    │ NOT NULL                       │
+│ NationalId             │ nvarchar(20)     │ NOT NULL, UNIQUE               │
+│ Email                  │ nvarchar(200)    │ NOT NULL, UNIQUE               │
+│ PhoneNumber            │ nvarchar(20)     │ NOT NULL                       │
+│ PasswordHash           │ nvarchar(500)    │ NOT NULL                       │
+│ Role                   │ int              │ NOT NULL (enum)                │
+│ AppRole                │ int              │ NULL (enum)                    │
+│ DateOfBirth            │ date             │ NULL                           │
+│ Gender                 │ int              │ NULL (enum)                    │
+│ Nationality            │ nvarchar(50)     │ NULL                           │
+│ BloodType              │ int              │ NULL (enum)                    │
+│ Address                │ nvarchar(500)    │ NULL                           │
+│ City                   │ nvarchar(100)    │ NULL                           │
+│ Region                 │ nvarchar(100)    │ NULL                           │
+│ ApplicantType         │ int              │ NULL (enum)                    │
+│ PreferredLanguage     │ nvarchar(10)     │ NOT NULL, DEFAULT 'ar'        │
+│ AppointmentPreference │ nvarchar(50)     │ NULL                           │
+│ NotificationPreferences│ nvarchar(max)   │ NULL (JSON)                    │
+│ RegistrationMethod    │ int              │ NOT NULL (enum)                │
+│ IsEmailVerified       │ bit              │ NOT NULL, DEFAULT 0            │
+│ IsPhoneVerified       │ bit              │ NOT NULL, DEFAULT 0            │
+│ EmailVerifiedAt        │ datetime2        │ NULL                           │
+│ PhoneVerifiedAt       │ datetime2        │ NULL                           │
+│ IsActive              │ bit              │ NOT NULL, DEFAULT 1            │
+│ IsLocked              │ bit              │ NOT NULL, DEFAULT 0            │
+│ RequiresPasswordReset │ bit              │ NOT NULL, DEFAULT 0            │
+│ EnableEmail           │ bit              │ NOT NULL, DEFAULT 1            │
+│ EnableSms             │ bit              │ NOT NULL, DEFAULT 1            │
+│ EnablePush            │ bit              │ NOT NULL, DEFAULT 1            │
+│ IsSecurityBlocked     │ bit              │ NOT NULL, DEFAULT 0            │
+│ FailedLoginAttempts   │ int              │ NOT NULL, DEFAULT 0            │
+│ LockoutEnd            │ datetime2        │ NULL                           │
+│ LastLoginAt           │ datetime2        │ NULL                           │
+│ CreatedAt             │ datetime2        │ NOT NULL, DEFAULT GETUTCDATE() │
+│ UpdatedAt             │ datetime2        │ NULL                           │
+│ CreatedBy             │ uniqueidentifier │ NULL                           │
+│ UpdatedBy             │ uniqueidentifier │ NULL                           │
+│ IsDeleted             │ bit              │ NOT NULL, DEFAULT 0            │
+│ DeletedAt             │ datetime2        │ NULL                           │
+│ DeletedBy             │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+- FK (Nullable): DeletedBy → Users(Id)
+
+القيود:
+- UNIQUE: NationalId
+- UNIQUE: Email
+
+الفهارس:
+- IX_Users_NationalId (فهرس فريد على رقم الهوية)
+- IX_Users_Email (فهرس فريد على البريد الإلكتروني)
+- IX_Users_PhoneNumber (فهرس على رقم الهاتف)
+- IX_Users_Role (فهرس على الدور)
+- IX_Users_IsActive (فهرس على حالة التفعيل)
+
+
+--------------------------------------------------------------------------------
+1.2 جدول Applications (طلبات الترخيص)
+--------------------------------------------------------------------------------
+
+الاسم:              Applications
+الوصف:             جدول الطلبات الرئيسية للحصول على رخصة القيادة
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ ApplicationNumber     │ nvarchar(20)     │ NOT NULL, UNIQUE               │
+│ ApplicantId           │ uniqueidentifier │ NOT NULL                       │
+│ ServiceType           │ int              │ NOT NULL (enum)                │
+│ LicenseCategoryId     │ uniqueidentifier │ NOT NULL                       │
+│ BranchId              │ uniqueidentifier │ NULL                           │
+│ Status                │ int              │ NOT NULL, DEFAULT 0 (enum)     │
+│ CurrentStage         │ nvarchar(50)     │ NOT NULL                       │
+│ PreferredLanguage     │ nvarchar(10)     │ NOT NULL, DEFAULT 'ar'        │
+│ SpecialNeeds         │ nvarchar(500)    │ NULL                           │
+│ DataAccuracyConfirmed │ bit              │ NOT NULL, DEFAULT 0            │
+│ SubmittedAt          │ datetime2        │ NULL                           │
+│ ReviewedBy           │ uniqueidentifier │ NULL                           │
+│ ReviewedAt           │ datetime2        │ NULL                           │
+│ Notes                │ nvarchar(max)    │ NULL                           │
+│ RejectionReason      │ nvarchar(500)    │ NULL                           │
+│ ExpiresAt            │ datetime2        │ NULL                           │
+│ CancelledAt          │ datetime2        │ NULL                           │
+│ CancellationReason   │ nvarchar(500)    │ NULL                           │
+│ TheoryAttemptCount   │ int              │ NOT NULL, DEFAULT 0            │
+│ PracticalAttemptCount│ int              │ NOT NULL, DEFAULT 0            │
+│ AdditionalTrainingRequired │ bit       │ NOT NULL, DEFAULT 0            │
+│ FinalDecision         │ int              │ NULL (enum)                    │
+│ FinalDecisionBy       │ uniqueidentifier │ NULL                           │
+│ FinalDecisionAt       │ datetime2        │ NULL                           │
+│ FinalDecisionReason   │ nvarchar(500)   │ NULL                           │
+│ ReturnToStage        │ nvarchar(50)     │ NULL                           │
+│ ManagerNotes         │ nvarchar(max)    │ NULL                           │
+│ SecurityStatus       │ int              │ NOT NULL, DEFAULT 0 (enum)    │
+│ SecurityVerifiedBy   │ uniqueidentifier │ NULL                           │
+│ SecurityVerifiedAt   │ datetime2        │ NULL                           │
+│ SecurityNotes       │ nvarchar(500)   │ NULL                           │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+│ IsDeleted            │ bit              │ NOT NULL, DEFAULT 0            │
+│ DeletedAt            │ datetime2        │ NULL                           │
+│ DeletedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK: ApplicantId → Users(Id) (إلزامي)
+- FK: LicenseCategoryId → LicenseCategories(Id) (إلزامي)
+- FK (Nullable): BranchId → Users(Id)
+- FK (Nullable): ReviewedBy → Users(Id)
+- FK (Nullable): FinalDecisionBy → Users(Id)
+- FK (Nullable): SecurityVerifiedBy → Users(Id)
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+- FK (Nullable): DeletedBy → Users(Id)
+
+القيود:
+- UNIQUE: ApplicationNumber
+
+الفهارس:
+- IX_Applications_ApplicationNumber (فهرس فريد على رقم الطلب)
+- IX_Applications_ApplicantId (فهرس على مقدم الطلب)
+- IX_Applications_LicenseCategoryId (فهرس على فئة الرخصة)
+- IX_Applications_Status (فهرس على الحالة)
+- IX_Applications_CurrentStage (فهرس على المرحلة الحالية)
+- IX_Applications_SubmittedAt (فهرس على تاريخ التقديم)
+- IX_Applications_ApplicantId_Status (فهرس مركب: مقدم الطلب + الحالة)
+
+
+--------------------------------------------------------------------------------
+1.3 جدول LicenseCategories (فئات الرخصة)
+--------------------------------------------------------------------------------
+
+الاسم:              LicenseCategories
+الوصف:             جدول فئات رخص القيادة (A, B, C, D, E, F)
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ Code                   │ int              │ NOT NULL (enum)                │
+│ NameAr                │ nvarchar(100)    │ NOT NULL                       │
+│ NameEn                │ nvarchar(100)    │ NOT NULL                       │
+│ MinimumAge            │ int              │ NOT NULL                       │
+│ RequiresTraining      │ bit              │ NOT NULL                       │
+│ IsActive              │ bit              │ NOT NULL, DEFAULT 1            │
+│ ValidityYears        │ int              │ NOT NULL                       │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+
+الفهارس:
+- IX_LicenseCategories_Code (فهرس فريد على код الفئة)
+- IX_LicenseCategories_IsActive (فهرس على التفعيل)
+
+
+--------------------------------------------------------------------------------
+1.4 جدول ApplicationDocuments (وثائق الطلب)
+--------------------------------------------------------------------------------
+
+الاسم:              ApplicationDocuments
+الوصف:             جدول الوثائق المرفقة بالطلبات
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ ApplicationId         │ uniqueidentifier │ NOT NULL                       │
+│ DocumentType         │ int              │ NOT NULL (enum)                │
+│ OriginalFileName     │ nvarchar(255)    │ NOT NULL                       │
+│ StoredFileName       │ nvarchar(255)    │ NOT NULL                       │
+│ FilePath             │ nvarchar(500)    │ NOT NULL                       │
+│ FileSizeBytes        │ bigint           │ NOT NULL                       │
+│ ContentType          │ nvarchar(100)    │ NOT NULL                       │
+│ IsRequired           │ bit              │ NOT NULL                       │
+│ Status               │ int              │ NOT NULL, DEFAULT 0 (enum)    │
+│ ReviewedBy           │ uniqueidentifier │ NULL                           │
+│ ReviewedAt           │ datetime2        │ NULL                           │
+│ RejectionReason      │ nvarchar(500)    │ NULL                           │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+│ IsDeleted            │ bit              │ NOT NULL, DEFAULT 0            │
+│ DeletedAt            │ datetime2        │ NULL                           │
+│ DeletedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK: ApplicationId → Applications(Id) (إلزامي)
+- FK (Nullable): ReviewedBy → Users(Id)
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+- FK (Nullable): DeletedBy → Users(Id)
+
+الفهارس:
+- IX_ApplicationDocuments_ApplicationId (فهرس على الطلب)
+- IX_ApplicationDocuments_DocumentType (فهرس على نوع الوثيقة)
+- IX_ApplicationDocuments_Status (فهرس على الحالة)
+
+
+--------------------------------------------------------------------------------
+1.5 جدول MedicalExaminations (الفحوصات الطبية)
+--------------------------------------------------------------------------------
+
+الاسم:              MedicalExaminations
+الوصف:             جدول سجلات الفحوصات الطبية
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ ApplicationId         │ uniqueidentifier │ NOT NULL                       │
+│ DoctorId              │ uniqueidentifier │ NOT NULL                       │
+│ ExaminedAt           │ datetime2        │ NOT NULL, DEFAULT GETUTCDATE() │
+│ FitnessResult        │ int              │ NOT NULL (enum)                │
+│ BloodType            │ int              │ NULL (enum)                    │
+│ Notes                │ nvarchar(max)    │ NULL                           │
+│ ReportReference      │ nvarchar(100)    │ NULL                           │
+│ ValidUntil           │ datetime2        │ NULL                           │
+│ CertificatePath      │ nvarchar(500)    │ NULL                           │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+│ IsDeleted            │ bit              │ NOT NULL, DEFAULT 0            │
+│ DeletedAt            │ datetime2        │ NULL                           │
+│ DeletedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK: ApplicationId → Applications(Id) (إلزامي)
+- FK: DoctorId → Users(Id) (إلزامي)
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+- FK (Nullable): DeletedBy → Users(Id)
+
+الفهارس:
+- IX_MedicalExaminations_ApplicationId (فهرس على الطلب)
+- IX_MedicalExaminations_DoctorId (فهرس على الطبيب)
+- IX_MedicalExaminations_ExaminedAt (فهرس على تاريخ الفحص)
+
+
+--------------------------------------------------------------------------------
+1.6 جدول TheoryTests (الاختبارات النظرية)
+--------------------------------------------------------------------------------
+
+الاسم:              TheoryTests
+الوصف:             جدول اختبارات القيادة النظرية
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ ApplicationId         │ uniqueidentifier │ NOT NULL                       │
+│ ExaminerId           │ uniqueidentifier │ NOT NULL                       │
+│ AttemptNumber        │ int              │ NOT NULL                       │
+│ ConductedAt          │ datetime2        │ NOT NULL, DEFAULT GETUTCDATE() │
+│ Score                │ int              │ NULL                           │
+│ PassingScore         │ int              │ NOT NULL                       │
+│ Result               │ int              │ NOT NULL (enum)                │
+│ IsAbsent             │ bit              │ NOT NULL, DEFAULT 0            │
+│ Notes                │ nvarchar(max)    │ NULL                           │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+│ IsDeleted            │ bit              │ NOT NULL, DEFAULT 0            │
+│ DeletedAt            │ datetime2        │ NULL                           │
+│ DeletedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK: ApplicationId → Applications(Id) (إلزامي)
+- FK: ExaminerId → Users(Id) (إلزامي)
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+- FK (Nullable): DeletedBy → Users(Id)
+
+الفهارس:
+- IX_TheoryTests_ApplicationId (فهرس على الطلب)
+- IX_TheoryTests_ExaminerId (فهرس على الممتحن)
+- IX_TheoryTests_ConductedAt (فهرس على تاريخ الاختبار)
+- IX_TheoryTests_ApplicationId_AttemptNumber (فهرس مركب)
+
+
+--------------------------------------------------------------------------------
+1.7 جدول PracticalTests (الاختبارات العملية)
+--------------------------------------------------------------------------------
+
+الاسم:              PracticalTests
+الوصف:             جدول اختبارات القيادة العملية
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ ApplicationId         │ uniqueidentifier │ NOT NULL                       │
+│ ExaminerId           │ uniqueidentifier │ NOT NULL                       │
+│ AttemptNumber        │ int              │ NOT NULL                       │
+│ ConductedAt          │ datetime2        │ NOT NULL, DEFAULT GETUTCDATE() │
+│ Score                │ int              │ NULL                           │
+│ PassingScore         │ int              │ NOT NULL                       │
+│ IsAbsent             │ bit              │ NOT NULL, DEFAULT 0            │
+│ Result               │ int              │ NOT NULL (enum)                │
+│ Notes                │ nvarchar(max)    │ NULL                           │
+│ VehicleUsed          │ nvarchar(100)    │ NULL                           │
+│ RequiresAdditionalTraining │ bit         │ NOT NULL, DEFAULT 0            │
+│ AdditionalHoursRequired│ int            │ NULL                           │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+│ IsDeleted            │ bit              │ NOT NULL, DEFAULT 0            │
+│ DeletedAt            │ datetime2        │ NULL                           │
+│ DeletedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK: ApplicationId → Applications(Id) (إلزامي)
+- FK: ExaminerId → Users(Id) (إلزامي)
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+- FK (Nullable): DeletedBy → Users(Id)
+
+الفهارس:
+- IX_PracticalTests_ApplicationId (فهرس على الطلب)
+- IX_PracticalTests_ExaminerId (فهرس على الممتحن)
+- IX_PracticalTests_ConductedAt (فهرس على تاريخ الاختبار)
+- IX_PracticalTests_ApplicationId_AttemptNumber (فهرس مركب)
+
+
+--------------------------------------------------------------------------------
+1.8 جدول TrainingRecords (سجلات التدريب)
+--------------------------------------------------------------------------------
+
+الاسم:              TrainingRecords
+الوصف:             جدول سجلات التدريب على القيادة
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ ApplicationId         │ uniqueidentifier │ NOT NULL                       │
+│ SchoolName            │ nvarchar(200)    │ NOT NULL                       │
+│ CertificateNumber    │ nvarchar(100)    │ NULL                           │
+│ CompletedHours       │ int              │ NOT NULL                       │
+│ TotalHoursRequired   │ int              │ NOT NULL                       │
+│ TrainingStatus       │ int              │ NOT NULL, DEFAULT 0 (enum)     │
+│ IsExempted           │ bit              │ NOT NULL, DEFAULT 0            │
+│ ExemptionReason      │ nvarchar(500)    │ NULL                           │
+│ ExemptionDocumentId  │ uniqueidentifier │ NULL                           │
+│ ExemptionApprovedBy  │ uniqueidentifier │ NULL                           │
+│ ExemptionApprovedAt  │ datetime2        │ NULL                           │
+│ ExemptionRejectionReason │ nvarchar(500) │ NULL                           │
+│ CompletedAt          │ datetime2        │ NULL                           │
+│ TrainingDate         │ date             │ NULL                           │
+│ TrainerName         │ nvarchar(100)    │ NULL                           │
+│ CenterName           │ nvarchar(200)    │ NULL                           │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+│ IsDeleted            │ bit              │ NOT NULL, DEFAULT 0            │
+│ DeletedAt            │ datetime2        │ NULL                           │
+│ DeletedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK: ApplicationId → Applications(Id) (إلزامي)
+- FK (Nullable): ExemptionDocumentId → ApplicationDocuments(Id)
+- FK (Nullable): ExemptionApprovedBy → Users(Id)
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+- FK (Nullable): DeletedBy → Users(Id)
+
+الفهارس:
+- IX_TrainingRecords_ApplicationId (فهرس على الطلب)
+- IX_TrainingRecords_TrainingStatus (فهرس على حالة التدريب)
+
+
+--------------------------------------------------------------------------------
+1.9 جدول PaymentTransactions (المعاملات المالية)
+--------------------------------------------------------------------------------
+
+الاسم:              PaymentTransactions
+الوصف:             جدول المعاملات المالية والمدفوعات
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ ApplicationId         │ uniqueidentifier │ NOT NULL                       │
+│ FeeType              │ int              │ NOT NULL (enum)                │
+│ Amount                │ decimal(18,2)   │ NOT NULL                       │
+│ Currency             │ nvarchar(3)      │ NOT NULL, DEFAULT 'SAR'        │
+│ Status                │ int              │ NOT NULL (enum)                │
+│ PaymentMethod         │ nvarchar(50)    │ NULL                           │
+│ TransactionReference  │ nvarchar(100)   │ NULL                           │
+│ PaidAt               │ datetime2        │ NULL                           │
+│ FailedAt             │ datetime2        │ NULL                           │
+│ FailureReason        │ nvarchar(500)    │ NULL                           │
+│ ReceiptPath          │ nvarchar(500)    │ NULL                           │
+│ ReceiptNumber        │ nvarchar(50)    │ NULL                           │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+│ IsDeleted            │ bit              │ NOT NULL, DEFAULT 0            │
+│ DeletedAt            │ datetime2        │ NULL                           │
+│ DeletedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK: ApplicationId → Applications(Id) (إلزامي)
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+- FK (Nullable): DeletedBy → Users(Id)
+
+الفهارس:
+- IX_PaymentTransactions_ApplicationId (فهرس على الطلب)
+- IX_PaymentTransactions_Status (فهرس على الحالة)
+- IX_PaymentTransactions_TransactionReference (فهرس على مرجع المعاملة)
+
+
+--------------------------------------------------------------------------------
+1.10 جدول Licenses (الرخص)
+--------------------------------------------------------------------------------
+
+الاسم:              Licenses
+الوصف:             جدول رخص القيادة الصادرة
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ LicenseNumber         │ nvarchar(20)     │ NOT NULL, UNIQUE               │
+│ ApplicationId         │ uniqueidentifier │ NOT NULL                       │
+│ HolderId             │ uniqueidentifier │ NOT NULL                       │
+│ LicenseCategoryId     │ uniqueidentifier │ NOT NULL                       │
+│ BranchId              │ uniqueidentifier │ NULL                           │
+│ IssuedAt             │ datetime2        │ NOT NULL, DEFAULT GETUTCDATE() │
+│ ExpiresAt            │ datetime2        │ NOT NULL                       │
+│ IssuedBy             │ uniqueidentifier │ NULL                           │
+│ Status                │ int              │ NOT NULL, DEFAULT 0 (enum)    │
+│ QrCode               │ nvarchar(500)    │ NULL                           │
+│ BlobUrl              │ nvarchar(500)    │ NULL                           │
+│ PrintedAt            │ datetime2        │ NULL                           │
+│ DownloadedAt         │ datetime2        │ NULL                           │
+│ ReplacementCount     │ int              │ NOT NULL, DEFAULT 0            │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+│ IsDeleted            │ bit              │ NOT NULL, DEFAULT 0            │
+│ DeletedAt            │ datetime2        │ NULL                           │
+│ DeletedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK: ApplicationId → Applications(Id) (إلزامي)
+- FK: HolderId → Users(Id) (إلزامي)
+- FK: LicenseCategoryId → LicenseCategories(Id) (إلزامي)
+- FK (Nullable): BranchId → Users(Id)
+- FK (Nullable): IssuedBy → Users(Id)
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+- FK (Nullable): DeletedBy → Users(Id)
+
+القيود:
+- UNIQUE: LicenseNumber
+
+الفهارس:
+- IX_Licenses_LicenseNumber (فهرس فريد على رقم الرخصة)
+- IX_Licenses_ApplicationId (فهرس على الطلب)
+- IX_Licenses_HolderId (فهرس على صاحب الرخصة)
+- IX_Licenses_ExpiresAt (فهرس على تاريخ الانتهاء)
+- IX_Licenses_Status (فهرس على الحالة)
+
+
+--------------------------------------------------------------------------------
+1.11 جدول Notifications (الإشعارات)
+--------------------------------------------------------------------------------
+
+الاسم:              Notifications
+الوصف:             جدول الإشعارات الداخلية للتطبيق
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ UserId               │ uniqueidentifier │ NOT NULL                       │
+│ ApplicationId         │ uniqueidentifier │ NULL                           │
+│ EventType            │ int              │ NOT NULL (enum)                │
+│ TitleAr              │ nvarchar(200)    │ NOT NULL                       │
+│ TitleEn              │ nvarchar(200)    │ NOT NULL                       │
+│ MessageAr            │ nvarchar(1000)   │ NOT NULL                       │
+│ MessageEn            │ nvarchar(1000)   │ NOT NULL                       │
+│ IsRead               │ bit              │ NOT NULL, DEFAULT 0            │
+│ ReadAt               │ datetime2        │ NULL                           │
+│ SentAt               │ datetime2        │ NOT NULL, DEFAULT GETUTCDATE() │
+│ RelatedEntityId     │ uniqueidentifier │ NULL                           │
+│ RelatedEntityType   │ nvarchar(100)    │ NULL                           │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK: UserId → Users(Id) (إلزامي)
+- FK (Nullable): ApplicationId → Applications(Id)
+
+الفهارس:
+- IX_Notifications_UserId (فهرس على المستخدم)
+- IX_Notifications_ApplicationId (فهرس على الطلب)
+- IX_Notifications_IsRead (فهرس على حالة القراءة)
+- IX_Notifications_SentAt (فهرس على وقت الإرسال)
+
+
+--------------------------------------------------------------------------------
+1.12 جدول Appointments (المواعيد)
+--------------------------------------------------------------------------------
+
+الاسم:              Appointments
+الوصف:             جدول مواعيد الفحوصات والاختبارات
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ ApplicationId         │ uniqueidentifier │ NOT NULL                       │
+│ AppointmentType       │ int              │ NOT NULL (enum)                │
+│ ScheduledDate        │ date             │ NOT NULL                       │
+│ TimeSlot             │ nvarchar(10)     │ NOT NULL                       │
+│ BranchId              │ uniqueidentifier │ NULL                           │
+│ AssignedStaffId       │ uniqueidentifier │ NULL                           │
+│ Status                │ int              │ NOT NULL, DEFAULT 0 (enum)    │
+│ Notes                │ nvarchar(500)    │ NULL                           │
+│ CancelledAt          │ datetime2        │ NULL                           │
+│ CancellationReason   │ nvarchar(500)    │ NULL                           │
+│ CheckInTime         │ time             │ NULL                           │
+│ RescheduleCount      │ int              │ NOT NULL, DEFAULT 0            │
+│ ReminderSent         │ bit              │ NOT NULL, DEFAULT 0            │
+│ RowVersion          │ timestamp        │ NULL (concurrency)             │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+│ IsDeleted            │ bit              │ NOT NULL, DEFAULT 0            │
+│ DeletedAt            │ datetime2        │ NULL                           │
+│ DeletedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK: ApplicationId → Applications(Id) (إلزامي)
+- FK (Nullable): BranchId → Users(Id)
+- FK (Nullable): AssignedStaffId → Users(Id)
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+- FK (Nullable): DeletedBy → Users(Id)
+
+الفهارس:
+- IX_Appointments_ApplicationId (فهرس على الطلب)
+- IX_Appointments_ScheduledDate (فهرس على التاريخ المجدول)
+- IX_Appointments_Status (فهرس على الحالة)
+- IX_Appointments_AssignedStaffId (فهرس على الموظف المكلف)
+
+
+--------------------------------------------------------------------------------
+1.13 جدول AuditLogs (سجلات التدقيق)
+--------------------------------------------------------------------------------
+
+الاسم:              AuditLogs
+الوصف:             جدول سجلات تدقيق النظام
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ UserId               │ uniqueidentifier │ NULL                           │
+│ ActionType           │ nvarchar(50)     │ NOT NULL                       │
+│ ActionCategory       │ nvarchar(50)     │ NOT NULL                       │
+│ EntityName           │ nvarchar(100)    │ NOT NULL                       │
+│ EntityId            │ nvarchar(100)    │ NOT NULL                       │
+│ Payload              │ nvarchar(max)    │ NOT NULL (JSON)                │
+│ IpAddress            │ nvarchar(50)     │ NULL                           │
+│ UserAgent            │ nvarchar(500)    │ NULL                           │
+│ IsSuccess            │ bit              │ NOT NULL, DEFAULT 1            │
+│ Timestamp            │ datetime2        │ NOT NULL, DEFAULT GETUTCDATE() │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK (Nullable): UserId → Users(Id)
+
+الفهارس:
+- IX_AuditLogs_UserId (فهرس على المستخدم)
+- IX_AuditLogs_Timestamp (فهرس على الوقت)
+- IX_AuditLogs_ActionType (فهرس على نوع الإجراء)
+- IX_AuditLogs_EntityName_EntityId (فهرس مركب)
+
+
+--------------------------------------------------------------------------------
+1.14 جدول SystemSettings (إعدادات النظام)
+--------------------------------------------------------------------------------
+
+الاسم:              SystemSettings
+الوصف:             جدول إعدادات النظام القابلة للتكوين
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ SettingKey            │ nvarchar(100)    │ NOT NULL, UNIQUE               │
+│ SettingValue         │ nvarchar(max)    │ NOT NULL                       │
+│ Category             │ nvarchar(50)     │ NULL                           │
+│ Description          │ nvarchar(500)    │ NULL                           │
+│ IsEncrypted          │ bit              │ NOT NULL, DEFAULT 0            │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+
+القيود:
+- UNIQUE: SettingKey
+
+الفهارس:
+- IX_SystemSettings_SettingKey (فهرس فريد على المفتاح)
+- IX_SystemSettings_Category (فهرس على الفئة)
+
+
+--------------------------------------------------------------------------------
+1.15 جدول FeeStructures (هيكل الرسوم)
+--------------------------------------------------------------------------------
+
+الاسم:              FeeStructures
+الوصف:             جدول هيكل رسوم الخدمات
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ FeeType              │ int              │ NOT NULL (enum)                │
+│ LicenseCategoryId    │ uniqueidentifier │ NULL                           │
+│ Amount                │ decimal(18,2)   │ NOT NULL                       │
+│ Currency             │ nvarchar(3)      │ NOT NULL, DEFAULT 'SAR'        │
+│ EffectiveFrom        │ datetime2        │ NOT NULL                       │
+│ EffectiveTo         │ datetime2        │ NULL                           │
+│ IsActive            │ bit              │ NOT NULL, DEFAULT 1             │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+│ IsDeleted            │ bit              │ NOT NULL, DEFAULT 0            │
+│ DeletedAt            │ datetime2        │ NULL                           │
+│ DeletedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK (Nullable): LicenseCategoryId → LicenseCategories(Id)
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+- FK (Nullable): DeletedBy → Users(Id)
+
+الفهارس:
+- IX_FeeStructures_FeeType (فهرس على نوع الرسم)
+- IX_FeeStructures_LicenseCategoryId (فهرس على فئة الرخصة)
+- IX_FeeStructures_IsActive (فهرس على التفعيل)
+
+
+--------------------------------------------------------------------------------
+1.16 جدول RefreshTokens (رموز التحديث)
+--------------------------------------------------------------------------------
+
+الاسم:              RefreshTokens
+الوصف:             جدول رموز تحديث JWT
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ UserId               │ uniqueidentifier │ NOT NULL                       │
+│ Token                │ nvarchar(500)    │ NOT NULL, UNIQUE               │
+│ ExpiresAt            │ datetime2        │ NOT NULL                       │
+│ IsRevoked            │ bit              │ NOT NULL, DEFAULT 0            │
+│ RevokedAt           │ datetime2        │ NULL                           │
+│ ReplacedByToken     │ nvarchar(500)    │ NULL                           │
+│ CreatedByIp         │ nvarchar(50)     │ NULL                           │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK: UserId → Users(Id) (إلزامي)
+
+القيود:
+- UNIQUE: Token
+
+الفهارس:
+- IX_RefreshTokens_Token (فهرس فريد على الرمز)
+- IX_RefreshTokens_UserId (فهرس على المستخدم)
+- IX_RefreshTokens_ExpiresAt (فهرس على تاريخ الانتهاء)
+
+
+--------------------------------------------------------------------------------
+1.17 جدول OtpCodes (رموز التحقق)
+--------------------------------------------------------------------------------
+
+الاسم:              OtpCodes
+الوصف:             جدول رموز التحقق OTP
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ UserId               │ uniqueidentifier │ NOT NULL                       │
+│ Destination          │ nvarchar(200)    │ NOT NULL                       │
+│ DestinationType      │ int              │ NOT NULL (enum)                │
+│ CodeHash             │ nvarchar(200)    │ NOT NULL                       │
+│ Purpose              │ int              │ NOT NULL (enum)                │
+│ ExpiresAt            │ datetime2        │ NOT NULL                       │
+│ IsUsed               │ bit              │ NOT NULL, DEFAULT 0            │
+│ UsedAt               │ datetime2        │ NULL                           │
+│ IsInvalidated        │ bit              │ NOT NULL, DEFAULT 0            │
+│ AttemptCount        │ int              │ NOT NULL, DEFAULT 0            │
+│ MaxAttempts         │ int              │ NOT NULL                       │
+│ IpAddress            │ nvarchar(50)     │ NULL                           │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK: UserId → Users(Id) (إلزامي)
+
+الفهارس:
+- IX_OtpCodes_UserId (فهرس على المستخدم)
+- IX_OtpCodes_Destination (فهرس على الوجهة)
+- IX_OtpCodes_ExpiresAt (فهرس على وقت الانتهاء)
+
+
+--------------------------------------------------------------------------------
+1.18 جدول PushTokens (رموز الإشعارات الفورية)
+--------------------------------------------------------------------------------
+
+الاسم:              PushTokens
+الوصف:             جدول رموز أجهزة الإشعارات الفورية
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ UserId               │ uniqueidentifier │ NOT NULL                       │
+│ Token                │ nvarchar(500)    │ NOT NULL                       │
+│ DeviceType           │ nvarchar(50)     │ NOT NULL                       │
+│ LastUsedAt          │ datetime2        │ NULL                           │
+│ IsActive            │ bit              │ NOT NULL, DEFAULT 1            │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+│ IsDeleted            │ bit              │ NOT NULL, DEFAULT 0            │
+│ DeletedAt            │ datetime2        │ NULL                           │
+│ DeletedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK: UserId → Users(Id) (إلزامي)
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+- FK (Nullable): DeletedBy → Users(Id)
+
+الفهارس:
+- IX_PushTokens_UserId (فهرس على المستخدم)
+- IX_PushTokens_Token (فهرس على الرمز)
+- IX_PushTokens_IsActive (فهرس على التفعيل)
+
+
+--------------------------------------------------------------------------------
+1.19 جدول EmailLogs (سجلات البريد الإلكتروني)
+--------------------------------------------------------------------------------
+
+الاسم:              EmailLogs
+الوصف:             جدول سجلات إرسال البريد الإلكتروني
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ RecipientEmail        │ nvarchar(200)    │ NOT NULL                       │
+│ TemplateName          │ nvarchar(100)    │ NOT NULL                       │
+│ ReferenceId          │ nvarchar(100)    │ NOT NULL                       │
+│ Status                │ int              │ NOT NULL (enum)                │
+│ RetryCount           │ int              │ NOT NULL, DEFAULT 0            │
+│ SentAt               │ datetime2        │ NOT NULL                       │
+│ ErrorMessage         │ nvarchar(500)    │ NULL                           │
+│ IsDeleted            │ bit              │ NOT NULL, DEFAULT 0            │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+
+الفهارس:
+- IX_EmailLogs_RecipientEmail (فهرس على البريد المستلم)
+- IX_EmailLogs_Status (فهرس على الحالة)
+- IX_EmailLogs_SentAt (فهرس على وقت الإرسال)
+
+
+--------------------------------------------------------------------------------
+1.20 جدول SmsLogs (سجلات الرسائل النصية)
+--------------------------------------------------------------------------------
+
+الاسم:              SmsLogs
+الوصف:             جدول سجلات إرسال الرسائل النصية
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ ApplicationId         │ uniqueidentifier │ NULL                           │
+│ UserId               │ uniqueidentifier │ NOT NULL                       │
+│ RecipientNumber      │ nvarchar(20)     │ NOT NULL                       │
+│ TemplateType         │ nvarchar(50)     │ NOT NULL                       │
+│ Status                │ int              │ NOT NULL (enum)                │
+│ TwilioMessageId      │ nvarchar(100)    │ NULL                           │
+│ Cost                 │ decimal(10,4)   │ NULL                           │
+│ ErrorMessage         │ nvarchar(500)    │ NULL                           │
+│ IsDeleted            │ bit              │ NOT NULL, DEFAULT 0            │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+│ UpdatedAt            │ datetime2        │ NULL                           │
+│ CreatedBy            │ uniqueidentifier │ NULL                           │
+│ UpdatedBy            │ uniqueidentifier │ NULL                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK (Nullable): ApplicationId → Applications(Id)
+- FK: UserId → Users(Id) (إلزامي)
+- FK (Nullable): CreatedBy → Users(Id)
+- FK (Nullable): UpdatedBy → Users(Id)
+
+الفهارس:
+- IX_SmsLogs_UserId (فهرس على المستخدم)
+- IX_SmsLogs_ApplicationId (فهرس على الطلب)
+- IX_SmsLogs_RecipientNumber (فهرس على الرقم المستلم)
+- IX_SmsLogs_Status (فهرس على الحالة)
+
+
+--------------------------------------------------------------------------------
+1.21 جدول ApplicationStatusHistory (سجل تغييرات الحالة)
+--------------------------------------------------------------------------------
+
+الاسم:              ApplicationStatusHistory
+الوصف:             جدول سجل تغييرات حالة الطلب
+
+الأعمدة:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Column Name            │ Data Type        │ Constraints                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Id                     │ uniqueidentifier │ PK, NOT NULL                   │
+│ ApplicationId         │ uniqueidentifier │ NOT NULL                       │
+│ FromStatus           │ int              │ NOT NULL (enum)                │
+│ ToStatus             │ int              │ NOT NULL (enum)                │
+│ ChangedBy            │ uniqueidentifier │ NOT NULL                       │
+│ Notes                │ nvarchar(500)    │ NULL                           │
+│ ChangedAt            │ datetime2        │ NOT NULL, DEFAULT GETUTCDATE() │
+│ CreatedAt            │ datetime2        │ NOT NULL                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+المفاتيح الأساسية:
+- PK: Id
+
+المفاتيح الخارجية:
+- FK: ApplicationId → Applications(Id) (إلزامي)
+- FK: ChangedBy → Users(Id) (إلزامي)
+
+الفهارس:
+- IX_ApplicationStatusHistory_ApplicationId (فهرس على الطلب)
+- IX_ApplicationStatusHistory_ChangedAt (فهرس على وقت التغيير)
+
+
+================================================================================
+                    2. العلاقات (Relationships)
+================================================================================
+
+------------------------------------------------------------------------------
+2.1 العلاقة بين Users و Applications
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────┐
+│    Users     │ 1    N  │  Applications│
+│   (مقدم)     │─────────│   (طلبات)    │
+└──────────────┘         └──────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل مقدم طلب يمكنه تقديم عدة طلبات ترخيص
+PK/FK:       Users.Id → Applications.ApplicantId
+
+
+------------------------------------------------------------------------------
+2.2 العلاقة بين Applications و ApplicationDocuments
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌─────────────────────┐
+│ Applications│ 1    N  │ ApplicationDocuments│
+│   (طلبات)    │─────────│    (وثائق)          │
+└──────────────┘         └─────────────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل طلب يحتوي على عدة وثائق
+PK/FK:       Applications.Id → ApplicationDocuments.ApplicationId
+
+
+------------------------------------------------------------------------------
+2.3 العلاقة بين Applications و Licenses
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────┐
+│ Applications│ 1    1  │   Licenses   │
+│   (طلبات)    │─────────│   (رخص)      │
+└──────────────┘         └──────────────┘
+
+النوع:       One-to-One (واحد لواحد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل طلب يقابله رخصة واحدة فقط عند الإصدار
+PK/FK:       Applications.Id → Licenses.ApplicationId
+
+
+------------------------------------------------------------------------------
+2.4 العلاقة بين LicenseCategories و Applications
+------------------------------------------------------------------------------
+
+┌──────────────────┐         ┌──────────────┐
+│LicenseCategories │ 1    N  │  Applications │
+│  (فئات الرخصة)   │─────────│   (طلبات)     │
+└──────────────────┘         └──────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل فئة رخصة يمكن أن تحتوي على عدة طلبات
+PK/FK:       LicenseCategories.Id → Applications.LicenseCategoryId
+
+
+------------------------------------------------------------------------------
+2.5 العلاقة بين Users (أطباء) و MedicalExaminations
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────────┐
+│    Users     │ 1    N  │MedicalExaminations│
+│  (أطباء)    │─────────│  (فحوصات طبية)   │
+└──────────────┘         └──────────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل طبيب يجري عدة فحوصات طبية
+PK/FK:       Users.Id → MedicalExaminations.DoctorId
+
+
+------------------------------------------------------------------------------
+2.6 العلاقة بين Applications و MedicalExaminations
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────────┐
+│ Applications│ 1    1  │MedicalExaminations│
+│   (طلبات)    │─────────│  (فحوصات طبية)   │
+└──────────────┘         └──────────────────┘
+
+النوع:       One-to-One (واحد لواحد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل طلب يتضمن فحصًا طبيًا واحدًا
+PK/FK:       Applications.Id → MedicalExaminations.ApplicationId
+
+
+------------------------------------------------------------------------------
+2.7 العلاقة بين Users (ممتحنون) و TheoryTests
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────┐
+│    Users     │ 1    N  │ TheoryTests  │
+│ (ممتحنون)   │─────────│ (نظري)       │
+└──────────────┘         └──────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل ممتحن يقوم بتصحيح عدة اختبارات نظرية
+PK/FK:       Users.Id → TheoryTests.ExaminerId
+
+
+------------------------------------------------------------------------------
+2.8 العلاقة بين Applications و TheoryTests
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────┐
+│ Applications│ 1    N  │ TheoryTests  │
+│   (طلبات)    │─────────│ (نظري)       │
+└──────────────┘         └──────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل طلب يتضمن عدة محاولات للاختبار النظري
+PK/FK:       Applications.Id → TheoryTests.ApplicationId
+
+
+------------------------------------------------------------------------------
+2.9 العلاقة بين Users (ممتحنون) و PracticalTests
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌────────────────┐
+│    Users     │ 1    N  │PracticalTests  │
+│ (ممتحنون)   │─────────│ (عملي)         │
+└──────────────┘         └────────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل ممتحن يقوم بتصحيح عدة اختبارات عملية
+PK/FK:       Users.Id → PracticalTests.ExaminerId
+
+
+------------------------------------------------------------------------------
+2.10 العلاقة بين Applications و PracticalTests
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌────────────────┐
+│ Applications│ 1    N  │PracticalTests  │
+│   (طلبات)    │─────────│ (عملي)         │
+└──────────────┘         └────────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل طلب يتضمن عدة محاولات للاختبار العملي
+PK/FK:       Applications.Id → PracticalTests.ApplicationId
+
+
+------------------------------------------------------------------------------
+2.11 العلاقة بين Applications و TrainingRecords
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌─────────────────┐
+│ Applications│ 1    1  │TrainingRecords  │
+│   (طلبات)    │─────────│ (تدريب)         │
+└──────────────┘         └─────────────────┘
+
+النوع:       One-to-One (واحد لواحد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل طلب يتطلب سجل تدريب واحد
+PK/FK:       Applications.Id → TrainingRecords.ApplicationId
+
+
+------------------------------------------------------------------------------
+2.12 العلاقة بين Applications و PaymentTransactions
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────────┐
+│ Applications│ 1    N  │PaymentTransactions│
+│   (طلبات)    │─────────│  (دفعات)         │
+└──────────────┘         └──────────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل طلب يتضمن عدة عمليات دفع
+PK/FK:       Applications.Id → PaymentTransactions.ApplicationId
+
+
+------------------------------------------------------------------------------
+2.13 العلاقة بين Users (حامل الرخصة) و Licenses
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────┐
+│    Users     │ 1    N  │   Licenses   │
+│(حامل الرخصة) │─────────│   (رخص)      │
+└──────────────┘         └──────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل شخص يمكن أن يمتلك عدة رخص
+PK/FK:       Users.Id → Licenses.HolderId
+
+
+------------------------------------------------------------------------------
+2.14 العلاقة بين LicenseCategories و Licenses
+------------------------------------------------------------------------------
+
+┌──────────────────┐         ┌──────────────┐
+│LicenseCategories │ 1    N  │   Licenses   │
+│  (فئات الرخصة)   │─────────│   (رخص)      │
+└──────────────────┘         └──────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل فئة رخصة تتضمن عدة رخص صادرة
+PK/FK:       LicenseCategories.Id → Licenses.LicenseCategoryId
+
+
+------------------------------------------------------------------------------
+2.15 العلاقة بين Users و Notifications
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────┐
+│    Users     │ 1    N  │Notifications │
+│ (مستلم)      │─────────│ (إشعارات)    │
+└──────────────┘         └──────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل مستلم يحصل على عدة إشعارات
+PK/FK:       Users.Id → Notifications.UserId
+
+
+------------------------------------------------------------------------------
+2.16 العلاقة بين Applications و Notifications
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────┐
+│ Applications│ 0..1    │Notifications │
+│   (طلبات)    │─────────│ (إشعارات)    │
+└──────────────┘         └──────────────┘
+
+النوع:       Zero-or-One (صفر أو واحد)
+الحالة:      اختياري (Nullable)
+الوصف:       الإشعارات مرتبطة بالطلبات بشكل اختياري
+PK/FK:       Applications.Id → Notifications.ApplicationId
+
+
+------------------------------------------------------------------------------
+2.17 العلاقة بين Applications و Appointments
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────┐
+│ Applications│ 1    N  │ Appointments │
+│   (طلبات)    │─────────│  (مواعيد)    │
+└──────────────┘         └──────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل طلب يتضمن عدة مواعيد
+PK/FK:       Applications.Id → Appointments.ApplicationId
+
+
+------------------------------------------------------------------------------
+2.18 العلاقة بين Users و AuditLogs
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────┐
+│    Users     │ 0..1    │  AuditLogs   │
+│   (مستخدم)   │─────────│  (تدقيق)     │
+└──────────────┘         └──────────────┘
+
+النوع:       Zero-or-One (صفر أو واحد)
+الحالة:      اختياري (Nullable)
+الوصف:       سجلات التدقيق مرتبطة بالمستخدمين بشكل اختياري
+PK/FK:       Users.Id → AuditLogs.UserId
+
+
+------------------------------------------------------------------------------
+2.19 العلاقة بين Users و RefreshTokens
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────┐
+│    Users     │ 1    N  │RefreshTokens │
+│  (مستخدم)    │─────────│ (تحديث)      │
+└──────────────┘         └──────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل مستخدم يمتلك عدة رموز تحديث
+PK/FK:       Users.Id → RefreshTokens.UserId
+
+
+------------------------------------------------------------------------------
+2.20 العلاقة بين Users و OtpCodes
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────┐
+│    Users     │ 1    N  │   OtpCodes   │
+│  (مستخدم)    │─────────│  (تحقق)      │
+└──────────────┘         └──────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل مستخدم يمتلك عدة رموز تحقق
+PK/FK:       Users.Id → OtpCodes.UserId
+
+
+------------------------------------------------------------------------------
+2.21 العلاقة بين Users و PushTokens
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────┐
+│    Users     │ 1    N  │  PushTokens   │
+│  (مستخدم)    │─────────│  (إشعارات)   │
+└──────────────┘         └──────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل مستخدم يمتلك عدة رموز أجهزة
+PK/FK:       Users.Id → PushTokens.UserId
+
+
+------------------------------------------------------------------------------
+2.22 العلاقة بين Applications و SmsLogs
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────┐
+│ Applications│ 0..1    │   SmsLogs    │
+│   (طلبات)    │─────────│ (رسائل)      │
+└──────────────┘         └──────────────┘
+
+النوع:       Zero-or-One (صفر أو واحد)
+الحالة:      اختياري (Nullable)
+الوصف:       الرسائل النصية مرتبطة بالطلبات بشكل اختياري
+PK/FK:       Applications.Id → SmsLogs.ApplicationId
+
+
+------------------------------------------------------------------------------
+2.23 العلاقة بين Users و SmsLogs
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌──────────────┐
+│    Users     │ 1    N  │   SmsLogs    │
+│  (مستخدم)    │─────────│ (رسائل)      │
+└──────────────┘         └──────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل مستلم يستلم عدة رسائل نصية
+PK/FK:       Users.Id → SmsLogs.UserId
+
+
+------------------------------------------------------------------------------
+2.24 العلاقة بين Applications و ApplicationStatusHistory
+------------------------------------------------------------------------------
+
+┌──────────────┐         ┌────────────────────────┐
+│ Applications│ 1    N  │ApplicationStatusHistory│
+│   (طلبات)    │─────────│ (سجل الحالة)          │
+└──────────────┘         └────────────────────────┘
+
+النوع:       One-to-Many (واحد لمتعدد)
+الحالة:      إلزامي (Non-nullable)
+الوصف:       كل طلب يحتوي على سجل كامل لتغييرات الحالة
+PK/FK:       Applications.Id → ApplicationStatusHistory.ApplicationId
+
+
+================================================================================
+                    3. الفهارس (Indexes)
+================================================================================
+
+------------------------------------------------------------------------------
+3.1 الفهارس الأساسية (Primary Indexes)
+------------------------------------------------------------------------------
+
+كل جدول يحتوي على فهرس أساسي على عمود المفتاح الأساسي (Id):
+
+- PK_Users           → Users(Id)
+- PK_Applications    → Applications(Id)
+- PK_LicenseCategories → LicenseCategories(Id)
+- PK_ApplicationDocuments → ApplicationDocuments(Id)
+- PK_MedicalExaminations → MedicalExaminations(Id)
+- PK_TheoryTests     → TheoryTests(Id)
+- PK_PracticalTests  → PracticalTests(Id)
+- PK_TrainingRecords → TrainingRecords(Id)
+- PK_PaymentTransactions → PaymentTransactions(Id)
+- PK_Licenses        → Licenses(Id)
+- PK_Notifications  → Notifications(Id)
+- PK_Appointments    → Appointments(Id)
+- PK_AuditLogs       → AuditLogs(Id)
+- PK_SystemSettings  → SystemSettings(Id)
+- PK_FeeStructures   → FeeStructures(Id)
+- PK_RefreshTokens   → RefreshTokens(Id)
+- PK_OtpCodes        → OtpCodes(Id)
+- PK_PushTokens      → PushTokens(Id)
+- PK_EmailLogs       → EmailLogs(Id)
+- PK_SmsLogs         → SmsLogs(Id)
+- PK_ApplicationStatusHistory → ApplicationStatusHistory(Id)
+
+
+------------------------------------------------------------------------------
+3.2 الفهارس على المفاتيح الخارجية
+------------------------------------------------------------------------------
+
+جدول Applications:
+- IX_Applications_ApplicantId
+- IX_Applications_LicenseCategoryId
+
+جدول ApplicationDocuments:
+- IX_ApplicationDocuments_ApplicationId
+
+جدول MedicalExaminations:
+- IX_MedicalExaminations_ApplicationId
+- IX_MedicalExaminations_DoctorId
+
+جدول TheoryTests:
+- IX_TheoryTests_ApplicationId
+- IX_TheoryTests_ExaminerId
+
+جدول PracticalTests:
+- IX_PracticalTests_ApplicationId
+- IX_PracticalTests_ExaminerId
+
+جدول TrainingRecords:
+- IX_TrainingRecords_ApplicationId
+
+جدول PaymentTransactions:
+- IX_PaymentTransactions_ApplicationId
+
+جدول Licenses:
+- IX_Licenses_ApplicationId
+- IX_Licenses_HolderId
+
+جدول Notifications:
+- IX_Notifications_UserId
+- IX_Notifications_ApplicationId
+
+جدول Appointments:
+- IX_Appointments_ApplicationId
+
+جدول RefreshTokens:
+- IX_RefreshTokens_UserId
+
+جدول OtpCodes:
+- IX_OtpCodes_UserId
+
+جدول PushTokens:
+- IX_PushTokens_UserId
+
+
+------------------------------------------------------------------------------
+3.3 الفهارس المركبة للأداء (Composite Indexes)
+------------------------------------------------------------------------------
+
+جدول Applications:
+- IX_Applications_ApplicantId_Status (ApplicantId, Status)
+- IX_Applications_Status_CurrentStage (Status, CurrentStage)
+
+جدول TheoryTests:
+- IX_TheoryTests_ApplicationId_AttemptNumber (ApplicationId, AttemptNumber)
+
+جدول PracticalTests:
+- IX_PracticalTests_ApplicationId_AttemptNumber (ApplicationId, AttemptNumber)
+
+جدول Notifications:
+- IX_Notifications_UserId_IsRead (UserId, IsRead)
+
+جدول AuditLogs:
+- IX_AuditLogs_Timestamp_ActionType (Timestamp, ActionType)
+- IX_AuditLogs_UserId_Timestamp (UserId, Timestamp)
+
+
+------------------------------------------------------------------------------
+3.4 فهارس التصفية (Filtered Indexes)
+------------------------------------------------------------------------------
+
+نظرًا لاستخدام الحذف الناعم (Soft Delete)، يتم إنشاء فهارس متضمنة شرط التصفية:
+
+CREATE NONCLUSTERED INDEX IX_Users_Active 
+ON Users(Id) 
+WHERE IsDeleted = 0;
+
+CREATE NONCLUSTERED INDEX IX_Applications_Active 
+ON Applications(ApplicantId, Status) 
+WHERE IsDeleted = 0;
+
+CREATE NONCLUSTERED INDEX IX_Notifications_Unread 
+ON Notifications(UserId, CreatedAt) 
+WHERE IsRead = 0;
+
+
+================================================================================
+                    4. ملخص الكيانات والعلاقات
+================================================================================
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                          ملخص الجداول والكيانات                             │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────────────────┐                                                     │
+│  │      المستخدمون     │───────┐                                             │
+│  │      (Users)        │       │ 1:N                                          │
+│  └─────────────────────┘       │                                             │
+│                               ├──► Applications (طلبات)                      │
+│                               ├──► Licenses (رخص)                            │
+│                               ├──► Notifications (إشعارات)                  │
+│                               ├──► RefreshTokens (رموز التحديث)              │
+│                               ├──► OtpCodes (رموز التحقق)                   │
+│                               ├──► PushTokens (رموز الإشعارات)               │
+│                               ├──► MedicalExaminations (فحوصات)             │
+│                               ├──► TheoryTests (اختبارات نظرية)             │
+│                               ├──► PracticalTests (اختبارات عملية)          │
+│                               ├──► SmsLogs (سجلات الرسائل)                   │
+│                               └──► AuditLogs (سجلات التدقيق)                 │
+│                                                                              │
+│  ┌─────────────────────┐                                                     │
+│  │    فئات الرخص       │ 1:N                                                │
+│  │(LicenseCategories)  │──────► Applications                                │
+│  │                     │──────► Licenses                                     │
+│  │                     │──────► FeeStructures                                │
+│  └─────────────────────┘                                                     │
+│                                                                              │
+│  ┌─────────────────────┐                                                     │
+│  │      الطلبات        │ 1:N                                                │
+│  │  (Applications)     │──────► ApplicationDocuments                        │
+│  │                     │──────► MedicalExamination                          │
+│  │                     │──────► TheoryTests                                 │
+│  │                     │──────► PracticalTests                               │
+│  │                     │──────► TrainingRecord                               │
+│  │                     │──────► PaymentTransactions                          │
+│  │                     │──────► Appointments                                │
+│  │                     │──────► Notifications                               │
+│  │                     │──────► ApplicationStatusHistory                    │
+│  │                     │                                                      │
+│  │                     │ 1:1                                                │
+│  │                     ├──────► License                                      │
+│  └─────────────────────┘                                                     │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+================================================================================
+                    5. قواعد التصميم
+================================================================================
+
+5.1 الحذف الناعم (Soft Delete)
+-------------------------------
+- جميع الكيانات باستثناء AuditLog و Notification تستخدم الحذف الناعم
+- عمود IsDeleted (bit) مع Default = 0
+- عمود DeletedAt (datetime2) لتتبع وقت الحذف
+- عمود DeletedBy (uniqueidentifier) لتتبع من قام بالحذف
+
+5.2 التدقيق (Auditing)
+------------------------
+- BaseEntity: Id, CreatedAt, UpdatedAt
+- AuditableEntity: يضيف CreatedBy, UpdatedBy
+- SoftDeletableEntity: يضيف IsDeleted, DeletedAt, DeletedBy
+- AuditLog: سجل منفصل للتدقيق
+
+5.3 المفاتيح الخارجية
+------------------------
+- RESTRICT only (لا حذف متسلسل)
+- جميع العلاقات الاختيارية تستخدم ON DELETE SET NULL
+- جميع العلاقات الإلزامية تستخدم ON DELETE NO ACTION
+
+5.4 الترقيم
+------------
+- IDs: uniqueidentifier (GUID)
+- ApplicationNumber: MOJ-{YEAR}-{8_RANDOM_DIGITS}
+- LicenseNumber: MOJ-{YEAR}-{8_RANDOM_DIGITS}
+
+5.5 التواريخ
+-------------
+- جميع التواريخ محفوظة بالتوقيت العالمي (UTC)
+- datetime2 بدقة عالية
+
+
+================================================================================
+                    6. ملاحظات إضافية
+================================================================================
+
+6.1 جداول الإعدادات
+-------------------
+- SystemSettings: إعدادات النظام القابلة للتعديل
+- FeeStructures: هيكل الرسوم القابل للتعديل
+
+6.2 جداول الأمان
+-----------------
+- RefreshTokens: لإدارة جلسات المستخدم
+- OtpCodes: للتحقق بخطوتين
+- PushTokens: للإشعارات الفورية
+
+6.3 جداول السجلات
+-----------------
+- EmailLogs: سجلات البريد الإلكتروني
+- SmsLogs: سجلات الرسائل النصية
+- AuditLogs: سجلات التدقيق
+
+6.4 القيود العامة
+-----------------
+- NationalId: رقم هوية فريد
+- Email: بريد إلكتروني فريد
+- ApplicationNumber: رقم طلب فريد
+- LicenseNumber: رقم رخصة فريد
+- SettingKey: مفتاح إعداد فريد
+- Token (RefreshTokens): رمز فريد
+
+================================================================================
+                              نهاية الوثيقة
+================================================================================

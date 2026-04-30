@@ -1,16 +1,19 @@
-using Mojaz.Domain.Common;
 using Mojaz.Domain.Enums;
-using System;
-using System.Collections.Generic;
 
 namespace Mojaz.Domain.Entities;
 
 public class RenewalApplication : Application
 {
-    public Guid OldLicenseId { get; set; }
-    public Guid? NewLicenseId { get; set; }
+    public int OldLicenseId { get; set; }
+    public int? NewLicenseId { get; set; }
     public bool RenewalFeePaid { get; set; } = false;
-    public Guid? MedicalExaminationId { get; set; }
+    public int? MedicalExaminationId { get; set; }
+
+    // Stage Exempt tracking for simplified renewal workflow
+    // Renewal workflow skips: Stage 05 (Training), Stage 06 (Theory), Stage 07 (Practical)
+    public bool TrainingExempt { get; set; } = true;
+    public bool TheoryExempt { get; set; } = true;
+    public bool PracticalExempt { get; set; } = true;
 
     public virtual License OldLicense { get; set; } = null!;
     public virtual License? NewLicense { get; set; }

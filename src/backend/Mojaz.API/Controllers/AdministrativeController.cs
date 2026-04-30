@@ -5,6 +5,7 @@ using Mojaz.Application.Interfaces;
 using Mojaz.Shared;
 using Mojaz.Shared.Constants;
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -20,48 +21,49 @@ namespace Mojaz.API.Controllers;
 public class AdministrativeController : ControllerBase
 {
     private readonly IReplaceLicenseService _replaceLicenseService;
+    private readonly IApplicationService _applicationService;
 
-    public AdministrativeController(IReplaceLicenseService replaceLicenseService)
+    public AdministrativeController(IReplaceLicenseService replaceLicenseService, IApplicationService applicationService)
     {
         _replaceLicenseService = replaceLicenseService;
+        _applicationService = applicationService;
     }
 
     /// <summary>
-    /// Verify a stolen police report for a replacement application.
-    /// Only accessible by Admin/Receptionist/Manager roles.
+    /// Verify a stolen police report for a replacement application by ID or Number.
     /// </summary>
-    [HttpPatch("applications/{id}/verify-stolen-report")]
+    [HttpPatch("applications/{idOrNumber}/verify-stolen-report")]
     [Authorize(Roles = "Admin,Manager,Receptionist")]
     [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 403)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
     public async Task<IActionResult> VerifyStolenReportAsync(
-        Guid id,
+        string idOrNumber,
         [FromBody] VerifyStolenReportRequest request)
     {
+        var applicationId = await ResolveIdAsync(idOrNumber);
+        if (applicationId == Guid.Empty)
+            return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
+
         var reviewerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _replaceLicenseService.UpdateReportVerificationAsync(
-            id, 
+            applicationId, 
             request.IsVerified, 
             request.Comments, 
             reviewerId);
         return StatusCode(result.StatusCode, result);
     }
+
+    private async Task<Guid> ResolveIdAsync(string idOrNumber)
+    {
+        if (Guid.TryParse(idOrNumber, out var id))
+            return id;
+
+        var result = await _applicationService.GetByApplicationNumberAsync(idOrNumber);
+        return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
+    }
 }
 
-/// <summary>
-/// Request to verify a stolen police report.
-/// </summary>
 public class VerifyStolenReportRequest
 {
-    /// <summary>
-    /// Whether the police report is verified (approved) or rejected.
-    /// </summary>
     public bool IsVerified { get; set; }
-
-    /// <summary>
-    /// Optional comments from the reviewer.
-    /// </summary>
     public string? Comments { get; set; }
 }

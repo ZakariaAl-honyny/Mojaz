@@ -15,7 +15,7 @@ const meta: Meta<typeof Hero> = {
 
       return (
         <ThemeProvider>
-          <LanguageProvider defaultLang={locale as "ar" | "en"}>
+          <LanguageProvider>
             <div
               dir={isRTL ? "rtl" : "ltr"}
               lang={locale}

@@ -76,27 +76,27 @@ export function PhoneRegistrationForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-12 font-arabic" dir="rtl">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 font-arabic" dir="rtl">
       <AnimatePresence mode="wait">
         {serverError && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="p-8 bg-red-500/5 border border-red-500/20 rounded-[2.5rem] flex items-start gap-6 shadow-sm"
+            className="p-4 bg-red-500/5 border border-red-500/20 rounded-2xl flex items-start gap-4 shadow-sm"
           >
             <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-red-500 shadow-md flex-shrink-0 border border-red-500/10">
-               <AlertCircle className="w-8 h-8" />
+              <AlertCircle className="w-8 h-8" />
             </div>
             <div className="space-y-2">
-               <p className="text-lg font-black text-red-900">حدث خطأ أثناء التسجيل</p>
-               <p className="text-sm font-bold text-red-700/80 leading-relaxed max-w-lg">{serverError}</p>
+              <p className="text-lg font-black text-red-900">حدث خطأ أثناء التسجيل</p>
+              <p className="text-sm font-bold text-red-700/80 leading-relaxed max-w-lg">{serverError}</p>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="grid grid-cols-1 gap-10">
+      <div className="grid grid-cols-1 gap-4">
         {/* Full Name */}
         <div className="group space-y-4">
           <Label className="text-sm font-black text-[#1a3a8f] me-4 flex items-center gap-3">
@@ -107,13 +107,13 @@ export function PhoneRegistrationForm() {
             <Input
               placeholder="مثال: صالح محمد علي المحبشي"
               className={cn(
-                "h-16 bg-neutral-100/50 border-none rounded-[1.5rem] px-8 text-[#1a3a8f] font-black placeholder:text-neutral-300 focus-visible:ring-4 focus-visible:ring-[#1a3a8f]/10 transition-all shadow-inner", 
-                errors.fullName && "ring-4 ring-red-500/10 bg-red-50/50"
+                "h-12 bg-neutral-100/50 border-none rounded-xl px-4 text-[#1a3a8f] font-black placeholder:text-neutral-300 focus-visible:ring-4 focus-visible:ring-[#1a3a8f]/10 transition-all shadow-inner",
+                errors?.fullName && "ring-4 ring-red-500/10 bg-red-50/50"
               )}
               {...register('fullName')}
             />
           </div>
-          {errors.fullName && (
+          {errors?.fullName && (
             <p className="text-xs text-red-500 font-bold me-4">
               {errors.fullName.message}
             </p>
@@ -124,27 +124,27 @@ export function PhoneRegistrationForm() {
         <div className="group space-y-4">
           <Label className="text-sm font-black text-[#1a3a8f] me-4 flex items-center gap-3">
             <Phone className="w-4.5 h-4.5" />
-            رقم الهاتف الجوال (يمني)
+            رقم الهاتف الجوال
           </Label>
           <div className="relative">
             <Input
               placeholder="+9677XXXXXXXX"
               className={cn(
-                "h-16 bg-neutral-100/50 border-none rounded-[1.5rem] px-8 text-[#1a3a8f] font-black placeholder:text-neutral-300 focus-visible:ring-4 focus-visible:ring-[#1a3a8f]/10 transition-all text-left font-mono shadow-inner", 
-                errors.phone && "ring-4 ring-red-500/10 bg-red-50/50"
+                "h-12 bg-neutral-100/50 border-none rounded-xl px-4 text-[#1a3a8f] font-black placeholder:text-neutral-300 focus-visible:ring-4 focus-visible:ring-[#1a3a8f]/10 transition-all text-start font-mono shadow-inner",
+                errors?.phone && "ring-4 ring-red-500/10 bg-red-50/50"
               )}
               {...register('phone')}
             />
           </div>
-          {errors.phone && (
+          {errors?.phone && (
             <p className="text-xs text-red-500 font-bold me-4">
-               {errors.phone.message}
+              {errors.phone.message}
             </p>
           )}
         </div>
 
         {/* Passwords */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="group space-y-4">
             <Label className="text-sm font-black text-[#1a3a8f] me-4 flex items-center gap-3">
               <Lock className="w-4.5 h-4.5" />
@@ -155,14 +155,14 @@ export function PhoneRegistrationForm() {
                 type="password"
                 placeholder="••••••••"
                 className={cn(
-                  "h-16 bg-neutral-100/50 border-none rounded-[1.5rem] px-8 text-[#1a3a8f] font-black placeholder:text-neutral-300 focus-visible:ring-4 focus-visible:ring-[#1a3a8f]/10 transition-all shadow-inner", 
-                  errors.password && "ring-4 ring-red-500/10 bg-red-50/50"
+                  "h-12 bg-neutral-100/50 border-none rounded-xl px-4 text-[#1a3a8f] font-black placeholder:text-neutral-300 focus-visible:ring-4 focus-visible:ring-[#1a3a8f]/10 transition-all shadow-inner",
+                  errors?.password && "ring-4 ring-red-500/10 bg-red-50/50"
                 )}
                 {...register('password')}
               />
             </div>
-            {errors.password && (
-              <p className="text-xs text-red-500 font-bold mr-4 leading-relaxed">
+            {errors?.password && (
+              <p className="text-xs text-red-500 font-bold me-4 leading-relaxed">
                 {errors.password.message}
               </p>
             )}
@@ -178,14 +178,14 @@ export function PhoneRegistrationForm() {
                 type="password"
                 placeholder="••••••••"
                 className={cn(
-                  "h-16 bg-neutral-100/50 border-none rounded-[1.5rem] px-8 text-[#1a3a8f] font-black placeholder:text-neutral-300 focus-visible:ring-4 focus-visible:ring-[#1a3a8f]/10 transition-all shadow-inner", 
-                  errors.confirmPassword && "ring-4 ring-red-500/10 bg-red-50/50"
+                  "h-12 bg-neutral-100/50 border-none rounded-xl px-4 text-[#1a3a8f] font-black placeholder:text-neutral-300 focus-visible:ring-4 focus-visible:ring-[#1a3a8f]/10 transition-all shadow-inner",
+                  errors?.confirmPassword && "ring-4 ring-red-500/10 bg-red-50/50"
                 )}
                 {...register('confirmPassword')}
               />
             </div>
-            {errors.confirmPassword && (
-              <p className="text-xs text-red-500 font-bold mr-4 leading-relaxed">
+            {errors?.confirmPassword && (
+              <p className="text-xs text-red-500 font-bold me-4 leading-relaxed">
                 {errors.confirmPassword.message}
               </p>
             )}
@@ -195,63 +195,66 @@ export function PhoneRegistrationForm() {
 
       {/* Terms and Conditions */}
       <div className={cn(
-        "flex items-start gap-8 p-10 rounded-[2.5rem] border-2 transition-all duration-500 relative overflow-hidden",
+        "flex flex-col gap-4 p-4 md:p-6 rounded-2xl border-2 transition-all duration-500 relative overflow-hidden",
         termsAccepted ? "bg-[#1a3a8f]/5 border-[#1a3a8f]/20 shadow-lg shadow-blue-900/5" : "bg-neutral-50 border-neutral-100"
       )}>
-        <Checkbox 
-          id="terms-phone" 
-          checked={termsAccepted}
-          onCheckedChange={(checked) => setValue('termsAccepted', checked === true)}
-          className={cn(
-            "w-10 h-10 rounded-2xl transition-all border-neutral-200 flex-shrink-0 mt-1",
-            "data-[state=checked]:bg-[#1a3a8f] data-[state=checked]:border-[#1a3a8f] data-[state=checked]:scale-110"
-          )}
-        />
-        <div className="flex-1 space-y-2">
-          <label
-            htmlFor="terms-phone"
-            className="text-lg font-bold text-neutral-500 cursor-pointer select-none leading-[1.6]"
-          >
-            أقر بأنني اطلعت على جميع <Link href="/terms" className="text-[#1a3a8f] font-black underline underline-offset-8 decoration-2 decoration-[#1a3a8f]/10 hover:decoration-[#1a3a8f] transition-all">الشروط والأحكام</Link> وسياسة الخصوصية المعمول بها في <span className="text-[#1a3a8f] font-black">الإدارة العامة للمرور</span> وأوافق عليها جملةً وتفصيلاً.
-          </label>
-          {errors.termsAccepted && (
-            <p className="mt-4 text-sm text-red-500 font-black flex items-center gap-2">
-               <AlertCircle className="w-4 h-4" />
-               {errors.termsAccepted.message}
-            </p>
-          )}
+        <div className="flex items-start gap-4">
+          <Checkbox
+            id="terms-phone"
+            checked={termsAccepted}
+            onCheckedChange={(checked) => setValue('termsAccepted', checked === true)}
+            className={cn(
+              "w-6 h-6 rounded-lg transition-all border-neutral-200 flex-shrink-0 mt-0.5",
+              "data-[state=checked]:bg-[#1a3a8f] data-[state=checked]:border-[#1a3a8f]"
+            )}
+          />
+          <div className="flex-1 space-y-1">
+            <label
+              htmlFor="terms-phone"
+              className="text-xs md:text-sm font-bold text-neutral-500 cursor-pointer select-none leading-relaxed"
+            >
+              أقر بأنني اطلعت على جميع <Link href="/terms" className="text-[#1a3a8f] font-black underline underline-offset-4 decoration-2 decoration-[#1a3a8f]/10 hover:decoration-[#1a3a8f] transition-all">الشروط والأحكام</Link> وسياسة الخصوصية المعمول بها في <span className="text-[#1a3a8f] font-black">الإدارة العامة للمرور</span> وأوافق عليها جملةً وتفصيلاً.
+            </label>
+            {errors?.termsAccepted && (
+              <p className="mt-4 text-sm text-red-500 font-black flex items-center gap-2">
+                <AlertCircle className="w-4 h-4" />
+                {errors.termsAccepted.message}
+              </p>
+            )}
+          </div>
         </div>
+
       </div>
 
       <div className="pt-4">
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           disabled={isLoading}
-          className="w-full h-20 text-2xl font-black bg-[#1a3a8f] hover:bg-[#00215a] text-white transition-all rounded-[2.5rem] shadow-[0_20px_50px_-10px_rgba(26,58,143,0.4)] active:scale-[0.98] group relative overflow-hidden"
+          className="w-full h-14 text-base md:text-lg font-black bg-[#1a3a8f] hover:bg-[#00215a] text-white transition-all rounded-xl md:rounded-2xl shadow-xl shadow-blue-900/20 active:scale-[0.98] group relative overflow-hidden"
         >
           <AnimatePresence mode="wait">
             {isLoading ? (
-              <motion.div 
-                 key="loading"
-                 initial={{ opacity: 0, scale: 0.8 }}
-                 animate={{ opacity: 1, scale: 1 }}
-                 exit={{ opacity: 0, scale: 0.8 }}
-                 className="flex items-center gap-6"
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="flex items-center gap-3"
               >
-                <Loader2 className="w-10 h-10 animate-spin" />
+                <Loader2 className="w-6 h-6 animate-spin" />
                 <span>جاري المعالجة...</span>
               </motion.div>
             ) : (
-              <motion.div 
-                 key="content"
-                 initial={{ opacity: 0 }}
-                 animate={{ opacity: 1 }}
-                 exit={{ opacity: 0 }}
-                 className="flex items-center justify-center gap-8 w-full"
+              <motion.div
+                key="content"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex items-center justify-center gap-4 w-full"
               >
-                <span>إنشاء الحساب اليمني الموحد</span>
-                <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center transition-transform group-hover:-translate-x-2">
-                   <ArrowLeft className="w-8 h-8" />
+                <span>إنشاء الحساب</span>
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-white/20 flex items-center justify-center transition-transform group-hover:-translate-x-1">
+                  <ArrowLeft className="w-5 h-5 md:w-6 md:h-6" />
                 </div>
               </motion.div>
             )}
@@ -259,10 +262,15 @@ export function PhoneRegistrationForm() {
         </Button>
       </div>
 
-      <div className="pt-8 border-t border-neutral-100 flex items-center justify-center gap-6">
-         <ShieldCheck className="w-6 h-6 text-emerald-600" />
-         <p className="text-xs font-black text-neutral-400 uppercase tracking-[0.2em]">اتصال آمن • معايير سيادية 2024</p>
+      <div className="text-center pt-2 border-t border-neutral-100/50">
+        <p className="text-sm font-bold text-neutral-500">
+          لديك حساب بالفعل؟{' '}
+          <Link href="/login" className="text-[#1a3a8f] font-black underline underline-offset-4 decoration-2 decoration-[#1a3a8f]/15 hover:decoration-[#1a3a8f] transition-all">
+            تسجيل الدخول
+          </Link>
+        </p>
       </div>
+
     </form>
   );
 }

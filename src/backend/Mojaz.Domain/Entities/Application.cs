@@ -1,6 +1,4 @@
-using Mojaz.Domain.Common;
 using Mojaz.Domain.Enums;
-using System;
 using System.Collections.Generic;
 
 namespace Mojaz.Domain.Entities;
@@ -8,17 +6,17 @@ namespace Mojaz.Domain.Entities;
 public class Application : SoftDeletableEntity
 {
     public string ApplicationNumber { get; set; } = string.Empty;
-    public Guid ApplicantId { get; set; }
+    public int ApplicantId { get; set; }
     public ServiceType ServiceType { get; set; }
-    public Guid LicenseCategoryId { get; set; }
-    public Guid? BranchId { get; set; }
+    public int LicenseCategoryId { get; set; }
+    public int? BranchId { get; set; }
     public ApplicationStatus Status { get; set; } = ApplicationStatus.Draft;
     public string CurrentStage { get; set; } = string.Empty;
     public string PreferredLanguage { get; set; } = "ar";
     public string? SpecialNeeds { get; set; }
     public bool DataAccuracyConfirmed { get; set; }
     public DateTime? SubmittedAt { get; set; }
-    public Guid? ReviewedBy { get; set; }
+    public int? ReviewedBy { get; set; }
     public DateTime? ReviewedAt { get; set; }
     public string? Notes { get; set; }
     public string? RejectionReason { get; set; }
@@ -31,11 +29,22 @@ public class Application : SoftDeletableEntity
     
     // Final Approval fields
     public FinalDecisionType? FinalDecision { get; set; }
-    public Guid? FinalDecisionBy { get; set; }
+    public int? FinalDecisionBy { get; set; }
     public DateTime? FinalDecisionAt { get; set; }
     public string? FinalDecisionReason { get; set; }
     public string? ReturnToStage { get; set; }
     public string? ManagerNotes { get; set; }
+    
+    // Security Verification (Gate 4)
+    public SecurityStatus SecurityStatus { get; set; } = SecurityStatus.Pending;
+    public int? SecurityVerifiedBy { get; set; }
+    public DateTime? SecurityVerifiedAt { get; set; }
+    public string? SecurityNotes { get; set; }
+    
+    // Staff Assignment (Receptionist assigns to Doctor/Examiner)
+    public int? AssignedToId { get; set; }
+    public DateTime? AssignedAt { get; set; }
+    public string? AssignmentNotes { get; set; }
     
     public virtual User Applicant { get; set; } = null!;
     public virtual LicenseCategory LicenseCategory { get; set; } = null!;

@@ -1,11 +1,16 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mojaz.Domain.Entities;
 
 public class AuditLog
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
-    public Guid? UserId { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+    
+    public int? UserId { get; set; }
     public string ActionType { get; set; } = string.Empty;
     public string ActionCategory { get; set; } = string.Empty; // e.g., "Authentication", "DataAccess"
     public string EntityName { get; set; } = string.Empty;

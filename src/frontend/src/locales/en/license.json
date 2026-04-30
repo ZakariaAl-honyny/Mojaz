@@ -1,0 +1,19 @@
+{
+  "card": {
+    "title": "Driving License - Category {{categoryName}}",
+    "categoryCode": "Category {{code}}",
+    "number": "License Number",
+    "category": "Category",
+    "issuedAt": "Issue Date",
+    "expiresAt": "Expiry Date",
+    "status": "Status",
+    "active": "Active",
+    "expired": "Expired",
+    "replaced": "Replaced",
+    "replacementCount": "Replacement Count",
+    "requestReplacement": "Request Replacement",
+    "renew": "Renew",
+    "viewPdf": "View PDF",
+    "expiringSoon": "Expiring Soon"
+  }
+}

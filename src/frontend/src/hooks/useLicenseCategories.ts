@@ -8,7 +8,7 @@ export function useLicenseCategories() {
     queryFn: async () => {
       const response = await ApplicationService.getLicenseCategories();
       if (!response.success) {
-        throw new Error(response.message || 'Failed to fetch categories');
+        throw new Error(response.message || 'فشل في تحميل فئات الرخص.');
       }
       return response.data;
     },

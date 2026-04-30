@@ -1,5 +1,3 @@
-using Mojaz.Domain.Common;
-
 namespace Mojaz.Domain.Entities;
 
 public class SystemSetting : AuditableEntity

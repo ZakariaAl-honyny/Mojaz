@@ -1,4 +1,3 @@
-using Mojaz.Domain.Common;
 using Mojaz.Domain.Enums;
 
 namespace Mojaz.Domain.Entities;

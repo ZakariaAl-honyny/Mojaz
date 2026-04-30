@@ -6,6 +6,41 @@ import React from 'react';
 
 // Official Arabic translations extracted from JSON files
 const ARABIC_MESSAGES: Record<string, any> = {
+  application: {
+    timeline: {
+      stages: {
+        "01": { title: "تقديم الطلب", desc: "إنشاء الطلب وتعبئة البيانات" },
+        "02": { title: "المستندات", desc: "رفع المستندات والتحقق" },
+        "03": { title: "سداد الرسوم", desc: "سداد الرسوم الأولية" },
+        "04": { title: "الفحص الطبي", desc: "تأكيد اللياقة الطبية" },
+        "05": { title: "التدريب", desc: "إكمال تدريب القيادة" },
+        "06": { title: "الاختبار النظري", desc: "اجتياز الاختبار النظري" },
+        "07": { title: "الاختبار العملي", desc: "اجتياز الاختبار العملي" },
+        "08": { title: "الاعتماد النهائي", desc: "المراجعة والاعتماد" },
+        "09": { title: "سداد الإصدار", desc: "سداد رسوم الإصدار" },
+        "10": { title: "إصدار الرخصة", desc: "إصدار وتسليم الرخصة" },
+        creation: "إنشاء الطلب",
+        documentReview: "مراجعة المستندات",
+        training: "مرحلة التدريب",
+        payment: "مرحلة السداد",
+        medical: "مرحلة الفحص الطبي",
+        theory: "مرحلة الاختبار النظري",
+        practical: "مرحلة الاختبار العملي",
+        fieldTest: "اختبار الميدان الزراعي",
+        issuance: "إصدار الرخصة"
+      },
+      status: {
+        completed: "مكتمل",
+        current: "قيد التنفيذ",
+        pending: "قيد الانتظار",
+        failed: "لم يتم الإكمال",
+        completedDesc: "مكتمل بنجاح",
+        currentDesc: "قيد المراجعة والمعالجة",
+        pendingDesc: "قيد الانتظار",
+        failedDesc: "فشل في هذه المرحلة"
+      }
+    }
+  },
   license: {
     title: "تراخيصي",
     subtitle: "إدارة ومتابعة رخص القيادة الصادرة عن الإدارة العامة للمرور",
@@ -24,6 +59,23 @@ const ARABIC_MESSAGES: Record<string, any> = {
       active: "نشط",
       expired: "منتهي",
       suspended: "موقوف",
+    },
+    card: {
+      title: "رخصة قيادة - فئة {{categoryName}}",
+      categoryCode: "فئة {{code}}",
+      number: "رقم الرخصة",
+      category: "الفئة",
+      issuedAt: "تاريخ الإصدار",
+      expiresAt: "تاريخ الانتهاء",
+      status: "الحالة",
+      active: "نشطة",
+      expired: "منتهية",
+      replaced: "تم استبدالها",
+      replacementCount: "عدد الاستبدالات",
+      requestReplacement: "طلب استبدال",
+      renew: "تجديد",
+      viewPdf: "عرض PDF",
+      expiringSoon: "تنتهي قريباً"
     }
   },
   queue: {
@@ -267,11 +319,99 @@ const ARABIC_MESSAGES: Record<string, any> = {
     notificationSettings: "إعدادات التنبيهات",
     emailPreferences: "تفضيلات البريد",
     logout: "تسجيل الخروج",
-    employee: {
-      manage: { title: "إدارة الرخص" },
-      training: { title: "إدارة التدريب" },
-      testing: { title: "إدارة الاختبارات" },
-      sendNotification: "إرسال تعميم"
+  },
+  employee: {
+    reports: {
+      subtitle: "لوحة التقارير والتحليلات",
+      title: "التقارير والإحصائيات",
+      charts: "نوع التقرير",
+      daily: "اليوم",
+      weekly: "الأسبوع",
+      monthly: "الشهر",
+      custom: "مخصص",
+      dateFrom: "من",
+      dateTo: "إلى",
+      generate: "إنشاء",
+      result: {
+        passed: "ناجح",
+        failed: "راسب",
+        pending: "قيد الانتظار"
+      },
+      details: "تفاصيل الطلبات",
+      passRate: "نسبة النجاح",
+      trends: "اتجاهات المعالجة",
+      columns: {
+        applicationNumber: "رقم الطلب",
+        category: "الفئة",
+        result: "النتيجة",
+        processingTime: "مدة المعالجة",
+        date: "التاريخ"
+      },
+      queue: {
+        columns: {
+          categoryPrefix: "فئة"
+        }
+      },
+      metrics: {
+        totalProcessed: "إجمالي المعالج",
+        passRate: "نسبة النجاح",
+        avgProcessingTime: "متوسط مدة المعالجة",
+        efficiencyTrend: "اتجاه الكفاءة"
+      },
+      totalIssued: "إجمالي الرخص المصدرة",
+      active: "نشط",
+      expired: "منتهي",
+      expiredSoon: "مقبل الانتهاء"
+    },
+    manage: { title: "إدارة الرخص" },
+    training: { title: "إدارة التدريب" },
+    testing: { title: "إدارة الاختبارات" },
+    sendNotification: "إرسال تعميم"
+  },
+  fees: {
+    title: "إدارة الرسوم",
+    subtitle: "إدارة رسوم الخدمات والرخص",
+    addNew: "إضافة رسوم جديد",
+    edit: "تعديل الرسوم",
+    create: "إضافة رسوم جديد",
+    feeType: "نوع الرسوم",
+    licenseCategory: "فئة الرخصة",
+    amount: "المبلغ",
+    currency: "العملة",
+    effectiveFrom: "تاريخ السريان",
+    effectiveTo: "تاريخ الانتهاء",
+    description: "الوصف",
+    status: "الحالة",
+    active: "نشط",
+    inactive: "غير نشط",
+    actions: "الإجراءات",
+    editAction: "تعديل",
+    deleteAction: "حذف",
+    toggleAction: "تفعيل/تعطيل",
+    search: "البحث...",
+    noFees: "لا توجد رسوم",
+    all: "الكل",
+    confirmDelete: "هل أنت متأكد من حذف هذه الرسوم؟",
+    deleteSuccess: "تم الحذف بنجاح",
+    deleteError: "فشل في الحذف",
+    saveSuccess: "تم الحفظ بنجاح",
+    saveError: "فشل في الحفظ",
+    loadError: "فشل في تحميل البيانات",
+    feeTypes: {
+      ApplicationFee: "رسوم التقديم",
+      MedicalExamFee: "رسوم الفحص الطبي",
+      TheoryTestFee: "رسوم الاختبار النظري",
+      PracticalTestFee: "رسوم الاختبار العملي",
+      IssuanceFee: "رسوم إصدار الرخصة",
+      RetakeFee: "رسوم إعادة الاختبار"
+    },
+    categories: {
+      A: "دراجة نارية",
+      B: "سيارة خصوصي",
+      C: "نقل عام",
+      D: "حافلة",
+      E: "أشغال شاقة",
+      F: "زراعية"
     }
   }
 };

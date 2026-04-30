@@ -2,7 +2,8 @@
 
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from '@/lib/static-translations';
+import { useQuery } from '@tanstack/react-query';
+
 import { Calendar, Clock, MapPin, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import { AppointmentCalendar } from '@/components/domain/appointment/AppointmentCalendar';
 import { TimeSlotPicker } from '@/components/domain/appointment/TimeSlotPicker';
@@ -11,19 +12,19 @@ import AppointmentService, {
   DaySlotsDto,
   CreateAppointmentRequest
 } from '@/services/appointment.service';
+import { paymentService, FeeType, PaymentStatus } from '@/services/payment.service';
 import { AppointmentType } from '@/lib/enums';
 import { cn } from '@/lib/utils';
 
 interface PageProps {
   params: Promise<{
-    locale: string;
     id: string;
   }>;
 }
 
 export default function AppointmentBookingPage({ params }: PageProps) {
   const resolvedParams = use(params);
-  const t = useTranslations('appointment');
+
   const router = useRouter();
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -37,6 +38,30 @@ export default function AppointmentBookingPage({ params }: PageProps) {
   const [appointmentType, setAppointmentType] = useState<AppointmentType>(AppointmentType.PracticalTest);
   // Default branch - in a real app this would come from user context or settings
   const branchId = '00000000-0000-0000-0000-000000000001';
+
+  // Check if application fee is paid before allowing booking
+  const { data: paymentsData } = useQuery({
+    queryKey: ['application-payments', resolvedParams.id],
+    queryFn: () => paymentService.getPaymentsByApplication(resolvedParams.id),
+    enabled: !!resolvedParams.id
+  });
+
+  const hasApplicationFeePaid = paymentsData?.data?.some(
+    p => p.feeType === FeeType.ApplicationFee && p.status === PaymentStatus.Paid
+  ) ?? false;
+
+  useEffect(() => {
+    if (!hasApplicationFeePaid && paymentsData) {
+      setError("يجب سداد رسوم الطلب أولاً قبل حجز الموعد. يرجى الذهاب إلى تفاصيل الطلب وسداد الرسوم.");
+    }
+  }, [hasApplicationFeePaid, paymentsData]);
+
+  // If fee not paid, show medical exam as the default option to allow booking first
+  useEffect(() => {
+    if (!hasApplicationFeePaid && paymentsData) {
+      setAppointmentType(AppointmentType.MedicalExam);
+    }
+  }, [hasApplicationFeePaid, paymentsData]);
 
   // Fetch available slots when date changes - inline pattern to avoid hook ordering issues
   useEffect(() => {
@@ -60,12 +85,12 @@ export default function AppointmentBookingPage({ params }: PageProps) {
           if (response.success && response.data) {
             setAvailableSlots(response.data);
           } else {
-            setError(response.message || 'Failed to load available slots');
+            setError(response.message || 'فشل تحميل المواعيد المتاحة');
           }
         }
       } catch (err) {
         if (isMounted) {
-          setError('Failed to load available slots. Please try again.');
+          setError('فشل تحميل المواعيد المتاحة، يرجى المحاولة مرة أخرى');
         }
       } finally {
         if (isMounted) {
@@ -100,7 +125,7 @@ export default function AppointmentBookingPage({ params }: PageProps) {
         timeSlot: selectedSlot.time
       };
 
-      const response = await AppointmentService.createAppointment(request);
+      const response = await AppointmentService.createAppointment(resolvedParams.id, request);
 
       if (response.success) {
         setSuccess(true);
@@ -109,10 +134,10 @@ export default function AppointmentBookingPage({ params }: PageProps) {
           router.push(`/applications/${resolvedParams.id}`);
         }, 2000);
       } else {
-        setError(response.message || 'Failed to book appointment');
+        setError(response.message || 'فشلت عملية حجز الموعد');
       }
     } catch (err) {
-      setError('Failed to book appointment. Please try again.');
+      setError('خطأ في حجز الموعد، يرجى المحاولة مرة أخرى لاحقاً');
     } finally {
       setIsBooking(false);
     }
@@ -120,14 +145,14 @@ export default function AppointmentBookingPage({ params }: PageProps) {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gray-50 bg-gray-900 flex items-center justify-center p-4">
-        <div className="bg-white bg-gray-800 rounded-xl p-8 shadow-lg max-w-md w-full text-center">
-          <CheckCircle className="w-16 h-16 text-king bule-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 text-white mb-2">
-            {t('bookingSuccess')}
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center p-4" dir="rtl">
+        <div className="bg-white rounded-xl p-8 shadow-lg max-w-md w-full text-center">
+          <CheckCircle className="w-16 h-16 text-[#10B981] mx-auto mb-4" />
+          <h2 className="text-2xl font-black text-neutral-900 mb-2">
+            تم حجز الموعد بنجاح
           </h2>
-          <p className="text-gray-600 text-gray-400">
-            {selectedDate?.toLocaleDateString()} at {selectedSlot?.time}
+          <p className="text-neutral-500 font-bold">
+            {selectedDate?.toLocaleDateString('ar-YE', { day: '2-digit', month: 'long', year: 'numeric' })} في تمام الساعة {selectedSlot?.time}
           </p>
         </div>
       </div>
@@ -135,30 +160,30 @@ export default function AppointmentBookingPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 bg-gray-900 p-4 md:p-8">
+    <div className="min-h-screen bg-neutral-50 p-4 md:p-8 font-arabic" dir="rtl">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 text-white">
-            {t('title')}
+        <div className="mb-8 border-r-4 border-[#1a3a8f] pr-6">
+          <h1 className="text-2xl md:text-3xl font-black text-neutral-900">
+            حجز موعد جديد
           </h1>
-          <p className="text-gray-600 text-gray-400 mt-1">
-            {t('selectDate')} & {t('selectTime')}
+          <p className="text-neutral-500 font-bold mt-1 text-lg">
+            يرجى اختيار التاريخ والوقت المناسبين للموعد
           </p>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 p-4 bg-red-50 bg-red-900/20 border border-red-200 border-red-800 rounded-lg flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-            <p className="text-red-700 text-red-400">{error}</p>
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-[#EF4444] flex-shrink-0" />
+            <p className="text-[#EF4444] font-bold">{error}</p>
           </div>
         )}
 
         {/* Type Selection */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 text-gray-300 mb-2">
-            Type
+          <label className="block text-sm font-black text-neutral-700 mb-2">
+            نوع الموعد
           </label>
           <div className="flex gap-2">
             {([AppointmentType.MedicalExam, AppointmentType.TheoryTest, AppointmentType.PracticalTest] as AppointmentType[]).map((type) => (
@@ -173,11 +198,11 @@ export default function AppointmentBookingPage({ params }: PageProps) {
                 className={cn(
                   'px-4 py-2 rounded-lg text-sm font-medium transition-all',
                   appointmentType === type
-                    ? 'bg-primary-500 text-white'
-                    : 'bg-white bg-gray-800 text-gray-700 text-gray-300 border border-gray-200 border-gray-700 hover:border-primary-500'
+                    ? 'bg-[#1a3a8f] text-white shadow-lg shadow-blue-900/20'
+                    : 'bg-white text-neutral-500 border border-neutral-200 hover:border-[#1a3a8f] hover:text-[#1a3a8f]'
                 )}
               >
-                {t(`types.${type === AppointmentType.MedicalExam ? 'medicalExam' : type === AppointmentType.TheoryTest ? 'theoryTest' : 'practicalTest'}`)}
+                {type === AppointmentType.MedicalExam ? 'فحص طبي' : type === AppointmentType.TheoryTest ? 'اختبار نظري' : 'اختبار عملي'}
               </button>
             ))}
           </div>
@@ -200,10 +225,10 @@ export default function AppointmentBookingPage({ params }: PageProps) {
                 isLoading={isLoadingSlots}
               />
             ) : (
-              <div className="bg-white bg-gray-800 rounded-xl p-6 shadow-sm text-center">
-                <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                <p className="text-gray-600 text-gray-400">
-                  {t('selectDate')}
+              <div className="bg-white rounded-xl p-10 shadow-sm text-center border border-neutral-100">
+                <Calendar className="w-16 h-16 text-neutral-200 mx-auto mb-4" />
+                <p className="text-neutral-400 font-black text-lg">
+                  اختر تاريخ الموعد أولاً
                 </p>
               </div>
             )}
@@ -212,21 +237,21 @@ export default function AppointmentBookingPage({ params }: PageProps) {
 
         {/* Selected Summary & Book Button */}
         {selectedDate && selectedSlot && (
-          <div className="mt-6 bg-white bg-gray-800 rounded-xl p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-gray-900 text-white mb-4">
-              {t('confirmBooking')}
+          <div className="mt-8 bg-white rounded-xl p-8 shadow-sm border border-neutral-100">
+            <h3 className="text-xl font-black text-neutral-900 mb-6 border-b pb-4">
+              تأكيد تفاصيل الحجز
             </h3>
 
             <div className="flex flex-wrap gap-4 mb-4">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-primary-500" />
-                <span className="text-gray-700 text-gray-300">
-                  {selectedDate.toLocaleDateString()}
+              <div className="flex items-center gap-3 bg-neutral-50 px-4 py-3 rounded-xl border border-neutral-100">
+                <Calendar className="w-5 h-5 text-[#D4A017]" />
+                <span className="text-neutral-900 font-black">
+                  {selectedDate.toLocaleDateString('ar-YE', { day: '2-digit', month: 'long', year: 'numeric' })}
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-primary-500" />
-                <span className="text-gray-700 text-gray-300">
+              <div className="flex items-center gap-3 bg-neutral-50 px-4 py-3 rounded-xl border border-neutral-100">
+                <Clock className="w-5 h-5 text-[#1a3a8f]" />
+                <span className="text-neutral-900 font-black">
                   {selectedSlot.time}
                 </span>
               </div>
@@ -236,21 +261,21 @@ export default function AppointmentBookingPage({ params }: PageProps) {
               onClick={handleBookAppointment}
               disabled={isBooking}
               className={cn(
-                'w-full md:w-auto px-6 py-3 rounded-lg font-medium transition-all',
-                'bg-primary-500 text-white hover:bg-primary-600',
+                'w-full md:w-auto px-10 py-4 rounded-xl font-black transition-all text-lg',
+                'bg-[#1a3a8f] text-white hover:bg-[#152d6f] shadow-lg shadow-blue-900/20',
                 'disabled:opacity-50 disabled:cursor-not-allowed',
-                'flex items-center justify-center gap-2'
+                'flex items-center justify-center gap-3'
               )}
             >
               {isBooking ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Processing...
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                  جاري معالجة الطلب...
                 </>
               ) : (
                 <>
-                  <CheckCircle className="w-5 h-5" />
-                  {t('book')}
+                  <CheckCircle className="w-6 h-6" />
+                  تأكيد وحجز الموعد الآن
                 </>
               )}
             </button>

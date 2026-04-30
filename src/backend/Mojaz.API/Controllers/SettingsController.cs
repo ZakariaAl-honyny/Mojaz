@@ -19,6 +19,7 @@ namespace Mojaz.API.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/v1/[controller]")]
+[Route("api/v1/system-settings")]
 [Produces("application/json")]
 [Authorize]
 public class SettingsController : ControllerBase
@@ -38,6 +39,49 @@ public class SettingsController : ControllerBase
         _settingsRepository = settingsRepository;
         _auditLogRepository = auditLogRepository;
         _unitOfWork = unitOfWork;
+    }
+
+    /// <summary>
+    /// Create a new system setting.
+    /// </summary>
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(ApiResponse<SystemSettingDto>), 201)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
+    [ProducesResponseType(typeof(ApiResponse<object>), 409)]
+    public async Task<IActionResult> CreateAsync([FromBody] CreateSettingRequest request)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        // Validate request
+        if (string.IsNullOrWhiteSpace(request.Key))
+            return BadRequest(ApiResponse<SystemSettingDto>.Fail(400, "مفتاح الإعداد مطلوب."));
+
+        if (string.IsNullOrWhiteSpace(request.Value))
+            return BadRequest(ApiResponse<SystemSettingDto>.Fail(400, "قيمة الإعداد مطلوبة."));
+
+        // Create the setting
+        var success = await _settingsService.CreateAsync(request);
+        if (!success)
+        {
+            return Conflict(ApiResponse<SystemSettingDto>.Fail(409, $"الإعداد '{request.Key}' موجود بالفعل."));
+        }
+
+        await _unitOfWork.SaveChangesAsync();
+
+        // Log the creation in audit log
+        await LogSettingChangeAsync(userId, "Create", request.Key, null, request.Value);
+
+        var response = new SystemSettingDto
+        {
+            Key = request.Key,
+            Value = request.Value,
+            Category = request.Category,
+            Description = request.Description,
+            UpdatedAt = DateTime.UtcNow
+        };
+
+        return StatusCode(201, ApiResponse<SystemSettingDto>.Ok(response, "تم إنشاء الإعداد بنجاح."));
     }
 
     /// <summary>
@@ -75,6 +119,7 @@ public class SettingsController : ControllerBase
         // Calculate pagination
         var totalCount = query.Count;
         var pagedItems = query
+            .ToList()
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToList();

@@ -27,11 +27,11 @@ export function FAQSection() {
   ];
 
   return (
-    <section className="py-24 bg-neutral-50">
+    <section id="faq" className="py-24 bg-neutral-50">
       <div className="container mx-auto px-4 md:px-6 max-w-4xl">
         <ScrollReveal>
           <div className="text-center mb-16 space-y-4">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-neutral-900 font-arabic ltr:font-english">
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight text-neutral-900 font-arabic ltr:font-english">
               الأسئلة الشائعة
             </h2>
             <div className="flex justify-center">

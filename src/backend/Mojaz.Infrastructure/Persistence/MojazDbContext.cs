@@ -43,7 +43,7 @@ namespace Mojaz.Infrastructure.Persistence
         {
             foreach (var entry in ChangeTracker.Entries())
             {
-                if (entry.Entity is Mojaz.Domain.Common.BaseEntity baseEntity)
+                if (entry.Entity is Mojaz.Domain.Entities.BaseEntity baseEntity)
                 {
                     if (entry.State == EntityState.Added)
                     {

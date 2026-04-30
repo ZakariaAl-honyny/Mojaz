@@ -2,10 +2,10 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { 
-  FileText, 
-  Calendar, 
-  User, 
+import {
+  FileText,
+  Calendar,
+  User,
   LogOut,
   Settings,
   LayoutDashboard,
@@ -17,11 +17,17 @@ import {
   Stethoscope,
   Target,
   ShieldCheck,
-  BarChart3
+  BarChart3,
+  CreditCard,
+  Save,
+  FileStack,
+  GitBranch,
+  Mail,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/stores/auth-store';
 import { isEmployeeRole, isAdminRole, isApplicantRole, getRoleLabel } from '@/lib/enums';
+import { RolePermissions } from '@/lib/role-guards';
 import { motion } from 'framer-motion';
 
 interface SidebarItemProps {
@@ -33,20 +39,20 @@ interface SidebarItemProps {
 }
 
 const SidebarItem = ({ href, icon: Icon, label, active, collapsed }: SidebarItemProps) => (
-  <Link 
-    href={href} 
+  <Link
+    href={href}
     className={cn(
-      "flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 group relative",
-      active 
-        ? "bg-[#1a3a8f] text-white shadow-xl shadow-blue-900/30" 
+      "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 group relative",
+      active
+        ? "bg-white/10 text-white"
         : "text-slate-400 hover:text-white hover:bg-white/5"
     )}
   >
-    <Icon className={cn("w-5 h-5 flex-shrink-0 transition-all duration-300 group-hover:scale-110", active ? "text-white" : "text-slate-500 group-hover:text-white")} />
-    {!collapsed && <span className="font-bold text-sm tracking-tight truncate">{label}</span>}
-    
+    <Icon className={cn("w-4 h-4 flex-shrink-0 transition-all duration-300 group-hover:scale-110", active ? "text-white" : "text-slate-500 group-hover:text-white")} />
+    {!collapsed && <span className="font-bold text-[13px] tracking-tight truncate">{label}</span>}
+
     {active && (
-      <div className="absolute inset-y-3 end-0 w-1 bg-[#D4A017] rounded-full" />
+      <div className="absolute inset-y-2 end-0 w-1 bg-[#D4A017] rounded-full" />
     )}
   </Link>
 );
@@ -58,32 +64,107 @@ export default function OfficialSidebar({ collapsed = false }: { collapsed?: boo
   const isEmployee = isEmployeeRole(user?.role);
   const isAdmin = isAdminRole(user?.role);
 
+  // 1. Applicant Menu
   const applicantMenu = [
     { href: '/dashboard', icon: LayoutDashboard, label: 'لوحة التحكم' },
     { href: '/applications', icon: FileText, label: 'طلباتي' },
     { href: '/applications/new', icon: PlusCircle, label: 'طلب جديد' },
     { href: '/appointments', icon: Calendar, label: 'المواعيد' },
+    { href: '/payments', icon: CreditCard, label: 'المدفوعات' },
     { href: '/licenses', icon: FileKey2, label: 'رخصتي' },
     { href: '/notifications', icon: Bell, label: 'التنبيهات' },
   ];
 
-  const employeeMenu = [
-    { href: '/dashboard', icon: LayoutDashboard, label: 'الرئيسية' },
-    { href: '/employee/queue', icon: Activity, label: 'طابور المعاملات' },
-    { href: '/employee/medical-results', icon: Stethoscope, label: 'الفحص الطبي' },
-    { href: '/employee/test-results', icon: Target, label: 'إدخال النتائج' },
-    { href: '/employee/licenses/issue', icon: FileKey2, label: 'إصدار الرخص' },
-    { href: '/employee/reports', icon: BarChart3, label: 'التقارير' },
-    { href: '/notifications', icon: Bell, label: 'التنبيهات' },
+  // 2. Employee Menu with Granular RBAC
+  const fullEmployeeMenu = [
+    {
+      href: user?.role === 2 ? `/employee/doctor` : 
+            user?.role === 3 ? `/employee/examiner` : 
+            user?.role === 4 ? `/employee/manager` : '/dashboard',
+      icon: LayoutDashboard,
+      label: 'الرئيسية',
+      visible: true
+    },
+    {
+      href: '/employee/queue',
+      icon: Activity,
+      label: 'طابور المعاملات',
+      visible: RolePermissions.canAccessQueue(user?.role || 0)
+    },
+    {
+      href: '/employee/applications',
+      icon: FileStack,
+      label: 'قائمة الطلبات',
+      visible: RolePermissions.canAccessMedical(user?.role || 0) || RolePermissions.canAccessTesting(user?.role || 0)
+    },
+    {
+      href: '/employee/attendance',
+      icon: ClipboardList,
+      label: 'تحضير المتقدمين',
+      visible: RolePermissions.canTrackAttendance(user?.role || 0)
+    },
+    {
+      href: user?.role === 2 ? `/employee/doctor` : '/employee/medical-results',
+      icon: Stethoscope,
+      label: 'الفحص الطبي',
+      visible: RolePermissions.canAccessMedical(user?.role || 0)
+    },
+    {
+      href: user?.role === 3 ? `/employee/examiner` : '/employee/test-results',
+      icon: Target,
+      label: 'إدخال النتائج',
+      visible: RolePermissions.canAccessTesting(user?.role || 0)
+    },
+    {
+      href: '/employee/security',
+      icon: ShieldCheck,
+      label: 'التحقق الأمني',
+      visible: RolePermissions.canAccessSecurity(user?.role || 0)
+    },
+    {
+      href: '/employee/security/queue',
+      icon: Activity,
+      label: 'طابور المراجعة',
+      visible: RolePermissions.canAccessSecurity(user?.role || 0)
+    },
+    {
+      href: '/employee/security/users',
+      icon: User,
+      label: 'إدارة المستخدمين',
+      visible: RolePermissions.canAccessSecurity(user?.role || 0)
+    },
+    {
+      href: '/employee/licenses/issue',
+      icon: FileKey2,
+      label: 'إصدار الرخص',
+      visible: RolePermissions.canIssueLicense(user?.role || 0)
+    },
+    {
+      href: '/employee/reports',
+      icon: BarChart3,
+      label: 'التقارير',
+      visible: RolePermissions.canViewReports(user?.role || 0)
+    },
+    {
+      href: '/notifications',
+      icon: Bell,
+      label: 'التنبيهات',
+      visible: true
+    },
   ];
 
+  const employeeMenu = fullEmployeeMenu.filter(item => item.visible);
+
+  // 3. Admin Menu - Only visible to Admin
   const adminMenu = [
-    { href: '/dashboard', icon: LayoutDashboard, label: 'لوحة الإشراف' },
-    { href: '/admin/users', icon: User, label: 'إدارة المستخدمين' },
-    { href: '/admin/settings', icon: Settings, label: 'إعدادات النظام' },
-    { href: '/employee/reports', icon: BarChart3, label: 'تقارير الأداء' },
-    { href: '/notifications', icon: Bell, label: 'تنبيهات النظام' },
-  ];
+    { href: '/dashboard', icon: LayoutDashboard, label: 'لوحة الإشراف', visible: isAdmin },
+    { href: '/admin/users', icon: User, label: 'إدارة المستخدمين', visible: isAdmin },
+    { href: '/admin/system-settings', icon: Settings, label: 'إعدادات النظام', visible: isAdmin },
+    { href: '/admin/workflows', icon: GitBranch, label: 'سير العمل', visible: isAdmin },
+    { href: '/admin/notifications/templates', icon: Mail, label: 'قوالب الإشعارات', visible: isAdmin },
+    { href: '/employee/reports', icon: BarChart3, label: 'إحصائيات النظام', visible: isAdmin },
+    { href: '/notifications', icon: Bell, label: 'تنبيهات النظام', visible: isAdmin },
+  ].filter(item => item.visible);
 
   const menuItems = isAdmin ? adminMenu : (isEmployee ? employeeMenu : applicantMenu);
 
@@ -94,11 +175,14 @@ export default function OfficialSidebar({ collapsed = false }: { collapsed?: boo
     )} dir="rtl">
       {/* 1. Header: Mojaz System Logo and Title */}
       <div className="px-5 py-6 flex items-center gap-3 border-b border-white/5">
-        <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center p-2 shadow-xl shadow-blue-900/50">
-           <ShieldCheck className="w-5 h-5 text-[#1a3a8f]" />
+        <div className={cn(
+          "bg-white rounded-xl flex items-center justify-center shadow-xl shadow-blue-900/50 overflow-hidden",
+          collapsed ? "w-10 h-10 p-1" : "w-10 h-10 p-1.5"
+        )}>
+          <img src="/images/logo.png" alt="Mojaz Logo" className="w-full h-full object-contain brightness-110" />
         </div>
         {!collapsed && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             className="leading-tight overflow-hidden"
@@ -112,10 +196,10 @@ export default function OfficialSidebar({ collapsed = false }: { collapsed?: boo
       {/* 2. Navigation Links */}
       <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto no-scrollbar">
         {menuItems.map((item) => (
-          <SidebarItem 
-            key={item.href} 
-            {...item} 
-            active={pathname === item.href || (item.href !== '/dashboard' && pathname?.startsWith(item.href))} 
+          <SidebarItem
+            key={`${item.label}-${item.href}`}
+            {...item}
+            active={pathname === item.href || (item.href !== '/dashboard' && pathname?.startsWith(item.href))}
             collapsed={collapsed}
           />
         ))}
@@ -123,32 +207,32 @@ export default function OfficialSidebar({ collapsed = false }: { collapsed?: boo
 
       {/* 3. Footer: User Info */}
       <div className="px-3 py-4 border-t border-white/5 space-y-1.5">
-          {!collapsed && (
-            <div className="px-3 py-3 mb-2 rounded-xl bg-white/5 border border-white/5 flex items-center gap-2.5">
-               <div className="w-8 h-8 rounded-lg bg-[#1a3a8f]/20 flex items-center justify-center border border-[#1a3a8f]/30 flex-shrink-0">
-                 <User className="w-4 h-4 text-[#1a3a8f]" />
-               </div>
-               <div className="overflow-hidden">
-<p className="text-xs font-black text-white truncate leading-none mb-1">{user?.fullName || 'المستخدم'}</p>
-                  <div className="flex items-center gap-1">
-                    <div className="w-1 h-1 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50 shrink-0" />
-                    <p className="text-[8px] text-slate-500 font-black uppercase tracking-wider truncate">{isApplicantRole(user?.role) ? 'حساب مواطن' : getRoleLabel(user?.role)}</p>
-                  </div>
-               </div>
+        {!collapsed && (
+          <div className="px-3 py-3 mb-2 rounded-xl bg-white/5 border border-white/5 flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[#1a3a8f]/20 flex items-center justify-center border border-[#1a3a8f]/30 flex-shrink-0">
+              <User className="w-4 h-4 text-[#1a3a8f]" />
             </div>
-          )}
-         
-         <div className="space-y-1">
-           <SidebarItem href="/profile" icon={User} label="الملف الشخصي" collapsed={collapsed} active={pathname === '/profile'} />
-           
-           <button 
-             onClick={logout}
-             className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-all duration-200 group mt-2"
-           >
-              <LogOut className="w-5 h-5 flex-shrink-0 transition-transform group-hover:-translate-x-1" />
-              {!collapsed && <span className="font-bold text-sm">تسجيل الخروج</span>}
-           </button>
-         </div>
+            <div className="overflow-hidden">
+              <p className="text-xs font-black text-white truncate leading-none mb-1">{user?.fullName || 'المستخدم'}</p>
+              <div className="flex items-center gap-1">
+                <div className="w-1 h-1 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50 shrink-0" />
+                <p className="text-[8px] text-slate-500 font-black uppercase tracking-wider truncate">{isApplicantRole(user?.role) ? 'حساب مواطن' : getRoleLabel(user?.role)}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-1">
+          <SidebarItem href="/profile" icon={User} label="الملف الشخصي" collapsed={collapsed} active={pathname === '/profile'} />
+
+          <button
+            onClick={logout}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-all duration-200 group mt-1"
+          >
+            <LogOut className="w-4 h-4 flex-shrink-0 transition-transform group-hover:-translate-x-1" />
+            {!collapsed && <span className="font-bold text-[13px]">تسجيل الخروج</span>}
+          </button>
+        </div>
       </div>
     </aside>
   );

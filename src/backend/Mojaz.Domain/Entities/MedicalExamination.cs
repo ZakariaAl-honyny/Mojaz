@@ -1,13 +1,11 @@
-using Mojaz.Domain.Common;
 using Mojaz.Domain.Enums;
-using System;
 
 namespace Mojaz.Domain.Entities;
 
 public class MedicalExamination : SoftDeletableEntity
 {
-    public Guid ApplicationId { get; set; }
-    public Guid DoctorId { get; set; }
+    public int ApplicationId { get; set; }
+    public int DoctorId { get; set; }
     public DateTime ExaminedAt { get; set; } = DateTime.UtcNow;
     public MedicalFitnessResult FitnessResult { get; set; }
     public BloodTypeEnum? BloodType { get; set; }

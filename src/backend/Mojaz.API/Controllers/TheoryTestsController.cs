@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mojaz.Application.DTOs.Theory;
+using Mojaz.Application.Interfaces.Services;
 using Mojaz.Application.Interfaces;
 using Mojaz.Shared;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -16,23 +20,29 @@ namespace Mojaz.API.Controllers
     public class TheoryTestsController : ControllerBase
     {
         private readonly ITheoryService _theoryService;
+        private readonly IApplicationService _applicationService;
 
-        public TheoryTestsController(ITheoryService theoryService)
+        public TheoryTestsController(ITheoryService theoryService, IApplicationService applicationService)
         {
             _theoryService = theoryService;
+            _applicationService = applicationService;
         }
 
-        /// <summary>
-        /// Submit a theory test result for an application
+        /// <summary> submit a theory test result for an application
+        /// Route: api/v1/theory-tests/application/{appIdOrNumber}/result
         /// </summary>
-        [HttpPost("{appId}/result")]
+        [HttpPost("application/{appIdOrNumber}/result")]
         [Authorize(Roles = "Examiner")]
         [ProducesResponseType(typeof(ApiResponse<TheoryTestDto>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> SubmitResult(Guid appId, [FromBody] SubmitTheoryResultRequest request)
+        public async Task<IActionResult> SubmitResult(string appIdOrNumber, [FromBody] SubmitTheoryResultRequest request)
         {
+            var appId = await ResolveAppIdAsync(appIdOrNumber);
+            if (appId == Guid.Empty)
+                return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
+
             var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(nameIdentifier) || !Guid.TryParse(nameIdentifier, out var examinerId))
             {
@@ -45,13 +55,19 @@ namespace Mojaz.API.Controllers
 
         /// <summary>
         /// Get all theory test attempts for an application
+        /// Route: api/v1/theory-tests/application/{appIdOrNumber}/history
         /// </summary>
-        [HttpGet("{appId}/history")]
+        [HttpGet("application/{appIdOrNumber}/history")]
+        [Authorize(Roles = "Applicant,Receptionist,Doctor,Examiner,Manager,Security,Admin,SuperAdmin,Support")]
         [ProducesResponseType(typeof(ApiResponse<PagedResult<TheoryTestDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetHistory(Guid appId, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+        public async Task<IActionResult> GetHistory(string appIdOrNumber, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
         {
+            var appId = await ResolveAppIdAsync(appIdOrNumber);
+            if (appId == Guid.Empty)
+                return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
+
             var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!Guid.TryParse(userIdStr, out var userId))
                 return Unauthorized(ApiResponse<object>.Fail(401, "User ID not found in token."));
@@ -61,22 +77,14 @@ namespace Mojaz.API.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
-        /// <summary>
-        /// Get all theory test attempts for an application by application number.
-        /// </summary>
-        [HttpGet("by-number/{applicationNumber}/history")]
-        [ProducesResponseType(typeof(ApiResponse<PagedResult<TheoryTestDto>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetHistoryByApplicationNumber(string applicationNumber, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
-        {
-            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!Guid.TryParse(userIdStr, out var userId))
-                return Unauthorized(ApiResponse<object>.Fail(401, "User ID not found in token."));
 
-            var role = User.FindFirstValue(ClaimTypes.Role) ?? "";
-            var result = await _theoryService.GetHistoryByApplicationNumberAsync(applicationNumber, userId, role, page, pageSize);
-            return StatusCode(result.StatusCode, result);
+        private async Task<Guid> ResolveAppIdAsync(string appIdOrNumber)
+        {
+            if (string.IsNullOrWhiteSpace(appIdOrNumber)) return Guid.Empty;
+            if (Guid.TryParse(appIdOrNumber.Trim(), out var id)) return id;
+
+            var result = await _applicationService.GetByApplicationNumberAsync(appIdOrNumber.Trim());
+            return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
         }
     }
 }

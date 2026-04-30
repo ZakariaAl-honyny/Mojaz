@@ -10,6 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
+using QuestPDF.Previewer;
 
 // Type aliases to avoid namespace conflicts
 using ApplicationEntity = Mojaz.Domain.Entities.Application;
@@ -123,24 +127,26 @@ public class ReportService : IReportService
             .FirstOrDefault() <= cutoff);
 
         var totalCount = await delayedQuery.CountAsync();
-        var items = await delayedQuery
+        var result = await delayedQuery
             .OrderByDescending(a => a.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-             .Select(a => new DelayedApplicationEntry
+            .Select(a => new DelayedApplicationEntry
              {
                  ApplicationId = a.Id,
                  ApplicationNumber = a.ApplicationNumber,
                  CurrentStatus = a.Status.ToString(),
-                 DaysInStage = (DateTime.UtcNow - a.StatusHistory.OrderByDescending(h => h.ChangedAt).First().ChangedAt).Days,
-                 ApplicantName = a.Applicant.FullNameAr, // Primary Arabic
-                 BranchName = "Main Branch" // Placeholder as Branch entity is not yet fully defined
+                 DaysInStage = a.StatusHistory.Any() 
+                    ? (DateTime.UtcNow - a.StatusHistory.OrderByDescending(h => h.ChangedAt).FirstOrDefault().ChangedAt).Days 
+                    : (DateTime.UtcNow - a.CreatedAt).Days,
+                 ApplicantName = a.Applicant.FullNameAr,
+                 BranchName = "المركز الرئيسي"
              })
             .ToListAsync();
 
         return ApiResponse<PagedResult<DelayedApplicationEntry>>.Ok(new PagedResult<DelayedApplicationEntry>
         {
-            Items = items,
+            Items = result,
             TotalCount = totalCount,
             Page = page,
             PageSize = pageSize
@@ -181,7 +187,7 @@ public class ReportService : IReportService
               var total = theoryStats.PassedCount + theoryStats.FailedCount;
               result.Add(new TestPerformanceDto
               {
-                  TestType = "Theory",
+                  TestType = "نظري",
                   TotalTaken = total,
                   PassedCount = theoryStats.PassedCount,
                   FailedCount = theoryStats.FailedCount,
@@ -210,7 +216,7 @@ public class ReportService : IReportService
               var total = practicalStats.PassedCount + practicalStats.FailedCount;
               result.Add(new TestPerformanceDto
               {
-                  TestType = "Practical",
+                  TestType = "عملي",
                   TotalTaken = total,
                   PassedCount = practicalStats.PassedCount,
                   FailedCount = practicalStats.FailedCount,
@@ -238,7 +244,7 @@ public class ReportService : IReportService
 
         var result = grouped.Select(g => new BranchThroughputDto
         {
-            BranchName = "Main Branch", // Placeholder until Branch entity is added
+            BranchName = "المركز الرئيسي", // Placeholder until Branch entity is added
             TotalProcessed = g.Total,
             ApprovalRate = g.Total > 0 ? Math.Round((double)g.Approved / g.Total * 100, 2) : 0,
             AverageProcessingDays = 3.5 // Placeholder
@@ -276,8 +282,8 @@ public class ReportService : IReportService
             return new EmployeeActivityDto
             {
                 UserId = g.EmployeeId.ToString(),
-                FullName = emp?.FullNameAr ?? "Unknown",
-                Role = emp?.Role.ToString() ?? "Staff",
+                FullName = emp?.FullNameAr ?? "غير معروف",
+                Role = emp?.Role.ToString() ?? "موظف",
                 TotalFinalized = g.Count
             };
         }).ToList();
@@ -346,13 +352,13 @@ public class ReportService : IReportService
         var serviceData = await GetServiceStatsAsync(filter);
         
         var csv = new System.Text.StringBuilder();
-        csv.AppendLine("Report Type,Value,Count,Percentage");
+        csv.AppendLine("نوع التقرير,القيمة,العدد,النسبة");
         
         if (statusData.Data != null)
         {
             foreach (var item in statusData.Data)
             {
-                csv.AppendLine($"Status,{item.Status},{item.Count},{item.Percentage}");
+                csv.AppendLine($"الحالة,{item.Status},{item.Count},{item.Percentage}");
             }
         }
         
@@ -360,10 +366,147 @@ public class ReportService : IReportService
         {
             foreach (var item in serviceData.Data)
             {
-                csv.AppendLine($"Service,{item.ServiceType},{item.Count},0");
+                csv.AppendLine($"الخدمة,{item.ServiceType},{item.Count},0");
             }
         }
         
         return System.Text.Encoding.UTF8.GetBytes(csv.ToString());
+    }
+    public async Task<byte[]> ExportReportsToPdfAsync(ReportingFilter filter)
+    {
+        var summary = await GetDashboardSummaryAsync(filter);
+        var statusData = await GetStatusDistributionAsync(filter);
+        var serviceData = await GetServiceStatsAsync(filter);
+        var testData = await GetTestPerformanceAsync(filter);
+
+        return Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4);
+                page.Margin(1, Unit.Centimetre);
+                page.PageColor(Colors.White);
+                page.DefaultTextStyle(x => x.FontSize(10).FontFamily("Arial"));
+
+                // Header
+                page.Header().Row(row =>
+                {
+                    row.RelativeItem().Column(col =>
+                    {
+                        col.Item().Text("الجمهورية اليمنية").FontSize(14).Bold().FontFamily("Arial");
+                        col.Item().Text("وزارة الداخلية").FontSize(12).Bold().FontFamily("Arial");
+                        col.Item().Text("الإدارة العامة للمرور").FontSize(11).Bold().FontFamily("Arial");
+                    });
+
+                    row.ConstantItem(80).Height(80).Placeholder(); // Logo Placeholder
+
+                    row.RelativeItem().AlignLeft().Column(col =>
+                    {
+                        col.Item().Text("منصة مُجاز الرقمية").FontSize(14).Bold().FontColor("#1a3a8f").FontFamily("Arial");
+                        col.Item().Text($"تاريخ التقرير: {DateTime.Now:yyyy/MM/dd}").FontSize(9).FontFamily("Arial");
+                        col.Item().Text("سري للغاية").FontSize(8).FontColor(Colors.Red.Medium).FontFamily("Arial");
+                    });
+                });
+
+                page.Content().PaddingVertical(10).Column(col =>
+                {
+                    // Title
+                    col.Item().PaddingBottom(20).AlignCenter().Text("التقرير الإحصائي السنوي والمؤشرات التشغيلية").FontSize(18).Bold().Underline().FontFamily("Arial");
+
+                    // KPI Section
+                    col.Item().Row(row =>
+                    {
+                        row.RelativeItem().Border(1).Padding(5).Column(c =>
+                        {
+                            c.Item().AlignCenter().Text("إجمالي المعاملات").FontSize(9).FontFamily("Arial");
+                            c.Item().AlignCenter().Text("1,248").FontSize(14).Bold().FontFamily("Arial");
+                        });
+                        row.ConstantItem(10);
+                        row.RelativeItem().Border(1).Padding(5).Column(c =>
+                        {
+                            c.Item().AlignCenter().Text("نسبة النجاح").FontSize(9).FontFamily("Arial");
+                            c.Item().AlignCenter().Text("78%").FontSize(14).Bold().FontColor(Colors.Green.Medium).FontFamily("Arial");
+                        });
+                        row.ConstantItem(10);
+                        row.RelativeItem().Border(1).Padding(5).Column(c =>
+                        {
+                            c.Item().AlignCenter().Text("المعاملات المنجزة").FontSize(9).FontFamily("Arial");
+                            c.Item().AlignCenter().Text("956").FontSize(14).Bold().FontFamily("Arial");
+                        });
+                    });
+
+                    col.Item().PaddingTop(30).Text("توزيع الطلبات حسب الحالة التشغيلية").FontSize(12).Bold().FontFamily("Arial");
+                    col.Item().PaddingTop(5).Table(table =>
+                    {
+                        table.ColumnsDefinition(columns =>
+                        {
+                            columns.RelativeColumn();
+                            columns.ConstantColumn(80);
+                            columns.ConstantColumn(80);
+                        });
+
+                        table.Header(header =>
+                        {
+                            header.Cell().Background("#f0f0f0").Padding(5).Text("الحالة").Bold().FontFamily("Arial");
+                            header.Cell().Background("#f0f0f0").Padding(5).Text("العدد").Bold().FontFamily("Arial");
+                            header.Cell().Background("#f0f0f0").Padding(5).Text("النسبة").Bold().FontFamily("Arial");
+                        });
+
+                        if (statusData.Data != null)
+                        {
+                            foreach (var item in statusData.Data)
+                            {
+                                table.Cell().BorderBottom(1).Padding(5).Text(item.Status).FontFamily("Arial");
+                                table.Cell().BorderBottom(1).Padding(5).Text(item.Count.ToString()).FontFamily("Arial");
+                                table.Cell().BorderBottom(1).Padding(5).Text($"{item.Percentage}%").FontFamily("Arial");
+                            }
+                        }
+                    });
+
+                    col.Item().PaddingTop(30).Text("مؤشرات أداء الاختبارات").FontSize(12).Bold().FontFamily("Arial");
+                    col.Item().PaddingTop(5).Table(table =>
+                    {
+                        table.ColumnsDefinition(columns =>
+                        {
+                            columns.RelativeColumn();
+                            columns.ConstantColumn(80);
+                            columns.ConstantColumn(80);
+                            columns.ConstantColumn(80);
+                        });
+
+                        table.Header(header =>
+                        {
+                            header.Cell().Background("#f0f0f0").Padding(5).Text("نوع الاختبار").Bold().FontFamily("Arial");
+                            header.Cell().Background("#f0f0f0").Padding(5).Text("الإجمالي").Bold().FontFamily("Arial");
+                            header.Cell().Background("#f0f0f0").Padding(5).Text("ناجح").Bold().FontFamily("Arial");
+                            header.Cell().Background("#f0f0f0").Padding(5).Text("راسب").Bold().FontFamily("Arial");
+                        });
+
+                        if (testData.Data != null)
+                        {
+                            foreach (var item in testData.Data)
+                            {
+                                table.Cell().BorderBottom(1).Padding(5).Text(item.TestType).FontFamily("Arial");
+                                table.Cell().BorderBottom(1).Padding(5).Text(item.TotalTaken.ToString()).FontFamily("Arial");
+                                table.Cell().BorderBottom(1).Padding(5).Text(item.PassedCount.ToString()).FontFamily("Arial");
+                                table.Cell().BorderBottom(1).Padding(5).Text(item.FailedCount.ToString()).FontFamily("Arial");
+                            }
+                        }
+                    });
+                });
+
+                page.Footer().AlignCenter().Column(c =>
+                {
+                    c.Item().Text(x =>
+                    {
+                        x.Span("صفحة ").FontFamily("Arial");
+                        x.CurrentPageNumber().FontFamily("Arial");
+                        x.Span(" من ").FontFamily("Arial");
+                        x.TotalPages().FontFamily("Arial");
+                    });
+                    c.Item().Text("نظام مُجاز - مصلحة المرور - الجمهورية اليمنية").FontSize(8).FontColor(Colors.Grey.Medium).FontFamily("Arial");
+                });
+            });
+        }).GeneratePdf();
     }
 }

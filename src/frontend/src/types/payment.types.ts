@@ -1,24 +1,19 @@
-export type PaymentStatus = 
-  | 'Pending' 
-  | 'Paid' 
-  | 'Overdue' 
-  | 'Failed' 
-  | 'Refunded';
+import { PaymentStatus, FeeType } from '@/lib/enums';
 
-export type PaymentMethod = 
-  | 'Mada' 
-  | 'Visa' 
-  | 'MasterCard' 
-  | 'ApplePay'
-  | 'BankTransfer';
+// Re-export from single source
+export { PaymentStatus, FeeType } from '@/lib/enums';
 
-export type FeeType = 
-  | 'ApplicationFee' 
-  | 'MedicalFee' 
-  | 'TheoryFee' 
-  | 'PracticalFee' 
-  | 'IssuanceFee' 
-  | 'RetakeFee';
+// ============================================================
+// PaymentMethod - matches backend numeric values
+// ============================================================
+export enum PaymentMethod {
+  Mada = 0,
+  Visa = 1,
+  MasterCard = 2,
+  ApplePay = 3,
+  BankTransfer = 4,
+  Jeeb = 5
+}
 
 export interface PaymentDto {
   id: string;

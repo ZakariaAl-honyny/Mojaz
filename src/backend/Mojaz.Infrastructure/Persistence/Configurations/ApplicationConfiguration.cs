@@ -52,6 +52,10 @@ builder.Property(a => a.DataAccuracyConfirmed).IsRequired();
             
             // Query filter for soft delete
             builder.HasQueryFilter(a => !a.IsDeleted);
+            
+            // Staff Assignment fields
+            builder.Property(a => a.AssignmentNotes).HasMaxLength(500);
+            builder.HasIndex(a => a.AssignedToId).HasDatabaseName("IX_Applications_AssignedToId");
         }
     }
 }

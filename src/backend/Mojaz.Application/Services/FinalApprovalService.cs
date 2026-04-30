@@ -1,11 +1,13 @@
 using AutoMapper;
 using Mojaz.Application.DTOs.Application;
+using Mojaz.Application.Interfaces.Repositories;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Shared;
 using Mojaz.Shared.Constants;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,32 +19,39 @@ public class FinalApprovalService : IFinalApprovalService
 {
     private readonly IRepository<Mojaz.Domain.Entities.Application> _applicationRepository;
     private readonly IRepository<User> _userRepository;
+    private readonly IRepository<PaymentTransaction> _paymentRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IAuditService _auditService;
     private readonly INotificationService _notificationService;
     private readonly IGate4ValidationService _gate4ValidationService;
+    private readonly IFeeStructureRepository _feeStructureRepository;
+    private readonly ILogger<FinalApprovalService> _logger;
 
-    private const string StageFinalApproval = "08-FinalApproval";
-    private const string StageIssuancePayment = "09-IssuancePayment";
     private const string StageDocuments = "02-Documents";
 
     public FinalApprovalService(
         IRepository<Mojaz.Domain.Entities.Application> applicationRepository,
         IRepository<User> userRepository,
+        IRepository<PaymentTransaction> paymentRepository,
         IUnitOfWork unitOfWork,
         IMapper mapper,
         IAuditService auditService,
         INotificationService notificationService,
-        IGate4ValidationService gate4ValidationService)
+        IGate4ValidationService gate4ValidationService,
+        IFeeStructureRepository feeStructureRepository,
+        ILogger<FinalApprovalService> logger)
     {
         _applicationRepository = applicationRepository;
         _userRepository = userRepository;
+        _paymentRepository = paymentRepository;
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _auditService = auditService;
         _notificationService = notificationService;
         _gate4ValidationService = gate4ValidationService;
+        _feeStructureRepository = feeStructureRepository;
+        _logger = logger;
     }
 
     public async Task<ApiResponse<Gate4ValidationResultDto>> GetGate4StatusAsync(Guid applicationId, Guid managerId)
@@ -50,7 +59,7 @@ public class FinalApprovalService : IFinalApprovalService
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null)
         {
-            return ApiResponse<Gate4ValidationResultDto>.NotFound("Application not found.");
+            return ApiResponse<Gate4ValidationResultDto>.NotFound("الطلب غير موجود.");
         }
 
         var result = await _gate4ValidationService.ValidateAsync(applicationId);
@@ -70,7 +79,7 @@ public class FinalApprovalService : IFinalApprovalService
             }).ToList()
         };
 
-        return ApiResponse<Gate4ValidationResultDto>.Ok(dto, "Gate 4 validation status retrieved.");
+        return ApiResponse<Gate4ValidationResultDto>.Ok(dto, "تم استرجاع حالة التحقق من البوابة الرابعة.");
     }
 
     public async Task<ApiResponse<ApplicationDecisionDto>> FinalizeAsync(Guid applicationId, FinalizeApplicationRequest request, Guid managerId)
@@ -79,19 +88,19 @@ public class FinalApprovalService : IFinalApprovalService
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null)
         {
-            return ApiResponse<ApplicationDecisionDto>.NotFound("Application not found.");
+            return ApiResponse<ApplicationDecisionDto>.NotFound("الطلب غير موجود.");
         }
 
         // 2. Guard: Application.CurrentStage must be FinalApproval stage
-        if (application.CurrentStage != StageFinalApproval)
+        if (application.CurrentStage != ApplicationStages.Stage08FinalApproval)
         {
-            return ApiResponse<ApplicationDecisionDto>.Fail(400, "Application is not in the Final Approval stage.");
+            return ApiResponse<ApplicationDecisionDto>.Fail(400, "الطلب ليس في مرحلة الاعتماد النهائي.");
         }
 
         // 3. Guard: Application.FinalDecision must be null (not already finalized)
         if (application.FinalDecision != null)
         {
-            return ApiResponse<ApplicationDecisionDto>.Fail(409, "This application has already been finalized.");
+            return ApiResponse<ApplicationDecisionDto>.Fail(409, "تم اعتماد هذا الطلب نهائياً بالفعل.");
         }
 
         // 4. Run Gate4ValidationService if decision is Approve
@@ -102,10 +111,10 @@ public class FinalApprovalService : IFinalApprovalService
         {
             var failingConditions = gate4Result.Conditions
                 .Where(c => !c.IsPassed)
-                .Select(c => $"{c.LabelEn}: {c.FailureMessageEn}")
+                .Select(c => $"{c.LabelAr}: {c.FailureMessageAr}")
                 .ToList();
             
-            return ApiResponse<ApplicationDecisionDto>.Fail(400, "Gate 4 validation failed. Application cannot be approved.", failingConditions);
+            return ApiResponse<ApplicationDecisionDto>.Fail(400, "فشل التحقق من البوابة الرابعة. لا يمكن اعتماد الطلب.", failingConditions);
         }
 
         // 6. Record decision on Application entity
@@ -124,7 +133,38 @@ public class FinalApprovalService : IFinalApprovalService
         {
             case FinalDecisionType.Approved:
                 newStatus = ApplicationStatus.Approved;
-                newStage = StageIssuancePayment;
+                newStage = ApplicationStages.Stage09IssuancePayment;
+                
+                // Create payment for issuance fee
+                try
+                {
+                    var issuanceFee = await _feeStructureRepository.GetActiveFeeAsync(FeeType.IssuanceFee, application.LicenseCategoryId);
+                    if (issuanceFee != null && issuanceFee.Amount > 0)
+                    {
+                        var issuancePayment = new PaymentTransaction
+                        {
+                            ApplicationId = applicationId,
+                            FeeType = FeeType.IssuanceFee,
+                            Amount = issuanceFee.Amount,
+                            Status = PaymentStatus.Pending,
+                            PaymentMethod = "System",
+                            TransactionReference = $"TXN_{Guid.NewGuid()}"
+                        };
+                        await _paymentRepository.AddAsync(issuancePayment);
+                        _logger.LogInformation("Created issuance payment for application {ApplicationId}, amount: {Amount}", 
+                            applicationId, issuanceFee.Amount);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("No active issuance fee found for application {ApplicationId}, category: {CategoryId}", 
+                            applicationId, application.LicenseCategoryId);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Don't block final approval if payment creation fails
+                    _logger.LogError(ex, "Failed to create issuance payment for application {ApplicationId}", applicationId);
+                }
                 break;
             case FinalDecisionType.Rejected:
                 newStatus = ApplicationStatus.Rejected;
@@ -152,7 +192,7 @@ public class FinalApprovalService : IFinalApprovalService
             ToStatus = newStatus,
             ChangedBy = managerId,
             ChangedAt = DateTime.UtcNow,
-            Notes = $"Final Decision: {request.Decision}"
+            Notes = $"القرار النهائي: {request.Decision}"
         };
         await _unitOfWork.Repository<ApplicationStatusHistory>().AddAsync(statusHistory);
 
@@ -277,10 +317,10 @@ public class FinalApprovalService : IFinalApprovalService
 
         var successMessage = request.Decision switch
         {
-            FinalDecisionType.Approved => "Application approved successfully.",
-            FinalDecisionType.Rejected => "Application rejected.",
-            FinalDecisionType.Returned => "Application returned for correction.",
-            _ => "Final decision recorded."
+            FinalDecisionType.Approved => "تم اعتماد الطلب بنجاح.",
+            FinalDecisionType.Rejected => "تم رفض الطلب.",
+            FinalDecisionType.Returned => "تم إعادة الطلب للتصحيح.",
+            _ => "تم تسجيل القرار النهائي."
         };
 
         return ApiResponse<ApplicationDecisionDto>.Ok(responseDto, successMessage);

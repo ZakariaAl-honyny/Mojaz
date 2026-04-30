@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { FeeType } from "@/lib/enums";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -9,8 +10,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   CheckCircle2, 
   FileUp, 
-  ChevronRight, 
-  ChevronLeft, 
   AlertCircle,
   CreditCard,
   Loader2,
@@ -24,16 +23,15 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { RadioGroup } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import apiClient from "@/lib/api-client";
 import toast from "react-hot-toast";
 import { PaymentSimModal } from "@/components/domain/payment/PaymentSimModal";
 import LicenseService from "@/services/license.service";
 import { ReplacementReason } from "@/types/application.types";
+import { FileUploader } from "@/components/shared/FileUploader";
 
 const replacementSchema = z.object({
   reason: z.string({
@@ -43,8 +41,8 @@ const replacementSchema = z.object({
     message: "يجب الموافقة على التعهد للمتابعة",
   }),
   documents: z.object({
-    policeReport: z.any().optional(),
-    damagedPhoto: z.any().optional(),
+    policeReport: z.instanceof(File).optional(),
+    damagedPhoto: z.instanceof(File).optional(),
   }),
 });
 
@@ -54,6 +52,7 @@ export default function ReplacementWizard() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isSubmittingRef = useRef(false);
   const [applicationNumber, setApplicationNumber] = useState<string | null>(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isEligible, setIsEligible] = useState<boolean | null>(null);
@@ -123,7 +122,8 @@ export default function ReplacementWizard() {
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
 
   const onSubmit = async (data: ReplacementFormValues) => {
-    if (!licenseInfo) return;
+    if (!licenseInfo || isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
     setIsSubmitting(true);
     try {
       const documentIds: string[] = [];
@@ -148,7 +148,7 @@ export default function ReplacementWizard() {
 
       const response = await LicenseService.submitReplacement({
         licenseId: licenseInfo.id,
-        reason: reasonMap[data.reason] as any,
+        reason: reasonMap[data.reason],
         documentIds: documentIds
       });
 
@@ -162,10 +162,12 @@ export default function ReplacementWizard() {
           toast.success("تم تقديم الطلب بنجاح، يرجى سداد الرسوم للمتابعة.");
         }
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "فشل تقديم الطلب.");
+    } catch (error) {
+      const err = error as { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || "فشل تقديم الطلب.");
     } finally {
       setIsSubmitting(false);
+      isSubmittingRef.current = false;
     }
   };
 
@@ -173,11 +175,12 @@ export default function ReplacementWizard() {
     setIsPaymentModalOpen(false);
     if (success && applicationNumber) {
       try {
-        await apiClient.post(`/api/v1/applications/${applicationNumber}/process-payment`);
+        await apiClient.post(`/applications/${applicationNumber}/process-payment`);
         toast.success("تم سداد الرسوم بنجاح. جاري إصدار الرخص الجديدة...");
         setTimeout(() => router.push("/applications"), 1500);
-      } catch (error: any) {
-        toast.error(error.response?.data?.message || "حدث خطأ أثناء معالجة الدفع.");
+      } catch (error) {
+        const err = error as { response?: { data?: { message?: string } } };
+        toast.error(err.response?.data?.message || "حدث خطأ أثناء معالجة الدفع.");
       }
     }
   };
@@ -205,7 +208,7 @@ export default function ReplacementWizard() {
             تشير سجلاتنا إلى عدم أهليتك لطلب بدل تالف/مفقود حالياً. 
             يرجى التأكد من وجود رخصة نشطة أو مراجعة أقرب فرع للمرور.
           </p>
-<Button onClick={() => router.push("/dashboard")} className="w-full h-10 md:h-12 px-6 md:px-8 rounded-md bg-[#1a3a8f] hover:bg-[#002868] text-sm md:text-base text-white font-black transition-all">
+          <Button onClick={() => router.push("/dashboard")} className="w-full h-12 px-8 rounded-xl bg-[#1a3a8f] hover:bg-[#002868] text-white font-black transition-all">
              العودة للوحة التحكم
            </Button>
         </CardContent>
@@ -274,7 +277,7 @@ export default function ReplacementWizard() {
               {currentStep === 0 && (
                 <div className="space-y-8">
                   <RadioGroup 
-                    onValueChange={(val) => setValue("reason", val as any)}
+                    onValueChange={(val) => setValue("reason", val)}
                     defaultValue={currentReason}
                     className="grid grid-cols-1 gap-6"
                   >
@@ -325,7 +328,7 @@ export default function ReplacementWizard() {
                        {watch("agreed") && <CheckCircle2 className="w-6 h-6 text-white" />}
                     </div>
                     <Label className="text-xl font-black text-neutral-700 cursor-pointer select-none leading-tight">
-                      أوافق على الشروط والتعهد المذكور أعلاه
+                       أوافق على الشروط والتعهد المذكور أعلاه
                     </Label>
                   </div>
                    {errors.agreed && <p className="text-red-500 text-xs font-black flex items-center gap-2 mt-4 px-4"><AlertCircle className="w-4 h-4" /> {errors.agreed.message}</p>}
@@ -333,48 +336,41 @@ export default function ReplacementWizard() {
               )}
 
               {currentStep === 2 && (
-                <div className="space-y-10">
+                <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="text-center space-y-4 mb-10">
                     <div className="w-24 h-24 bg-[#1a3a8f]/5 rounded-full flex items-center justify-center mx-auto border-4 border-white shadow-xl">
                       <FileUp className="w-12 h-12 text-[#1a3a8f]" />
                     </div>
-                    <h3 className="text-3xl font-black text-[#1a3a8f] tracking-tighter">تحميل المرفقات المطلوبة</h3>
-                    <p className="text-sm font-bold text-neutral-500">يرجى إرفاق المستندات بصيغة واضحة (JPG, PNG, PDF) بحد أقصى 5 ميجابايت</p>
+                    <h3 className="text-3xl font-black text-[#1a3a8f] tracking-tighter">مركز المرفقات السيادية</h3>
+                    <p className="text-sm font-bold text-neutral-500">يرجى توفير الوثائق الرسمية المطلوبة لضمان معالجة طلبكم</p>
                   </div>
                   
-                  <div className="max-w-2xl mx-auto space-y-8">
+                  <div className="max-w-2xl mx-auto space-y-12">
                     {currentReason === "stolen" && (
-                      <div className="space-y-4">
-                        <Label className="font-black text-lg flex items-center gap-3 mr-2">
-                          <CheckCircle2 className="w-6 h-6 text-[#1a3a8f]" />
-                          نسخة من مشروع محضر الشرطة
-                        </Label>
-                        <Input 
-                          type="file" 
-                          onChange={(e) => setValue("documents.policeReport", e.target.files?.[0])}
-                          className="h-24 bg-neutral-50 border-4 border-dashed border-neutral-100 rounded-3xl cursor-pointer file:h-12 file:bg-[#1a3a8f] file:text-white file:border-0 file:rounded-xl file:px-8 file:font-black file:mx-4 hover:file:bg-[#002868] transition-all flex items-center"
-                          accept=".jpg,.jpeg,.png,.pdf"
-                        />
-                      </div>
+                      <FileUploader 
+                        label="محضر الشرطة الرسمي"
+                        value={watch("documents.policeReport")}
+                        onFileSelect={(file) => setValue("documents.policeReport", file as File)}
+                        error={errors.documents?.policeReport?.message}
+                      />
                     )}
                     {currentReason === "damaged" && (
-                      <div className="space-y-4">
-                        <Label className="font-black text-lg flex items-center gap-3 mr-2">
-                           <CheckCircle2 className="w-6 h-6 text-[#1a3a8f]" />
-                          صورة واضحة للرخصة التالفة
-                        </Label>
-                        <Input 
-                          type="file" 
-                          onChange={(e) => setValue("documents.damagedPhoto", e.target.files?.[0])}
-                          className="h-24 bg-neutral-50 border-4 border-dashed border-neutral-100 rounded-3xl cursor-pointer file:h-12 file:bg-[#1a3a8f] file:text-white file:border-0 file:rounded-xl file:px-8 file:font-black file:mx-4 hover:file:bg-[#002868] transition-all flex items-center"
-                          accept=".jpg,.jpeg,.png,.pdf"
-                        />
-                      </div>
+                      <FileUploader 
+                        label="صورة الرخصة التالفة"
+                        value={watch("documents.damagedPhoto")}
+                        onFileSelect={(file) => setValue("documents.damagedPhoto", file as File)}
+                        error={errors.documents?.damagedPhoto?.message}
+                      />
                     )}
                      {currentReason === "lost" && (
-                       <div className="p-16 text-center bg-neutral-50 rounded-[3rem] border-4 border-dashed border-neutral-100 space-y-6">
-                         <CheckCircle2 className="w-20 h-20 text-[#1a3a8f] opacity-20 mx-auto" />
-                         <p className="text-xl font-black text-neutral-400">لا يتطلب هذا الطلب مرفقات إضافية حالياً</p>
+                       <div className="p-20 text-center bg-neutral-50/50 rounded-[4rem] border-4 border-dashed border-neutral-100 flex flex-col items-center space-y-6 group hover:border-[#1a3a8f]/10 transition-all">
+                         <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                             <ShieldCheck className="w-12 h-12 text-[#1a3a8f]/20" />
+                         </div>
+                         <div className="space-y-2">
+                           <p className="text-2xl font-black text-neutral-900 tracking-tighter">نظام التحقق الذاتي نشط</p>
+                           <p className="text-sm font-bold text-neutral-400 max-w-xs mx-auto">لا يتطلب طلب بدل مفقود مرفقات ورقية حالياً، سيتم الاعتماد على سجلاتك الرقمية.</p>
+                         </div>
                        </div>
                      )}
                   </div>
@@ -386,7 +382,7 @@ export default function ReplacementWizard() {
                   <div className="p-12 bg-[#1a3a8f]/5 rounded-[3rem] border border-[#1a3a8f]/10 shadow-inner space-y-10">
                     <div className="flex justify-between items-center border-b border-[#1a3a8f]/10 pb-8">
                       <h3 className="text-3xl font-black text-[#1a3a8f] tracking-tighter">ملخص الطلب</h3>
-                      <div className="bg-[#1a3a8f] text-white px-8 py-3 rounded-2xl text-lg font-black shadow-xl shadow-blue-900/30">رسوم الخدمة: 50.00 ريال</div>
+                      <div className="bg-[#1a3a8f] text-white px-8 py-3 rounded-2xl text-lg font-black shadow-xl shadow-blue-900/30">رسوم الخدمة: 50.00 ر.ي</div>
                     </div>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-lg">
@@ -401,12 +397,12 @@ export default function ReplacementWizard() {
                         <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest block">المستندات المرفقة</span>
                         <div className="space-y-3">
                           {currentReason === "stolen" && (
-                            watch("documents.policeReport") 
+                            documents.policeReport 
                               ? <span className="flex items-center gap-3 text-emerald-600 font-black px-6 py-4 bg-white rounded-2xl border-2 border-emerald-100 shadow-md w-fit"><CheckCircle2 className="w-6 h-6" /> محضر الشرطة جاهز</span> 
                               : <span className="flex items-center gap-3 text-red-500 font-black px-6 py-4 bg-white rounded-2xl border-2 border-red-100 shadow-md w-fit"><AlertCircle className="w-6 h-6" /> المستند مفقود</span>
                           )}
                           {currentReason === "damaged" && (
-                            watch("documents.damagedPhoto") 
+                            documents.damagedPhoto 
                               ? <span className="flex items-center gap-3 text-emerald-600 font-black px-6 py-4 bg-white rounded-2xl border-2 border-emerald-100 shadow-md w-fit"><CheckCircle2 className="w-6 h-6" /> صورة التلف جاهزة</span> 
                               : <span className="flex items-center gap-3 text-red-500 font-black px-6 py-4 bg-white rounded-2xl border-2 border-red-100 shadow-md w-fit"><AlertCircle className="w-6 h-6" /> المستند مفقود</span>
                           )}
@@ -441,14 +437,14 @@ export default function ReplacementWizard() {
                      
                      <div className="w-full max-w-md overflow-hidden rounded-[3rem] border-4 border-neutral-50 bg-white shadow-2xl">
                         <div className="p-10 space-y-6">
-                          <div className="flex justify-between items-center text-lg">
-                            <span className="text-neutral-400 font-bold">رسوم استخراج البديل</span>
-                            <span className="font-black text-[#1a3a8f]">50.00 ر.ي</span>
-                          </div>
-                          <div className="flex justify-between items-center text-lg">
-                            <span className="text-neutral-400 font-bold">ضريبة القيمة المضافة</span>
-                            <span className="font-black text-[#1a3a8f]">0.00 ر.ي</span>
-                          </div>
+                           <div className="flex justify-between items-center text-lg">
+                             <span className="text-neutral-400 font-bold">رسوم استخراج البديل</span>
+                             <span className="font-black text-[#1a3a8f]">50.00 ر.ي</span>
+                           </div>
+                           <div className="flex justify-between items-center text-lg">
+                             <span className="text-neutral-400 font-bold">ضريبة القيمة المضافة</span>
+                             <span className="font-black text-[#1a3a8f]">0.00 ر.ي</span>
+                           </div>
                         </div>
                         <div className="p-10 bg-[#1a3a8f] flex justify-between items-center">
                            <span className="font-black text-2xl text-white">الإجمالي المستحق</span>
@@ -483,10 +479,11 @@ export default function ReplacementWizard() {
               {currentStep < 3 ? (
                  <Button 
                    onClick={nextStep} 
+                   disabled={isSubmitting}
                    className="h-16 px-12 bg-[#1a3a8f] hover:bg-[#002868] text-white text-lg font-black rounded-2xl shadow-xl shadow-blue-900/20 group"
                  >
                    <span>التالي</span>
-                   <ArrowLeft className="w-5 h-5 mr-3 transition-transform group-hover:-translate-x-1" />
+                   <ArrowLeft className="w-5 h-5 me-3 transition-transform group-hover:translate-x-1" />
                  </Button>
               ) : currentStep === 3 ? (
                  <Button 
@@ -508,11 +505,11 @@ export default function ReplacementWizard() {
         </motion.div>
       </AnimatePresence>
 
-<PaymentSimModal
+      <PaymentSimModal
         isOpen={isPaymentModalOpen}
         onClose={handlePaymentSuccess}
         applicationNumber={applicationNumber || ""}
-        feeType={0}
+        feeType={FeeType.ReplacementFee}
         amount={50}
       />
     </div>

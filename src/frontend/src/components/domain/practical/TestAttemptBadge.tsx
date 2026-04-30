@@ -2,27 +2,28 @@
 
 import { cn } from '@/lib/utils';
 import { CheckCircle2, XCircle, Clock } from 'lucide-react';
+import { TestResult } from '@/lib/enums';
 
 interface TestAttemptBadgeProps {
-  result: 'Pass' | 'Fail' | 'Absent';
+  result: TestResult;
 }
 
 export function TestAttemptBadge({ result }: TestAttemptBadgeProps) {
-  const getStatusConfig = (res: string) => {
+  const getStatusConfig = (res: TestResult) => {
     switch (res) {
-      case 'Pass':
+      case TestResult.Pass:
         return {
-          label: 'ناجح (اجتيار)',
+          label: 'ناجح (اجتياز)',
           icon: CheckCircle2,
           styles: 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20',
         };
-      case 'Fail':
+      case TestResult.Fail:
         return {
           label: 'راسب (لم يجتز)',
           icon: XCircle,
           styles: 'bg-red-500 text-white shadow-lg shadow-red-500/20',
         };
-      case 'Absent':
+      case TestResult.Absent:
         return {
           label: 'غائب',
           icon: Clock,
@@ -50,3 +51,4 @@ export function TestAttemptBadge({ result }: TestAttemptBadgeProps) {
     </div>
   );
 }
+

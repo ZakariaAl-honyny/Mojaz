@@ -6,6 +6,10 @@ public class EligibilityResponse
 {
     public bool IsEligible { get; set; }
     public string? Reason { get; set; }
+    public Guid? LicenseId { get; set; }
+    public string? LicenseNumber { get; set; }
+    public string? LicenseCategoryCode { get; set; }
+    public string? LicenseCategoryName { get; set; }
     public DateTime? CurrentLicenseExpiresAt { get; set; }
     public DateTime? GracePeriodEndsAt { get; set; }
     public decimal? RenewalFeeAmount { get; set; }

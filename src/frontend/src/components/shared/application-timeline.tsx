@@ -77,7 +77,7 @@ export const ApplicationTimeline = ({ timeline, className }: ApplicationTimeline
             </div>
 
             {/* Content */}
-            <div className="flex-1 text-right pt-1">
+            <div className="flex-1 text-end pt-1">
               <div className="flex flex-wrap items-center gap-3 mb-3 justify-start">
                 <h4 className={cn(
                   "font-black text-lg tracking-tight",

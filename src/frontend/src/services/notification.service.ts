@@ -21,7 +21,7 @@ export const notificationService = {
     pageSize: number = 20
   ): Promise<ApiResponse<NotificationListResponse>> {
     const response = await apiClient.get<ApiResponse<NotificationListResponse>>(
-      '/notifications',
+      'notifications',
       {
         params: { page, pageSize },
       }
@@ -34,7 +34,7 @@ export const notificationService = {
    */
   async getUnreadCount(): Promise<ApiResponse<UnreadCountResponse>> {
     const response = await apiClient.get<ApiResponse<UnreadCountResponse>>(
-      '/notifications/unread-count'
+      'notifications/unread-count'
     );
     return response.data;
   },
@@ -44,7 +44,7 @@ export const notificationService = {
    */
   async markAllAsRead(): Promise<ApiResponse<MarkAllReadResponse>> {
     const response = await apiClient.patch<ApiResponse<MarkAllReadResponse>>(
-      '/notifications/read-all'
+      'notifications/read-all'
     );
     return response.data;
   },
@@ -54,7 +54,7 @@ export const notificationService = {
    */
   async markAsRead(notificationId: number): Promise<ApiResponse<void>> {
     const response = await apiClient.patch<ApiResponse<void>>(
-      `/notifications/${notificationId}/read`
+      `notifications/${notificationId}/read`
     );
     return response.data;
   },

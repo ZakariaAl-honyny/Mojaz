@@ -16,4 +16,5 @@ public interface IReportService
     Task<ApiResponse<List<EmployeeActivityDto>>> GetEmployeeActivityAsync(ReportingFilter filter);
     Task<ApiResponse<List<DailyLoadDto>>> GetIssuanceTimelineAsync(ReportingFilter filter);
     Task<byte[]> ExportReportsToCsvAsync(ReportingFilter filter);
+    Task<byte[]> ExportReportsToPdfAsync(ReportingFilter filter);
 }

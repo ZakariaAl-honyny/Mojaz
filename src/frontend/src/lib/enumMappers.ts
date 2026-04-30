@@ -45,7 +45,8 @@ export const ServiceTypeLabels: Record<ServiceType, string> = {
   [ServiceType.InternationalLicense]: "رخصة دولية",
   [ServiceType.StatusChange]: "تغيير حالة",
   [ServiceType.MedicalExtension]: "تمديد طبي",
-  [ServiceType.TemporaryLicense]: "رخصة مؤقتة"
+  [ServiceType.TemporaryLicense]: "رخصة مؤقتة",
+  [ServiceType.TestRetake]: "إعادة الاختبار"
 };
 
 // ============================================================
@@ -159,6 +160,29 @@ export const ApplicantTypeLabels: Record<ApplicantType, string> = {
 // Helper function to get any enum label
 // ============================================================
 export function getEnumLabel<T extends number>(mapper: Record<T, string>, value: T | number): string {
-  const num = typeof value === 'number' ? value : parseInt(value as any);
+  const num = typeof value === 'number' ? value : parseInt(value as unknown as string);
   return mapper[num as T] ?? 'غير معروف';
 }
+
+// ============================================================
+// Safe enum comparison helpers (use strict equality)
+// ============================================================
+export const isApplicationStatus = (value: unknown): value is ApplicationStatus => {
+  return typeof value === 'number' && value >= 0 && value <= 14;
+};
+
+export const isServiceType = (value: unknown): value is ServiceType => {
+  return typeof value === 'number' && value >= 0 && value <= 8;
+};
+
+export const isFeeType = (value: unknown): value is FeeType => {
+  return typeof value === 'number' && value >= 0 && value <= 8;
+};
+
+export const isPaymentStatus = (value: unknown): value is PaymentStatus => {
+  return typeof value === 'number' && value >= 0 && value <= 3;
+};
+
+export const isUserRole = (value: unknown): value is UserRole => {
+  return typeof value === 'number' && value >= 0 && value <= 6;
+};

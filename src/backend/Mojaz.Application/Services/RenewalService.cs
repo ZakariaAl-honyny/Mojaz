@@ -83,7 +83,7 @@ public class RenewalService : IRenewalService
 
             if (license == null)
             {
-                return ApiResponse<EligibilityResponse>.Fail(400, "No eligible license found for this category.");
+                return ApiResponse<EligibilityResponse>.Fail(400, "لم يتم العثور على رخصة مؤهلة لهذه الفئة.");
             }
 
             // Check grace period
@@ -107,21 +107,32 @@ public class RenewalService : IRenewalService
 
             if (!isWithinGracePeriod)
             {
-                return ApiResponse<EligibilityResponse>.Fail(400, "License is outside the renewal grace period.");
+                return ApiResponse<EligibilityResponse>.Fail(400, "الرخصة خارج فترة السماح للتجديد.");
             }
 
-            // Get renewal fee - use category ID in the fee type name
-            var feeTypeStr = $"RenewalFee_{licenseCategoryId}";
-            var feeStructures = await _feeStructureRepository.FindAsync(f =>
-                f.IsActive);
+            // Check for security/judicial block
+            var holder = await _userRepository.GetByIdAsync(applicantId);
+            if (holder != null && holder.IsSecurityBlocked)
+            {
+                return ApiResponse<EligibilityResponse>.Fail(403, "يوجد حظر أمني على ملف مقدم الطلب.");
+            }
 
-            var feeTypeEnum = Enum.Parse<FeeType>(feeTypeStr, true);
-            var renewalFee = feeStructures.FirstOrDefault(f => 
-                f.FeeType == feeTypeEnum)?.Amount ?? 0;
+            // Get renewal fee by FeeType.RenewalFee and category ID
+            var feeStructures = await _feeStructureRepository.FindAsync(f =>
+                f.IsActive && f.FeeType == FeeType.RenewalFee && f.LicenseCategoryId == licenseCategoryId);
+
+            var renewalFee = feeStructures.FirstOrDefault()?.Amount ?? 0;
+
+            // Get category info
+            var categoryInfo = await _licenseCategoryRepository.GetByIdAsync(licenseCategoryId);
 
             var response = new EligibilityResponse
             {
                 IsEligible = true,
+                LicenseId = license.Id,
+                LicenseNumber = license.LicenseNumber,
+                LicenseCategoryCode = categoryInfo?.Code.ToString(),
+                LicenseCategoryName = categoryInfo?.NameAr,
                 CurrentLicenseExpiresAt = license.ExpiresAt,
                 GracePeriodEndsAt = license.Status == LicenseStatus.Active ? license.ExpiresAt : gracePeriodEnd,
                 RenewalFeeAmount = renewalFee
@@ -132,7 +143,7 @@ public class RenewalService : IRenewalService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error validating eligibility for renewal");
-            return ApiResponse<EligibilityResponse>.Fail(500, "An error occurred while validating eligibility.");
+            return ApiResponse<EligibilityResponse>.Fail(500, "حدث خطأ أثناء التحقق من الأهلية.");
         }
     }
 
@@ -144,14 +155,14 @@ public class RenewalService : IRenewalService
             var oldLicense = await _licenseRepository.GetByIdAsync(request.OldLicenseId);
             if (oldLicense == null)
             {
-                return ApiResponse<Guid>.NotFound("Old license not found.");
+                return ApiResponse<Guid>.NotFound("الرخصة القديمة غير موجودة.");
             }
 
             // Validate category
             var category = await _licenseCategoryRepository.GetByIdAsync(request.LicenseCategoryId);
             if (category == null)
             {
-                return ApiResponse<Guid>.NotFound("License category not found.");
+                return ApiResponse<Guid>.NotFound("فئة الرخصة غير موجودة.");
             }
 
             // Check for existing pending renewal application (using Draft as initial status)
@@ -162,17 +173,23 @@ public class RenewalService : IRenewalService
 
             if (existingRenewal.Any())
             {
-                return ApiResponse<Guid>.Fail(409, "A renewal application already exists for this license.");
+                return ApiResponse<Guid>.Fail(409, "يوجد طلب تجديد لهذا الطلب بالفعل.");
             }
 
             // Create renewal application
+            // Renewal workflow skips: Stage 05 (Training), Stage 06 (Theory), Stage 07 (Practical)
             var renewalApplication = new RenewalApplication
             {
                 ApplicantId = oldLicense.HolderId,
                 OldLicenseId = request.OldLicenseId,
                 LicenseCategoryId = request.LicenseCategoryId,
                 Status = ApplicationStatus.Draft,
-                ServiceType = ServiceType.Renewal
+                ServiceType = ServiceType.Renewal,
+                
+                // Mark stages as exempt for simplified renewal workflow
+                TrainingExempt = true,
+                TheoryExempt = true,
+                PracticalExempt = true
             };
 
             await _renewalApplicationRepository.AddAsync(renewalApplication);
@@ -180,12 +197,12 @@ public class RenewalService : IRenewalService
 
             _logger.LogInformation("Renewal application created: {ApplicationId}", renewalApplication.Id);
 
-            return ApiResponse<Guid>.Ok(renewalApplication.Id, "Renewal application created successfully.");
+            return ApiResponse<Guid>.Ok(renewalApplication.Id, "تم إنشاء طلب التجديد بنجاح.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error creating renewal application");
-            return ApiResponse<Guid>.Fail(500, "An error occurred while creating the renewal application.");
+            return ApiResponse<Guid>.Fail(500, "حدث خطأ أثناء إنشاء طلب التجديد.");
         }
     }
 
@@ -196,19 +213,19 @@ public class RenewalService : IRenewalService
             var renewalApplication = await _renewalApplicationRepository.GetByIdAsync(applicationId);
             if (renewalApplication == null)
             {
-                return ApiResponse<bool>.NotFound("Renewal application not found.");
+                return ApiResponse<bool>.NotFound("طلب التجديد غير موجود.");
             }
 
             var medicalExam = await _medicalExaminationRepository.GetByIdAsync(medicalExaminationId);
             if (medicalExam == null)
             {
-                return ApiResponse<bool>.NotFound("Medical examination not found.");
+                return ApiResponse<bool>.NotFound("الفحص الطبي غير موجود.");
             }
 
             // Validate medical exam is fit
             if (medicalExam.FitnessResult != MedicalFitnessResult.Fit)
             {
-                return ApiResponse<bool>.Fail(400, "Medical examination must show fitness for renewal.");
+                return ApiResponse<bool>.Fail(400, "يجب أن يظهر الفحص الطبي اللياقة البدنية للتجديد.");
             }
 
             renewalApplication.MedicalExaminationId = medicalExaminationId;
@@ -218,12 +235,12 @@ public class RenewalService : IRenewalService
 
             _logger.LogInformation("Medical result processed for renewal application: {ApplicationId}", applicationId);
 
-            return ApiResponse<bool>.Ok(true, "Medical result processed successfully.");
+            return ApiResponse<bool>.Ok(true, "تمت معالجة نتيجة الفحص الطبي بنجاح.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error processing medical result for renewal application: {ApplicationId}", applicationId);
-            return ApiResponse<bool>.Fail(500, "An error occurred while processing the medical result.");
+            return ApiResponse<bool>.Fail(500, "حدث خطأ أثناء معالجة نتيجة الفحص الطبي.");
         }
     }
 
@@ -234,18 +251,21 @@ public class RenewalService : IRenewalService
             var renewalApplication = await _renewalApplicationRepository.GetByIdAsync(applicationId);
             if (renewalApplication == null)
             {
-                return ApiResponse<bool>.NotFound("Renewal application not found.");
+                return ApiResponse<bool>.NotFound("طلب التجديد غير موجود.");
             }
 
             // Validate medical exam is completed
             if (!renewalApplication.MedicalExaminationId.HasValue)
             {
-                return ApiResponse<bool>.Fail(400, "Medical examination must be completed before payment.");
+                return ApiResponse<bool>.Fail(400, "يجب إكمال الفحص الطبي قبل عملية الدفع.");
             }
 
-            // Get the fee type for renewal
-            var feeTypeStr = $"RenewalFee_{renewalApplication.LicenseCategoryId}";
-            var feeTypeEnum = Enum.Parse<FeeType>(feeTypeStr, true);
+            // Get the renewal fee from fee structures
+            var feeStructures = await _feeStructureRepository.FindAsync(f =>
+                f.IsActive && f.FeeType == FeeType.RenewalFee && f.LicenseCategoryId == renewalApplication.LicenseCategoryId);
+            var renewalFee = feeStructures.FirstOrDefault()?.Amount ?? paymentInfo.Amount;
+
+            var feeTypeEnum = FeeType.RenewalFee;
 
             // Create payment transaction
             var payment = new PaymentTransaction
@@ -267,12 +287,12 @@ public class RenewalService : IRenewalService
 
             _logger.LogInformation("Renewal fee paid for application: {ApplicationId}", applicationId);
 
-            return ApiResponse<bool>.Ok(true, "Renewal fee paid successfully.");
+            return ApiResponse<bool>.Ok(true, "تم دفع رسوم التجديد بنجاح.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error processing renewal fee payment for application: {ApplicationId}", applicationId);
-            return ApiResponse<bool>.Fail(500, "An error occurred while processing the payment.");
+            return ApiResponse<bool>.Fail(500, "حدث خطأ أثناء معالجة عملية الدفع.");
         }
     }
 
@@ -283,39 +303,39 @@ public class RenewalService : IRenewalService
             var renewalApplication = await _renewalApplicationRepository.GetByIdAsync(applicationId);
             if (renewalApplication == null)
             {
-                return ApiResponse<IssueLicenseResponse>.NotFound("Renewal application not found.");
+                return ApiResponse<IssueLicenseResponse>.NotFound("طلب التجديد غير موجود.");
             }
 
             // Validate all prerequisites
             if (!renewalApplication.MedicalExaminationId.HasValue)
             {
-                return ApiResponse<IssueLicenseResponse>.Fail(400, "Medical examination must be completed.");
+                return ApiResponse<IssueLicenseResponse>.Fail(400, "يجب إكمال الفحص الطبي.");
             }
 
             if (!renewalApplication.RenewalFeePaid)
             {
-                return ApiResponse<IssueLicenseResponse>.Fail(400, "Renewal fee must be paid.");
+                return ApiResponse<IssueLicenseResponse>.Fail(400, "يجب دفع رسوم التجديد.");
             }
 
             // Get old license
             var oldLicense = await _licenseRepository.GetByIdAsync(renewalApplication.OldLicenseId);
             if (oldLicense == null)
             {
-                return ApiResponse<IssueLicenseResponse>.NotFound("Old license not found.");
+                return ApiResponse<IssueLicenseResponse>.NotFound("الرخصة القديمة غير موجودة.");
             }
 
             // Get category for validity
             var category = await _licenseCategoryRepository.GetByIdAsync(renewalApplication.LicenseCategoryId);
             if (category == null)
             {
-                return ApiResponse<IssueLicenseResponse>.NotFound("License category not found.");
+                return ApiResponse<IssueLicenseResponse>.NotFound("فئة الرخصة غير موجودة.");
             }
 
             // Get holder
             var holder = await _userRepository.GetByIdAsync(renewalApplication.ApplicantId);
             if (holder == null)
             {
-                return ApiResponse<IssueLicenseResponse>.NotFound("License holder not found.");
+                return ApiResponse<IssueLicenseResponse>.NotFound("صاحب الرخصة غير موجود.");
             }
 
             // Generate new license
@@ -373,12 +393,12 @@ public class RenewalService : IRenewalService
                 ExpiresAt = newLicense.ExpiresAt
             };
 
-            return ApiResponse<IssueLicenseResponse>.Ok(response, "License issued successfully.");
+            return ApiResponse<IssueLicenseResponse>.Ok(response, "تم إصدار الرخصة بنجاح.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error issuing license for renewal application: {ApplicationId}", applicationId);
-            return ApiResponse<IssueLicenseResponse>.Fail(500, "An error occurred while issuing the license.");
+            return ApiResponse<IssueLicenseResponse>.Fail(500, "حدث خطأ أثناء إصدار الرخصة.");
         }
     }
 

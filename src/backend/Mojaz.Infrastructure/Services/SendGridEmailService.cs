@@ -23,7 +23,7 @@ namespace Mojaz.Infrastructure.Services
         private readonly IEmailLogRepository _emailLogRepository;
         private readonly MojazDbContext _dbContext;
         private readonly IRazorLightEngine _razorEngine;
-        private readonly SendGridClient _sendGridClient;
+        private readonly ISendGridClient _sendGridClient;
         private readonly AsyncRetryPolicy _retryPolicy;
 
         public SendGridEmailService(
@@ -31,7 +31,7 @@ namespace Mojaz.Infrastructure.Services
             IEmailLogRepository emailLogRepository,
             MojazDbContext dbContext,
             IRazorLightEngine razorEngine,
-            SendGridClient sendGridClient)
+            ISendGridClient sendGridClient)
         {
             _settings = settings.Value;
             _emailLogRepository = emailLogRepository;

@@ -283,7 +283,7 @@ export default function ProgressPage() {
               </div>
             </div>
             <Button disabled className="h-10 md:h-12 px-6 md:px-8 rounded-md bg-white text-[#1a3a8f] font-black text-sm md:text-base transition-all">
-              <Download className="w-4 h-4 md:w-5 md:h-5 ml-2 md:ml-3" />
+              <Download className="w-4 h-4 md:w-5 md:h-5 ms-2 md:ms-3" />
               تحميل الشهادة الموحدة
             </Button>
           </CardContent>

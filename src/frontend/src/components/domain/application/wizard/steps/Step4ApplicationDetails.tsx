@@ -10,14 +10,15 @@ import ApplicationService from '@/services/application.service';
 import { wizardQueryKeys } from '@/lib/constants';
 import WizardStepHeader from '../WizardStepHeader';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { cn } from '@/lib/utils';
-import { FormField, SelectField } from '../shared/FormField';
+import { SelectField } from '../shared/FormField';
 import WizardErrorDisplay from '../shared/WizardErrorDisplay';
-import { Building2, Languages, Clock, Accessibility, AlertCircle, Loader2, TextIcon, ShieldCheck, Stethoscope, Briefcase } from 'lucide-react';
+import { Building2, Languages, Clock, AlertCircle, Loader2, ShieldCheck, Stethoscope, Briefcase, FileUp, Fingerprint } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FileUploader } from '@/components/shared/FileUploader';
 
 function FormSkeleton() {
   return (
@@ -35,50 +36,59 @@ function FormSkeleton() {
 }
 
 export default function Step4ApplicationDetails() {
-  const { step4, setStep4 } = useWizardStore();
+  // Use selectors to avoid subscribing to the entire store or the specific state we're updating
+  // which causes infinite loops when synced with watch()
+  const setStep4 = useWizardStore(state => state.setStep4);
+  const setStepValidator = useWizardStore(state => state.setStepValidator);
+  
+  // Get initial values from store WITHOUT subscribing to changes
+  const initialStep4 = useWizardStore.getState().step4;
 
   const { data: centersData, isLoading: loadingCenters, error: centersError, refetch: refetchCenters } = useQuery({
     queryKey: wizardQueryKeys.examCenters,
     queryFn: async () => {
       const response = await ApplicationService.getExamCenters();
-      if (!response.success || !response.data) throw new Error('Failed to load exam centers');
+      if (!response.success || !response.data) throw new Error('فشل في تحميل قائمة مراكز الفحص المعتمدة.');
       return (response.data || []).filter(center => center.isActive);
     },
     staleTime: 24 * 60 * 60 * 1000,
   });
 
-  const { register, setValue, watch, trigger, setFocus, getValues, formState: { errors } } = useForm<Step4FormValues>({
+  const { register, setValue, watch, trigger, setFocus, getValues, formState: { errors, isValid } } = useForm<Step4FormValues>({
     resolver: zodResolver(step4Schema),
     defaultValues: {
-      applicantType: step4.applicantType,
-      preferredCenterId: step4.preferredCenterId,
-      testLanguage: step4.testLanguage,
-      appointmentPreference: step4.appointmentPreference,
-      specialNeedsDeclaration: step4.specialNeedsDeclaration,
-      specialNeedsNote: step4.specialNeedsNote || '',
+      applicantType: initialStep4.applicantType,
+      preferredCenterId: initialStep4.preferredCenterId,
+      testLanguage: initialStep4.testLanguage,
+      appointmentPreference: initialStep4.appointmentPreference,
+      specialNeedsDeclaration: initialStep4.specialNeedsDeclaration,
+      specialNeedsNote: initialStep4.specialNeedsNote || '',
+      identityDocument: initialStep4.identityDocument,
+      medicalDocument: initialStep4.medicalDocument,
     },
     mode: 'onBlur',
   });
 
+  // Register form on global store
   useEffect(() => {
-    (window as any).__step4Form = { trigger, setFocus };
+    setStepValidator(4, { trigger, setFocus });
     return () => {
-      delete (window as any).__step4Form;
+      setStepValidator(4, null);
     };
-  }, [trigger, setFocus]);
+  }, [trigger, setFocus, setStepValidator]);
 
+  // Sync specific fields to store as they change (React Hook Form state to Zustand Persistence)
+  // We use JSON.stringify as a dependency to ensure the effect only runs when data actually changes
+  // and avoid infinite loops caused by referential instability of watch()
+  const watchedFields = watch();
+  const watchedFieldsString = JSON.stringify(watchedFields);
+  
   useEffect(() => {
-    const values = getValues();
-    setStep4({
-      applicantType: values.applicantType || 'Citizen',
-      preferredCenterId: values.preferredCenterId || '',
-      testLanguage: values.testLanguage || 'ar',
-      appointmentPreference: values.appointmentPreference || 'Morning',
-      specialNeedsDeclaration: values.specialNeedsDeclaration || false,
-      specialNeedsNote: values.specialNeedsNote || '',
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // Only update if we have actual values (avoid clearing store during initialization)
+    if (watchedFields) {
+      setStep4({ ...watchedFields });
+    }
+  }, [watchedFieldsString, setStep4]);
 
   if (loadingCenters) {
     return (
@@ -113,10 +123,12 @@ export default function Step4ApplicationDetails() {
              <Briefcase className="w-5 h-5 text-[#1a3a8f]/40" />
              الصفة القانونية للمتقدم
           </Label>
-<RadioGroup 
-              value={watch('applicantType')} 
-              onValueChange={v => setValue('applicantType', v as any)}
-             className="flex gap-10 bg-white p-6 rounded-3xl border border-neutral-100 shadow-sm"
+          <RadioGroup 
+              id="applicantType"
+              name="applicantType"
+              value={watchedFields.applicantType} 
+              onValueChange={v => setValue('applicantType', v as Step4FormValues['applicantType'])}
+              className="flex gap-10 bg-white p-6 rounded-3xl border border-neutral-100 shadow-sm"
           >
             <div className="flex items-center space-x-4 rtl:space-x-reverse cursor-pointer group">
               <RadioGroupItem value="Citizen" id="type-citizen" className="w-6 h-6 border-neutral-200 text-[#1a3a8f] focus:ring-[#1a3a8f]" />
@@ -127,7 +139,7 @@ export default function Step4ApplicationDetails() {
               <Label htmlFor="type-resident" className="cursor-pointer font-black text-lg text-neutral-600 group-hover:text-[#1a3a8f] transition-colors">مقيم (أجنبي)</Label>
             </div>
           </RadioGroup>
-          {errors.applicantType && <p role="alert" className="text-xs font-black text-red-500 mt-2 px-2">يجب تحديد صفة المتقدم</p>}
+          {errors.applicantType && <p role="alert" className="text-xs font-black text-red-500 mt-2 px-2">{errors.applicantType.message}</p>}
         </div>
 
         {/* Center Selection */}
@@ -152,13 +164,15 @@ export default function Step4ApplicationDetails() {
              لغة الاختبار النظري
           </Label>
           <div className="flex items-center justify-between gap-6 bg-white p-6 rounded-3xl border border-neutral-100 shadow-sm">
-            <span className={cn("text-lg font-black transition-all duration-500", watch('testLanguage') === 'ar' ? "text-[#1a3a8f] scale-105" : "text-neutral-300")}>العربية</span>
+            <span className={cn("text-lg font-black transition-all duration-500", watchedFields.testLanguage === 'ar' ? "text-[#1a3a8f] scale-105" : "text-neutral-300")}>العربية</span>
             <Switch 
-               checked={watch('testLanguage') === 'en'} 
-               onCheckedChange={c => setValue('testLanguage', c ? 'en' : 'ar')} 
+               id="testLanguage"
+               name="testLanguage"
+               checked={watchedFields.testLanguage === 'en'} 
+               onCheckedChange={(c: boolean) => setValue('testLanguage', c ? 'en' : 'ar')} 
                className="data-[state=checked]:bg-[#1a3a8f] scale-125" 
             />
-            <span className={cn("text-lg font-black transition-all duration-500", watch('testLanguage') === 'en' ? "text-[#1a3a8f] scale-105" : "text-neutral-300")}>الإنجليزية</span>
+            <span className={cn("text-lg font-black transition-all duration-500", watchedFields.testLanguage === 'en' ? "text-[#1a3a8f] scale-105" : "text-neutral-300")}>الإنجليزية</span>
           </div>
         </div>
 
@@ -166,11 +180,13 @@ export default function Step4ApplicationDetails() {
         <div className="space-y-4">
           <Label className="text-base font-black text-neutral-900 flex items-center gap-3">
              <Clock className="w-5 h-5 text-[#1a3a8f]/40" />
-             تفضيل الفترة الزمنية
+             تفضل الفترة الزمنية
           </Label>
           <RadioGroup 
-             value={watch('appointmentPreference')} 
-             onValueChange={v => setValue('appointmentPreference', v as any)} 
+             id="appointmentPreference"
+             name="appointmentPreference"
+             value={watchedFields.appointmentPreference} 
+             onValueChange={v => setValue('appointmentPreference', v as Step4FormValues['appointmentPreference'])} 
              className="flex flex-wrap gap-4 bg-white p-6 rounded-3xl border border-neutral-100 shadow-sm"
           >
             <div className="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer group px-4 py-2 rounded-xl hover:bg-neutral-50 transition-colors">
@@ -181,21 +197,48 @@ export default function Step4ApplicationDetails() {
               <RadioGroupItem value="Afternoon" id="pref-afternoon" className="w-5 h-5 border-neutral-200 text-[#1a3a8f]" />
               <Label htmlFor="pref-afternoon" className="cursor-pointer font-black text-neutral-600 group-hover:text-[#1a3a8f] text-sm">الفترة المسائية</Label>
             </div>
-            <div className="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer group px-4 py-2 rounded-xl hover:bg-neutral-50 transition-colors">
-               <RadioGroupItem value="NoPreference" id="pref-none" className="w-5 h-5 border-neutral-200 text-[#1a3a8f]" />
-               <Label htmlFor="pref-none" className="cursor-pointer font-black text-neutral-600 group-hover:text-[#1a3a8f] text-sm">حسب المتاح</Label>
-            </div>
           </RadioGroup>
-          {errors.appointmentPreference && <p role="alert" className="text-xs font-black text-red-500 mt-2 px-2">يرجى تحديد تفضيل الوقت</p>}
+          {errors.appointmentPreference && <p role="alert" className="text-xs font-black text-red-500 mt-2 px-2">{errors.appointmentPreference.message}</p>}
+        </div>
+
+        {/* Sovereign Documents Section */}
+        <div className="md:col-span-2 pt-14 border-t border-neutral-100 space-y-12">
+            <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#1a3a8f] rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-900/20">
+                    <Fingerprint className="w-6 h-6" />
+                </div>
+                <div className="space-y-1">
+                    <h3 className="text-2xl font-black text-neutral-900 tracking-tighter leading-none">مركز الوثائق السيادية</h3>
+                    <p className="text-sm font-bold text-neutral-400">يرجى إرفاق الوثائق الرسمية الثبوتية للمتابعة</p>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <FileUploader 
+                    label="بطاقة الهوية الشخصية / جواز السفر"
+                    icon={<ShieldCheck className="w-8 h-8" />}
+                    value={watchedFields.identityDocument}
+                    onFileSelect={(file) => setValue('identityDocument', file)}
+                    error={errors.identityDocument?.message}
+                />
+                <FileUploader 
+                    label="تقرير الفحص الطبي (إن وجد)"
+                    icon={<Stethoscope className="w-8 h-8" />}
+                    value={watchedFields.medicalDocument}
+                    onFileSelect={(file) => setValue('medicalDocument', file)}
+                    error={errors.medicalDocument?.message}
+                />
+            </div>
         </div>
 
         {/* Special Needs Section */}
-        <div className="md:col-span-2 space-y-8 pt-10 border-t border-neutral-100">
+        <div className="md:col-span-2 space-y-8 pt-14 border-t border-neutral-100">
           <div className="flex items-start gap-6 p-8 rounded-[2.5rem] bg-amber-500/5 border border-amber-500/10 transition-all duration-700 hover:bg-amber-500/10 shadow-sm group">
              <Checkbox 
                 id="specialNeedsDeclaration" 
-                checked={watch('specialNeedsDeclaration')} 
-                onCheckedChange={c => setValue('specialNeedsDeclaration', c === true)} 
+                name="specialNeedsDeclaration"
+                checked={watchedFields.specialNeedsDeclaration} 
+                onCheckedChange={(c: boolean | 'indeterminate') => setValue('specialNeedsDeclaration', c === true)} 
                 className="mt-2 w-7 h-7 border-amber-300 data-[state=checked]:bg-amber-600 data-[state=checked]:border-amber-600 rounded-lg transition-all"
               />
             <div className="space-y-3 leading-none">
@@ -208,7 +251,7 @@ export default function Step4ApplicationDetails() {
           </div>
 
           <AnimatePresence mode="wait">
-              {watch('specialNeedsDeclaration') && (
+              {watchedFields.specialNeedsDeclaration && (
                 <motion.div 
                    initial={{ opacity: 0, height: 0 }}
                    animate={{ opacity: 1, height: 'auto' }}
@@ -218,12 +261,13 @@ export default function Step4ApplicationDetails() {
                    <div className="relative group">
                       <Label className="text-sm font-black text-neutral-700 mb-3 block px-2">تقديم تفاصيل عن الترتيبات الحكومية المطلوبة</Label>
                       <textarea 
+                        id="specialNeedsNote"
                         placeholder="يرجى كتابة ملاحظاتك الطبية هنا ليتم دراستها من قبل لجنة الفحص..." 
                         rows={5} 
                         className="flex min-h-[160px] w-full rounded-[2rem] border border-neutral-100 bg-white px-10 py-7 text-lg font-bold text-[#1a3a8f] placeholder:text-neutral-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#1a3a8f]/5 transition-all duration-700 hover:shadow-xl focus-visible:shadow-2xl focus-visible:border-[#1a3a8f]/30" 
                         {...register('specialNeedsNote')} 
                       />
-                      {errors.specialNeedsNote && <p role="alert" className="text-xs font-black text-red-500 mt-3 px-6 animate-pulse">يرجى تقديم شرح مفصل للترتيبات المطلوبة</p>}
+                      {errors.specialNeedsNote && <p role="alert" className="text-xs font-black text-red-500 mt-3 px-6 animate-pulse">{errors.specialNeedsNote.message}</p>}
                    </div>
                 </motion.div>
               )}

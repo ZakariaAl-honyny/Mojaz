@@ -56,7 +56,7 @@ export function ExistingApplicationBanner({
                     <History className="w-3 h-3" />
                     رقم المعاملة
                 </span>
-                <p className="text-2xl font-black text-[#1a3a8f] tracking-tighter" dir="ltr">{applicationNumber}</p>
+                <p className="text-2xl font-black text-[#1a3a8f] tracking-tighter">{applicationNumber}</p>
              </div>
              <div className="space-y-1 flex flex-col items-center">
                 <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">المرحلة الحالية</span>

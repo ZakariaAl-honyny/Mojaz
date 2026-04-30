@@ -1,0 +1,19 @@
+{
+  "card": {
+    "title": "رخصة قيادة - فئة {{categoryName}}",
+    "categoryCode": "فئة {{code}}",
+    "number": "رقم الرخصة",
+    "category": "الفئة",
+    "issuedAt": "تاريخ الإصدار",
+    "expiresAt": "تاريخ الانتهاء",
+    "status": "الحالة",
+    "active": "نشطة",
+    "expired": "منتهية",
+    "replaced": "تم استبدالها",
+    "replacementCount": "عدد الاستبدالات",
+    "requestReplacement": "طلب استبدال",
+    "renew": "تجديد",
+    "viewPdf": "عرض PDF",
+    "expiringSoon": "تنتهي قريباً"
+  }
+}

@@ -343,5 +343,176 @@ public class TheoryServiceTests
         result.Data!.Items.Should().HaveCount(1);
     }
 
+    #region IsTheoryExemptForUpgradeAsync Tests
+
+    [Fact]
+    public async Task IsTheoryExemptForUpgradeAsync_WhenCategoryUpgradeAndWaiverEnabled_ShouldReturnTrue()
+    {
+        // Arrange
+        var applicationId = Guid.NewGuid();
+        var application = new Domain.Entities.Application
+        {
+            Id = applicationId,
+            ServiceType = ServiceType.CategoryUpgrade
+        };
+
+        _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(application);
+        _settingsServiceMock.Setup(x => x.GetAsync("UPGRADE_THEORY_WAIVER_ENABLED"))
+            .ReturnsAsync("true");
+
+        // Act
+        var result = await _service.IsTheoryExemptForUpgradeAsync(applicationId);
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task IsTheoryExemptForUpgradeAsync_WhenCategoryUpgradeAndWaiverDisabled_ShouldReturnFalse()
+    {
+        // Arrange
+        var applicationId = Guid.NewGuid();
+        var application = new Domain.Entities.Application
+        {
+            Id = applicationId,
+            ServiceType = ServiceType.CategoryUpgrade
+        };
+
+        _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(application);
+        _settingsServiceMock.Setup(x => x.GetAsync("UPGRADE_THEORY_WAIVER_ENABLED"))
+            .ReturnsAsync("false");
+
+        // Act
+        var result = await _service.IsTheoryExemptForUpgradeAsync(applicationId);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task IsTheoryExemptForUpgradeAsync_WhenNewLicense_ShouldReturnFalse()
+    {
+        // Arrange
+        var applicationId = Guid.NewGuid();
+        var application = new Domain.Entities.Application
+        {
+            Id = applicationId,
+            ServiceType = ServiceType.NewLicense
+        };
+
+        _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(application);
+
+        // Act
+        var result = await _service.IsTheoryExemptForUpgradeAsync(applicationId);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task IsTheoryExemptForUpgradeAsync_WhenApplicationNotFound_ShouldReturnFalse()
+    {
+        // Arrange
+        var applicationId = Guid.NewGuid();
+
+        _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Domain.Entities.Application?)null);
+
+        // Act
+        var result = await _service.IsTheoryExemptForUpgradeAsync(applicationId);
+
+        // Assert
+        result.Should().BeFalse();
+    }
+
+    #endregion
+
+    #region SubmitResultAsync With Exemption Tests
+
+    [Fact]
+    public async Task SubmitResultAsync_WhenExempt_ShouldAutoPassAndAdvanceToPractical()
+    {
+        // Arrange
+        var applicationId = Guid.NewGuid();
+        var examinerId = Guid.NewGuid();
+        var application = new Domain.Entities.Application
+        {
+            Id = applicationId,
+            CurrentStage = ApplicationStages.Theory,
+            TheoryAttemptCount = 0,
+            Status = ApplicationStatus.TheoryTest,
+            ServiceType = ServiceType.CategoryUpgrade,
+            ApplicantId = Guid.NewGuid()
+        };
+
+        _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(application);
+        _settingsServiceMock.Setup(x => x.GetAsync("UPGRADE_THEORY_WAIVER_ENABLED"))
+            .ReturnsAsync("true");
+
+        var request = new SubmitTheoryResultRequest
+        {
+            Score = 50,
+            IsAbsent = false
+        };
+
+        // Act
+        var result = await _service.SubmitResultAsync(applicationId, request, examinerId);
+
+        // Assert
+        result.Success.Should().BeTrue();
+        result.Message.Should().Contain("معافاة");
+        application.CurrentStage.Should().Be(ApplicationStages.Practical);
+        application.Status.Should().Be(ApplicationStatus.PracticalTest);
+        application.TheoryAttemptCount.Should().Be(1);
+        _theoryRepositoryMock.Verify(x => x.AddAsync(It.Is<TheoryTest>(t => t.Result == TestResult.Pass && t.Notes.Contains("معافاة")), It.IsAny<CancellationToken>()), Times.Once);
+        _notificationServiceMock.Verify(x => x.SendAsync(It.Is<NotificationRequest>(r => r.TitleEn.Contains("Exempted"))), Times.Once);
+    }
+
+    [Fact]
+    public async Task SubmitResultAsync_WhenCategoryUpgradeButWaiverDisabled_ShouldNotExempt()
+    {
+        // Arrange
+        var applicationId = Guid.NewGuid();
+        var examinerId = Guid.NewGuid();
+        var application = new Domain.Entities.Application
+        {
+            Id = applicationId,
+            CurrentStage = ApplicationStages.Theory,
+            TheoryAttemptCount = 0,
+            Status = ApplicationStatus.TheoryTest,
+            ServiceType = ServiceType.CategoryUpgrade,
+            ApplicantId = Guid.NewGuid()
+        };
+
+        _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(application);
+        _settingsServiceMock.Setup(x => x.GetAsync("UPGRADE_THEORY_WAIVER_ENABLED"))
+            .ReturnsAsync("false");
+        _settingsServiceMock.Setup(x => x.GetAsync("MIN_PASS_SCORE_THEORY"))
+            .ReturnsAsync("80");
+        _settingsServiceMock.Setup(x => x.GetAsync("MAX_THEORY_ATTEMPTS"))
+            .ReturnsAsync("3");
+
+        var request = new SubmitTheoryResultRequest
+        {
+            Score = 85,
+            IsAbsent = false
+        };
+
+        // Act
+        var result = await _service.SubmitResultAsync(applicationId, request, examinerId);
+
+        // Assert
+        result.Success.Should().BeTrue();
+        result.Message.Should().Contain("نتيجة");
+        _notificationServiceMock.Verify(x => x.SendAsync(It.Is<NotificationRequest>(r => r.TitleEn.Contains("Passed"))), Times.Once);
+    }
+
+    #endregion
+
     #endregion
 }

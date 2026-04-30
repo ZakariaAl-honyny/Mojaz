@@ -54,13 +54,13 @@ public class PracticalService : IPracticalService
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null)
         {
-            return ApiResponse<PracticalTestDto>.Fail(404, "Application not found");
+            return ApiResponse<PracticalTestDto>.Fail(404, "الطلب غير موجود.");
         }
 
         // Stage check - must be in Practical stage
         if (application.CurrentStage != ApplicationStages.Practical)
         {
-            return ApiResponse<PracticalTestDto>.Fail(400, "Application is not in Practical Test stage");
+            return ApiResponse<PracticalTestDto>.Fail(400, "الطلب ليس في مرحلة الاختبار العملي.");
         }
 
         // Get settings
@@ -68,14 +68,14 @@ public class PracticalService : IPracticalService
         var maxAttemptsStr = await _systemSettingsService.GetAsync("MAX_PRACTICAL_ATTEMPTS");
         var coolingPeriodDaysStr = await _systemSettingsService.GetAsync("COOLING_PERIOD_DAYS_PRACTICAL");
 
-        var minPassScore = int.Parse(minPassScoreStr ?? "75");
-        var maxAttempts = int.Parse(maxAttemptsStr ?? "3");
-        var coolingPeriodDays = int.Parse(coolingPeriodDaysStr ?? "7");
+        var minPassScore = int.TryParse(minPassScoreStr, out var mps) ? mps : 75;
+        var maxAttempts = int.TryParse(maxAttemptsStr, out var ma) ? ma : 3;
+        var coolingPeriodDays = int.TryParse(coolingPeriodDaysStr, out var cpd) ? cpd : 7;
 
         // Check max attempts
         if (application.PracticalAttemptCount >= maxAttempts)
         {
-            return ApiResponse<PracticalTestDto>.Fail(400, "Maximum practical test attempts already reached");
+            return ApiResponse<PracticalTestDto>.Fail(400, "تم استنفاد الحد الأقصى لمحاولات الاختبار العملي بالفعل.");
         }
 
         // Determine result
@@ -158,7 +158,7 @@ public class PracticalService : IPracticalService
         // Map to DTO
         var examiner = await _userRepository.GetByIdAsync(examinerId);
         var dto = _mapper.Map<PracticalTestDto>(practicalTest);
-        dto.ExaminerName = examiner?.FullNameAr ?? examiner?.FullNameEn ?? "Examiner";
+        dto.ExaminerName = examiner?.FullNameAr ?? examiner?.FullNameEn ?? "الفاحص";
         dto.ApplicationStatus = application.Status.ToString();
 
         // Calculate retake eligible date for failed/absent
@@ -225,7 +225,7 @@ public class PracticalService : IPracticalService
             });
         }
 
-        return ApiResponse<PracticalTestDto>.Created(dto, "Practical test result submitted successfully");
+        return ApiResponse<PracticalTestDto>.Created(dto, "تم تسجيل نتيجة الاختبار العملي بنجاح.");
     }
 
     public async Task<ApiResponse<PagedResult<PracticalTestDto>>> GetHistoryAsync(Guid applicationId, Guid userId, string role, int page = 1, int pageSize = 10)
@@ -234,28 +234,28 @@ public class PracticalService : IPracticalService
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null)
         {
-            return ApiResponse<PagedResult<PracticalTestDto>>.Fail(404, "Application not found");
+            return ApiResponse<PagedResult<PracticalTestDto>>.Fail(404, "الطلب غير موجود.");
         }
 
         // Ownership check for Applicants
         if (role == "Applicant" && application.ApplicantId != userId)
         {
-            return ApiResponse<PagedResult<PracticalTestDto>>.Fail(403, "You do not have permission to view this application");
+            return ApiResponse<PagedResult<PracticalTestDto>>.Fail(403, "ليس لديك صلاحية لعرض هذا الطلب.");
         }
 
         // Get all tests
         var tests = await _practicalRepository.GetAllByApplicationIdAsync(applicationId);
         var coolingPeriodDaysStr = await _systemSettingsService.GetAsync("COOLING_PERIOD_DAYS_PRACTICAL");
-        var coolingPeriodDays = int.Parse(coolingPeriodDaysStr ?? "7");
+        var coolingPeriodDays = int.TryParse(coolingPeriodDaysStr, out var cpd) ? cpd : 7;
 
         // Calculate pagination
         var totalCount = tests.Count;
         var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
         var pagedTests = tests
             .OrderBy(t => t.AttemptNumber)
+            .ToList()
             .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
+            .Take(pageSize);
 
         // Map to DTOs
         var dtos = new List<PracticalTestDto>();
@@ -293,7 +293,7 @@ public class PracticalService : IPracticalService
         }
 
         var coolingPeriodDaysStr = await _systemSettingsService.GetAsync("COOLING_PERIOD_DAYS_PRACTICAL");
-        var coolingPeriodDays = int.Parse(coolingPeriodDaysStr ?? "7");
+        var coolingPeriodDays = int.TryParse(coolingPeriodDaysStr, out var cpd) ? cpd : 7;
         var coolingPeriodEnd = latestTest.ConductedAt.AddDays(coolingPeriodDays);
 
         return DateTime.UtcNow < coolingPeriodEnd;
@@ -308,7 +308,7 @@ public class PracticalService : IPracticalService
         }
 
         var maxAttemptsStr = await _systemSettingsService.GetAsync("MAX_PRACTICAL_ATTEMPTS");
-        var maxAttempts = int.Parse(maxAttemptsStr ?? "3");
+        var maxAttempts = int.TryParse(maxAttemptsStr, out var ma) ? ma : 3;
         return application.PracticalAttemptCount >= maxAttempts;
     }
 

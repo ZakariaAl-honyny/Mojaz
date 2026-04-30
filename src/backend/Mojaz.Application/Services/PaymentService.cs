@@ -5,6 +5,7 @@ using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Shared;
+using Mojaz.Shared.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,11 +84,19 @@ public class PaymentService : IPaymentService
     }
 
     /// <summary>
-    /// Get all payments with pagination (for employees/managers)
+    /// Get all payments with pagination (for employees/managers and applicants)
     /// </summary>
-    public async Task<ApiResponse<PagedResult<PaymentDto>>> GetAllPaymentsAsync(int page, int pageSize, string? status, string? search)
+    public async Task<ApiResponse<PagedResult<PaymentDto>>> GetAllPaymentsAsync(int page, int pageSize, string? status, string? search, Guid? userId = null, string? role = null)
     {
         var query = _paymentRepository.Query().Where(p => !p.IsDeleted);
+
+        // For Applicants, filter to only their applications
+        if (role == "Applicant" && userId.HasValue)
+        {
+            var applicationIds = await _applicationRepository.FindAsync(a => a.ApplicantId == userId.Value && !a.IsDeleted);
+            var appIdList = applicationIds.Select(a => a.Id).ToList();
+            query = query.Where(p => appIdList.Contains(p.ApplicationId));
+        }
 
         // Filter by status if provided
         if (!string.IsNullOrEmpty(status) && Enum.TryParse<PaymentStatus>(status, out var statusEnum))
@@ -95,8 +104,8 @@ public class PaymentService : IPaymentService
             query = query.Where(p => p.Status == statusEnum);
         }
 
-        // Filter by search (application number or applicant name)
-        if (!string.IsNullOrEmpty(search))
+        // Filter by search (application number or applicant name) - only for employees
+        if (!string.IsNullOrEmpty(search) && role != "Applicant")
         {
             var applicationQuery = _applicationRepository.Query().Where(a => !a.IsDeleted);
             if (search.Length >= 3)
@@ -114,12 +123,12 @@ public class PaymentService : IPaymentService
         var totalCount = query.Count();
         var payments = query
             .OrderByDescending(p => p.CreatedAt)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
             .ToList();
 
         var paymentDtos = new List<PaymentDto>();
-        foreach (var payment in payments)
+        foreach (var payment in payments
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize))
         {
             var app = await _applicationRepository.GetByIdAsync(payment.ApplicationId);
             var applicant = app != null ? await _userRepository.GetByIdAsync(app.ApplicantId) : null;
@@ -149,16 +158,23 @@ public class PaymentService : IPaymentService
             Items = paymentDtos,
             TotalCount = totalCount,
             Page = page,
-            PageSize = pageSize
+            PageSize = pageSize,
+            TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
+            HasPreviousPage = page > 1,
+            HasNextPage = page < (int)Math.Ceiling(totalCount / (double)pageSize)
         };
 
         return ApiResponse<PagedResult<PaymentDto>>.Ok(result);
     }
 
-public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid applicationId, PaymentInitiateRequest request)
+public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid applicationId, PaymentInitiateRequest request, Guid userId, string role)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
-        if (application == null) return ApiResponse<PaymentDto>.Fail(404, "Application not found.");
+        if (application == null) return ApiResponse<PaymentDto>.Fail(404, "الطلب غير موجود.");
+
+        // Ownership check for Applicants
+        if (role == "Applicant" && application.ApplicantId != userId)
+            return ApiResponse<PaymentDto>.Fail(403, "غير مصرح لك.");
 
         // Read actual fee from FeeStructures table based on request.FeeType and request.LicenseCategoryId
         var feeStructure = await _feeRepository.GetActiveFeeAsync(request.FeeType, application.LicenseCategoryId);
@@ -166,7 +182,7 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
 
         if (amount <= 0)
         {
-            return ApiResponse<PaymentDto>.Fail(400, "Fee structure not found for this payment type.");
+            return ApiResponse<PaymentDto>.Fail(400, "لم يتم العثور على رسوم نشطة لهذا النوع. يرجى التواصل مع الدعم.");
         }
 
         var payment = new PaymentTransaction
@@ -191,11 +207,15 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
         });
     }
 
-    public async Task<ApiResponse<PaymentDto>> InitiatePaymentByNumberAsync(string applicationNumber, InitiatePaymentRequest request)
+    public async Task<ApiResponse<PaymentDto>> InitiatePaymentByNumberAsync(string applicationNumber, InitiatePaymentRequest request, Guid userId, string role)
     {
         var application = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
         var app = application.FirstOrDefault();
-        if (app == null) return ApiResponse<PaymentDto>.Fail(404, "Application not found.");
+        if (app == null) return ApiResponse<PaymentDto>.Fail(404, "الطلب غير موجود.");
+
+        // Ownership check for Applicants
+        if (role == "Applicant" && app.ApplicantId != userId)
+            return ApiResponse<PaymentDto>.Fail(403, "غير مصرح لك.");
 
         // Read actual fee from FeeStructures table based on request.FeeType and request.LicenseCategoryId
         var feeStructure = await _feeRepository.GetActiveFeeAsync(request.FeeType, app.LicenseCategoryId);
@@ -203,7 +223,7 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
 
         if (amount <= 0)
         {
-            return ApiResponse<PaymentDto>.Fail(400, "Fee structure not found for this payment type.");
+            return ApiResponse<PaymentDto>.Fail(400, "يجب تحديد مبلغ الدفع.");
         }
 
         var payment = new PaymentTransaction
@@ -232,7 +252,7 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
     {
         var payments = await _paymentRepository.FindAsync(p => p.TransactionReference == request.TransactionId);
         var payment = payments.FirstOrDefault();
-        if (payment == null) return ApiResponse<PaymentDto>.Fail(404, "Transaction not found.");
+        if (payment == null) return ApiResponse<PaymentDto>.Fail(404, "المعاملة غير موجودة.");
 
         payment.Status = request.Success ? PaymentStatus.Paid : PaymentStatus.Failed;
         payment.PaidAt = request.Success ? DateTime.UtcNow : null;
@@ -242,9 +262,9 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
         if (payment.Status == PaymentStatus.Paid)
         {
             var application = await _applicationRepository.GetByIdAsync(payment.ApplicationId);
-            if (application != null && application.CurrentStage == "01: Application Submission")
+            if (application != null && application.CurrentStage == ApplicationStages.Stage01Creation)
             {
-                application.CurrentStage = "02: Payment Received";
+                application.CurrentStage = ApplicationStages.Stage03InitialPayment;
                 _applicationRepository.Update(application);
                 
                 await _notificationService.SendAsync(new NotificationRequest
@@ -269,11 +289,21 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
             Status = payment.Status,
             TransactionReference = payment.TransactionReference ?? string.Empty,
             Success = request.Success
-        });
+        }, "تمت العملية بنجاح.");
     }
 
-    public async Task<ApiResponse<IEnumerable<PaymentDto>>> GetByApplicationIdAsync(Guid applicationId)
+    public async Task<ApiResponse<IEnumerable<PaymentDto>>> GetByApplicationIdAsync(Guid applicationId, Guid userId, string role)
     {
+        // Ownership check for Applicants
+        if (role == "Applicant")
+        {
+            var application = await _applicationRepository.GetByIdAsync(applicationId);
+            if (application == null)
+                return ApiResponse<IEnumerable<PaymentDto>>.Fail(404, "الطلب غير موجود.");
+            if (application.ApplicantId != userId)
+                return ApiResponse<IEnumerable<PaymentDto>>.Fail(403, "غير مصرح لك.");
+        }
+
         var payments = await _paymentRepository.FindAsync(p => p.ApplicationId == applicationId);
         return ApiResponse<IEnumerable<PaymentDto>>.Ok(payments.Select(p => new PaymentDto { 
             Id = p.Id, 
@@ -284,16 +314,20 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
         }));
     }
 
-    public async Task<ApiResponse<IEnumerable<PaymentDto>>> GetByApplicationNumberAsync(string applicationNumber)
+    public async Task<ApiResponse<IEnumerable<PaymentDto>>> GetByApplicationNumberAsync(string applicationNumber, Guid userId, string role)
     {
         if (string.IsNullOrWhiteSpace(applicationNumber))
-            return ApiResponse<IEnumerable<PaymentDto>>.Fail(400, "Application number is required.");
+            return ApiResponse<IEnumerable<PaymentDto>>.Fail(400, "معرف الطلب مطلوب.");
 
         var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
         var application = applications.FirstOrDefault();
         
         if (application == null)
-            return ApiResponse<IEnumerable<PaymentDto>>.Fail(404, "Application not found.");
+            return ApiResponse<IEnumerable<PaymentDto>>.Fail(404, "الطلب غير موجود.");
+
+        // Ownership check for Applicants
+        if (role == "Applicant" && application.ApplicantId != userId)
+            return ApiResponse<IEnumerable<PaymentDto>>.Fail(403, "غير مصرح لك.");
 
         var payments = await _paymentRepository.FindAsync(p => p.ApplicationId == application.Id);
         return ApiResponse<IEnumerable<PaymentDto>>.Ok(payments.Select(p => new PaymentDto { 
@@ -308,12 +342,17 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
     /// <summary>
     /// Get a single payment by ID
     /// </summary>
-    public async Task<ApiResponse<PaymentDto>> GetByIdAsync(Guid paymentId)
+    public async Task<ApiResponse<PaymentDto>> GetByIdAsync(Guid paymentId, Guid userId, string role)
     {
         var payment = await _paymentRepository.GetByIdAsync(paymentId);
-        if (payment == null) return ApiResponse<PaymentDto>.Fail(404, "Payment not found.");
+        if (payment == null) return ApiResponse<PaymentDto>.Fail(404, "الدفع غير موجود.");
 
         var application = await _applicationRepository.GetByIdAsync(payment.ApplicationId);
+        
+        // Ownership check for Applicants
+        if (role == "Applicant" && (application == null || application.ApplicantId != userId))
+            return ApiResponse<PaymentDto>.Fail(403, "غير مصرح لك.");
+
         var creator = application != null ? await _userRepository.GetByIdAsync(application.ApplicantId) : null;
         var applicantName = creator?.FullNameAr ?? creator?.FullNameEn ?? string.Empty;
 
@@ -341,15 +380,25 @@ public async Task<ApiResponse<PaymentDto>> InitiatePaymentAsync(Guid application
 public async Task<ApiResponse<bool>> VerifyPaymentAsync(Guid paymentId)
     {
         var payment = await _paymentRepository.GetByIdAsync(paymentId);
-        if (payment == null) return ApiResponse<bool>.Fail(404, "Payment not found.");
+        if (payment == null) return ApiResponse<bool>.Fail(404, "الدفع غير موجود.");
         
         return ApiResponse<bool>.Ok(payment.Status == PaymentStatus.Paid);
     }
 
-    public async Task<ApiResponse<PaymentDto>> ConfirmPaymentAsync(PaymentConfirmRequest request)
+    public async Task<ApiResponse<PaymentDto>> ConfirmPaymentAsync(PaymentConfirmRequest request, Guid userId, string role)
     {
         var payment = await _paymentRepository.GetByIdAsync(request.PaymentId);
-        if (payment == null) return ApiResponse<PaymentDto>.Fail(404, "Payment not found.");
+        if (payment == null) return ApiResponse<PaymentDto>.Fail(404, "الدفع غير موجود.");
+
+        // Security check: Applicants can only confirm their own payments
+        if (role == "Applicant")
+        {
+            var application = await _applicationRepository.GetByIdAsync(payment.ApplicationId);
+            if (application == null || application.ApplicantId != userId)
+            {
+                return ApiResponse<PaymentDto>.Fail(403, "غير مصرح لك بتأكيد هذا الدفع.");
+            }
+        }
 
         // Update payment status based on confirmation
         payment.Status = request.IsSuccessful ? PaymentStatus.Paid : PaymentStatus.Failed;
@@ -368,9 +417,9 @@ public async Task<ApiResponse<bool>> VerifyPaymentAsync(Guid paymentId)
         if (payment.Status == PaymentStatus.Paid)
         {
             var application = await _applicationRepository.GetByIdAsync(payment.ApplicationId);
-            if (application != null && application.CurrentStage == "01: Application Submission")
+            if (application != null && application.CurrentStage == ApplicationStages.Stage01Creation)
             {
-                application.CurrentStage = "02: Payment Received";
+                application.CurrentStage = ApplicationStages.Stage03InitialPayment;
                 _applicationRepository.Update(application);
 
                 await _notificationService.SendAsync(new NotificationRequest
@@ -398,19 +447,23 @@ public async Task<ApiResponse<bool>> VerifyPaymentAsync(Guid paymentId)
             ReceiptNumber = payment.ReceiptNumber,
             PaidAt = payment.PaidAt,
             Success = request.IsSuccessful
-        });
+        }, "تم تحديث وسيلة الدفع بنجاح.");
     }
 
-    public async Task<ApiResponse<PaymentReceiptResponse>> GetReceiptAsync(Guid paymentId)
+    public async Task<ApiResponse<PaymentReceiptResponse>> GetReceiptAsync(Guid paymentId, Guid userId, string role)
     {
         var payment = await _paymentRepository.GetByIdAsync(paymentId);
-        if (payment == null) return ApiResponse<PaymentReceiptResponse>.Fail(404, "Payment not found.");
+        if (payment == null) return ApiResponse<PaymentReceiptResponse>.Fail(404, "الدفع غير موجود.");
 
         if (payment.Status != PaymentStatus.Paid)
-            return ApiResponse<PaymentReceiptResponse>.Fail(400, "Payment not completed.");
+            return ApiResponse<PaymentReceiptResponse>.Fail(400, "الدفع لم يكتمل.");
 
         var application = await _applicationRepository.GetByIdAsync(payment.ApplicationId);
-        if (application == null) return ApiResponse<PaymentReceiptResponse>.Fail(404, "Application not found.");
+        if (application == null) return ApiResponse<PaymentReceiptResponse>.Fail(404, "الطلب غير موجود.");
+
+        // Ownership check for Applicants
+        if (role == "Applicant" && application.ApplicantId != userId)
+            return ApiResponse<PaymentReceiptResponse>.Fail(403, "غير مصرح لك.");
 
         // Get applicant name - use application's stored preferred language
         var applicantName = application.PreferredLanguage == "ar" 
@@ -438,4 +491,137 @@ public async Task<ApiResponse<bool>> VerifyPaymentAsync(Guid paymentId)
         return ApiResponse<PaymentReceiptResponse>.Ok(receipt);
     }
 
+    /// <summary>
+    /// Process a payment by ID - simulates successful payment
+    /// </summary>
+    public async Task<ApiResponse<PaymentDto>> ProcessPaymentAsync(Guid paymentId, Guid userId, string role)
+    {
+        var payment = await _paymentRepository.GetByIdAsync(paymentId);
+        if (payment == null) return ApiResponse<PaymentDto>.Fail(404, "الدفع غير موجود.");
+
+        // Ownership check for Applicants
+        ApplicationEntity? application = null;
+        if (role == "Applicant")
+        {
+            application = await _applicationRepository.GetByIdAsync(payment.ApplicationId);
+            if (application == null || application.ApplicantId != userId)
+                return ApiResponse<PaymentDto>.Fail(403, "غير مصرح لك.");
+        }
+
+        // Only process pending payments
+        if (payment.Status != PaymentStatus.Pending)
+            return ApiResponse<PaymentDto>.Fail(400, $"لا يمكن معالجة الدفع الحالي. الحالة: {payment.Status}");
+
+        // Simulate successful payment
+        payment.Status = PaymentStatus.Paid;
+        payment.PaidAt = DateTime.UtcNow;
+        payment.PaymentMethod = "Simulated";
+        payment.ReceiptNumber = $"RCP-{DateTime.UtcNow:yyyyMMdd}-{payment.Id:N}".ToUpper();
+
+        _paymentRepository.Update(payment);
+
+        // Update application stage based on payment type and current stage
+        application ??= await _applicationRepository.GetByIdAsync(payment.ApplicationId);
+        if (application != null)
+        {
+            // Stage 03: Initial Payment (Application Fee) -> Advance to Stage 04
+            if (application.CurrentStage == ApplicationStages.Stage01Creation || 
+                application.CurrentStage == ApplicationStages.Stage02Documents ||
+                application.CurrentStage == ApplicationStages.Stage03InitialPayment)
+            {
+                application.CurrentStage = ApplicationStages.Stage04Medical;
+                _applicationRepository.Update(application);
+            }
+            // Stage 09: Issuance Payment -> Advance to Stage 10
+            else if (application.CurrentStage == ApplicationStages.Stage08FinalApproval ||
+                     application.CurrentStage == ApplicationStages.Stage09IssuancePayment)
+            {
+                application.CurrentStage = ApplicationStages.Stage10Issuance;
+                _applicationRepository.Update(application);
+            }
+
+            // Send notification
+            await _notificationService.SendAsync(new NotificationRequest
+            {
+                UserId = application.ApplicantId,
+                ApplicationId = application.Id,
+                EventType = NotificationEventType.PaymentSuccess,
+                TitleAr = "تم استلام الدفعة بنجاح",
+                TitleEn = "Payment Success",
+                MessageAr = $"تم استلام مبلغ {payment.Amount} بنجاح وتم تحديث حالة الطلب.",
+                MessageEn = $"Payment of {payment.Amount} received successfully and application status updated."
+            });
+        }
+
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponse<PaymentDto>.Ok(new PaymentDto
+        {
+            Id = payment.Id,
+            ApplicationId = payment.ApplicationId,
+            Amount = payment.Amount,
+            Status = payment.Status,
+            TransactionReference = payment.TransactionReference ?? string.Empty,
+            ReceiptNumber = payment.ReceiptNumber,
+            PaidAt = payment.PaidAt,
+            PaymentMethod = payment.PaymentMethod,
+            Success = true
+        }, "تم معالجة الدفع بنجاح.");
+    }
+
+    /// <summary>
+    /// Get pending payment for a specific application
+    /// </summary>
+    public async Task<ApiResponse<PaymentDto>> GetPendingPaymentForApplicationAsync(Guid applicationId, Guid userId, string role)
+    {
+        var application = await _applicationRepository.GetByIdAsync(applicationId);
+        if (application == null) return ApiResponse<PaymentDto>.Fail(404, "الطلب غير موجود.");
+
+        // Ownership check for Applicants
+        if (role == "Applicant" && application.ApplicantId != userId)
+            return ApiResponse<PaymentDto>.Fail(403, "غير مصرح لك.");
+
+        // Find the pending payment for this application
+        var payments = await _paymentRepository.FindAsync(p => 
+            p.ApplicationId == applicationId && 
+            p.Status == PaymentStatus.Pending &&
+            !p.IsDeleted);
+
+        var pendingPayment = payments.FirstOrDefault();
+        
+        if (pendingPayment == null)
+        {
+            // Check if there's any payment (paid or failed) - return not found if none
+            var anyPayments = await _paymentRepository.FindAsync(p => p.ApplicationId == applicationId && !p.IsDeleted);
+            if (!anyPayments.Any())
+                return ApiResponse<PaymentDto>.Fail(404, "لا يوجد دفعة معلقة لهذا الطلب.");
+            
+            // There are payments but none pending - return success with null data indicating all paid
+            return ApiResponse<PaymentDto>.Ok(null!, "جميع المدفوعات تم سدادها.");
+        }
+
+        // Get applicant name
+        var applicant = await _userRepository.GetByIdAsync(application.ApplicantId);
+        var applicantName = applicant?.FullNameAr ?? applicant?.FullNameEn ?? string.Empty;
+
+        return ApiResponse<PaymentDto>.Ok(new PaymentDto
+        {
+            Id = pendingPayment.Id,
+            ApplicationId = pendingPayment.ApplicationId,
+            ApplicationNumber = application.ApplicationNumber,
+            ApplicantFullName = applicantName,
+            FeeType = pendingPayment.FeeType,
+            Amount = pendingPayment.Amount,
+            Currency = pendingPayment.Currency,
+            Status = (PaymentStatus)pendingPayment.Status,
+            DueDate = pendingPayment.CreatedAt.AddDays(7).ToString("yyyy-MM-dd"),
+            TransactionReference = pendingPayment.TransactionReference ?? string.Empty,
+            ReceiptNumber = pendingPayment.ReceiptNumber,
+            PaidAt = pendingPayment.PaidAt,
+            PaymentMethod = pendingPayment.PaymentMethod,
+            CreatedAt = pendingPayment.CreatedAt
+        });
+    }
+
 }
+

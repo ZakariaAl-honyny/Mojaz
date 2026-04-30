@@ -27,8 +27,9 @@ public class JwtService : IJwtService
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString()), // Required by controllers for User.FindFirstValue(ClaimTypes.NameIdentifier)
             new Claim(JwtRegisteredClaimNames.Name, fullName),
-            new Claim(ClaimTypes.Role, role.ToString()), // Now properly returns string like "Admin", "Applicant" etc
+            new Claim(ClaimTypes.Role, role.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

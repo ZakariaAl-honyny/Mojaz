@@ -49,12 +49,18 @@ export default function ForgotPasswordForm({ onSuccess }: ForgotPasswordFormProp
   };
 
   return (
-    <div className="space-y-10 font-arabic" dir="rtl">
-      <div className="text-center space-y-4">
-        <div className="w-20 h-20 bg-[#1a3a8f] rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-900/40 border border-white/20 transform hover:rotate-12 transition-transform duration-500">
-          <KeyRound className="w-10 h-10 text-white" />
+    <div className="space-y-6 font-arabic bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-neutral-100 relative overflow-hidden" dir="rtl">
+      {/* Institutional Accent */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-[#1a3a8f]/5 rounded-full -mr-16 -mt-16 blur-2xl" />
+      <div className="text-center space-y-2 relative z-10">
+        <div className="transition-transform duration-700 cursor-pointer inline-block">
+          <img
+            src="/images/logo.png"
+            alt="Mojaz Logo"
+            className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-2 object-contain"
+          />
         </div>
-        <h2 className="text-3xl md:text-4xl font-black tracking-tighter text-[#1a3a8f]">استعادة الوصول</h2>
+        <h2 className="text-2xl md:text-3xl font-black tracking-tight text-[#1a3a8f]">استعادة الوصول</h2>
         <p className="text-neutral-500 font-bold text-sm leading-relaxed max-w-sm mx-auto">
           أدخل بيانات الهوية الرقمية المسجلة لإرسال رمز التحقق الآمن إلى هاتفك أو بريدك الإلكتروني.
         </p>
@@ -62,7 +68,7 @@ export default function ForgotPasswordForm({ onSuccess }: ForgotPasswordFormProp
 
       <AnimatePresence mode="wait">
         {error && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
@@ -74,40 +80,41 @@ export default function ForgotPasswordForm({ onSuccess }: ForgotPasswordFormProp
         )}
       </AnimatePresence>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
-        <div className="space-y-4 group">
-          <Label className="text-[#1a3a8f] font-black text-sm mr-2 flex items-center gap-3">
-            <Mail className="w-4.5 h-4.5" />
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 relative z-10">
+        <div className="space-y-2 group">
+          <Label className="text-[#1a3a8f] font-black text-xs pe-1 flex items-center gap-2">
+            <Mail className="w-3.5 h-3.5 opacity-40" />
             الرابط الرقمي (البريد أو الهاتف)
           </Label>
           <div className="relative">
-            <Input 
-              {...register('identifier')} 
+            <Input
+              {...register('identifier')}
+              autoComplete="username"
               className={cn(
-                "h-16 bg-neutral-100/50 border-none rounded-2xl text-[#1a3a8f] px-8 font-black placeholder:text-neutral-300 focus:ring-4 focus:ring-[#1a3a8f]/10 transition-all text-right shadow-inner",
+                "h-12 bg-neutral-100/50 border-none rounded-xl text-[#1a3a8f] px-6 font-black placeholder:text-neutral-300 focus:ring-4 focus:ring-[#1a3a8f]/10 transition-all text-start shadow-inner",
                 errors.identifier && "ring-4 ring-red-500/10 bg-red-50/50"
-              )} 
-              placeholder="user@domain.com أو +967..." 
+              )}
+              placeholder="user@domain.com أو +967..."
             />
           </div>
-          {errors.identifier && <p className="text-xs text-red-500 font-bold mr-2">{errors.identifier.message}</p>}
+          {errors.identifier && <p className="text-xs text-red-500 font-bold me-2">{errors.identifier.message}</p>}
         </div>
 
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           disabled={isLoading}
-          className="w-full h-20 bg-[#1a3a8f] hover:bg-[#00215a] text-white text-xl font-black rounded-[2rem] shadow-2xl shadow-blue-900/40 active:scale-[0.98] transition-all group overflow-hidden relative"
+          className="w-full h-16 bg-[#1a3a8f] hover:bg-[#00215a] text-white text-lg font-black rounded-xl md:rounded-2xl shadow-xl shadow-blue-900/40 active:scale-[0.98] transition-all group overflow-hidden relative"
         >
           {isLoading ? (
-            <div className="flex items-center gap-4">
-              <Loader2 className="w-8 h-8 animate-spin" />
+            <div className="flex items-center gap-3">
+              <Loader2 className="w-6 h-6 animate-spin" />
               <span>جاري المعالجة...</span>
             </div>
           ) : (
-            <div className="flex items-center justify-center gap-6 w-full">
+            <div className="flex items-center justify-center gap-4 w-full">
               <span>إرسال رمز التوثيق</span>
-              <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center transition-transform group-hover:-translate-x-2">
-                 <ArrowLeft className="w-7 h-7" />
+              <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center transition-transform group-hover:-translate-x-1">
+                <ArrowLeft className="w-6 h-6" />
               </div>
             </div>
           )}

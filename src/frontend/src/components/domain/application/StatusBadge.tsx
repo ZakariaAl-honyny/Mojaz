@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ApplicationStatus, ApplicationStatusLabels } from "@/types/application.types";
+import { ApplicationStatus } from "@/lib/enums";
 
 interface StatusBadgeProps {
   status: ApplicationStatus | number | string;

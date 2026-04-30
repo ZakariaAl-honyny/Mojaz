@@ -118,14 +118,14 @@ export function Step5ReviewSubmit() {
                         <Phone className="w-3.5 h-3.5" />
                         رقم التواصل
                       </div>
-                      <p className="text-xl font-black text-neutral-900 lg:text-start" dir="ltr">{step3.mobileNumber}</p>
+                      <p className="text-xl font-black text-neutral-900 lg:text-start">{step3.mobileNumber}</p>
                    </div>
                    <div className="space-y-2">
                       <div className="flex items-center gap-2 text-[10px] font-black text-neutral-400 uppercase tracking-[0.3em]">
                         <Mail className="w-3.5 h-3.5" />
                         البريد الإلكتروني
                       </div>
-                      <p className="text-xl font-black text-neutral-900 truncate" dir="ltr">{step3.email}</p>
+                      <p className="text-xl font-black text-neutral-900 truncate">{step3.email}</p>
                    </div>
                    <div className="space-y-2 lg:col-span-2">
                       <div className="flex items-center gap-2 text-[10px] font-black text-neutral-400 uppercase tracking-[0.3em]">
@@ -214,6 +214,7 @@ export function Step5ReviewSubmit() {
           <div className="relative z-10 pt-2">
               <Checkbox
                 id="declaration"
+                name="declaration"
                 checked={declarationAccepted}
                 onCheckedChange={(checked) => setDeclaration(checked === true)}
                 className={cn(

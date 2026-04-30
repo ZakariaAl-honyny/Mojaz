@@ -41,6 +41,12 @@ namespace Mojaz.API.Extensions
                 policy.RequireClaim("role", 
                     Roles.Admin, 
                     Roles.Manager));
+            
+            // Allow Manager and Admin to view users
+            options.AddPolicy("ManagerOrAdmin", policy => 
+                policy.RequireClaim("role", 
+                    Roles.Admin, 
+                    Roles.Manager));
         }
     }
 }

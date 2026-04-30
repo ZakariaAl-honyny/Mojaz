@@ -47,7 +47,7 @@ public class Gate4ValidationService : IGate4ValidationService
                 IsFullyPassed = false,
                 Conditions = new List<Gate4Condition>
                 {
-                    new() { Key = "ApplicationNotFound", LabelAr = "الطلب", LabelEn = "Application", IsPassed = false, FailureMessageAr = "الطلب غير موجود", FailureMessageEn = "Application not found" }
+                    new() { Key = "ApplicationNotFound", LabelAr = "الطلب", LabelEn = "الطلب", IsPassed = false, FailureMessageAr = "الطلب غير موجود", FailureMessageEn = "الطلب غير موجود" }
                 }
             };
         }
@@ -63,10 +63,10 @@ public class Gate4ValidationService : IGate4ValidationService
         {
             Key = "TheoryTestPassed",
             LabelAr = "اختبار النظري",
-            LabelEn = "Theory Test",
+            LabelEn = "اختبار النظري",
             IsPassed = theoryPassed,
             FailureMessageAr = theoryPassed ? null : "لم يتم اجتياز اختبار النظري.",
-            FailureMessageEn = theoryPassed ? null : "Theory test has not been passed."
+            FailureMessageEn = theoryPassed ? null : "لم يتم اجتياز اختبار النظري."
         });
 
         // Condition 2: Practical Test Passed
@@ -77,10 +77,10 @@ public class Gate4ValidationService : IGate4ValidationService
         {
             Key = "PracticalTestPassed",
             LabelAr = "الاختبار العملي",
-            LabelEn = "Practical Test",
+            LabelEn = "الاختبار العملي",
             IsPassed = practicalPassed,
             FailureMessageAr = practicalPassed ? null : "لم يتم اجتياز الاختبار العملي.",
-            FailureMessageEn = practicalPassed ? null : "Practical test has not been passed."
+            FailureMessageEn = practicalPassed ? null : "لم يتم اجتياز الاختبار العملي."
         });
 
         // Condition 3: Security Status Clean
@@ -89,10 +89,10 @@ public class Gate4ValidationService : IGate4ValidationService
         {
             Key = "SecurityStatusClean",
             LabelAr = "الوضع الأمني",
-            LabelEn = "Security Status",
+            LabelEn = "الوضع الأمني",
             IsPassed = securityClean,
             FailureMessageAr = securityClean ? null : "يوجد حظر أمني على مقدم الطلب.",
-            FailureMessageEn = securityClean ? null : "Applicant has an active security block."
+            FailureMessageEn = securityClean ? null : "يوجد حظر أمني على مقدم الطلب."
         });
 
         // Condition 4: Identity Document Valid
@@ -101,10 +101,10 @@ public class Gate4ValidationService : IGate4ValidationService
         {
             Key = "IdentityDocumentValid",
             LabelAr = "صلاحية وثيقة الهوية",
-            LabelEn = "Identity Document Validity",
+            LabelEn = "صلاحية وثيقة الهوية",
             IsPassed = identityValid,
             FailureMessageAr = identityValid ? null : "وثيقة الهوية منتهية الصلاحية أو مفقودة.",
-            FailureMessageEn = identityValid ? null : "Identity document is expired or missing."
+            FailureMessageEn = identityValid ? null : "وثيقة الهوية منتهية الصلاحية أو مفقودة."
         });
 
         // Condition 5: Medical Certificate Valid
@@ -117,10 +117,10 @@ public class Gate4ValidationService : IGate4ValidationService
         {
             Key = "MedicalCertificateValid",
             LabelAr = "صلاحية الشهادة الطبية",
-            LabelEn = "Medical Certificate Validity",
+            LabelEn = "صلاحية الشهادة الطبية",
             IsPassed = medicalValid,
             FailureMessageAr = medicalValid ? null : "الشهادة الطبية غير صالحة.",
-            FailureMessageEn = medicalValid ? null : "Medical certificate is not valid."
+            FailureMessageEn = medicalValid ? null : "الشهادة الطبية غير صالحة."
         });
 
         // Condition 6: All Payments Cleared
@@ -131,10 +131,10 @@ public class Gate4ValidationService : IGate4ValidationService
         {
             Key = "AllPaymentsCleared",
             LabelAr = "سداد جميع الرسوم",
-            LabelEn = "All Payments Cleared",
+            LabelEn = "سداد جميع الرسوم",
             IsPassed = allPaymentsCleared,
             FailureMessageAr = allPaymentsCleared ? null : "توجد رسوم معلقة أو فشلت في السداد.",
-            FailureMessageEn = allPaymentsCleared ? null : "There are pending or failed payments."
+            FailureMessageEn = allPaymentsCleared ? null : "توجد رسوم معلقة أو فشلت في السداد."
         });
 
         var isFullyPassed = conditions.All(c => c.IsPassed);

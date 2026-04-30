@@ -82,7 +82,7 @@ export function TimeSlotPicker({
            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-[#1a3a8f]">
               <Icon className="w-5 h-5" />
            </div>
-           <h4 className="text-sm font-black text-neutral-800 uppercase tracking-widest">{title}</h4>
+           <h4 className="text-sm font-black text-neutral-800">{title}</h4>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-4">
           {groupSlots.map((slot) => (
@@ -93,7 +93,7 @@ export function TimeSlotPicker({
               onClick={() => slot.isAvailable && onSlotSelect(slot)}
               disabled={!slot.isAvailable}
               className={cn(
-                'group relative p-5 rounded-2xl border-none transition-all duration-500 text-right overflow-hidden',
+                'group relative p-5 rounded-2xl border-none transition-all duration-500 text-end overflow-hidden',
                 selectedSlot === slot.time
                   ? 'bg-[#1a3a8f] text-white shadow-xl shadow-blue-900/20 ring-4 ring-blue-100/50'
                   : 'bg-neutral-50 hover:bg-white hover:shadow-xl hover:shadow-blue-900/5 hover:ring-2 hover:ring-blue-100',
@@ -106,14 +106,14 @@ export function TimeSlotPicker({
                   selectedSlot === slot.time ? "text-blue-100" : "text-[#1a3a8f]"
                 )} />
                 <span className={cn(
-                  "text-lg font-black tracking-tight",
+                  "text-lg font-black",
                   selectedSlot === slot.time ? "text-white" : "text-neutral-900"
                 )}>
                   {slot.time}
                 </span>
               </div>
               <div className={cn(
-                "text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full w-fit",
+                "text-[10px] font-black px-3 py-1 rounded-full w-fit",
                 selectedSlot === slot.time 
                   ? "bg-white/10 text-white" 
                   : slot.isAvailable ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"

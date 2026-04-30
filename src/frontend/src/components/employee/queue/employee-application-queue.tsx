@@ -16,9 +16,11 @@ import { useQuery } from '@tanstack/react-query';
 import { dashboardService } from '@/services/dashboard.service';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, ChevronLeft, ChevronRight, RefreshCcw, Filter, LayoutGrid, List } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Search, ChevronLeft, ChevronRight, RefreshCcw, Filter, LayoutGrid, List, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useDebounce } from '@/hooks/useDebounce';
 
 // Memoized Table Row for performance
 const FloatingRow = memo(({ row, index }: { row: any; index: number }) => {
@@ -52,10 +54,11 @@ export function EmployeeApplicationQueue() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
+  const debouncedFilter = useDebounce(globalFilter, 500);
   
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ['employee-queue', globalFilter],
-    queryFn: () => dashboardService.getEmployeeQueue({ search: globalFilter }),
+  const { data, isLoading, isFetching, refetch } = useQuery({
+    queryKey: ['employee-queue', debouncedFilter],
+    queryFn: () => dashboardService.getEmployeeQueue({ search: debouncedFilter }),
   });
 
   const tableData = useMemo(() => data?.data?.items || [], [data]);
@@ -93,13 +96,26 @@ export function EmployeeApplicationQueue() {
       {/* Institutional Toolbar */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white border border-neutral-200 p-6 rounded-3xl shadow-sm">
         <div className="relative w-full lg:w-[420px] group">
-          <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 group-focus-within:text-[#1a3a8f] transition-colors" />
+          <Search className="absolute start-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 group-focus-within:text-[#1a3a8f] transition-colors" />
           <Input
             placeholder="البحث برقم الطلب، الاسم، أو الهوية..."
             value={globalFilter}
             onChange={(event) => setGlobalFilter(event.target.value)}
-            className="pe-12 h-12 border-neutral-100 bg-neutral-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all rounded-xl font-bold text-sm text-right"
+            className="ps-12 pe-10 h-12 border-neutral-100 bg-neutral-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all rounded-xl font-bold text-sm text-start"
           />
+          <AnimatePresence>
+            {globalFilter && (
+              <motion.button
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                onClick={() => setGlobalFilter('')}
+                className="absolute end-4 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-neutral-100 transition-colors"
+              >
+                <X className="w-3.5 h-3.5 text-neutral-400" />
+              </motion.button>
+            )}
+          </AnimatePresence>
         </div>
         
         <div className="flex items-center gap-2">
@@ -118,10 +134,11 @@ export function EmployeeApplicationQueue() {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-12 w-12 rounded-xl border border-neutral-200 hover:bg-neutral-50 transition-all"
+            className="h-12 w-12 rounded-xl border border-neutral-200 hover:bg-neutral-50 transition-all relative overflow-hidden"
             onClick={() => refetch()}
+            disabled={isFetching}
           >
-            <RefreshCcw className={cn("w-4 h-4 text-neutral-400", isLoading && "animate-spin text-[#1a3a8f]")} />
+            <RefreshCcw className={cn("w-4 h-4 text-neutral-400", isFetching && "animate-spin text-[#1a3a8f]")} />
           </Button>
         </div>
       </div>
@@ -129,12 +146,12 @@ export function EmployeeApplicationQueue() {
       {/* Table Section */}
       <div className="relative">
         <div className="overflow-x-auto">
-          <table className="w-full text-right border-separate border-spacing-y-2 px-1" dir="rtl">
+          <table className="w-full text-start border-separate border-spacing-y-2 px-1" dir="rtl">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <th key={header.id} className="px-6 pb-4 text-right text-[10px] font-black text-neutral-400 uppercase tracking-[0.25em]">
+                    <th key={header.id} className="px-6 pb-4 text-start text-[10px] font-black text-neutral-400 uppercase tracking-[0.25em]">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -150,15 +167,15 @@ export function EmployeeApplicationQueue() {
               <AnimatePresence mode="popLayout" initial={false}>
                 {isLoading ? (
                   Array.from({ length: 6 }).map((_, i) => (
-                    <tr key={`skeleton-${i}`} className="bg-white rounded-2xl border border-neutral-100">
+                    <tr key={`skeleton-${i}`} className="bg-white rounded-2xl">
                       {columns.map((_, j) => (
-                        <td key={`cell-${i}-${j}`} className="px-6 py-6 border-y border-neutral-100 first:border-s last:border-e first:rounded-s-2xl last:rounded-e-2xl">
-                          <div className="h-4 bg-neutral-50 rounded-lg animate-pulse w-full"></div>
+                        <td key={`cell-${i}-${j}`} className="px-6 py-8 bg-white border-y border-neutral-100 first:border-s last:border-e first:rounded-s-2xl last:rounded-e-2xl">
+                          <Skeleton className="h-4 w-full bg-neutral-100/50" />
                         </td>
                       ))}
                     </tr>
                   ))
-                ) : table.getRowModel().rows?.length ? (
+                ) : data?.data?.items?.length ? (
                   table.getRowModel().rows.map((row, index) => (
                     <FloatingRow key={row.id} row={row} index={index} />
                   ))

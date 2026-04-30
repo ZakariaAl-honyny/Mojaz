@@ -162,6 +162,44 @@
         "totalIssued": "إجمالي الصادرة",
         "renewalRates": "معدلات التجديد"
       }
+    },
+    "workflows": {
+      "title": "إدارة سير العمل",
+      "subtitle": "تكوين مراحل سير عمل الطلبات",
+      "configure": "تكوين متقدم",
+      "infoTitle": "معلومات حول سير العمل",
+      "infoDesc": "يعرض هذا القسم المراحل المختلفة لسير عمل طلبات رخصة القيادة. يمكنك تفعيل/تعطيل المراحل وتكوين التحولات المسموح بينها.",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "allowedTransitions": "التحولات المسموح بها",
+      "noTransitions": "لا توجد تحولات",
+      "requiredRole": "الدور المسؤول",
+      "autoProgress": "تقدم تلقائي",
+      "yes": "نعم",
+      "no": "لا",
+      "flow": "مسار التدفق",
+      "legend": "دليل المراحل",
+      "transition": "تحويل",
+      "auto": "تلقائي",
+      "editTransitions": "تحرير التحولات"
+    },
+    "notifications": {
+      "templatesTitle": "قوالب الإشعارات",
+      "templatesSubtitle": "إدارة قوالب الإشعارات البريدية والرسائل النصية",
+      "addTemplate": "إضافة قالب جديد",
+      "search": "البحث...",
+      "channel": "القناة",
+      "allChannels": "الكل",
+      "eventType": "نوع الحدث",
+      "allEvents": "الكل",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "noTemplates": "لا توجد قوالب إشعارات",
+      "preview": "معاينة القالب",
+      "subject": "العنوان",
+      "body": "المحتوى",
+      "variables": "المتغيرات",
+      "editTemplate": "تعديل القالب"
     }
   }
 }

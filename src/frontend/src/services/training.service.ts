@@ -5,7 +5,8 @@ import {
   CreateTrainingRecordRequest, 
   UpdateTrainingHoursRequest, 
   CreateExemptionRequest,
-  ExemptionActionRequest
+  ExemptionActionRequest,
+  PendingExemptionDto
 } from '@/types/training.types';
 
 /**
@@ -16,7 +17,7 @@ const TrainingService = {
    * Get training record for a specific application
    */
   async getRecordByApplicationId(applicationId: string): Promise<ApiResponse<TrainingRecordDto>> {
-    const response = await apiClient.get(`/training/application/${applicationId}`);
+    const response = await apiClient.get(`training/application/${applicationId}`);
     return response.data;
   },
 
@@ -24,7 +25,7 @@ const TrainingService = {
    * Create initial training record (if it doesn't exist)
    */
   async createRecord(request: CreateTrainingRecordRequest): Promise<ApiResponse<TrainingRecordDto>> {
-    const response = await apiClient.post('/Training', request);
+    const response = await apiClient.post('Training', request);
     return response.data;
   },
 
@@ -32,7 +33,7 @@ const TrainingService = {
    * Add training hours to an existing record
    */
   async addHours(id: string, request: UpdateTrainingHoursRequest): Promise<ApiResponse<TrainingRecordDto>> {
-    const response = await apiClient.patch(`/training/${id}/hours`, request);
+    const response = await apiClient.patch(`training/${id}/hours`, request);
     return response.data;
   },
 
@@ -40,7 +41,7 @@ const TrainingService = {
    * Submit an exemption request
    */
   async submitExemption(request: CreateExemptionRequest): Promise<ApiResponse<TrainingRecordDto>> {
-    const response = await apiClient.post('/training/exemption', request);
+    const response = await apiClient.post('training/exemption', request);
     return response.data;
   },
 
@@ -48,7 +49,7 @@ const TrainingService = {
    * Approve an exemption (Manager only)
    */
   async approveExemption(id: string, request: ExemptionActionRequest): Promise<ApiResponse<TrainingRecordDto>> {
-    const response = await apiClient.patch(`/training/${id}/exemption/approve`, request);
+    const response = await apiClient.patch(`training/${id}/exemption/approve`, request);
     return response.data;
   },
 
@@ -56,20 +57,20 @@ const TrainingService = {
    * Reject an exemption (Manager only)
    */
   async rejectExemption(id: string, request: ExemptionActionRequest): Promise<ApiResponse<TrainingRecordDto>> {
-    const response = await apiClient.patch(`/training/${id}/exemption/reject`, request);
+    const response = await apiClient.patch(`training/${id}/exemption/reject`, request);
     return response.data;
   },
 
   async getStatus(applicationId: string): Promise<ApiResponse<boolean>> {
-    const response = await apiClient.get(`/training/application/${applicationId}/status`);
+    const response = await apiClient.get(`training/application/${applicationId}/status`);
     return response.data;
   },
 
   /**
    * Get all pending exemptions (Manager only)
    */
-  async getPendingExemptions(): Promise<ApiResponse<any[]>> {
-    const response = await apiClient.get('/training/exemptions/pending');
+  async getPendingExemptions(): Promise<ApiResponse<PendingExemptionDto[]>> {
+    const response = await apiClient.get('training/exemptions/pending');
     return response.data;
   }
 };

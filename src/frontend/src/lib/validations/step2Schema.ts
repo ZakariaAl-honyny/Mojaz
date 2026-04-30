@@ -18,7 +18,7 @@ export const createStep2Schema = (
   minAgeMap: Record<string, number>
 ) =>
   z.object({
-    categoryCode: z.string().min(1, 'wizard.validation.step2.categoryRequired'),
+    categoryCode: z.string().min(1, 'يرجى تحديد فئة الرخصة المستهدفة للمتابعة في إجراءات المعاملة.'),
   }).superRefine((data, ctx) => {
     if (!dateOfBirth || !data.categoryCode) return;
     const age = calculateAge(dateOfBirth);
@@ -27,7 +27,7 @@ export const createStep2Schema = (
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['categoryCode'],
-        message: `wizard.validation.step2.ageError:${minAge}`,
+        message: `AGE_ERROR:${minAge}`,
       });
     }
   });

@@ -75,7 +75,7 @@ export function ServiceGrid() {
   ];
 
   return (
-    <section className="py-32 bg-[#f8fafc]">
+    <section id="services" className="py-32 bg-[#f8fafc]">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-20 space-y-6">
           <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-[#1a3a8f] font-arabic leading-tight">

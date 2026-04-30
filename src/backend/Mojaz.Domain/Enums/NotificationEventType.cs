@@ -19,5 +19,7 @@ public enum NotificationEventType : byte
     FinalApprovalReturned,
     OtpSent,
     OtpResent,
-    OtpVerified
+    OtpVerified,
+    MedicalExamResult,
+    ApplicationAssigned
 }

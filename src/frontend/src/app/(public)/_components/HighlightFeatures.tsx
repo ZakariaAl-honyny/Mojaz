@@ -50,7 +50,7 @@ export function HighlightFeatures() {
                 <div className="text-secondary-500 font-bold tracking-widest uppercase text-sm">
                   خدمة تليق بتطلعاتكم
                 </div>
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-neutral-900 font-arabic ltr:font-english leading-tight">
+                <h2 className="text-3xl md:text-4xl font-black tracking-tight text-neutral-900 font-arabic ltr:font-english leading-tight">
                   تقنيات متطورة
                 </h2>
               </div>

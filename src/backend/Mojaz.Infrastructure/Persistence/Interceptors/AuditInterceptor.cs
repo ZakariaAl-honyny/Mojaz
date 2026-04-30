@@ -37,7 +37,7 @@ namespace Mojaz.Infrastructure.Persistence.Interceptors
 
             foreach (var entry in entries)
             {
-                if (entry.Entity is AuditLog) continue; // Skip audit entities to avoid infinite loop
+                if (entry.Entity is AuditLog) continue;
 
                 var auditEntry = new AuditLog
                 {
@@ -45,23 +45,44 @@ namespace Mojaz.Infrastructure.Persistence.Interceptors
                     ActionType = GetActionType(entry.State),
                     EntityName = entry.Entity.GetType().Name,
                     EntityId = GetEntityId(entry)?.ToString() ?? string.Empty,
-                    Payload = string.Empty,
                     Timestamp = DateTime.UtcNow
                 };
 
-                switch (entry.State)
+                var auditData = new Dictionary<string, object?>();
+
+                if (entry.State == EntityState.Added)
                 {
-                    case EntityState.Added:
-                        auditEntry.Payload = SerializeEntity(entry.Entity);
-                        break;
-                    case EntityState.Deleted:
-                        auditEntry.Payload = SerializeEntity(entry.Entity);
-                        break;
-                    case EntityState.Modified:
-                        var oldValues = SerializeEntity(entry.OriginalValues.ToObject());
-                        var newValues = SerializeEntity(entry.CurrentValues.ToObject());
-                        auditEntry.Payload = JsonConvert.SerializeObject(new { Old = oldValues, New = newValues });
-                        break;
+                    foreach (var prop in entry.CurrentValues.Properties)
+                    {
+                        auditData[prop.Name] = entry.CurrentValues[prop];
+                    }
+                    auditEntry.Payload = JsonConvert.SerializeObject(new { NewValues = auditData });
+                }
+                else if (entry.State == EntityState.Deleted)
+                {
+                    foreach (var prop in entry.OriginalValues.Properties)
+                    {
+                        auditData[prop.Name] = entry.OriginalValues[prop];
+                    }
+                    auditEntry.Payload = JsonConvert.SerializeObject(new { OldValues = auditData });
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    var oldValues = new Dictionary<string, object?>();
+                    var newValues = new Dictionary<string, object?>();
+
+                    foreach (var prop in entry.OriginalValues.Properties)
+                    {
+                        var originalValue = entry.OriginalValues[prop];
+                        var currentValue = entry.CurrentValues[prop];
+
+                        if (!Equals(originalValue, currentValue))
+                        {
+                            oldValues[prop.Name] = originalValue;
+                            newValues[prop.Name] = currentValue;
+                        }
+                    }
+                    auditEntry.Payload = JsonConvert.SerializeObject(new { Old = oldValues, New = newValues });
                 }
 
                 context.Set<AuditLog>().Add(auditEntry);
@@ -70,8 +91,6 @@ namespace Mojaz.Infrastructure.Persistence.Interceptors
 
         private Guid? GetUserId(DbContext? context)
         {
-            // In a real implementation, you would get the current user from HttpContext or similar
-            // For now, we'll return null as this should be set by the service layer
             return null;
         }
 
@@ -88,29 +107,11 @@ namespace Mojaz.Infrastructure.Persistence.Interceptors
 
         private object? GetEntityId(EntityEntry entry)
         {
-            // Try to find the primary key value
             if (entry.Metadata.FindPrimaryKey() is var pk && pk != null)
             {
                 return pk.Properties.Select(p => entry.Property(p.Name).CurrentValue).FirstOrDefault();
             }
             return null;
-        }
-
-        private string SerializeEntity(object? entity)
-        {
-            if (entity == null) return "{}";
-            
-            try
-            {
-                return JsonConvert.SerializeObject(entity, new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                });
-            }
-            catch
-            {
-                return "{}";
-            }
         }
     }
 }

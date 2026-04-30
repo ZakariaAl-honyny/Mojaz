@@ -48,13 +48,70 @@ namespace Mojaz.Application.Services
             var application = await _applicationRepository.GetByIdAsync(applicationId);
             if (application == null)
             {
-                return ApiResponse<TheoryTestDto>.Fail(404, "Application not found.");
+                return ApiResponse<TheoryTestDto>.Fail(404, "الطلب غير موجود.");
+            }
+
+            // 1.5. Check if theory test is exempt for category upgrades
+            var isExempt = await IsTheoryExemptForUpgradeAsync(applicationId);
+            if (isExempt)
+            {
+                // Auto-pass without test — create waiver record
+                var waiverTest = new TheoryTest
+                {
+                    ApplicationId = applicationId,
+                    ExaminerId = examinerId,
+                    AttemptNumber = 1,
+                    Score = null,
+                    PassingScore = 0,
+                    Result = TestResult.Pass,
+                    IsAbsent = false,
+                    Notes = "تمت معافاة الاختبار النظري لترقية الفئة (تم اجتيازه سابقاً).",
+                    ConductedAt = DateTime.UtcNow
+                };
+
+                await _theoryRepository.AddAsync(waiverTest);
+
+                // Update application status
+                application.Status = ApplicationStatus.PracticalTest;
+                application.CurrentStage = ApplicationStages.Practical;
+                application.TheoryAttemptCount += 1;
+
+                _applicationRepository.Update(application);
+                await _unitOfWork.SaveChangesAsync();
+
+                // Audit log
+                await _auditService.LogAsync(
+                    "SUBMIT_THEORY_RESULT",
+                    "TheoryTest",
+                    waiverTest.Id.ToString(),
+                    null,
+                    "Result: Pass (Exemption Waiver)");
+
+                // Notification
+                await _notificationService.SendAsync(new NotificationRequest
+                {
+                    UserId = application.ApplicantId,
+                    ApplicationId = applicationId,
+                    EventType = NotificationEventType.StatusChanged,
+                    TitleAr = "تمت معافاة الاختبار النظري",
+                    TitleEn = "Theory Test Exempted",
+                    MessageAr = "تم إعفاءك من الاختبار النظري لترقية الفئة. يمكنك الآن حجز موعد الاختبار العملي.",
+                    MessageEn = "You have been exempted from the theory test for category upgrade. You may now book your practical test.",
+                    InApp = true,
+                    Push = true,
+                    Email = true,
+                    Sms = true
+                });
+
+                var waiverDto = _mapper.Map<TheoryTestDto>(waiverTest);
+                waiverDto.ApplicationStatus = application.Status.ToString();
+                return ApiResponse<TheoryTestDto>.Ok(waiverDto, "تمت معافاة الاختبار النظري بنجاح.");
             }
 
             // 2. Check application.CurrentStage == ApplicationStages.Theory — 400 if not
             if (application.CurrentStage != ApplicationStages.Theory)
             {
-                return ApiResponse<TheoryTestDto>.Fail(400, "Application is not in the Theory Test stage.");
+                return ApiResponse<TheoryTestDto>.Fail(400, "الطلب ليس في مرحلة الاختبار النظري.");
             }
 
             // 3. Check application.TheoryAttemptCount < MAX_THEORY_ATTEMPTS — 400 if at limit
@@ -63,7 +120,7 @@ namespace Mojaz.Application.Services
 
             if (application.TheoryAttemptCount >= maxAttempts)
             {
-                return ApiResponse<TheoryTestDto>.Fail(400, "Maximum theory test attempts have already been reached.");
+                return ApiResponse<TheoryTestDto>.Fail(400, "تم استنفاد الحد الأقصى لمحاولات الاختبار النظري.");
             }
 
             // 4. Read MIN_PASS_SCORE_THEORY from SystemSettings (default 80, log warn if missing)
@@ -203,7 +260,7 @@ namespace Mojaz.Application.Services
             dto.RetakeEligibleAfter = retakeEligibleAfter;
             dto.ApplicationStatus = application.Status.ToString();
 
-            return ApiResponse<TheoryTestDto>.Ok(dto, "Theory test result recorded successfully.");
+            return ApiResponse<TheoryTestDto>.Ok(dto, "تم تسجيل نتيجة الاختبار النظري بنجاح.");
         }
 
         public async Task<ApiResponse<PagedResult<TheoryTestDto>>> GetHistoryAsync(Guid applicationId, Guid userId, string role, int page = 1, int pageSize = 10)
@@ -212,13 +269,13 @@ namespace Mojaz.Application.Services
             var application = await _applicationRepository.GetByIdAsync(applicationId);
             if (application == null)
             {
-                return ApiResponse<PagedResult<TheoryTestDto>>.Fail(404, "Application not found.");
+                return ApiResponse<PagedResult<TheoryTestDto>>.Fail(404, "الطلب غير موجود.");
             }
 
             // Ownership check for Applicant role (403 if not owner)
             if (role == "Applicant" && application.ApplicantId != userId)
             {
-                return ApiResponse<PagedResult<TheoryTestDto>>.Fail(403, "You do not have permission to view this application's test history.");
+                return ApiResponse<PagedResult<TheoryTestDto>>.Fail(403, "ليس لديك صلاحية لعرض سجل اختبارات هذا الطلب.");
             }
 
             // Query all TheoryTest records by ApplicationId ordered by ConductedAt asc
@@ -228,6 +285,7 @@ namespace Mojaz.Application.Services
             // Calculate pagination
             var totalCount = testList.Count;
             var pagedItems = testList
+                .OrderBy(t => t.AttemptNumber)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
@@ -300,11 +358,30 @@ namespace Mojaz.Application.Services
             return application.TheoryAttemptCount >= maxAttempts;
         }
 
+        public async Task<bool> IsTheoryExemptForUpgradeAsync(Guid applicationId)
+        {
+            var application = await _applicationRepository.GetByIdAsync(applicationId);
+            if (application == null)
+            {
+                return false;
+            }
+
+            // Only category upgrades are exempt from theory test
+            if (application.ServiceType != ServiceType.CategoryUpgrade)
+            {
+                return false;
+            }
+
+            // Check if upgrade theory waiver is enabled
+            var waiverEnabled = await _settingsService.GetAsync("UPGRADE_THEORY_WAIVER_ENABLED");
+            return waiverEnabled?.ToLower() == "true";
+        }
+
         public async Task<ApiResponse<PagedResult<TheoryTestDto>>> GetHistoryByApplicationNumberAsync(string applicationNumber, Guid userId, string role, int page = 1, int pageSize = 10)
         {
             if (string.IsNullOrWhiteSpace(applicationNumber))
             {
-                return ApiResponse<PagedResult<TheoryTestDto>>.Fail(400, "Application number is required.");
+                return ApiResponse<PagedResult<TheoryTestDto>>.Fail(400, "رقم الطلب مطلوب.");
             }
 
             var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
@@ -312,13 +389,13 @@ namespace Mojaz.Application.Services
 
             if (application == null)
             {
-                return ApiResponse<PagedResult<TheoryTestDto>>.Fail(404, "Application not found.");
+                return ApiResponse<PagedResult<TheoryTestDto>>.Fail(404, "الطلب غير موجود.");
             }
 
             // Ownership check for Applicant role
             if (role == "Applicant" && application.ApplicantId != userId)
             {
-                return ApiResponse<PagedResult<TheoryTestDto>>.Fail(403, "You do not have permission to view this application's test history.");
+                return ApiResponse<PagedResult<TheoryTestDto>>.Fail(403, "ليس لديك صلاحية لعرض سجل اختبارات هذا الطلب.");
             }
 
             // Query all TheoryTest records by ApplicationId
@@ -327,6 +404,7 @@ namespace Mojaz.Application.Services
 
             var totalCount = testList.Count;
             var pagedItems = testList
+                .OrderBy(t => t.AttemptNumber)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();

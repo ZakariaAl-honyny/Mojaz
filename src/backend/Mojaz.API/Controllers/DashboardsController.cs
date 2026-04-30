@@ -37,7 +37,7 @@ public class DashboardsController : ControllerBase
     /// Get high-level KPI dashboard for Manager role
     /// </summary>
     [HttpGet("manager")]
-    [Authorize(Roles = "Manager,Admin")]
+    [Authorize(Roles = "Manager,Admin,Receptionist,Doctor,Examiner")]
     [ProducesResponseType(typeof(ApiResponse<ManagerKpiDto>), 200)]
     public async Task<IActionResult> GetManagerDashboardAsync()
     {
@@ -61,7 +61,7 @@ public class DashboardsController : ControllerBase
     /// Get dashboard for Employee (Receptionist/Doctor/Examiner) roles
     /// </summary>
     [HttpGet("employee")]
-    [Authorize(Roles = "Receptionist,Doctor,Examiner")]
+    [Authorize(Roles = "Admin,Receptionist,Doctor,Examiner,Manager,Security")]
     [ProducesResponseType(typeof(ApiResponse<EmployeeDashboardDto>), 200)]
     public async Task<IActionResult> GetEmployeeDashboardAsync()
     {
@@ -74,12 +74,47 @@ public class DashboardsController : ControllerBase
     /// Get dashboard for Receptionist role
     /// </summary>
     [HttpGet("receptionist")]
-    [Authorize(Roles = "Receptionist")]
+    [Authorize(Roles = "Admin,Receptionist,Manager,Security")]
     [ProducesResponseType(typeof(ApiResponse<ReceptionistDashboardDto>), 200)]
     public async Task<IActionResult> GetReceptionistDashboardAsync()
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _dashboardService.GetReceptionistDashboardAsync(userId);
         return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Get general statistics (accessible by all authenticated users)
+    /// </summary>
+    [HttpGet("stats")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<ManagerKpiDto>), 200)]
+    public async Task<IActionResult> GetStatsAsync()
+    {
+        var userRole = User.FindFirstValue(ClaimTypes.Role);
+        
+        // Route to appropriate dashboard based on role
+        if (userRole == "Applicant")
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var result = await _dashboardService.GetApplicantDashboardAsync(userId);
+            return StatusCode(result.StatusCode, result);
+        }
+        else if (userRole == "Admin")
+        {
+            var result = await _dashboardService.GetAdminDashboardAsync();
+            return StatusCode(result.StatusCode, result);
+        }
+        else if (userRole == "Manager")
+        {
+            var result = await _dashboardService.GetManagerDashboardAsync();
+            return StatusCode(result.StatusCode, result);
+        }
+        else
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var result = await _dashboardService.GetEmployeeDashboardAsync(userId);
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }

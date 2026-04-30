@@ -5,7 +5,7 @@ import {
   ApplicationDecision,
 } from "@/types/finalApproval.types";
 
-const API_BASE = "/applications";
+const API_BASE = "applications";
 
 export const finalApprovalService = {
   async getGate4Status(applicationId: string): Promise<Gate4ValidationResult> {

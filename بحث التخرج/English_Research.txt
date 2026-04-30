@@ -1,0 +1,671 @@
+================================================================================
+                    GRADUATION PROJECT
+================================================================================
+
+                    "MOJAZ" Electronic Platform
+               Driving License Management - Yemen
+
+================================================================================
+
+University: [University Name]
+Faculty: [Faculty Name]
+Department: [Department Name]
+
+Supervisor: [Supervisor Name]
+Student: [Student Name]
+Academic Year: 2024-2025
+
+================================================================================
+                        ABSTRACT
+================================================================================
+
+The driving license is one of the most essential official documents that 
+citizens need in their daily life. However, the process of obtaining it in 
+Yemen still relies heavily on paper-based transactions and multiple field 
+visits to traffic departments, leading to wasted time, effort, and long queues.
+
+This project aims to develop a comprehensive digital platform called "Mojaz" 
+to digitize and automate the entire driving license lifecycle. The system is 
+built using modern architecture with ASP.NET Core 8 for the backend and 
+Next.js 15 for the frontend, providing a user experience that mimics 
+advanced government systems like Saudi Arabia's "Absher" system.
+
+The platform includes eight main services, six license categories, and 
+seven user roles, with full support for both Arabic and English languages.
+
+================================================================================
+                    CHAPTER 1: PROJECT FRAMEWORK
+================================================================================
+
+1.1 Introduction and Overview
+--------------------------------------------------------------------------------
+Digital transformation in the traffic and licensing sector aims to enhance 
+road safety and ensure accuracy of national records. The Mojaz platform 
+strives to be a comprehensive technological solution aimed at transitioning 
+the traditional working model in Yemen to a secure and effective digital 
+environment.
+
+The platform provides a unified cloud environment that connects all 
+stakeholders: citizens, medical centers, driving schools, and traffic 
+departments in a single central platform.
+
+1.2 Problem Statement
+--------------------------------------------------------------------------------
+The process of issuing driving licenses in Yemen faces several key challenges:
+
+A) Bureaucracy and Paperwork:
+   - Need to fill out multiple paper forms
+   - Dependence on handwritten signatures
+   - Difficulty archiving and retrieving documents
+
+B) Overcrowding and Repeated Visits:
+   - Long queues at traffic centers
+   - Multiple unnecessary visits
+   - Long waiting times for appointments
+
+C) Lack of Transparency:
+   - No real-time knowledge of application status
+   - Absence of instant notifications
+   - Difficulty in temporal tracking
+
+D) Document Verification:
+   - Difficulty verifying authenticity of medical documents
+   - Manual verification of applicant data
+   - Lack of automated verification system
+
+1.3 Project Objectives
+--------------------------------------------------------------------------------
+The project's strategic objectives:
+
+1. Operations Automation:
+   - Automate all license application stages (10 stages)
+   - Minimize human intervention
+   - Speed up processing
+
+2. User Experience Improvement:
+   - Easy-to-use Arabic interface
+   - Electronic submission from anywhere
+   - Real-time application tracking
+
+3. Transparency Assurance:
+   - Real-time stages tracking
+   - SMS and email notifications
+   - Complete timeline history
+
+4. Performance Improvement:
+   - Reduce processing time to less than 14 days
+   - Increase capacity
+   - Reduce error rates
+
+5. Security and Reliability:
+   - Digital license with QR code
+   - Instant license verification
+   - Secure immutable records
+
+1.4 Project Scope and Boundaries
+--------------------------------------------------------------------------------
+Geographical Scope:
+- Phase One: Capital Secretariat
+- Expandable in the future
+
+Included Services:
+- 8 main services
+- New issuance, renewal, replacement, category upgrade, etc.
+
+Supported Categories:
+- 6 categories: A (motorcycle), B (private), C (medium transport), 
+  D (heavy transport), E (trailer), F (agricultural)
+
+Roles:
+- 7 roles: Applicant, Receptionist, Doctor, Examiner, 
+  TrainingCenter, Manager, Security, Admin
+
+Timeline:
+- 10 sprints (20 weeks)
+
+================================================================================
+        CHAPTER 2: THEORETICAL BACKGROUND
+================================================================================
+
+2.1 E-Government Concepts
+--------------------------------------------------------------------------------
+The platform is based on several integrated theoretical concepts:
+
+A) E-Government:
+   - Providing government services through digital means
+   - Improving government operations efficiency
+   - Increasing service transparency
+
+B) Business Process Reengineering (BPR):
+   - Redesigning traditional processes
+   - Removing unnecessary steps
+   - Automating repetitive tasks
+
+C) Digital Transformation:
+   - Transitioning from paper to digital
+   - Employing technology in service delivery
+   - Improving user experience
+
+D) User Experience (UX):
+   - Designing easy and simple interfaces
+   - Meeting user needs
+   - Saving time and effort
+
+2.2 Similar Systems Study
+--------------------------------------------------------------------------------
+
+A) Absher System (Saudi Arabia):
+   - Comprehensive traffic services platform
+   - Professional Arabic interface
+   - Our primary design model
+
+B) Egypt Digital Portal:
+   - Government services integration
+   - Unified registration system
+
+C) Smart Traffic System (UAE):
+   - Advanced technologies
+   - Smart applications
+
+2.3 Business Rules
+--------------------------------------------------------------------------------
+
+Basic rules stored in the system:
+
+A) Minimum Age:
+   - Category A (motorcycle): 16 years
+   - Category B (private): 18 years
+   - Category F (agricultural): 18 years
+   - Category C (medium transport): 21 years
+   - Category D (heavy transport): 21 years
+   - Category E (trailer): 21 years
+
+B) Other Conditions:
+   - Medical examination validity: 90 days
+   - Maximum test attempts: 3 times
+   - Renewal grace period: 6 months
+   - Minimum training hours: per category
+
+================================================================================
+            CHAPTER 3: REQUIREMENTS ANALYSIS
+================================================================================
+
+3.1 Functional Requirements - Portals
+--------------------------------------------------------------------------------
+
+Portal 1: Applicant Portal
+- Create new application
+- Upload documents (ID photo, personal photo, etc.)
+- Book appointments (medical, theory, practical)
+- Pay fees electronically
+- Track application status
+- Receive digital license
+- View complete application history
+
+Portal 2: Receptionist Portal
+- Receive and verify applications
+- Verify document authenticity
+- Accept or reject applications
+- Request document modification
+- Schedule appointments
+
+Portal 3: Doctor Portal
+- View applicant data
+- Enter medical examination results
+  * Visual acuity (right eye, left eye)
+  * Color blindness
+  * Hearing
+  * Chronic diseases
+- Make fitness decision (fit/unfit)
+
+Portal 4: Examiner Portal
+- View attendance list
+- Record theory test results
+- Record practical test results
+- Rate skills
+- Record result (pass/fail)
+
+Portal 5: Training Center Portal
+- Track trainee attendance
+- Record training hours
+- Evaluate initial skills
+- Approve training completion
+
+Portal 6: Supervisor/Manager Portal
+- Approve final licenses
+- Review reports
+- Performance statistics
+
+Portal 7: Security Portal
+- Scan QR code
+- Verify license authenticity
+- Display driver data
+
+3.2 License Categories
+--------------------------------------------------------------------------------
+
+| Category | Description | Min Age | Requirements |
+|----------|------------|---------|--------------|
+| A | Motorcycle | 16 years | Wear helmet |
+| B | Private vehicle | 18 years | - |
+| C | Medium transport | 21 years | 1 year experience |
+| D | Heavy transport | 21 years | 2 years experience |
+| E | Trailer | 21 years | 2 years experience |
+| F | Agricultural vehicle | 18 years | - |
+
+3.3 Available Services
+--------------------------------------------------------------------------------
+
+1. New License Issuance:
+   - First-time license request
+   - All categories included
+
+2. License Renewal:
+   - Renew expired or expiring license
+   - Update data
+
+3. Lost/Damaged Replacement:
+   - Replace lost or damaged license
+   - Issue new license with different number
+
+4. Category Upgrade:
+   - Move from lower to higher category
+
+5. Add Category:
+   - Add category to current license
+
+6. Update Data:
+   - Change address or phone number
+
+7. Foreign License Conversion:
+   - Convert license from another country
+
+8. Inquiry:
+   - Inquire about current license status
+
+3.4 Workflow Stages (10 Stages)
+--------------------------------------------------------------------------------
+
+Stage 1: Application Creation
+- Fill personal data
+- Select license category
+- Upload required documents
+- Save as draft or submit
+
+Stage 2: Data Verification
+- Review documents by receptionist
+- Verify data correctness
+- Accept or reject with reason
+
+Stage 3: Medical Examination
+- Book medical appointment
+- Conduct examinations at approved center
+- Record result
+
+Stage 4: Fee Payment
+- Pay government fees electronically
+- Activate next stage
+
+Stage 5: Training
+- Join driving school
+- Complete required hours
+- Evaluate skills
+
+Stage 6: Theory Test
+- Test on traffic rules
+- 70% passing score
+
+Stage 7: Practical Test
+- Field driving test
+- Evaluate practical skills
+
+Stage 8: Final Approval
+- Manager review
+- Approve license issuance
+
+Stage 9: License Issuance
+- Generate license number
+- Create QR code
+- Record in database
+
+Stage 10: Delivery
+- Notify applicant
+- Download digital license
+- Or receive paper copy
+
+================================================================================
+                    CHAPTER 4: SYSTEM DESIGN
+================================================================================
+
+4.1 Technologies Used (Tech Stack)
+--------------------------------------------------------------------------------
+
+A) Backend:
+- ASP.NET Core 8 Web API
+- Entity Framework Core 8
+- SQL Server 2022
+- JWT Authentication
+- FluentValidation
+- FluentEmail
+
+B) Frontend:
+- Next.js 15 (App Router)
+- TypeScript
+- Tailwind CSS 4
+- shadcn/ui
+- React Query
+- Zustand
+- Zod Validation
+
+C) Tools and Integrations:
+- Twilio (SMS)
+- SendGrid (Email)
+- Firebase (Push Notifications)
+- QR Code Generator
+
+4.2 Software Architecture
+--------------------------------------------------------------------------------
+
+The project uses Clean Architecture with four layers:
+
+Layer 1: Domain Layer
+- Entities: User, Application, License, etc.
+- Value Objects
+- Interfaces
+- No external dependencies
+
+Layer 2: Application Layer
+- Services
+- DTOs
+- Validators
+- AutoMapper Profiles
+
+Layer 3: Infrastructure Layer
+- Database Context
+- Repositories
+- External Services
+
+Layer 4: API Layer
+- Controllers
+- Middleware
+- Filters
+- Swagger Documentation
+
+4.3 System Diagrams
+--------------------------------------------------------------------------------
+
+A) Use Case Diagram:
+Applicant → apply, book, pay, receive
+Receptionist → verify, accept, reject
+Doctor → medical exam, fitness check
+Examiner → theory test, practical test
+Trainer → training, skills evaluation
+Manager → approve, issue
+Security → verify via QR
+
+B) Activity Diagram:
+[Start] → Submit Application → Verify → Medical → 
+Pay → Training → Tests → Approve → Issue → [End]
+
+C) Sequence Diagram:
+Applicant → API → Database
+API → External Services (SMS/Email)
+Database ← API
+
+4.4 Visual Identity
+--------------------------------------------------------------------------------
+
+A) Colors:
+- Primary: King Blue #1a3a8f
+- Secondary: Gold #D4A017
+- Status colors: success (green), failure (red), warning (orange)
+
+B) Fonts:
+- Arabic: IBM Plex Sans Arabic
+- English: Inter
+
+C) Design:
+- Light mode only
+- RTL direction for Arabic
+- Absher-inspired design
+
+4.5 Database
+--------------------------------------------------------------------------------
+
+Main Tables:
+- Users
+- Applicants
+- Applications
+- LicenseCategories
+- ApplicationDocuments
+- MedicalResults
+- TestResults
+- Payments
+- Licenses
+- Notifications
+- Appointments
+- AuditLogs
+
+Relationships:
+- User 1:N Applications
+- Application 1:N Documents
+- Application 1:1 License
+
+4.6 System Interfaces
+--------------------------------------------------------------------------------
+
+A) Public Interfaces:
+- Landing Page
+- Login
+- Registration
+- OTP Verification
+- Password Recovery
+
+B) Applicant Interfaces:
+- Dashboard
+- New Application Wizard
+- Track Application
+- Timeline
+- Book Appointment
+- Notification Center
+- Digital License View
+
+C) Employee Interfaces:
+- Receptionist Dashboard
+- Doctor Dashboard
+- Examiner Dashboard
+- Training Center Dashboard
+- Manager Dashboard
+- Security Dashboard
+
+================================================================================
+                    CHAPTER 5: IMPLEMENTATION
+================================================================================
+
+5.1 Main Services
+--------------------------------------------------------------------------------
+
+1. ApplicationWorkflowService:
+   - Manages 10-stage workflow
+   - Validates transition conditions
+   - Automates stage transitions
+   - Verifies application eligibility
+
+2. AuthenticationService:
+   - Sign in/sign out
+   - JWT Token Management
+   - OTP Verification
+   - Password Recovery
+
+3. PaymentService:
+   - Payment gateway integration
+   - Payment verification
+   - Refund processing
+
+4. NotificationService:
+   - Send SMS via Twilio
+   - Send Email via SendGrid
+   - Push notifications via Firebase
+
+5. CalendarService:
+   - Appointment management
+   - Availability checking
+   - Booking confirmation
+
+6. LicenseGenerationService:
+   - Generate license number
+   - Create QR code
+   - Digital signing
+
+5.2 External Integrations
+--------------------------------------------------------------------------------
+
+A) Twilio (SMS):
+- OTP codes
+- Application status notifications
+- Appointment confirmations
+
+B) SendGrid (Email):
+- Account confirmation
+- Application status notifications
+- Digital license link
+
+C) Firebase (Push):
+- Instant notifications
+- Update alerts
+- Appointment reminders
+
+5.3 Testing
+--------------------------------------------------------------------------------
+
+A) Unit Tests:
+- Age verification
+- Stage transitions
+- Validators
+- Error handling
+
+B) Integration Tests:
+- Login
+- New application
+- Fee payment
+- License issuance
+
+C) Performance Tests:
+- Response time < 2 seconds
+- Support 1000 concurrent requests
+- Page load < 3 seconds
+
+5.4 Security Measures
+--------------------------------------------------------------------------------
+
+1. Password encryption (BCrypt)
+2. JWT Tokens with expiration
+3. Rate Limiting
+4. Audit Log
+5. Authorization verification
+6. Input sanitization
+7. SQL injection prevention
+8. Security headers
+
+================================================================================
+                    CHAPTER 6: CONCLUSION
+================================================================================
+
+6.1 Results Summary
+--------------------------------------------------------------------------------
+The Mojaz project succeeded in achieving its objectives:
+- Comprehensive digital platform for driving license issuance
+- Easy-to-use Arabic interface mimicking Absher
+- Full automation of 10 stages
+- Integration with SMS, Email, and Push services
+- Digital license with QR code for instant verification
+- Real-time tracking for all application stages
+- Reduced applicant visits to traffic centers
+
+6.2 Project Advantages
+--------------------------------------------------------------------------------
+
+1. Reduced Processing Time:
+   - From weeks to days
+   - Fewer applicant visits
+   - Automatic stage processing
+
+2. Improved Transparency:
+   - Real-time status tracking
+   - Instant notifications
+   - Complete timeline
+
+3. Enhanced Security:
+   - Non-forgeable digital license
+   - Instant QR verification
+   - Secure operation logging
+
+4. Cost Reduction:
+   - Reduced paper and printing
+   - Human resource savings
+   - Work efficiency improvement
+
+5. User-Friendly:
+   - Simple Arabic interface
+   - Mobile and computer support
+   - Smart assistance
+
+6.3 Future Recommendations
+--------------------------------------------------------------------------------
+
+1. Service Expansion:
+   - Vehicle plate issuance
+   - Ownership transfer
+   - Customs services
+
+2. Mobile Applications:
+   - Native mobile app (iOS/Android)
+   - Additional verification features
+
+3. Additional Integrations:
+   - Civil Registry connection
+   - Police system integration
+   - Insurance company connection
+
+4. Advanced Features:
+   - AI-based verification
+   - Blockchain for licenses
+   - Smart monitoring points
+
+================================================================================
+                        REFERENCES
+================================================================================
+
+1. Ministry of Interior - Traffic Department - Yemen
+2. Martin, Robert C. (2017) - Clean Architecture
+3. Microsoft Documentation - ASP.NET Core 8
+4. Vercel Documentation - Next.js 15
+5. Yemen Traffic Law - 2024
+6. RFC 7519 - JWT Standard
+7. OWASP Security Guidelines
+8. Absher System - Saudi Arabia
+
+================================================================================
+                        APPENDIXES
+================================================================================
+
+Appendix A: Database
+- 24 tables
+- Integrated relationships
+- Optimized indexes
+
+Appendix B: System Interfaces
+- 23 user interfaces
+- Unified design
+- RTL support
+
+Appendix C: System Reports
+- 7 reports
+- Charts
+- PDF/Excel export
+
+================================================================================
+
+[END OF RESEARCH]
+
+================================================================================

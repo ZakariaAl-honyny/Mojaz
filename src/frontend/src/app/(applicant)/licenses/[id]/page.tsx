@@ -20,11 +20,11 @@ import {
 import Link from "next/link";
 import { useTranslations } from '@/lib/static-translations';
 import { useParams } from 'next/navigation';
-import { cn } from "@/lib/utils";
+import { cn, maskNationalId } from "@/lib/utils";
 
 export default function DigitalLicensePage() {
   const t = useTranslations('license');
-  const { locale, id } = useParams();
+  const { id } = useParams();
 
   // Mock data for MVP - would be fetched from API
   const license = {
@@ -87,7 +87,7 @@ export default function DigitalLicensePage() {
     <div className="max-w-4xl mx-auto py-12 px-4 space-y-8 font-arabic" dir="rtl">
       {/* Back Link */}
       <Link
-        href={`/licenses`}
+        href="/licenses"
         className="inline-flex items-center gap-3 text-neutral-400 hover:text-[#1a3a8f] transition-all group font-black uppercase text-xs tracking-widest"
       >
         <ArrowRight className="w-4 h-4 rtl:rotate-180 group-hover:-translate-x-1 transition-transform" />
@@ -177,7 +177,7 @@ export default function DigitalLicensePage() {
               <div className="grid grid-cols-2 gap-y-6 gap-x-8">
                 <div>
                   <p className="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-1">{t('application.create.fields.nationalId')}</p>
-                  <p className="text-base font-black text-neutral-800">{license.holder.nationalId}</p>
+                  <p className="text-base font-black text-neutral-800">{maskNationalId(license.holder.nationalId)}</p>
                 </div>
                 <div>
                   <p className="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-1">{t('application.create.fields.dateOfBirth')}</p>

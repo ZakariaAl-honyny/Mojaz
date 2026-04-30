@@ -1,15 +1,16 @@
 import { z } from 'zod';
-import { ServiceType, LicenseCategoryCode } from '@/lib/enums';
+import { ServiceType, LicenseCategoryCode, Gender } from '@/lib/enums';
 
 // Re-export for convenience
-export { ServiceType, LicenseCategoryCode };
+export { ServiceType, LicenseCategoryCode, Gender };
 
 // Gender numeric enum (matches backend: NotSpecified=0, Male=1, Female=2)
-export enum Gender {
-  NotSpecified = 0,
-  Male = 1,
-  Female = 2
-}
+// Now imported from @/lib/enums - keeping here for backward compatibility
+// export enum Gender {
+//   NotSpecified = 0,
+//   Male = 1,
+//   Female = 2
+// }
 
 // Display labels for enums (separate from API values)
 export const ServiceTypeLabels = {
@@ -21,6 +22,7 @@ export const ServiceTypeLabels = {
   [ServiceType.StatusChange]: { ar: 'تغيير الحالة', en: 'Status Change' },
   [ServiceType.MedicalExtension]: { ar: 'تمديد طبي', en: 'Medical Extension' },
   [ServiceType.TemporaryLicense]: { ar: 'رخصة مؤقتة', en: 'Temporary License' },
+  [ServiceType.TestRetake]: { ar: 'إعادة الاختبار', en: 'Test Retake' },
 } as const;
 
 export const LicenseCategoryLabels = {
@@ -46,6 +48,7 @@ export interface Step1Data {
 
 export interface Step2Data {
   categoryCode: string | null; // Backend returns "A", "B", etc. as strings
+  availableCategories?: string[] | null; // Filtered categories for upgrade service (transient, not persisted)
 }
 
 export interface Step3Data {
@@ -61,12 +64,14 @@ export interface Step3Data {
 }
 
 export interface Step4Data {
-  applicantType: 'Citizen' | 'Resident';
-  preferredCenterId: string;
-  testLanguage: 'ar' | 'en';
-  appointmentPreference: 'Morning' | 'Afternoon' | 'Evening' | 'NoPreference';
-  specialNeedsDeclaration: boolean;
+  applicantType?: 'Citizen' | 'Resident';
+  preferredCenterId?: string;
+  testLanguage?: 'ar' | 'en';
+  appointmentPreference?: 'Morning' | 'Afternoon' | 'Evening' | 'NoPreference';
+  specialNeedsDeclaration?: boolean;
   specialNeedsNote?: string;
+  identityDocument?: File | null;
+  medicalDocument?: File | null;
 }
 
 export interface LicenseCategoryOption {
@@ -134,6 +139,13 @@ export interface WizardState {
   incrementSaveFailures: () => void;
   resetSaveFailures: () => void;
   resetWizard: () => void;
+  
+  // Transient/Local State
+  stepValidators: Record<number, { trigger: any; setFocus: any; isValid?: boolean } | null>;
+  setStepValidator: (step: number, validator: { trigger: any; setFocus: any; isValid?: boolean } | null) => void;
+  hasLoadedFromApi: boolean;
+  setHasLoadedFromApi: (loaded: boolean) => void;
+
   loadFromApi: (data: {
     serviceType?: number | null;
     licenseCategoryCode?: number | string | null;

@@ -1,0 +1,1434 @@
+================================================================================
+                   الفصل الرابع: التصميم التفصيلي للنظام
+================================================================================
+
+يُعرض هذا الفصل البنية التقنية الكاملة لنظام مُجاز، بدءاً من التقنيات المُستخدمة وصولاً إلى تصميم قاعدة البيانات ومنظومة العمل.
+
+--------------------------------------------------------------------------------
+
+4.1_stack_tech ================================================================================
+                              4.1 المكدس التقني (Tech Stack)
+--------------------------------------------------------------------------------
+
+يُمثّل نظام مُجاز حلاً متكاملاً يعتمد على مجموعة من التقنيات الحديثة والمتطورة لتوفير أداء عالٍ وقابلية للتوسع. فيما يلي التفصيل الكامل لكل مكوّن:
+
+------------------------------------------------------------------------------
+
+4.1.1 _backend ------------------------------------------------------------------------------
+
+يُستخدم ASP.NET Core 8 كإطار عمل رئيسي للواجهة البرمجية الخلفية (Backend Framework). يُعد هذا الإصدار أحدث إصدار مستقر من منصة .NET، ويتميز بمزايا متعددة تشمل:
+
+- أداء عالٍ جداً يعتمد على Kestrel Web Server المُحسّن
+- دعم متقدم للبرمجة غير المتزامنة (Async/Await)
+- نظام حقن التبعيات (Dependency Injection) المدمج
+- دعم لـ gRPC للتواصل بين الخدمات
+- تحسينات أمنية مدمجة للحماية من الهجمات الشائعة
+
+يُستخدم Entity Framework Core 8 كمُنظم كائنات قواعد البيانات (Object-Relational Mapper - ORM). يوفر هذا الإطار:
+
+- قدرة عالية على التعامل مع قواعد البيانات بطريقة موجهة للكائنات
+- دعم كامل لـ Language Integrated Query (LINQ)
+- إدارة آلية لتهجير قاعدة البيانات (Database Migrations)
+- دعم مؤقت للذاكرة (In-Memory Provider) لأغراض الاختبار
+- تحسين الاستعلامات من خلال تجميع الاستعلامات (Query Caching)
+
+يُستخدم SQL Server 2022 كقاعدة بيانات علائقية (Relational Database). تشمل مزايا هذا الاختيار:
+
+- دعم معاملات موزعة (Distributed Transactions)
+- أمان متقدم على مستوى الأعمدة (Column-Level Security)
+- دعم للبيانات المؤقتة (Temporal Tables)
+- أداء عالٍ في التعامل مع البيانات الضخمة
+- تكامل مع نظام Azure للتوسع السحابي
+
+------------------------------------------------------------------------------
+
+4.1.2 _security ------------------------------------------------------------------------------
+
+يتضمن النظام منظومة أمنية متكاملة لحماية البيانات والمستخدمين:
+
+- نظام JWT (JSON Web Tokens) للمصادقة الحقيقية (Stateless Authentication)
+- استخدام BCrypt لتشفير كلمات المرور بمعامل تكلفة 12
+- FluentValidation للتحقق من صحة المدخلات
+- Rate Limiting لمنع هجمات العنف (Brute Force Attacks)
+- نظام FluentValidation للتأكد من صحة جميع المدخلات
+
+------------------------------------------------------------------------------
+
+4.1.3 _architecture ------------------------------------------------------------------------------
+
+ياتباع النظام هندسة نظيفة (Clean Architecture) صارمة تتكون من أربع طبقات رئيسية، حيث تعتمد كل طبقة على الطبقة الأدنى منها ولا تعرف شيئاً عن الطبقة الأعلى. هذا التصميم يضمن:
+
+- فصل واضح بين المسؤوليات (Separation of Concerns)
+- قابلية عالية للاختبار (Testability)
+- سهولة الصيانة والتطوير (Maintainability)
+- مرونة في استبدال المكونات (Replaceability)
+
+================================================================================
+
+4.2_arch_layers ===========================================================================
+                           4.2 طبقات الهندسة النظيفة
+--------------------------------------------------------------------------------
+
+يتبنى نظام مُجاز نموذج الهندسة النظيفة (Clean Architecture) الذي صاغه روبرت سي مارتن (Robert C. Martin)، المعروف بـ Uncle Bob. يُعد هذا النموذج من أكثر النماذج فعالية في تطوير البرمجيات الحديثة.
+
+------------------------------------------------------------------------------
+
+4.2.1 _domain ===============================================================================
+
+تُعد طبقة النطاق (Domain Layer)基礎 الأساسية التي يرتكز عليها النظام بالكامل. لا تحتوي هذه الطبقة على أي تبعيات خارجية، أي أنها مستقلة تماماً ولا تعرف شيئاً عن بقية النظام. تتضمن هذه الطبقة:
+
+أ) الكيانات (Entities):
+تمثل الكيانات الكائنات التجارية الأساسية للنظام. كل كيان يُعرّف بحد ذاته ومعرفه الفريد (GUID). من أهم الكيانات:
+
+- User: يمثل المستخدم في النظام، سواء كان متقدماً بطلب أو موظفاً
+- Application: يمثل طلب الحصول على رخصة قيادة
+- License: يمثل الرخصة الصادرة
+- LicenseCategory: يمثل فئة الرخصة (A, B, C, D, E, F)
+- PaymentTransaction: يمثل معاملة الدفع
+- Appointment: يمثل موعد الفحص أو الاختبار
+- MedicalExamination: يمثل الفحص الطبي
+- TheoryTest: يمثل الاختبار النظري
+- PracticalTest: يمثل الاختبار العملي
+- Document: يمثل المستند المُحمّل
+- Notification: يمثل الإشعار الداخلي
+
+ب) التعدادات (Enums):
+تُستخدم التعدادلات لتعريف القيم الثابتة في النظام. تشمل:
+
+- ApplicationStatus: حالة الطلب (Draft, Submitted, InReview, MedicalExam, Training, TheoryTest, PracticalTest, Approved, Payment, Issued, Active, Rejected, Cancelled, Expired)
+- UserRole: دور المستخدم (Applicant, Receptionist, Doctor, Examiner, Manager, Security, Admin)
+- ServiceType: نوع الخدمة (NewLicense, Renewal, Replacement, CategoryUpgrade)
+- LicenseCategoryCode: код الفئة (A, B, C, D, E, F)
+- FeeType: نوع الرسم (ApplicationFee, MedicalExamFee, TheoryTestFee, PracticalTestFee, IssuanceFee, RetakeFee)
+- TestResult: نتيجة الاختبار (Pass, Fail, Absent)
+- PaymentStatus: حالة الدفع (Pending, Paid, Failed, Refunded)
+
+ج) Interfaces Interfaces)):
+تعرّف هذه الطبقة عقود (Contracts) للخدمات التي تحتاجها من الطبقات الأخرى. تشمل:
+
+- IRepository<T>: واجهة عامة للمستودعات
+- IUnitOfWork: واجهة وحدة العمل
+- IOtpRepository: واجهة مستودعات OTP
+
+------------------------------------------------------------------------------
+
+4.2.2 _shared ===============================================================================
+
+تُشارك (Shared Layer) الطبقة المشتركة بين جميع الطبقات الأخرى. توفر هذه الطبقة:
+
+أ) ApiResponse<T>: غلاف الاستجابة الموحد (Standard Response Wrapper)
+هوكل موحد لجميع استجابات API يضمن تناسقاً كاملاً في تنسيق الردود:
+
+```csharp
+public class ApiResponse<T>
+{
+    public bool Success { get; set; }
+    public string Message { get; set; }
+    public T? Data { get; set; }
+    public List<string>? Errors { get; set; }
+    public int StatusCode { get; set; }
+}
+```
+
+ب) PagedResult<T>: نتيجة الصفحات (Pagination)
+تُستخدم لتغليف النتائج المُصفحّة:
+
+```csharp
+public class PagedResult<T>
+{
+    public List<T> Items { get; set; }
+    public int TotalCount { get; set; }
+    public int Page { get; set; }
+    public int PageSize { get; set; }
+    public int TotalPages { get; set; }
+    public bool HasPreviousPage { get; set; }
+    public bool HasNextPage { get; set; }
+}
+```
+
+ج) Exceptions: الاستثناءات المخصصة
+توفر فئات استثناء مخصصة للتعامل مع الأخطاء:
+
+- MojazException: الاستثناء الأساسي
+- NotFoundException: لم يتم العثور على المورد
+- UnauthorizedException: غير مُصرَّح به
+- ForbiddenException: ممنوع الوصول
+- ConflictException: تعارض في البيانات
+- ValidationException: خطأ في التحقق
+
+------------------------------------------------------------------------------
+
+4.2.3 _application ===========================================================================
+
+تطبيق (Application Layer) الطبقة الثانية في الترتيب. تعتمد على طبقة النطاق والمُشاركة فقط، ولا تحتوي على أي مرجع مباشر لطبقة البنية التحتية. تتضمن:
+
+أ) الخدمات (Services):
+الخدمات هي جوهر العمل التجاري (Business Logic). تشمل الخدمات الرئيسية:
+
+- ApplicationService: إدارة طلبات الرخص
+- AuthService: المصادقة والتفويض
+- PaymentService: إدارة المدفوعات
+- LicenseService: إدارة الرخص
+- AppointmentService: إدارة المواعيد
+- NotificationService: إدارة الإشعارات
+- DocumentService: إدارة المستندات
+- ReportService: التقارير والإحصائيات
+
+ب) الـ Validators:
+تستخدم FluentValidation للتحقق من صحة المدخلات:
+
+- CreateApplicationValidator: التحقق من طلب جديد
+- LoginRequestValidator: التحقق من بيانات تسجيل الدخول
+- UploadDocumentValidator: التحقق من المستندات
+
+ج) التعيينات (Mappings):
+تستخدم AutoMapper لتحويل الكيانات إلى كائنات النقل (DTOs):
+
+- ApplicationProfile: تعيين بيانات الطلب
+- UserProfile: تعيين بيانات المستخدم
+- PaymentProfile: تعيين بيانات الدفع
+
+------------------------------------------------------------------------------
+
+4.2.4 _infrastructure ========================================================================
+
+البنية التحتية (Infrastructure Layer) الطبقة الرابعة والأخيرة. تعتمد على جميع الطبقات الأخرى وتُنفّذ الواجهات المُعرّفة في طبقة التطبيق. تتضمن:
+
+أ) MojazDbContext: سياق قاعدة البيانات
+يعرّف جميع الجداول والعلاقات باستخدام Entity Framework Core:
+
+```csharp
+public class MojazDbContext : DbContext
+{
+    public DbSet<User> Users { get; set; }
+    public DbSet<Application> Applications { get; set; }
+    public DbSet<License> Licenses { get; set; }
+    // ... باقي الجداول
+}
+```
+
+ب) المستودعات (Repositories):
+تنفيذ أنماط الوصول للبيانات:
+
+- Repository<T>: مستودع عام
+- ApplicationRepository: مستودع الطلبات
+- LicenseRepository: مستودع الرخص
+
+ج) الخدمات الخارجية (External Services):
+- EmailService: إرسال البريد الإلكتروني (SendGrid)
+- SmsService: إرسال الرسائل النصية (Twilio)
+- PushNotificationService: الإشعارات الفورية (Firebase)
+- FileStorageService: تخزين الملفات
+
+------------------------------------------------------------------------------
+
+4.2.5 _api ===========================================================================
+
+طبقة API (API Layer) الطبقة الأخيرة التي تعمل كتركيب (Composition Root). تتضمن:
+
+أ) Controllers: المتحكمات
+تُعرّف نقاط النهاية (Endpoints) وتستقبل الطلبات من العملاء:
+
+- ApplicationsController: نقاط نهاية الطلبات
+- AuthController: نقاط نهاية المصادقة
+- PaymentsController: نقاط نهاية المدفوعات
+
+ب) Middleware: البرمجيات الوسيطة
+- GlobalExceptionHandler: معالجة الاستثناءات عملياً
+- SecurityHeadersMiddleware: إضافة头部 الأمنية
+
+ج) Program.cs: تكوين التطبيق
+تسجيل جميع الخدمات وتكوين DI Container
+
+================================================================================
+
+4.3_apis_endpoints ========================================================================
+                          4.3 واجهات برمجة التطبيقات
+--------------------------------------------------------------------------------
+
+يستخدم النظام واجهات RESTful标准的 adheres to REST principles. جميع نقاط النهاية تتبع تنسيقاً موحداً وتُرجع استجابة ApiResponse<T> موحدة.
+
+------------------------------------------------------------------------------
+
+4.3.1 _auth_endpoints ---------------------------------------------------------------------
+
+نقاط نهاية المصادقة والتفويض:
+
+POST /api/v1/auth/register
+- التسجيل/registering مستخدم جديد
+- المدخلات: RegisterRequest (Email, Password, PhoneNumber, FirstName, LastName)
+- الاستجابة: ApiResponse<RegisterResponse>
+- حالة النجاح: 201 Created
+
+POST /api/v1/auth/login
+- تسجيل الدخول/login in مستخدم
+- المدخلات: LoginRequest (Identifier, Password, Method)
+- الاستجابة: ApiResponse<LoginResponse>
+- حالة النجاح: 200 OK
+
+POST /api/v1/auth/verify-otp
+- التحقق de رمز التحقق (OTP)
+- المدخلات: VerifyOtpRequest (Code, Purpose)
+- الاستجابة: ApiResponse<bool>
+- حالة النجاح: 200 OK
+
+POST /api/v1/auth/resend-otp
+- إعادة إرسال رمز التحقق
+- المدخلات: ResendOtpRequest (Purpose)
+- الاستجابة: ApiResponse<OtpResponseDto>
+- حالة النجاح: 200 OK
+
+POST /api/v1/auth/refresh-token
+- تجديد رمز الوصول (Access Token)
+- المدخلات: RefreshTokenRequest (RefreshToken)
+- الاستجابة: ApiResponse<LoginResponse>
+- حالة النجاح: 200 OK
+
+POST /api/v1/auth/forgot-password
+- استعادة كلمة المرور المنسية
+- المدخلات: ForgotPasswordRequest (Identifier, Method)
+- الاستجابة: ApiResponse<bool>
+- حالة النجاح: 200 OK
+
+POST /api/v1/auth/reset-password
+- إعادة تعيين كلمة المرور
+- المدخلات: ResetPasswordRequest (Identifier, Code, NewPassword)
+- الاستجابة: ApiResponse<bool>
+- حالة النجاح: 200 OK
+
+POST /api/v1/auth/change-password
+- تغيير كلمة المرور للمستخدم المُصادق
+- المدخلات: ChangePasswordRequest (CurrentPassword, NewPassword)
+- الاستجابة: ApiResponse<bool>
+- حالة النجاح: 200 OK
+- يتطلب تفويض: [Authorize]
+
+------------------------------------------------------------------------------
+
+4.3.2 _application_endpoints ------------------------------------------------------------------
+
+نقاط نهاية الطلبات:
+
+GET /api/v1/applications
+- جلب قائمة طلبات المستخدم المُصادق
+- المعاملات: page, pageSize, search, status
+- الاستجابة: ApiResponse<PagedResult<ApplicationDto>>
+- حالة النجاح: 200 OK
+- يتطلب تفويض: [Authorize]
+
+GET /api/v1/applications/{id}
+- جلب طلب واحد by المعرف
+- الاستجابة: ApiResponse<ApplicationDto>
+- حالة النجاح: 200 OK
+
+POST /api/v1/applications
+- إنشاء طلب جديد
+- المدخلات: CreateApplicationRequest
+- الاستجابة: ApiResponse<ApplicationDto>
+- حالة النجاح: 201 Created
+
+PUT /api/v1/applications/{id}
+- تحديث طلب موجود
+- المدخلات: UpdateApplicationRequest
+- الاستجابة: ApiResponse<ApplicationDto>
+
+PATCH /api/v1/applications/{id}/submit
+- تقديم المسودة للمراجعة
+- الاستجابة: ApiResponse<bool>
+- يتطلب دور: Applicant
+
+PATCH /api/v1/applications/{id}/cancel
+- إلغاء الطلب
+- المدخلات: CancellationReason
+- الاستجابة: ApiResponse<bool>
+
+GET /api/v1/applications/{id}/timeline
+- جلب الجدول الزمني للطلب
+- الاستجابة: ApiResponse<ApplicationWorkflowTimelineDto>
+
+GET /api/v1/applications/queue
+- جلب طابور الطلبات للموظفين
+- المعاملات: page, pageSize, search, stage
+- الاستجابة: ApiResponse<PagedResult<ApplicationDto>>
+- يتطلب دور: Receptionist, Doctor, Examiner, Manager
+
+PATCH /api/v1/applications/{id}/approve
+- اعتماد الطلب والتمرير للمرحلة التالية
+- المدخلات: Reason
+- الاستجابة: ApiResponse<bool>
+- يتطلب دور: Receptionist, Doctor, Examiner, Manager
+
+PATCH /api/v1/applications/{id}/reject
+- رفض الطلب
+- المدخلات: RejectionReason
+- الاستجابة: ApiResponse<bool>
+- يتطلب دور: Receptionist, Doctor, Examiner, Manager
+
+------------------------------------------------------------------------------
+
+4.3.3 _payment_endpoints --------------------------------------------------------------------
+
+نقاط نهاية المدفوعات:
+
+POST /api/v1/payments/initiate
+- بدء عملية الدفع
+- المدخلات: PaymentInitiateRequest
+- الاستجابة: ApiResponse<PaymentDto>
+- حالة النجاح: 201 Created
+
+POST /api/v1/payments/{id}/confirm
+- تأكيد الدفع
+- المدخلات: PaymentConfirmRequest
+- الاستجابة: ApiResponse<bool>
+
+GET /api/v1/payments
+- قائمة المدفوعات
+- الاستجابة: ApiResponse<PagedResult<PaymentDto>>
+
+------------------------------------------------------------------------------
+
+4.3.4 _appointment_endpoints ---------------------------------------------------------------
+
+نقاط نهاية المواعيد:
+
+GET /api/v1/appointments/available
+- جلب المواعيد المتاحة
+- المعاملات: date, type, branchId
+- الاستجابة: ApiResponse<List<TimeSlotDto>>
+
+POST /api/v1/appointments
+- حجز موعد جديد
+- المدخلات: CreateAppointmentRequest
+- الاستجابة: ApiResponse<AppointmentDto>
+
+GET /api/v1/appointments
+- قائمة مواعيد المستخدم
+- الاستجابة: ApiResponse<PagedResult<AppointmentDto>>
+
+------------------------------------------------------------------------------
+
+4.3.5 _license_endpoints ---------------------------------------------------------------------
+
+نقاط نهاية الرخص:
+
+GET /api/v1/licenses
+- قائمة رخص المستخدم
+- الا��تج��بة: ApiResponse<List<LicenseDto>>
+
+GET /api/v1/licenses/{id}
+- تفاصيل رخصة واحدة
+- الاستجابة: ApiResponse<LicenseDto>
+
+GET /api/v1/licenses/{id}/pdf
+- تحميل PDF الرخصة
+- الاستجابة: File (PDF)
+
+POST /api/v1/licenses/renew
+- طلب تجديد الرخصة
+- المدخلات: CreateRenewalRequest
+- الاستجابة: ApiResponse<RenewalResponse>
+
+POST /api/v1/licenses/replace
+- طلب استبدال الرخصة
+- المدخلات: ReplacementApplicationRequest
+- الاستجابة: ApiResponse<ApplicationDto>
+
+POST /api/v1/licenses/upgrade
+- طلب ترقية الفئة
+- المدعنات: UpgradeApplicationRequest
+- الاستجابة: ApiResponse<ApplicationDto>
+
+================================================================================
+
+4.4_auth_flow ===========================================================================
+                    4.4 تدفق المصادقة والتفويض
+--------------------------------------------------------------------------------
+
+يتضمن النظام منظومة مصادقة وتفويض متكاملة تستخدم JWT Tokens. فيما يلي التفاصيل:
+
+------------------------------------------------------------------------------
+
+4.4.1 _login_flow ---------------------------------------------------------------------
+
+1. يرسل المستخدم طلب تسجيل الدخول مع (Email أو Phone) وكلمة المرور
+2. يتحقق AuthService من صحة بيانات اعتماد المستخدم
+3. يُبحث عن المستخدم في قاعدة البيانات
+4. يُتحقق من صحة كلمة المرور المشفرة باستخدام BCrypt
+5. يُتحقق من حالة الحساب (مُفعّل/مقفل)
+6. يُنشأ Access Token (مدة ساعة واحدة)
+7. يُنشأ Refresh Token (مدة 7 أيام)
+8. يُخزّن Refresh Token في قاعدة البيانات
+9. تُرجع الاستجابة مع الرموز
+
+------------------------------------------------------------------------------
+
+4.4.2 _jwt_structure ---------------------------------------------------------------------
+
+يتكون JWT Token من three parts:
+
+- Header: يحتوي على نوع الرمز وخوارزمية التوقيع
+- Payload: يحتوي على المطالبات (Claims)
+- Signature: التوقيع الرقمي
+
+```json
+{
+  "sub": "user-id-guid",
+  "role": "Applicant",
+  "iat": 1715000000,
+  "exp": 1715003600
+}
+```
+
+المطالبات الرئيسية:
+- sub: معرف المستخدم
+- role: دور المستخدم
+- iat: وقت الإصدار
+- exp: وقت الانتهاء
+
+------------------------------------------------------------------------------
+
+4.4.3 _authorization -----------------------------------------------------
+
+يستخدم النظام Role-Based Authorization (RBAC). الأدوار المحددة:
+
+- Applicant: مُقدّم الطلب - يقرأ ويعدل طلباته فقط
+- Receptionist: موظف الاستقبال - مراجعة الوثائق
+- Doctor: طبيب الفحص الطبي - تسجيل النتائج الطبية
+- Examiner: مُمتحن النظري والعملي - تسجيل نتائج الاختبارات
+- Manager: المدير - الاعتماد النهائي
+- Security: الأمني - التحقق الأمني
+- Admin: المدير العام - إدارة النظام
+
+------------------------------------------------------------------------------
+
+4.4.4 _security_gates ---------------------------------------------------------------------
+
+يتضمن النظام أربع بوابات للتحقق (Gates) في مراحل الطلب:
+
+- البوابة الأولى (Gate 1): التحقق من أهلية مقدم الطلب (السن، عدم وجود طلب نشط، الحظر الأمني)
+- البوابة الثانية (Gate 2): مرا��عة الوثائق والأصالة
+- البوابة الثالثة (Gate 3): الفحص الطبي والنظري والعملي
+- البوابة الرابعة (Gate 4): التحقق الأمني النهائي
+
+================================================================================
+
+4.5_database_schema ======================================================================
+                         4.5 نظرة عامة على مخطط قاعدة البيانات
+--------------------------------------------------------------------------------
+
+يستخدم النظام 21 جدولاً في قاعدة البيانات. فيما يلي نظرة عامة على الجداول الرئيسية:
+
+------------------------------------------------------------------------------
+
+4.5.1 _users_table -------------------------------------------------------------------------
+
+الجدول: Users
+الوصف: تخزين بيانات جميع المستخدمين
+
+الأعمدة:
+- Id: المعرف الفريد (GUID)
+- Email: البريد الإلكتروني
+- PhoneNumber: رقم الهاتف
+- PasswordHash: كلمة المرور المشفرة
+- FirstName: الاسم الأول
+- LastName: اسم العائلة
+- NationalId: رقم الهوية
+- DateOfBirth: تاريخ الميلاد
+- Gender: النوع
+- Role: الدور
+- IsActive: الحالة
+- IsSecurityBlocked: حالة الحظر الأمني
+- CreatedAt: وقت الإنشاء
+- UpdatedAt: وقت التحديث
+
+------------------------------------------------------------------------------
+
+4.5.2 _applications_table ------------------------------------------------------------------
+
+الجدول: Applications
+الوصف: تخزين طلبات الرخص
+
+الأعمدة:
+- Id: المعرف الفريد
+- ApplicationNumber: رقم الطلب (MOJ-2025-XXXXXXXX)
+- ApplicantId: معرف مقدم الطلب
+- ServiceType: نوع الخدمة
+- LicenseCategoryId: معرف فئة الرخصة
+- Status: حالة الطلب
+- CurrentStage: المرحلة الحالية
+- ExpiresAt: وقت انتهاء الصلاحية
+- CreatedAt: وقت الإنشاء
+- UpdatedAt: وقت التحديث
+
+------------------------------------------------------------------------------
+
+4.5.3 _licenses_table ---------------------------------------------------------------------
+
+الجدول: Licenses
+الوصف: تخزين الرخص الصادرة
+
+الأعمدة:
+- Id: المعرف الفريد
+- LicenseNumber: رقم الرخصة
+- HolderId: معرف حامل الرخصة
+- LicenseCategoryId: معرف فئة الرخصة
+- IssueDate: تاريخ الإصدار
+- ExpiryDate: تاريخ الانتهاء
+- Status: الحالة
+- CreatedAt: وقت الإنشاء
+- UpdatedAt: وقت التحديث
+
+------------------------------------------------------------------------------
+
+4.5.4 _payments_table -----------------------------------------------------------------------
+
+الجدول: PaymentTransactions
+الوصف: تخزين معاملات الدفع
+
+الأعمدة:
+- Id: المعرف الفريد
+- ApplicationId: معرف الطلب
+- Amount: المبلغ
+- FeeType: نوع الرسم
+- Status: حالة الدفع
+- TransactionReference: مرجع المعاملة
+- PaidAt: وقت الدفع
+- CreatedAt: وقت الإنشاء
+
+------------------------------------------------------------------------------
+
+4.5.5 _other_tables ------------------------------------------------------------------------
+
+الجداول الأخرى:
+
+- LicenseCategories: فئات الرخص (A-F)
+- Appointments: مواعيد الفحوصات والاختبارات
+- MedicalExaminations: نتائج الفحوصات الطبية
+- TheoryTests: نتائج الاختبارات النظرية
+- PracticalTests: نتائج الاختبارات العملية
+- ApplicationDocuments: المستندات المُحمّلة
+- Notifications: الإشعارات الداخلية
+- SystemSettings: إعدادات النظام القابلة للتكوين
+- FeeStructures: هيكل الرسوم
+- AuditLogs: سجل التدقيق
+
+================================================================================
+
+                        الفصل الخامس: تفاصيل التنفيذ
+================================================================================
+
+يُعرض هذا الفصل تفاصيل التنفيذ الفعلية للكود، بما في ذلك الخدمات الأساسية والهياكل البرمجية.
+
+--------------------------------------------------------------------------------
+
+5.1_services_description ======================================================================
+                         5.1 وصف الخدمات الرئيسية
+--------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+
+5.1.1 _application_service ----------------------------------------------------------
+
+الخدمة: ApplicationService
+الوصف: تُعدّ هذه الخدمة من أهم خدمات النظام، حيث تتولى إدارة دورة حياة طلبات الرخص بالكامل.
+
+الواجهة المُعرّفة:
+
+```csharp
+public interface IApplicationService
+{
+    Task<ApiResponse<ApplicationDto>> CreateAsync(CreateApplicationRequest request, Guid userId);
+    Task<ApiResponse<ApplicationDto>> CreateDraftAsync(ServiceType serviceType, Guid userId);
+    Task<ApiResponse<ApplicationDto>> GetByIdAsync(Guid id, Guid userId, string role);
+    Task<ApiResponse<PagedResult<ApplicationDto>>> GetListAsync(...);
+    Task<ApiResponse<ApplicationWorkflowTimelineDto>> GetTimelineAsync(Guid id);
+    Task<ApiResponse<bool>> CancelAsync(Guid id, string reason, Guid userId);
+    Task<ApiResponse<bool>> UpdateStatusAsync(...);
+    Task<ApiResponse<bool>> SubmitAsync(Guid id, Guid userId);
+    Task<ApiResponse<bool>> ApproveAsync(...);
+    Task<ApiResponse<bool>> RejectAsync(...);
+}
+```
+
+الوظائف الرئيسية:
+
+1) التحقق من الأهلية (Gate 1 Check):
+- التحقق من عمر مقدم الطلب وفقاً لفئة الرخصة المطلوبة
+- جلب الحد الأدنى للسن من جدول SystemSettings
+- التحقق من عدم وجود رخصة نشطة لنفس الفئة
+- التحقق من عدم وجود طلب نشط لنفس الفئة
+- التحقق من عدم وجود حظر أمني على مقدم الطلب
+
+2) إنشاء طلب جديد:
+- توليد رقم طلب فريد بالتنسيق MOJ-{YEAR}-{8-RANDOM}
+- تحديد تاريخ انتهاء الصلاحية من الإعدادات (افتراضياً 6 أشهر)
+- حفظ حالة الطلب الأولية
+
+3) إدارة دورة حياة الطلب:
+- الانتقال بين المراحل المختلفة
+- تسجيل_reason الرفض عند الحاجة
+- إرسال إشعارات تلقائية عند تغيير الحالة
+
+------------------------------------------------------------------------------
+
+5.1.2 _auth_service ---------------------------------------------------------------
+
+الخدمة: AuthService
+الوصف: تتولى المصادقة والتفويض وإدارة الحسابات.
+
+الواجهة المُعرّفة:
+
+```csharp
+public interface IAuthService
+{
+    Task<ApiResponse<RegisterResponse>> RegisterAsync(RegisterRequest request);
+    Task<ApiResponse<LoginResponse>> LoginAsync(LoginRequest request);
+    Task<ApiResponse<bool>> VerifyOtpAsync(VerifyOtpRequest request);
+    Task<ApiResponse<OtpResponseDto>> ResendOtpAsync(ResendOtpRequest request);
+    Task<ApiResponse<LoginResponse>> RefreshTokenAsync(RefreshTokenRequest request);
+    Task<ApiResponse<bool>> LogoutAsync(LogoutRequest request);
+    Task<ApiResponse<bool>> ForgotPasswordAsync(ForgotPasswordRequest request);
+    Task<ApiResponse<bool>> ResetPasswordAsync(ResetPasswordRequest request);
+    Task<ApiResponse<bool>> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword);
+}
+```
+
+الوظائف الرئيسية:
+
+1) التسجيل:
+- التحقق من عدم تكرار البريد الإلكتروني أو الهاتف
+- تشفير كلمة المرور باستخدام BCrypt (Cost Factor = 12)
+- إنشاء حساب جديد بحساب Applicant
+- إرسال OTP للتحقق من البريد/الهاتف
+
+2) تسجيل الدخول:
+- البحث عن المستخدم via Email أو Phone
+- مقارنة كلمة المرور المشفرة
+- التحقق من حالة الحساب
+- توليد JWT Tokens
+
+3) إدارة OTP:
+- توليد رمز من 6 أرقام
+- تخزين القيمة المشفرة (ليس النص الصريح)
+- التحقق من صحة الرمز
+- التحقق من عدد المحاولات
+- تحديد مهلة الانتهاء (5 دقائق لـ SMS، 15 لـ Email)
+
+------------------------------------------------------------------------------
+
+5.1.3 _payment_service ---------------------------------------------------------------
+
+الخدمة: PaymentService
+الوصف: تتولى إدارة جميع معاملات الدفع.
+
+الواجهة المُعرّفة:
+
+```csharp
+public interface IPaymentService
+{
+    Task<ApiResponse<PaymentDto>> InitiateAsync(PaymentInitiateRequest request, Guid userId);
+    Task<ApiResponse<bool>> ConfirmAsync(PaymentConfirmRequest request, Guid userId);
+    Task<ApiResponse<bool>> CancelAsync(Guid id, Guid userId);
+    Task<ApiResponse<PagedResult<PaymentDto>>> GetListAsync(...);
+}
+```
+
+الوظائف الرئيسية:
+
+1) بدء الدفع:
+- جلب مبلغ الرسم من جدول FeeStructures
+- إنشاء معاملة دفع بحالة Pending
+- توليد مرجع للمعاملة
+
+2) تأكيد الدفع:
+- التحقق من حالة المعاملة
+- تحديث الحالة إلى Paid
+- تحديث حالة الطلب تلقائياً
+
+------------------------------------------------------------------------------
+
+5.1.4 _notification_service -----------------------------------------------------------
+
+الخدمة: NotificationService
+الوصف: تتولى إرسال الإشعارات عبر قنوات متعددة.
+
+الواجهة المُعرّفة:
+
+```csharp
+public interface INotificationService
+{
+    Task SendAsync(NotificationRequest request);
+}
+```
+
+الوظائف الرئيسية:
+
+1) إرسال الإشعار:
+- حفظ في قاعدة البيانات (إشعار داخلي)
+- جدولة إرسال خارجي عبر Hangfire
+
+2) قنوات الإرسال:
+- In-App: إشعار داخلي (متزامن)
+- Push: إشعار فوري عبر Firebase
+- Email: بريد إلكتروني عبر SendGrid
+- SMS: رسالة نصية عبر Twilio
+
+الأنواع المدعومة:
+- ApplicationSubmitted: تقديم طلب جديد
+- ApplicationApproved: اعتماد الطلب
+- ApplicationRejected: رفض الطلب
+- PaymentDue: ضرورة الدفع
+- PaymentConfirmed: تأكيد الدفع
+- AppointmentScheduled: تحديد موعد
+- TestResultPublished: نشر نتيجة الاختبار
+- LicenseIssued: إصدار الرخصة
+
+================================================================================
+
+5.2_code_structure ===========================================================================
+                         5.2 أمثلة على بنية الكود
+--------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+
+5.2.1 _repository_pattern --------------------------------------------------------------
+
+يُستخدم نمط المستودع (Repository Pattern) لعزل طبقة الو��ول للبيانات:
+
+```csharp
+public interface IRepository<T> where T : BaseEntity
+{
+    Task<T?> GetByIdAsync(Guid id);
+    Task<IEnumerable<T>> GetAllAsync();
+    Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+    Task<T> AddAsync(T entity);
+    Task UpdateAsync(T entity);
+    Task DeleteAsync(Guid id);
+    IQueryable<T> Query();
+}
+```
+
+التنفيذ:
+
+```csharp
+public class Repository<T> : IRepository<T> where T : BaseEntity
+{
+    private readonly MojazDbContext _context;
+    private readonly DbSet<T> _dbSet;
+
+    public Repository(MojazDbContext context)
+    {
+        _context = context;
+        _dbSet = context.Set<T>();
+    }
+
+    public virtual async Task<T?> GetByIdAsync(Guid id)
+    {
+        return await _dbSet.FindAsync(id);
+    }
+
+    public virtual async Task<IEnumerable<T>> FindAsync(
+        Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.Where(predicate).ToListAsync();
+    }
+}
+```
+
+------------------------------------------------------------------------------
+
+5.2.2 _unit_of_work ---------------------------------------------------------------
+
+يُستخدم نمط وحدة العمل (Unit of Work) لإدارة المعاملات:
+
+```csharp
+public interface IUnitOfWork
+{
+    Task<int> SaveChangesAsync();
+    Task BeginTransactionAsync();
+    Task CommitTransactionAsync();
+    Task RollbackTransactionAsync();
+}
+```
+
+التنفيذ:
+
+```csharp
+public class UnitOfWork : IUnitOfWork
+{
+    private readonly MojazDbContext _context;
+
+    public UnitOfWork(MojazDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<int> SaveChangesAsync()
+    {
+        return await _context.SaveChangesAsync();
+    }
+}
+```
+
+------------------------------------------------------------------------------
+
+5.2.3 _controller_pattern ----------------------------------------------------------
+
+تُستخدم المتحكمات (Controllers) thin و delegating:
+
+```csharp
+[ApiController]
+[Route("api/v1/[controller]")]
+[Produces("application/json")]
+public class ApplicationsController : ControllerBase
+{
+    private readonly IApplicationService _applicationService;
+
+    public ApplicationsController(IApplicationService applicationService)
+    {
+        _applicationService = applicationService;
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Applicant")]
+    [ProducesResponseType(typeof(ApiResponse<ApplicationDto>),
+        StatusCodes.Status201Created)]
+    public async Task<IActionResult> CreateAsync(
+        [FromBody] CreateApplicationRequest request)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userId = Guid.Parse(userIdClaim!);
+
+        var result = await _applicationService.CreateAsync(request, userId);
+        return StatusCode(result.StatusCode, result);
+    }
+}
+```
+
+الماحظات:
+
+- المتحكمات لا تحتوي على منطق تجاري
+- جميع الأعمال تُفوَّض للخدمات
+- تُستخدم الوسيطات لتوثيق Swagger
+- تُرجع ApiResponse<T> موحدة
+
+------------------------------------------------------------------------------
+
+5.2.4 _validator_example --------------------------------------------------------------
+
+مثال على المُحقق باستخدام FluentValidation:
+
+```csharp
+public class CreateApplicationValidator : AbstractValidator<CreateApplicationRequest>
+{
+    public CreateApplicationValidator()
+    {
+        RuleFor(x => x.ServiceType)
+            .IsInEnum()
+            .WithMessage("نوع الخدمة غير صالح");
+
+        RuleFor(x => x.LicenseCategoryId)
+            .NotEmpty()
+            .WithMessage("فئة الرخصة مطلوبة");
+
+        RuleFor(x => x.NationalId)
+            .NotEmpty()
+            .Length(10)
+            .Matches("^[0-9]*$")
+            .WithMessage("رقم الهوية غير صالح");
+
+        RuleFor(x => x.DateOfBirth)
+            .NotEmpty()
+            .LessThan(DateTime.UtcNow.AddYears(-16))
+            .WithMessage("الحد الأدنى للسن هو 16 سنة");
+
+        RuleFor(x => x.DataAccuracyConfirmed)
+            .Equal(true)
+            .WithMessage("يجب تأكيد صحة البيانات");
+    }
+}
+```
+
+================================================================================
+
+5.3_error_handling ========================================================================
+                         5.3 معالجة الأخطاء
+--------------------------------------------------------------------------------
+
+يتضمن النظام منظومة معالجة أخطاء متكاملة تضمن تجربة مستخدم سلسة:
+
+------------------------------------------------------------------------------
+
+5.3.1 _exception_hierarchy -----------------------------------------------------------
+
+الاستثناءات المخصصة:
+
+```csharp
+public class MojazException : Exception
+{
+    public int StatusCode { get; }
+    public MojazException(string message, int statusCode = 500)
+        : base(message)
+    {
+        StatusCode = statusCode;
+    }
+}
+
+public class NotFoundException : MojazException
+{
+    public NotFoundException(string message = "Resource not found")
+        : base(message, 404) { }
+}
+
+public class UnauthorizedException : MojazException
+{
+    public UnauthorizedException(string message = "Unauthorized")
+        : base(message, 401) { }
+}
+
+public class ForbiddenException : MojazException
+{
+    public ForbiddenException(string message = "Forbidden")
+        : base(message, 403) { }
+}
+
+public class ValidationException : MojazException
+{
+    public List<string> Errors { get; }
+    public ValidationException(string message, List<string>? errors = null)
+        : base(message, 400)
+    {
+        Errors = errors ?? new List<string>();
+    }
+}
+```
+
+------------------------------------------------------------------------------
+
+5.3.2 _global_handler -----------------------------------------------------------
+
+معالج الاستثناءات العام (Global Exception Handler):
+
+```csharp
+public class GlobalExceptionHandler : IExceptionHandler
+{
+    private readonly ILogger<GlobalExceptionHandler> _logger;
+    private readonly IAuditService _auditService;
+
+    public async Task HandleExceptionAsync(ExceptionContext context)
+    {
+        var exception = context.Exception;
+
+        _logger.LogError(exception, "Unhandled exception occurred");
+
+        switch (exception)
+        {
+            case NotFoundException ex:
+                context.Result = new NotFoundObjectResult(
+                    ApiResponse<object>.Fail(ex.Message, ex.StatusCode));
+                break;
+            case UnauthorizedException ex:
+                context.Result = new UnauthorizedObjectResult(
+                    ApiResponse<object>.Fail(ex.Message, ex.StatusCode));
+                break;
+            case ValidationException ex:
+                context.Result = new BadRequestObjectResult(
+                    ApiResponse<object>.Fail(ex.Message, ex.StatusCode, ex.Errors));
+                break;
+            default:
+                context.Result = new ObjectResult(
+                    ApiResponse<object>.Fail(
+                        "حدث خطأ داخلي. يرجى المحاولة لاحقاً.", 500))
+                {
+                    StatusCode = 500
+                };
+                break;
+        }
+
+        context exceptionHandled = true;
+    }
+}
+```
+
+------------------------------------------------------------------------------
+
+5.3.3 _result_wrapper -----------------------------------------------------------
+
+نمط تغليف النتائج (Result Pattern):
+
+```csharp
+public class Result<T>
+{
+    public bool IsSuccess { get; }
+    public T? Data { get; }
+    public string? Error { get; }
+    public int StatusCode { get; }
+
+    public static Result<T> Ok(T data, int statusCode = 200)
+    {
+        return new Result<T> { IsSuccess = true, Data = data, StatusCode = statusCode };
+    }
+
+    public static Result<T> Fail(string error, int statusCode = 400)
+    {
+        return new Result<T> { IsSuccess = false, Error = error, StatusCode = statusCode };
+    }
+}
+```
+
+الاستخدام في الخدمات:
+
+```csharp
+public async Task<ApiResponse<ApplicationDto>> CreateAsync(...)
+{
+    // التحقق الأولي
+    var category = await _categoryRepository.GetByIdAsync(request.LicenseCategoryId);
+    if (category == null)
+        return ApiResponse<ApplicationDto>.Fail(400, "فئة الرخصة غير موجودة.");
+
+    // التحقق من عمر المستخدم
+    var age = CalculateAge(user.DateOfBirth);
+    var minAgeSetting = await _settingsService.GetAsync($"MIN_AGE_CATEGORY_{category.Code}");
+    var minAge = int.Parse(minAgeSetting?.Value ?? category.MinimumAge.ToString());
+
+    if (age < minAge)
+        return ApiResponse<ApplicationDto>.Fail(400, $"الحد الأدنى للسن هو {minAge} سنة.");
+
+    // إنشاء الطلب
+    var application = new Application { ... };
+    await _applicationRepository.AddAsync(application);
+    await _unitOfWork.SaveChangesAsync();
+
+    return ApiResponse<ApplicationDto>.Ok(_mapper.Map<ApplicationDto>(application),
+        "تم إنشاء الطلب بنجاح.");
+}
+```
+
+================================================================================
+
+5.4_logging_patterns ======================================================================
+                         5.4 أنماط التسجيل
+--------------------------------------------------------------------------------
+
+يستخدم النظام عدة مستويات من التسجيل:
+
+------------------------------------------------------------------------------
+
+5.4.1 _audit_logging -----------------------------------------------------------
+
+سجل التدقيق (Audit Log) للتتبع الأمني:
+
+```csharp
+public interface IAuditService
+{
+    Task LogAsync(string action, string entity, string entityId,
+        string? oldValue = null, string? newValue = null);
+}
+```
+
+أنواع الأحداث المُسجَّلة:
+
+- CREATE_APPLICATION: إنشاء طلب جديد
+- STATUS_CHANGE: تغيير حالة الطلب
+- LOGIN_SUCCESS: تسجيل دخول ناجح
+- LOGIN_FAILED: فشل تسجيل الدخول
+- PASSWORD_CHANGED: تغيير كلمة المرور
+- PAYMENT_INITIATED: بدء عملية دفع
+- PAYMENT_CONFIRMED: تأكيد الدفع
+- SECURITY_VERIFICATION: التحقق الأمني
+
+------------------------------------------------------------------------------
+
+5.4.2 _application_logging -----------------------------------------------------------
+
+سجل التطبيقات (Application Logs) باستخدام Serilog:
+
+```csharp
+_log.LogInformation("Creating application for user {UserId}, Category {CategoryId}",
+    userId, categoryId);
+
+_log.LogWarning("User {UserId} has existing active application for category {CategoryId}",
+    userId, categoryId);
+
+_log.LogError(ex, "Failed to process payment for application {ApplicationId}",
+    applicationId);
+```
+
+------------------------------------------------------------------------------
+
+5.4.3 _security_logging -----------------------------------------------------------
+
+السجل الأمني لتسجيل محاولات الاختراق:
+
+```csharp
+_log.LogWarning("Suspicious login attempt from IP {IpAddress}, Email {Email}",
+    ipAddress, email);
+
+_log.LogWarning("Multiple failed OTP attempts for user {UserId}, Phone {Phone}",
+    userId, phone);
+
+_log.LogWarning("Rate limit exceeded for endpoint {Endpoint}, IP {IpAddress}",
+    endpoint, ipAddress);
+```
+
+================================================================================
+
+5.5_performance ===========================================================================
+                         5.5 تحسين الأداء
+--------------------------------------------------------------------------------
+
+يتضمن النظام عدة تقنيات لتحسين الأداء:
+
+------------------------------------------------------------------------------
+
+5.5.1 _ef_core_optimization -----------------------------------------------------------
+
+تحسينات Entity Framework Core:
+
+1) استعلامات التجميع (Compiled Queries):
+```csharp
+private static readonly Func<MojazDbContext, Guid, Task<User?>>
+    _getUserByIdCompiled = EF.CompileAsyncQuery(
+        (MojazDbContext ctx, Guid id) =>
+            ctx.Users.FirstOrDefault(u => u.Id == id));
+```
+
+2) تقسيم الاستعلام (Query Splitting):
+```csharp
+var application = await _context.Applications
+    .AsSplitQuery()
+    .Include(a => a.LicenseCategory)
+    .Include(a => a.StatusHistory)
+    .FirstOrDefaultAsync(a => a.Id == id);
+```
+
+3) تصفية العموم (Global Query Filters):
+```csharp
+builder.HasQueryFilter(a => !a.IsDeleted);
+```
+
+------------------------------------------------------------------------------
+
+5.5.2 _caching -----------------------------------------------------------
+
+التخزين المؤقت (Caching):
+
+1) ذاكرة التخزين المؤقت (IMemoryCache):
+```csharp
+var cachedCategories = await _cache.GetOrCreateAsync("license_categories",
+    async entry =>
+    {
+        entry.SlidingExpiration = TimeSpan.FromHours(1);
+        return await _categoryRepository.GetAllAsync();
+    });
+```
+
+2) التخزين المؤقت على مستوى HTTP:
+```csharp
+[ResponseCache(Duration = 300, VaryByHeader = "Authorization")]
+public async Task<IActionResult> GetCategories()
+{
+    // ...
+}
+```
+
+------------------------------------------------------------------------------
+
+5.5.3 _pagination -----------------------------------------------------------
+
+التصفح pagination للنتائج الكبيرة:
+
+```csharp
+public async Task<PagedResult<T>> GetPagedAsync<T>(
+    IQueryable<T> query,
+    int page,
+    int pageSize)
+{
+    var total = await query.CountAsync();
+    var items = await query
+        .OrderByDescending(x => x.CreatedAt)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+
+    return new PagedResult<T>
+    {
+        Items = items,
+        TotalCount = total,
+        Page = page,
+        PageSize = pageSize,
+        TotalPages = (int)Math.Ceiling(total / (double)pageSize)
+    };
+}
+```
+
+------------------------------------------------------------------------------
+
+5.5.4 _indexing -----------------------------------------------------------
+
+الفهارس لتحسين أداء الاستعلام:
+
+```csharp
+builder.HasIndex(a => a.ApplicationNumber);
+builder.HasIndex(a => a.ApplicantId);
+builder.HasIndex(a => a.Status);
+builder.HasIndex(a => a.CurrentStage);
+builder.HasIndex(a => a.CreatedAt);
+
+builder.HasIndex(u => u.Email);
+builder.HasIndex(u => u.PhoneNumber);
+builder.HasIndex(u => u.NationalId);
+
+builder.HasIndex(l => l.LicenseNumber);
+builder.HasIndex(l => l.HolderId);
+```
+
+------------------------------------------------------------------------------
+
+5.5.5 _rate_limiting -----------------------------------------------------------
+
+تحديد معدل الطلبات (Rate Limiting):
+
+```csharp
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("Auth", configure =>
+    {
+        configure.PermitLimit = 10;
+        configure.Window = TimeSpan.FromMinutes(1);
+        configure.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+    });
+});
+```
+
+الحدود المُطبَّقة:
+
+- تسجيل الدخول: 10 طلبات في الدقيقة
+- تسجيل حساب جديد: 5 طلبات في الدقيقة
+- OTP: 3 محاولات في الدقيقة
+-استعادة كلمة المرور: 5 طلبات في الدقيقة
+
+================================================================================
+
+5.6_security_implementation ============================================================
+                         5.6 التنفيذ الأمني
+--------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+
+5.6.1 _password_hashing -----------------------------------------------------------
+
+تشفير كلمات المرور باستخدام BCrypt:
+
+```csharp
+public class PasswordService
+{
+    private const int WorkFactor = 12;
+
+    public string Hash(string password)
+    {
+        return BCrypt.Net.BCrypt.HashPassword(password, WorkFactor);
+    }
+
+    public bool Verify(string password, string hash)
+    {
+        return BCrypt.Net.BCrypt.Verify(password, hash);
+    }
+}
+```
+
+------------------------------------------------------------------------------
+
+5.6.2 _jwt_generation -----------------------------------------------------------
+
+توليد JWT Tokens:
+
+```csharp
+public class JwtService : IJwtService
+{
+    public string GenerateToken(User user)
+    {
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email ?? ""),
+            new Claim(ClaimTypes.Role, user.Role.ToString()),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+        var key = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(_settings.SecretKey));
+        var credentials = new SigningCredentials(
+            key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: _settings.Issuer,
+            audience: _settings.Audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(60),
+            signingCredentials: credentials);
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+}
+```
+
+------------------------------------------------------------------------------
+
+5.6.3 _file_validation -----------------------------------------------------------
+
+التحقق من الملفات المُحمّلة:
+
+```csharp
+public class FileValidationService : IFileValidationService
+{
+    private static readonly HashSet<string> AllowedExtensions =
+        new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ".jpg", ".jpeg", ".png", ".pdf"
+        };
+
+    private const long MaxFileSize = 5 * 1024 * 1024; // 5MB
+
+    public async Task<bool> ValidateAsync(IFormFile file)
+    {
+        if (file.Length > MaxFileSize)
+            return false;
+
+        var extension = Path.GetExtension(file.FileName);
+        if (!AllowedExtensions.Contains(extension))
+            return false;
+
+        using var stream = file.OpenReadStream();
+        var header = new byte[4];
+        var bytesRead = await stream.ReadAsync(header, 0, 4);
+
+        // التحقق من توقيع الملف
+        var signature = BitConverter.ToString(header);
+        return signature.StartsWith("FF-D8-FF") || // JPEG
+               signature.StartsWith("89-50-4E") || // PNG
+               signature.StartsWith("25-50-44-46"); // PDF
+    }
+}
+```
+
+===============================================================================
+
+                             الخاتمة
+===============================================================================
+
+قدّم هذا البحث تصميماً تفصيلياً ونظاماً متكاملاً لمنصة مُجاز لإصدار رخص القيادة. اعتمد النظام على أحدث التقنيات البرمجية وهندسة نظيفة صارمة تضمن جودة عالية وقابلية للصيانة والتوسع.
+
+يضمن الجمع بين ASP.NET Core 8 و Entity Framework Core 8 و SQL Server 2022 توفير أداء عالٍ واستقراراً تاماً. كما تضمن الهندسة النظيفة separation of concerns واضحة تُسهّل التطوير المستقبلي.
+
+================================================================================
+                             المراجع
+================================================================================
+
+1. Microsoft Docs - ASP.NET Core 8
+2. Entity Framework Core Documentation
+3. Clean Architecture - Robert C. Martin
+4. JWT Specification (RFC 7519)
+5. FluentValidation Documentation
+
+================================================================================

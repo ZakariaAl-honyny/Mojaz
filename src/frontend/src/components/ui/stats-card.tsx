@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { FileText, LucideIcon } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
@@ -14,8 +15,8 @@ interface StatsCardProps extends React.HTMLAttributes<HTMLDivElement> {
   trend?: number
   /** Optional trend label (e.g., "vs last month") */
   trendLabel?: string
-  /** Icon element to display */
-  icon?: React.ReactNode
+  /** Lucide icon component to display */
+  icon?: React.ComponentType<{ className?: string }>
   /** Whether the trend is positive (blue) or negative (red) */
   trendDirection?: 'up' | 'down'
 }
@@ -85,11 +86,9 @@ function StatsCard({
           )}
         </div>
 
-        {icon && (
-          <div className="w-10 h-10 md:w-12 md:h-12 bg-neutral-50 rounded-lg md:rounded-xl flex items-center justify-center text-neutral-400 group-hover:bg-[#1a3a8f]/10 group-hover:text-[#1a3a8f] transition-all border border-neutral-100 group-hover:border-[#1a3a8f]/20">
-            {React.cloneElement(icon as React.ReactElement, { className: cn((icon as React.ReactElement).props.className, 'w-5 h-5 md:w-6 md:h-6') })}
-          </div>
-        )}
+        {icon && React.createElement(icon, { 
+          className: "w-5 h-5 md:w-6 md:h-6"
+        })}
       </div>
     </div>
   )

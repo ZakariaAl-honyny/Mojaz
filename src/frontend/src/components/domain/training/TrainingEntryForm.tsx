@@ -82,7 +82,7 @@ export function TrainingEntryForm({
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 items-start">
           {/* Hours Input */}
           <div className="md:col-span-1 space-y-4">
-            <Label htmlFor="additionalHours" className="text-sm font-black text-[#1a3a8f] mr-2 flex items-center gap-2">
+            <Label htmlFor="additionalHours" className="text-sm font-black text-[#1a3a8f] me-2 flex items-center gap-2">
               <Clock className="w-4 h-4" />
               عدد الساعات
             </Label>
@@ -108,7 +108,7 @@ export function TrainingEntryForm({
 
           {/* Notes Input */}
           <div className="md:col-span-2 space-y-4">
-            <Label htmlFor="notes" className="text-sm font-black text-[#1a3a8f] mr-2 flex items-center gap-2">
+            <Label htmlFor="notes" className="text-sm font-black text-[#1a3a8f] me-2 flex items-center gap-2">
               <FileText className="w-4 h-4" />
               ملاحظات المدرب (اختياري)
             </Label>
@@ -151,7 +151,7 @@ export function TrainingEntryForm({
            <History className="w-3 h-3" />
            <span className="text-[10px] font-black font-mono">MOJAZ-TRN-ENTRY-CORE</span>
         </div>
-        <span className="text-[10px] font-black font-mono text-right">رقم الطلب المرجعي: {applicationId.substring(0, 10).toUpperCase()}</span>
+        <span className="text-[10px] font-black font-mono text-start">رقم الطلب المرجعي: {applicationId.substring(0, 10).toUpperCase()}</span>
       </div>
     </form>
   );

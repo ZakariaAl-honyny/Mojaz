@@ -22,11 +22,11 @@ export function CategoryCards() {
   ];
 
   return (
-    <section className="py-24 bg-white">
+    <section id="categories" className="py-24 bg-white">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16 px-4">
           <div className="space-y-2">
-            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-[#1a3a8f] font-arabic">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-[#1a3a8f] font-arabic">
               فئات الرخص المتاحة
             </h2>
             <p className="text-neutral-500 font-bold uppercase tracking-widest text-xs">نظام التصنيف الموحد • الجمهورية اليمنية</p>

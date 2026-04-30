@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
+import { Home } from 'lucide-react';
 import { Mail, Phone } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { EmailRegistrationForm } from '@/components/domain/auth/EmailRegistrationForm';
@@ -11,15 +13,27 @@ export default function RegisterPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4 py-12 font-arabic" dir="rtl">
+      {/* Navigation */}
+      <div className="w-full max-w-xl flex items-center justify-between mb-4 px-2">
+        <Link href="/" className="flex items-center gap-2 text-neutral-400 hover:text-[#1a3a8f] transition-colors text-xs font-black group">
+          <Home className="w-4 h-4" />
+          <span className="group-hover:underline decoration-2 underline-offset-4">الرئيسية</span>
+        </Link>
+      </div>
+
       <div className="w-full max-w-xl space-y-8">
-        
         <div className="bg-white border-0 p-8 md:p-10 rounded-[2.5rem] shadow-2xl shadow-blue-900/5 ring-1 ring-neutral-100 animate-fade-in relative overflow-hidden">
           {/* Brand Accent */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-[#1a3a8f]/5 rounded-bl-full blur-2xl" />
-          
+
           <div className="text-center space-y-4 mb-10 relative z-10">
-            <h1 className="text-4xl font-black text-neutral-900 tracking-tight">إنشاء حساب جديد</h1>
-            <p className="text-neutral-400 font-bold max-w-sm mx-auto leading-relaxed">انضم إلى المنظومة الإلكترونية الموحدة لخدمات المرور في محافظة صنعاء.</p>
+            <img
+              src="/images/logo.png"
+              alt="Mojaz Logo"
+              className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-6 object-contain"
+            />
+            <h1 className="text-xl md:text-2xl font-black text-[#1a3a8f] tracking-tight">إنشاء حساب جديد</h1>
+            <p className="text-neutral-400 font-bold text-sm max-w-sm mx-auto leading-relaxed">انضم إلى المنظومة الإلكترونية الموحدة لخدمات المرور.</p>
           </div>
 
           {/* Institutional Tabs */}
@@ -55,9 +69,6 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        <p className="text-center text-xs font-black text-neutral-300 uppercase tracking-[0.3em]">
-          الإدارة العامة للمرور - محافظة صنعاء
-        </p>
       </div>
     </div>
   );

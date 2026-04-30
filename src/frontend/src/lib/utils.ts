@@ -6,6 +6,16 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
+ * Masks a national ID for display (shows only last 4 digits)
+ * @param id - The national ID to mask
+ * @returns Masked ID (e.g., "****1234") or "—" if invalid/missing
+ */
+export function maskNationalId(id: string | undefined | null): string {
+  if (!id || id.length < 4) return '—';
+  return '****' + id.slice(-4);
+}
+
+/**
  * Calculate age from date of birth string (YYYY-MM-DD or ISO format)
  * @param dateOfBirth - Date of birth in YYYY-MM-DD format
  * @returns Current age in years

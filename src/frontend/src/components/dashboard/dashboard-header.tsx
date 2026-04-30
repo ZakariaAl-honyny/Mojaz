@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/stores/auth-store";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,13 +11,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { 
-  Menu, 
-  Sun, 
-  Moon, 
-  User, 
-  LogOut, 
-  Settings, 
+import {
+  Menu,
+  Sun,
+  Moon,
+  User,
+  LogOut,
+  Settings,
   Bell,
   ShieldCheck,
   ChevronDown,
@@ -33,8 +34,7 @@ export function DashboardHeader({ role, onMenuClick }: DashboardHeaderProps) {
   const router = useRouter();
 
   const handleLogout = () => {
-    localStorage.removeItem("userRole");
-    localStorage.removeItem("isLoggedIn");
+    useAuthStore.getState().logout();
     router.push("/");
   };
 
@@ -58,31 +58,31 @@ export function DashboardHeader({ role, onMenuClick }: DashboardHeaderProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden hover:bg-neutral-50 rounded pl-0"
+            className="lg:hidden hover:bg-neutral-50 rounded ps-0"
             onClick={onMenuClick}
           >
             <Menu className="h-5 w-5 text-sidebar-foreground" />
           </Button>
 
           <div className="hidden lg:flex items-center gap-4">
-             <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-[#1a3a8f] shadow-sm">
-               <LayoutDashboard className="w-5 h-5" />
-             </div>
-             <div>
-                <h1 className="text-xl font-black text-neutral-900 tracking-tight leading-none">لوحة التحكم</h1>
-                <p className="text-xs font-bold text-neutral-400 mt-1 uppercase tracking-widest">إدارة المرور - صنعاء</p>
-             </div>
+            <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-[#1a3a8f] shadow-sm">
+              <LayoutDashboard className="w-5 h-5" />
+            </div>
+            <div>
+              <h1 className="text-xl font-black text-neutral-900 tracking-tight leading-none">لوحة التحكم</h1>
+              <p className="text-xs font-bold text-neutral-400 mt-1 uppercase tracking-widest">إدارة المرور - صنعاء</p>
+            </div>
           </div>
         </div>
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-4">
-          
+
           {/* Notifications Notification Pin */}
           <Button variant="ghost" size="icon" className="w-12 h-12 rounded-2xl relative bg-neutral-50/50 hover:bg-blue-50 hover:text-[#1a3a8f] transition-all group overflow-hidden">
-             <div className="absolute inset-0 bg-[#1a3a8f] translate-y-full group-hover:translate-y-0 transition-transform opacity-5"></div>
-             <Bell className="w-6 h-6" />
-             <span className="absolute top-3 left-3 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+            <div className="absolute inset-0 bg-[#1a3a8f] translate-y-full group-hover:translate-y-0 transition-transform opacity-5"></div>
+            <Bell className="w-6 h-6" />
+            <span className="absolute top-3 left-3 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
           </Button>
 
           {/* User Profile Dropdown */}
@@ -104,9 +104,9 @@ export function DashboardHeader({ role, onMenuClick }: DashboardHeaderProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-72 rounded-[2rem] border-none shadow-2xl p-4 mt-2 font-arabic">
               <DropdownMenuLabel className="px-4 py-4">
-                 <p className="text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] mb-1">الحساب الشخصي</p>
-                 <p className="text-lg font-black text-neutral-900 leading-tight">أحمد فؤاد السلمي</p>
-                 <p className="text-xs font-bold text-[#1a3a8f] mt-1">{roleLabel}</p>
+                <p className="text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em] mb-1">الحساب الشخصي</p>
+                <p className="text-lg font-black text-neutral-900 leading-tight">أحمد فؤاد السلمي</p>
+                <p className="text-xs font-bold text-[#1a3a8f] mt-1">{roleLabel}</p>
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-neutral-50 mx-2" />
               <div className="p-2 space-y-1">
@@ -121,8 +121,8 @@ export function DashboardHeader({ role, onMenuClick }: DashboardHeaderProps) {
               </div>
               <DropdownMenuSeparator className="bg-neutral-50 mx-2" />
               <div className="p-2">
-                <DropdownMenuItem 
-                  onClick={handleLogout} 
+                <DropdownMenuItem
+                  onClick={handleLogout}
                   className="h-12 px-4 rounded-xl font-black gap-3 text-red-600 focus:bg-red-50 focus:text-red-700 cursor-pointer"
                 >
                   <LogOut className="h-5 w-5 opacity-60" />

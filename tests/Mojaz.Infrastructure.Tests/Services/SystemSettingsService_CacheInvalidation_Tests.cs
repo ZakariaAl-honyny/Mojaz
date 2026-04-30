@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Mojaz.Application.DTOs.SystemSettings;
+using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Infrastructure.Services;
@@ -17,11 +18,15 @@ namespace Mojaz.Infrastructure.Tests.Services;
 public class SystemSettingsService_CacheInvalidation_Tests
 {
     private readonly Mock<IRepository<SystemSetting>> _settingsRepo = new();
+    private readonly Mock<IAuditService> _auditService = new();
     private readonly MemoryCache _memoryCache = new(Options.Create(new MemoryCacheOptions()));
+    private readonly Mock<IUnitOfWork> _unitOfWork = new();
 
     private SystemSettingsService CreateService() => new(
         _settingsRepo.Object,
-        _memoryCache
+        _unitOfWork.Object,
+        _memoryCache,
+        _auditService.Object
     );
 
     [Fact]

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mojaz.Application.DTOs.LicenseReplacement;
 using Mojaz.Application.Interfaces.Infrastructure;
@@ -76,7 +77,7 @@ public class ReplaceLicenseService : IReplaceLicenseService
             {
                 return ApiResponse<ReplacementEligibilityDto>.Fail(
                     400,
-                    "No active license found. You must have an active license to apply for replacement.");
+                    "لم يتم العثور على رخصة نشطة. يجب أن يكون لديك رخصة نشطة لطلب الاستبدال.");
             }
 
             // Get license category for response
@@ -98,7 +99,7 @@ public class ReplaceLicenseService : IReplaceLicenseService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error checking eligibility for license replacement for applicant {ApplicantId}", applicantId);
-            return ApiResponse<ReplacementEligibilityDto>.Fail(500, "An error occurred while checking eligibility.");
+            return ApiResponse<ReplacementEligibilityDto>.Fail(500, "حدث خطأ أثناء التحقق من الأهلية.");
         }
     }
 
@@ -111,18 +112,18 @@ public class ReplaceLicenseService : IReplaceLicenseService
             var oldLicense = await _licenseRepository.GetByIdAsync(request.LicenseId);
             if (oldLicense == null)
             {
-                return ApiResponse<Guid>.NotFound("License not found.");
+                return ApiResponse<Guid>.NotFound("الرخصة غير موجودة.");
             }
 
             if (oldLicense.HolderId != applicantId)
             {
-                return ApiResponse<Guid>.Fail(403, "You do not own this license.");
+                return ApiResponse<Guid>.Fail(403, "أنت لا تملك هذه الرخصة.");
             }
 
             // Validate license status is Active
             if (oldLicense.Status != LicenseStatus.Active)
             {
-                return ApiResponse<Guid>.Fail(400, "Only active licenses can be replaced.");
+                return ApiResponse<Guid>.Fail(400, "يمكن استبدال الرخص النشطة فقط.");
             }
 
             // Check for existing pending replacement application
@@ -137,14 +138,14 @@ public class ReplaceLicenseService : IReplaceLicenseService
 
             if (pendingApplication != null)
             {
-                return ApiResponse<Guid>.Fail(409, "A replacement application already exists for this license.");
+                return ApiResponse<Guid>.Fail(409, "يوجد طلب استبدال لهذا الطلب بالفعل.");
             }
 
             // Get category
             var category = await _licenseCategoryRepository.GetByIdAsync(oldLicense.LicenseCategoryId);
             if (category == null)
             {
-                return ApiResponse<Guid>.NotFound("License category not found.");
+                return ApiResponse<Guid>.NotFound("فئة الرخصة غير موجودة.");
             }
 
             // Create Application with ServiceType = Replacement
@@ -192,12 +193,12 @@ public class ReplaceLicenseService : IReplaceLicenseService
             _logger.LogInformation("Replacement application created: {ApplicationId} for license {LicenseId}",
                 application.Id, request.LicenseId);
 
-            return ApiResponse<Guid>.Ok(application.Id, "Replacement application created successfully.");
+            return ApiResponse<Guid>.Ok(application.Id, "تم إنشاء طلب الاستبدال بنجاح.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error creating replacement application");
-            return ApiResponse<Guid>.Fail(500, "An error occurred while creating the replacement application.");
+            return ApiResponse<Guid>.Fail(500, "حدث خطأ أثناء إنشاء طلب الاستبدال.");
         }
     }
 
@@ -213,14 +214,14 @@ public class ReplaceLicenseService : IReplaceLicenseService
 
             if (replacement == null)
             {
-                return ApiResponse<LicenseReplacementDto>.NotFound("Replacement record not found.");
+                return ApiResponse<LicenseReplacementDto>.NotFound("سجل الاستبدال غير موجود.");
             }
 
             // Get license details
             var license = await _licenseRepository.GetByIdAsync(replacement.LicenseId);
             if (license == null)
             {
-                return ApiResponse<LicenseReplacementDto>.NotFound("License not found.");
+                return ApiResponse<LicenseReplacementDto>.NotFound("الرخصة غير موجودة.");
             }
 
             var result = _mapper.Map<LicenseReplacementDto>(replacement);
@@ -233,7 +234,7 @@ public class ReplaceLicenseService : IReplaceLicenseService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error getting replacement details for application {ApplicationId}", applicationId);
-            return ApiResponse<LicenseReplacementDto>.Fail(500, "An error occurred while getting replacement details.");
+            return ApiResponse<LicenseReplacementDto>.Fail(500, "حدث خطأ أثناء استرجاع تفاصيل الاستبدال.");
         }
     }
 
@@ -253,13 +254,13 @@ public class ReplaceLicenseService : IReplaceLicenseService
 
             if (replacement == null)
             {
-                return ApiResponse<bool>.NotFound("Replacement record not found.");
+                return ApiResponse<bool>.NotFound("سجل الاستبدال غير موجود.");
             }
 
             // Only stolen reports need verification
             if (replacement.Reason != ReplacementReason.Stolen)
             {
-                return ApiResponse<bool>.Fail(400, "Report verification is only required for stolen licenses.");
+                return ApiResponse<bool>.Fail(400, "التحقق من البلاغ مطلوب فقط للرخص المسروقة.");
             }
 
             // Update verification status
@@ -283,12 +284,12 @@ public class ReplaceLicenseService : IReplaceLicenseService
             _logger.LogInformation("Report verification updated for application {ApplicationId}. Verified: {IsVerified}",
                 applicationId, isVerified);
 
-            return ApiResponse<bool>.Ok(true, "Report verification updated successfully.");
+            return ApiResponse<bool>.Ok(true, "تم تحديث حالة التحقق من البلاغ بنجاح.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error updating report verification for application {ApplicationId}", applicationId);
-            return ApiResponse<bool>.Fail(500, "An error occurred while updating report verification.");
+            return ApiResponse<bool>.Fail(500, "حدث خطأ أثناء تحديث حالة التحقق من البلاغ.");
         }
     }
 
@@ -300,32 +301,52 @@ public class ReplaceLicenseService : IReplaceLicenseService
             var application = await _applicationRepository.GetByIdAsync(applicationId);
             if (application == null)
             {
-                return ApiResponse<bool>.NotFound("Application not found.");
+                return ApiResponse<bool>.NotFound("الطلب غير موجود.");
             }
 
             // Validate application is ready for payment
             if (application.Status != ApplicationStatus.Draft && application.Status != ApplicationStatus.DocumentReview)
             {
-                return ApiResponse<bool>.Fail(400, "Application is not in a state that requires payment.");
+                return ApiResponse<bool>.Fail(400, "الطلب ليس في حالة تتطلب الدفع.");
             }
 
             // Get payment
             var payment = await _paymentRepository.GetByIdAsync(paymentId);
             if (payment == null)
             {
-                return ApiResponse<bool>.NotFound("Payment not found.");
+                return ApiResponse<bool>.NotFound("عملية الدفع غير موجودة.");
             }
 
             // Verify payment is for this application
             if (payment.ApplicationId != applicationId)
             {
-                return ApiResponse<bool>.Fail(400, "Payment does not belong to this application.");
+                return ApiResponse<bool>.Fail(400, "عملية الدفع لا تنتمي لهذا الطلب.");
             }
 
             // Verify payment is successful
             if (payment.Status != PaymentStatus.Paid)
             {
-                return ApiResponse<bool>.Fail(400, "Payment is not completed.");
+                return ApiResponse<bool>.Fail(400, "عملية الدفع لم تكتمل بعد.");
+            }
+
+            // Get replacement fee from FeeStructures
+            var feeStructure = await _feeStructureRepository.Query()
+                .FirstOrDefaultAsync(f =>
+                    f.IsActive &&
+                    f.FeeType == FeeType.ReplacementFee &&
+                    f.LicenseCategoryId == application.LicenseCategoryId);
+
+            var replacementFee = feeStructure?.Amount ?? 0;
+
+            if (replacementFee <= 0)
+            {
+                return ApiResponse<bool>.Fail(400, "لم يتم تحديد رسوم الاستبدال.");
+            }
+
+            // Validate payment amount matches the fee
+            if (payment.Amount < replacementFee)
+            {
+                return ApiResponse<bool>.Fail(400, "مبلغ الدفع غير كافٍ.");
             }
 
             // Check report verification for stolen licenses
@@ -335,7 +356,7 @@ public class ReplaceLicenseService : IReplaceLicenseService
 
             if (replacement?.Reason == ReplacementReason.Stolen && !replacement.IsReportVerified)
             {
-                return ApiResponse<bool>.Fail(400, "Police report must be verified before proceeding.");
+                return ApiResponse<bool>.Fail(400, "يجب التحقق من بلاغ الشرطة قبل المتابعة.");
             }
 
             // Update application status
@@ -345,12 +366,12 @@ public class ReplaceLicenseService : IReplaceLicenseService
 
             _logger.LogInformation("Payment processed for replacement application: {ApplicationId}", applicationId);
 
-            return ApiResponse<bool>.Ok(true, "Payment processed successfully.");
+            return ApiResponse<bool>.Ok(true, "تمت معالجة عملية الدفع بنجاح.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error processing payment for application {ApplicationId}", applicationId);
-            return ApiResponse<bool>.Fail(500, "An error occurred while processing the payment.");
+            return ApiResponse<bool>.Fail(500, "حدث خطأ أثناء معالجة عملية الدفع.");
         }
     }
 
@@ -362,13 +383,13 @@ public class ReplaceLicenseService : IReplaceLicenseService
             var application = await _applicationRepository.GetByIdAsync(applicationId);
             if (application == null)
             {
-                return ApiResponse<Guid>.NotFound("Application not found.");
+                return ApiResponse<Guid>.NotFound("الطلب غير موجود.");
             }
 
             // Validate all prerequisites
             if (application.Status != ApplicationStatus.Payment)
             {
-                return ApiResponse<Guid>.Fail(400, "Payment must be completed before issuing replacement license.");
+                return ApiResponse<Guid>.Fail(400, "يجب إكمال عملية الدفع قبل إصدار رخصة بدل فاقد/تالف.");
             }
 
             var replacements = await _replacementRepository.FindAsync(r =>
@@ -377,34 +398,34 @@ public class ReplaceLicenseService : IReplaceLicenseService
 
             if (replacement == null)
             {
-                return ApiResponse<Guid>.NotFound("Replacement record not found.");
+                return ApiResponse<Guid>.NotFound("سجل الاستبدال غير موجود.");
             }
 
             // For stolen licenses, verify report is checked
             if (replacement.Reason == ReplacementReason.Stolen && !replacement.IsReportVerified)
             {
-                return ApiResponse<Guid>.Fail(400, "Police report must be verified before issuing replacement.");
+                return ApiResponse<Guid>.Fail(400, "يجب التحقق من بلاغ الشرطة قبل إصدار الرخصة.");
             }
 
             // Get old license
             var oldLicense = await _licenseRepository.GetByIdAsync(replacement.LicenseId);
             if (oldLicense == null)
             {
-                return ApiResponse<Guid>.NotFound("Original license not found.");
+                return ApiResponse<Guid>.NotFound("الرخصة الأصلية غير موجودة.");
             }
 
             // Get category
             var category = await _licenseCategoryRepository.GetByIdAsync(application.LicenseCategoryId);
             if (category == null)
             {
-                return ApiResponse<Guid>.NotFound("License category not found.");
+                return ApiResponse<Guid>.NotFound("فئة الرخصة غير موجودة.");
             }
 
             // Get holder
             var holder = await _userRepository.GetByIdAsync(application.ApplicantId);
             if (holder == null)
             {
-                return ApiResponse<Guid>.NotFound("License holder not found.");
+                return ApiResponse<Guid>.NotFound("صاحب الرخصة غير موجود.");
             }
 
             // Generate new license number
@@ -424,12 +445,14 @@ public class ReplaceLicenseService : IReplaceLicenseService
                 IssuedAt = issuedAt,
                 ExpiresAt = expiresAt,
                 IssuedBy = processedById,
-                Status = LicenseStatus.Active
+                Status = LicenseStatus.Active,
+                ReplacementCount = oldLicense.ReplacementCount
             };
 
             await _licenseRepository.AddAsync(newLicense);
 
-            // Deactivate old license
+            // Increment replacement count on old license and mark as replaced
+            oldLicense.ReplacementCount = oldLicense.ReplacementCount + 1;
             oldLicense.Status = LicenseStatus.Replaced;
             _licenseRepository.Update(oldLicense);
 
@@ -464,12 +487,12 @@ public class ReplaceLicenseService : IReplaceLicenseService
             _logger.LogInformation("Replacement license issued: {NewLicenseId} for application {ApplicationId}. Old license {OldLicenseId} replaced.",
                 newLicense.Id, applicationId, oldLicense.Id);
 
-            return ApiResponse<Guid>.Ok(newLicense.Id, "Replacement license issued successfully.");
+            return ApiResponse<Guid>.Ok(newLicense.Id, "تم إصدار رخصة بدل فاقد/تالف بنجاح.");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error issuing replacement license for application {ApplicationId}", applicationId);
-            return ApiResponse<Guid>.Fail(500, "An error occurred while issuing the replacement license.");
+            return ApiResponse<Guid>.Fail(500, "حدث خطأ أثناء إصدار رخصة بدل فاقد/تالف.");
         }
     }
 

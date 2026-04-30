@@ -14,5 +14,312 @@
       "status": "الحالة",
       "submittedDate": "تاريخ التقديم"
     }
+  },
+  "doctor": {
+    "dashboard": {
+      "title": "لوحة الفحص الطبي",
+      "subtitle": "إدارة الفحوصات الطبية والترخيص",
+      "pending": "قيد الانتظار",
+      "completed": "مكتمل",
+      "today": "اليوم",
+      "fitRate": "معدل اللياقة",
+      "pendingDesc": "طلبات بانتظار الفحص الطبي",
+      "completedDesc": "فحوصات مكتملة اليوم",
+      "todayDesc": "فحوصات محددة اليوم",
+      "fitRateDesc": "نسبة اللياقة",
+      "queue": "طابور الفحص الطبي",
+      "queueDesc": "المعاملات المعلقة التي تحتاج فحصاً طبياً",
+      "openQueue": "فتح الطابور",
+      "results": "سجل النتائج",
+      "resultsDesc": "عرض نتائج الفحوصات السابقة",
+      "openResults": "عرض السجل"
+    },
+    "queue": {
+      "title": "طابور الفحص الطبي",
+      "subtitle": "الطلبات المعلقة التي تحتاج فحصاً طبياً",
+      "searchPlaceholder": "البحث برقم الطلب أو اسم مقدم الطلب...",
+      "noResults": "لا توجد طلبات معلقة للفحص الطبي",
+      "noResultsDesc": "جميع الطلبات تم فحصها طبياً",
+      "columns": {
+        "applicationNumber": "رقم الطلب",
+        "applicantName": "مقدم الطلب",
+        "nationalId": "رقم الهوية",
+        "category": "فئة الرخصة",
+        "submittedDate": "تاريخ التقديم",
+        "action": "إجراء"
+      },
+      "actions": {
+        "startExam": "بدء الفحص"
+      }
+    },
+    "exam": {
+      "title": "الفحص الطبي لطلب رقم: {appNumber}",
+      "applicantInfo": "معلومات مقدم الطلب",
+      "fullName": "الاسم الكامل",
+      "nationalId": "رقم الهوية",
+      "dateOfBirth": "تاريخ الميلاد",
+      "licenseCategory": "فئة الرخصة المطلوبة",
+      "address": "العنوان",
+      "examForm": "نموذج الفحص الطبي",
+      "visionTest": "فحص النظر",
+      "visionLeft": "العين اليسرى",
+      "visionRight": "العين اليمنى",
+      "pass": "ناجح",
+      "fail": "راسب",
+      "hearingTest": "فحص السمع",
+      "physicalExam": "الفحص البدني",
+      "generalHealth": "الصحة العامة",
+      "bloodPressure": "ضغط الدم",
+      "result": "النتيجة الإجمالية",
+      "fit": "لائق",
+      "conditionallyFit": "لائق بشروط",
+      "unfit": "غير لائق",
+      "notes": "ملاحظات الطبيب",
+      "notesPlaceholder": "أدخل أي ملاحظات تتعلق بحالة المريض...",
+      "submit": "حفظ نتائج الفحص",
+      "submitting": "جاري الحفظ...",
+      "success": "تم حفظ نتائج الفحص الطبي بنجاح",
+      "error": "حدث خطأ أثناء حفظ نتائج الفحص",
+      "warning": "تحذير: عند اختيار غير لائق سيتم رفض الطلب تلقائياً"
+    }
+  },
+  "security": {
+    "dashboard": {
+      "title": "لوحة تحكم الأمن",
+      "subtitle": "مراجعة الطلبات والتحقق الأمني",
+      "pendingVerifications": "قيد الانتظار",
+      "todayVerifications": "اليوم",
+      "blockedUsers": "محظورون",
+      "totalApplications": "إجمالي",
+      "pendingDesc": "تحقق أمني",
+      "completedDesc": "تم إنجازها",
+      "blockedDesc": "حسابات محظورة",
+      "totalDesc": "معاملة منفذة",
+      "queue": "قائمة الانتظار",
+      "queueDesc": "المعاملات المعلقة التي تحتاج تحقق أمني",
+      "openQueue": "فتح القائمة",
+      "users": "إدارة المستخدمين",
+      "usersDesc": "التحقق من حسابات المستخدمين وحظرهم عند الحاجة",
+      "openUsers": "فتح الإدارة"
+    },
+    "queue": {
+      "title": "طابور التحقق الأمني",
+      "subtitle": "المعاملات المعلقة التي تحتاج مراجعة أمنية",
+      "searchPlaceholder": "البحث بالاسم أو رقم الطلب...",
+      "fromDate": "من تاريخ",
+      "toDate": "إلى تاريخ",
+      "columns": {
+        "applicationNumber": "رقم المعاملة",
+        "applicantName": "مقدم الطلب",
+        "nationalId": "رقم الهوية",
+        "category": "الفئة",
+        "submittedDate": "تاريخ التقديم",
+        "verify": "التحقق"
+      },
+      "noResults": "لا توجد معاملات",
+      "noResultsDesc": "جميع الطلبات تم مراجعتها أمنياً",
+      "pagination": "صفحة {current} من {total}"
+    },
+    "verify": {
+      "title": "مراجعة طلب رقم: {appNumber}",
+      "applicantInfo": "معلومات مقدم الطلب",
+      "nationalId": "رقم الهوية",
+      "dateOfBirth": "تاريخ الميلاد",
+      "licenseCategory": "فئة الرخصة",
+      "address": "العنوان",
+      "securityCheck": "الفحص الأمني",
+      "selectDecision": "اختر قرار التحقق",
+      "clear": "عدم ممانعة",
+      "clearDesc": "المتقدم غير مطلوب أمنياً",
+      "block": "ممانعة",
+      "blockDesc": "المتقدم مطلوب أمنياً",
+      "notes": "ملاحظات (اختياري)",
+      "notesPlaceholder": "أدخل أي ملاحظات تتعلق بهذا الطلب...",
+      "cancel": "إلغاء",
+      "submit": "تقديم القرار",
+      "submitting": "جاري التقديم...",
+      "warning": "سيتم رفض هذا الطلب بسبب وجود ممانعة أمنية. لا يمكن التراجع عن هذا الإجراء."
+    },
+    "users": {
+      "title": "إدارة المستخدمين",
+      "subtitle": "تحكم في الحسابات المحظورة أمنياً",
+      "searchPlaceholder": "البحث بالاسم أو رقم الهوية...",
+      "columns": {
+        "fullName": "اسم المستخدم",
+        "nationalId": "رقم الهوية",
+        "phone": "رقم الجوال",
+        "email": "البريد الإلكتروني",
+        "status": "الحالة الأمنية",
+        "action": "إجراء"
+      },
+      "status": {
+        "blocked": "محظور",
+        "active": "نشط"
+      },
+      "noResults": "لا توجد بيانات",
+      "noResultsDesc": "لم يتم العثور على مستخدمين",
+      "warning": "عند تفعيل الحظر، سيتم منع المستخدم من تقديم أي طلبات جديدة حتى رفع الحظر.",
+      "toggle": {
+        "block": "حظر",
+        "unblock": "فتح الحظر"
+      },
+      "success": "تم تحديث حالة الحظر بنجاح",
+      "error": "فشل في تحديث حالة الحظر"
+    }
+  },
+  "examiner": {
+    "dashboard": {
+      "title": "لوحة فحص الاختبارات",
+      "subtitle": "إدارة جلسات الاختبار النظري والعملي",
+      "theories": "الاختبارات النظرية",
+      "practical": "الاختبارات العملية",
+      "theoriesDesc": "قائمة المتقدمين المنتظرين للاختبار المعرفي",
+      "practicalDesc": "قائمة المتقدمين المنتظرين للاختبار الميداني",
+      "pending": "قيد الانتظار",
+      "completed": "مكتمل",
+      "viewQueue": "عرض الطابور"
+    },
+    "queue": {
+      "title": "طابور الاختبار {type}",
+      "titleTheory": "الاختبار النظري (المعرفي)",
+      "titlePractical": "الاختبار العملي (الميداني)",
+      "searchPlaceholder": "البحث برقم الطلب أو اسم مقدم الطلب...",
+      "noResults": "لا توجد طلبات معلقة للاختبار",
+      "actions": {
+        "view": "عرض التفاصيل",
+        "checkIn": "تسجيل الحضور",
+        "start": "بدء الجلسة",
+        "result": "تسجيل النتيجة"
+      },
+      "columns": {
+        "applicationNumber": "رقم الطلب",
+        "applicantName": "مقدم الطلب",
+        "licenseCategory": "فئة الرخصة",
+        "appointmentDate": "موعد الاختبار",
+        "appointmentTime": "الوقت",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "status": {
+        "scheduled": "مجدول",
+        "checkedIn": "حاضر",
+        "inProgress": "قيد التنفيذ",
+        "completed": "مكتمل"
+      }
+    },
+    "result": {
+      "title": "تسجيل نتيجة {type}",
+      "titleTheory": "نتيجة الاختبار النظري",
+      "titlePractical": "نتيجة الاختبار العملي",
+      "applicantName": "مقدم الطلب",
+      "applicationNo": "رقم الطلب",
+      "passingScore": "درجة النجاح",
+      "score": "الدرجة",
+      "scorePlaceholder": "أدخل الدرجة من 100",
+      "isAbsent": "المتقدم غائب",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "ملاحظات حول أداء المتقدم...",
+      "submit": "حفظ النتيجة",
+      "submitting": "جاري الحفظ...",
+      "success": "تم حفظ النتيجة بنجاح",
+      "error": "حدث خطأ أثناء حفظ النتيجة",
+      "vehicleUsed": "المركبة المستخدمة",
+      "vehiclePlaceholder": "مثال: تويوتا كامري 2022",
+      "requiresTraining": "يتطلب تدريب إضافي",
+      "manualTransmission": "يتطلب رخصة حركة عادي"
+    }
+  },
+  "reports": {
+    "title": "التقارير وإحصائيات الموظفين",
+    "subtitle": "أداء العمل والإحصائيات",
+    "daily": "يومي",
+    "weekly": "أسبوعي",
+    "monthly": "شهري",
+    "custom": "مخصص",
+    "totalProcessed": "إجمالي المعالجة",
+    "passRate": "نسبة النجاح",
+    "avgTime": "متوسط الوقت",
+    "efficiency": "الكفاءة",
+    "trends": "الاتجاهات",
+    "charts": "الرسوم البيانية",
+    "details": "التفاصيل",
+    "dateFrom": "من",
+    "dateTo": "إلى",
+    "generate": "إنشاء تقرير",
+    "noData": "لا توجد بيانات للفترة المحددة",
+    "columns": {
+      "applicationNumber": "رقم الطلب",
+      "result": "النتيجة",
+      "processingTime": "وقت المعالجة",
+      "date": "التاريخ",
+      "category": "الفئة"
+    },
+    "result": {
+      "passed": "ناجح",
+      "failed": "راسب",
+      "pending": "قيد الانتظار"
+    },
+    "metrics": {
+      "totalProcessed": "إجمالي المعالجة",
+      "passRate": "نسبة النجاح",
+      "avgProcessingTime": "متوسط وقت المعالجة",
+      "efficiencyTrend": "اتجاه الكفاءة"
+    }
+  },
+  "manager": {
+    "dashboard": {
+      "title": "لوحة تحكم المدير",
+      "subtitle": "لوحة القيادة والإدارة العامة",
+      "pendingApprovals": "المعلقة",
+      "approvedToday": "المقبولة اليوم",
+      "rejectedToday": "المرفوضة اليوم",
+      "thisMonth": "هذا الشهر",
+      "pendingSingular": "معلق",
+      "pendingPlural": "معلقين",
+      "pendingDesc": "الطلبات المعلقة التي تحتاج موافقة نهائية",
+      "viewPending": "عرض الطلبات المعلقة",
+      "viewPendingBtn": "فتح طابور الموافقات",
+      "processApproval": "اعتماد الطلب",
+      "processApprovalDesc": "معالجة الموافقات النهائية للطلبات",
+      "processApprovalBtn": "معالجة الاعتماد",
+      "finalApproval": "اعتماد نهائي",
+      "recentActivity": "النشاط الأخير",
+      "recentActivityDesc": "أحدث المعاملات التي تمت معالجتها",
+      "viewAll": "عرض الكل",
+      "columns": {
+        "applicationNumber": "رقم الطلب",
+        "applicant": "مقدم الطلب",
+        "category": "الفئة",
+        "decision": "القرار",
+        "date": "التاريخ"
+      },
+      "categoryLabel": "فئة",
+      "sampleApplicant": "مقدم رقم {number}",
+      "decision": {
+        "approved": "مقبول",
+        "pending": "قيد المراجعة",
+        "rejected": "مرفوض"
+      },
+      "status": {
+        "draft": "مسودة",
+        "submitted": "مُقدَّم",
+        "documentReview": "مراجعة المستندات",
+        "inReview": "قيد المراجعة",
+        "approved": "مقبول",
+        "rejected": "مرفوض"
+      },
+      "reports": {
+        "title": "التقارير والإحصائيات"
+      },
+      "monthlyStats": "إحصائيات شهرية",
+      "monthlyStatsDesc": "عرض إحصائيات المعاملات الشهرية",
+      "approvalRate": "نسب الاعتماد",
+      "approvalRateDesc": "نسبة الطلبات المقبولة والمرفوضة",
+      "processingTime": "أوقات المعالجة",
+      "processingTimeDesc": "متوسط وقت معالجة المعاملات",
+      "openReport": "فتح التقرير",
+      "footerText": "نظام إدارة المعاملات المرورية - الإدارة العامة للمرور",
+      "version": "إصدار لوحة التحكم v2.4 • صنعاء"
+    }
   }
 }

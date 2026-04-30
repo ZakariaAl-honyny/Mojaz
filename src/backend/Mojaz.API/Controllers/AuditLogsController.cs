@@ -10,7 +10,7 @@ namespace Mojaz.API.Controllers;
 [ApiController]
 [Route("api/v1/[controller]")]
 [Produces("application/json")]
-[Authorize(Policy = RolePolicies.AdminOnly)]
+[Authorize(Roles = "Admin,Manager,Security")]
 public class AuditLogsController : ControllerBase
 {
     private readonly IAuditLogService _auditLogService;

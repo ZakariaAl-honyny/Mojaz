@@ -58,6 +58,7 @@ export function FormField({
           if (React.isValidElement(child)) {
             return React.cloneElement(child as React.ReactElement<any>, {
               id,
+              name: (child.props as any).name || id,
               'aria-invalid': !!error,
               'aria-describedby': error ? `${id}-error` : undefined,
               className: cn(
@@ -115,6 +116,8 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
     <FormField label={label} id={id} error={error} className={className} required={required}>
       <select
         ref={ref}
+        id={id}
+        name={props.name || id}
         className={cn(
           "flex h-16 w-full rounded-[1.25rem] border border-neutral-100 bg-neutral-50/50 px-8 text-sm font-bold transition-all duration-700",
           "appearance-none", // Remove default arrow

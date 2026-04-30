@@ -477,7 +477,7 @@ public class DocumentServiceTests
             .ReturnsAsync(new List<ApplicationDocument>());
 
         // Act
-        var result = await service.GetRequirementsAsync(applicationId, userId);
+        var result = await service.GetRequirementsAsync(applicationId, userId, "Applicant");
 
         // Assert
         result.Success.Should().BeTrue();
@@ -513,7 +513,7 @@ public class DocumentServiceTests
             .ReturnsAsync(new List<ApplicationDocument>());
 
         // Act
-        var result = await service.GetRequirementsAsync(applicationId, userId);
+        var result = await service.GetRequirementsAsync(applicationId, userId, "Applicant");
 
         // Assert
         result.Success.Should().BeTrue();

@@ -1,30 +1,12 @@
-import { ApiResponse } from './api.types';
+import { ApiResponse, UserDto } from './api.types';
+import { UserRole } from '@/lib/enums';
+
+// Re-export from single source
+export { UserRole } from '@/lib/enums';
 
 // ============================================================
-// UserRole - matches backend numeric values
-// Backend: Applicant=0, Receptionist=1, Doctor=2, Examiner=3, Manager=4, Admin=5, Security=6
+// RegistrationMethod - matches backend numeric values
 // ============================================================
-export enum UserRole {
-  Applicant = 0,
-  Receptionist = 1,
-  Doctor = 2,
-  Examiner = 3,
-  Manager = 4,
-  Admin = 5,
-  Security = 6
-}
-
-// Display labels for UserRole
-export const UserRoleLabels = {
-  [UserRole.Applicant]: { ar: 'متقدم', en: 'Applicant' },
-  [UserRole.Receptionist]: { ar: 'موظف الاستقبال', en: 'Receptionist' },
-  [UserRole.Doctor]: { ar: 'طبيب', en: 'Doctor' },
-  [UserRole.Examiner]: { ar: 'مفتش', en: 'Examiner' },
-  [UserRole.Manager]: { ar: 'مدير', en: 'Manager' },
-  [UserRole.Admin]: { ar: 'مدير النظام', en: 'Admin' },
-  [UserRole.Security]: { ar: 'امن', en: 'Security' },
-} as const;
-
 export enum RegistrationMethod {
   NationalId = 0,
   Email = 1,
@@ -40,15 +22,7 @@ export enum OtpPurpose {
   Generic = 5
 }
 
-export interface UserDto {
-  id: string;
-  fullName: string;
-  email?: string;
-  phone?: string;
-  role: UserRole;
-  isActive: boolean;
-  preferredLanguage: string;
-}
+// UserDto is re-exported from api.types.ts
 
 export interface RegisterRequest {
   fullName: string;
@@ -99,12 +73,12 @@ export interface LogoutRequest {
 }
 
 export interface ForgotPasswordRequest {
-  destination: string;
-  purpose: OtpPurpose;
+  identifier: string;
+  method: RegistrationMethod;
 }
 
 export interface ResetPasswordRequest {
-  userId: string;
+  identifier: string;
   code: string;
   newPassword: string;
 }

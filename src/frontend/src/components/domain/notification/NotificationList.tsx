@@ -128,7 +128,7 @@ export function NotificationList({ isOpen, onClose }: NotificationListProps) {
                   <button
                     onClick={() => handleNotificationClick(notification)}
                     className={cn(
-                      'w-full p-6 text-right rounded-[2rem] transition-all duration-300 group',
+                      'w-full p-6 text-end rounded-[2rem] transition-all duration-300 group',
                       notification.isRead 
                         ? 'bg-transparent hover:bg-neutral-50' 
                         : 'bg-blue-50/50 hover:bg-blue-50 ring-1 ring-blue-100/20 shadow-lg shadow-blue-900/5'

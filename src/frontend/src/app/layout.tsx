@@ -2,7 +2,6 @@ import QueryProvider from '@/providers/query-provider';
 import { Cairo, Inter, IBM_Plex_Sans_Arabic } from "next/font/google";
 import { Metadata, Viewport } from 'next';
 import "./globals.css";
-import { PRIMARY_COLOR } from '@/lib/constants';
 import { Toaster } from '@/components/ui/toaster';
 
 const cairo = Cairo({
@@ -25,10 +24,10 @@ const ibmPlexArabic = IBM_Plex_Sans_Arabic({
 
 export const metadata: Metadata = {
   title: 'منصة مُجاز | نظام إصدار رخص القيادة الإلكتروني',
-  description: 'المنصة الرسمية الموحدة لإصدار وتجديد رخص القيادة - الإدارة العامة للمرور',
+  description: 'المنصة الرسمية الموحدة لإصدار وتجديد رخص القيادة - الجمهورية اليمنية - الإدارة العامة للمرور',
   icons: {
-    icon: '/logo.png',
-    apple: '/logo.png',
+    icon: '/images/logo.png',
+    apple: '/images/logo.png',
   },
 };
 

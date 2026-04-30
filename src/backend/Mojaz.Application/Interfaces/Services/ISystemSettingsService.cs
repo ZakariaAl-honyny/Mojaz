@@ -36,4 +36,11 @@ public interface ISystemSettingsService
     /// Invalidates the cache for a specific setting.
     /// </summary>
     void InvalidateCache(string key);
+
+    /// <summary>
+    /// Creates a new system setting.
+    /// </summary>
+    /// <param name="request">The setting creation request.</param>
+    /// <returns>True if created successfully.</returns>
+    Task<bool> CreateAsync(CreateSettingRequest request);
 }

@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { StepId, WizardState, ServiceType, LicenseCategoryCode, Gender } from '@/types/wizard.types';
-import { genderFromNumber } from '@/lib/enum-utils';
+import { StepId, WizardState, ServiceType, LicenseCategoryCode } from '@/types/wizard.types';
+import { Gender } from '@/lib/enums';
+import { genderFromNumber, serviceTypeFromNumber, licenseCategoryFromNumber } from '@/lib/enum-utils';
 
 const initialState = {
   applicationId: null,
@@ -15,6 +16,7 @@ const initialState = {
   },
   step2: {
     categoryCode: null as string | null, // Backend returns "A", "B", etc. as strings
+    availableCategories: null as string[] | null, // Filtered categories for upgrade service
   },
   step3: {
     nationalId: '',
@@ -34,8 +36,12 @@ const initialState = {
     appointmentPreference: 'Morning' as const,
     specialNeedsDeclaration: false,
     specialNeedsNote: '',
+    identityDocument: null as File | null,
+    medicalDocument: null as File | null,
   },
   declarationAccepted: false,
+  stepValidators: {} as Record<number, { trigger: any; setFocus: any; isValid?: boolean } | null>,
+  hasLoadedFromApi: false,
 };
 
 export const useWizardStore = create<WizardState>()(
@@ -68,6 +74,12 @@ export const useWizardStore = create<WizardState>()(
       resetSaveFailures: () => set({ consecutiveSaveFailures: 0 }),
       
       resetWizard: () => set(initialState),
+
+      setStepValidator: (step, validator) => set((state) => ({
+        stepValidators: { ...state.stepValidators, [step]: validator }
+      })),
+
+      setHasLoadedFromApi: (value) => set({ hasLoadedFromApi: value }),
 
       // Load wizard data fetched from API (e.g., after page refresh)
       // Data comes from backend as numeric enum values
@@ -122,10 +134,10 @@ export const useWizardStore = create<WizardState>()(
         if (data.region !== undefined) newStep3.region = data.region ?? '';
 
         const newStep4 = { ...state.step4 };
-        if (data.applicantType !== undefined) newStep4.applicantType = (data.applicantType as any) ?? 'Citizen';
+        if (data.applicantType !== undefined) newStep4.applicantType = (data.applicantType ?? 'Citizen') as typeof state.step4.applicantType;
         if (data.preferredCenterId !== undefined) newStep4.preferredCenterId = data.preferredCenterId ?? '';
-        if (data.testLanguage !== undefined) newStep4.testLanguage = (data.testLanguage as any) ?? 'ar';
-        if (data.appointmentPreference !== undefined) newStep4.appointmentPreference = (data.appointmentPreference as any) ?? 'Morning';
+        if (data.testLanguage !== undefined) newStep4.testLanguage = (data.testLanguage ?? 'ar') as typeof state.step4.testLanguage;
+        if (data.appointmentPreference !== undefined) newStep4.appointmentPreference = (data.appointmentPreference ?? 'Morning') as typeof state.step4.appointmentPreference;
         if (data.specialNeedsDeclaration !== undefined) newStep4.specialNeedsDeclaration = data.specialNeedsDeclaration ?? false;
         if (data.specialNeedsNote !== undefined) newStep4.specialNeedsNote = data.specialNeedsNote ?? '';
 
@@ -143,10 +155,8 @@ export const useWizardStore = create<WizardState>()(
         step2: state.step2,
         step3: state.step3,
         step4: state.step4,
+        declarationAccepted: state.declarationAccepted,
       }),
     }
   )
 );
-
-// Import from enum-utils for conversion
-import { serviceTypeFromNumber, licenseCategoryFromNumber } from '@/lib/enum-utils';

@@ -4,11 +4,11 @@ namespace Mojaz.Application.Applications.Dtos;
 
 public class ApplicationSummaryDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string ApplicationNumber { get; set; } = string.Empty;
     public string ApplicantName { get; set; } = string.Empty;
-    public string LicenseCategoryCode { get; set; } = string.Empty;
-    public string ServiceType { get; set; } = string.Empty;
+    public LicenseCategoryCode LicenseCategoryCode { get; set; }
+    public ServiceType ServiceType { get; set; }
     public string CurrentStage { get; set; } = string.Empty;
     public ApplicationStatus Status { get; set; }
     public DateTime SubmittedDate { get; set; }

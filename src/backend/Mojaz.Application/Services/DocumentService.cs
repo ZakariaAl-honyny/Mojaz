@@ -61,9 +61,9 @@ public DocumentService(
 public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, UploadDocumentRequest request, Guid userId)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
-        if (application == null) return ApiResponse<DocumentDto>.Fail(404, "Application not found.");
+        if (application == null) return ApiResponse<DocumentDto>.Fail(404, "الطلب غير موجود.");
           
-        if (application.ApplicantId != userId) return ApiResponse<DocumentDto>.Fail(403, "Unauthorized.");
+        if (application.ApplicantId != userId) return ApiResponse<DocumentDto>.Fail(403, "غير مصرح لك.");
 
         // Delegate to internal upload logic
         return await UploadInternalAsync(application, request, userId);
@@ -85,12 +85,12 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
     private async Task<ApiResponse<DocumentDto>> UploadInternalAsync(ApplicationEntity application, UploadDocumentRequest request, Guid userId)
     {
         // Validate file
-        if (request.File == null) return ApiResponse<DocumentDto>.Fail(400, "File is required.");
+        if (request.File == null) return ApiResponse<DocumentDto>.Fail(400, "الملف مطلوب.");
         
         // Validate file size using the dedicated security service
         if (!await _fileValidationService.ValidateSizeAsync(request.File.Length))
         {
-            return ApiResponse<DocumentDto>.Fail(400, "File size exceeds the allowed limit.");
+            return ApiResponse<DocumentDto>.Fail(400, "حجم الملف يتجاوز الحد المسموح به.");
         }
         
         // Validate file extension
@@ -98,7 +98,7 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
         
         if (!await _fileValidationService.ValidateSignatureAsync(request.File.OpenReadStream(), request.File.FileName))
         {
-            return ApiResponse<DocumentDto>.Fail(400, "Security Check Failed: The file content does not match its extension or the file type is not allowed.");
+            return ApiResponse<DocumentDto>.Fail(400, "فشل فحص الأمان: محتوى الملف لا يتطابق مع امتداده أو نوع الملف غير مسموح به.");
         }
 
         // Use file storage service
@@ -137,8 +137,16 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
         });
     }
 
-    public async Task<ApiResponse<IEnumerable<DocumentDto>>> GetByApplicationIdAsync(Guid applicationId, Guid userId, string role)
+public async Task<ApiResponse<IEnumerable<DocumentDto>>> GetByApplicationIdAsync(Guid applicationId, Guid userId, string role)
     {
+        var application = await _applicationRepository.GetByIdAsync(applicationId);
+        if (application == null)
+            return ApiResponse<IEnumerable<DocumentDto>>.Fail(404, "Application not found.");
+
+        // Ownership check for Applicants
+        if (role == "Applicant" && application.ApplicantId != userId)
+            return ApiResponse<IEnumerable<DocumentDto>>.Fail(403, "غير مصرح لك.");
+
         var docs = await _documentRepository.FindAsync(d => d.ApplicationId == applicationId);
         return ApiResponse<IEnumerable<DocumentDto>>.Ok(docs.Select(d => new DocumentDto 
         { 
@@ -158,10 +166,14 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
         }));
     }
 
-    public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequirementsAsync(Guid applicationId, Guid userId)
+public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequirementsAsync(Guid applicationId, Guid userId, string role)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null) return ApiResponse<IEnumerable<DocumentRequirementDto>>.Fail(404, "Application not found.");
+
+        // Ownership check for Applicants
+        if (role == "Applicant" && application.ApplicantId != userId)
+            return ApiResponse<IEnumerable<DocumentRequirementDto>>.Fail(403, "غير مصرح لك.");
 
         var docs = await _documentRepository.FindAsync(d => d.ApplicationId == applicationId);
         
@@ -187,7 +199,7 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
                     // Required when applicant is Resident (check from Application/Applicant)
                     isRequired = false;
                     isConditional = true;
-                    conditionDescription = "Required for resident applicants";
+                    conditionDescription = "مطلوب للمتقدمين المقيمين";
                     break;
                 case DocumentType.GuardianConsent:
                     // Required when applicant age < 18
@@ -197,20 +209,20 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
                         var age = DateTime.UtcNow.Year - dob.Year;
                         isRequired = age < 18;
                         isConditional = true;
-                        conditionDescription = isRequired ? "Required because applicant is under 18 years old" : "Not applicable (applicant is 18 or older)";
+                        conditionDescription = isRequired ? "مطلوب لأن المتقدم تحت سن 18 عاماً" : "غير مطلوب (المتقدم 18 عاماً أو أكثر)";
                     }
                     break;
                 case DocumentType.PreviousLicense:
                     // Required when previous license declared / Renewal / Upgrade service
                     isRequired = false;
                     isConditional = true;
-                    conditionDescription = "Required for renewal or upgrade services";
+                    conditionDescription = "مطلوب لخدمات التجديد أو الترقية";
                     break;
                 case DocumentType.AccessibilityDocuments:
                     // Required when SupportNeeds == true
                     isRequired = false;
                     isConditional = true;
-                    conditionDescription = "Required for applicants with accessibility needs";
+                    conditionDescription = "مطلوب للمتقدمين ذوي الاحتياجات الخاصة";
                     break;
                 default:
                     // Mandatory documents
@@ -243,6 +255,10 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
         
         if (application == null) return ApiResponse<IEnumerable<DocumentDto>>.Fail(404, "Application not found.");
         
+        // Ownership check for Applicants
+        if (role == "Applicant" && application.ApplicantId != userId)
+            return ApiResponse<IEnumerable<DocumentDto>>.Fail(403, "غير مصرح لك.");
+        
         var docs = await _documentRepository.FindAsync(d => d.ApplicationId == application.Id);
         return ApiResponse<IEnumerable<DocumentDto>>.Ok(docs.Select(d => new DocumentDto 
         { 
@@ -262,12 +278,16 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
         }));
     }
 
-    public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequirementsByApplicationNumberAsync(string applicationNumber, Guid userId)
+    public async Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequirementsByApplicationNumberAsync(string applicationNumber, Guid userId, string role)
     {
         var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
         var application = applications.FirstOrDefault();
         
         if (application == null) return ApiResponse<IEnumerable<DocumentRequirementDto>>.Fail(404, "Application not found.");
+
+        // Ownership check for Applicants
+        if (role == "Applicant" && application.ApplicantId != userId)
+            return ApiResponse<IEnumerable<DocumentRequirementDto>>.Fail(403, "غير مصرح لك.");
 
         var docs = await _documentRepository.FindAsync(d => d.ApplicationId == application.Id);
         
@@ -344,7 +364,7 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
 
         // Validate rejection reason
         if (!request.Approved && string.IsNullOrWhiteSpace(request.RejectionReason))
-            return ApiResponse<DocumentDto>.Fail(400, "Rejection reason is required when rejecting a document.");
+            return ApiResponse<DocumentDto>.Fail(400, "سبب الرفض مطلوب عند رفض المستند.");
 
         document.Status = request.Approved ? DocumentStatus.Approved : DocumentStatus.Rejected;
         document.RejectionReason = request.RejectionReason;
@@ -476,7 +496,7 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
                 $"Missing docs: {string.Join(", ", missingEn)}", "Notification sent");
         }
 
-        return ApiResponse<bool>.Ok(true, "Missing documents notification sent.");
+        return ApiResponse<bool>.Ok(true, "تم إرسال إشعار المستندات المفقودة.");
     }
 
     public async Task<ApiResponse<bool>> DeleteAsync(Guid documentId, Guid userId)
@@ -490,11 +510,11 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
         
         // Only allow deletion if user owns the document and application is in editable state
         if (application.ApplicantId != userId)
-            return ApiResponse<bool>.Fail(403, "You are not authorized to delete this document.");
+            return ApiResponse<bool>.Fail(403, "غير مصرح لك بحذف هذا المستند.");
             
         // Check application status - can only delete if Draft
         if (application.Status != Domain.Enums.ApplicationStatus.Draft)
-            return ApiResponse<bool>.Fail(403, "Documents cannot be deleted after the application has been submitted for review.");
+            return ApiResponse<bool>.Fail(403, "لا يمكن حذف المستندات بعد تقديم الطلب للمراجعة.");
 
         // Soft delete
         document.IsDeleted = true;
@@ -504,7 +524,7 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
 
         await _auditService.LogAsync("DELETE_DOCUMENT", "Document", documentId.ToString(), null, "Soft deleted");
 
-        return ApiResponse<bool>.Ok(true, "Document deleted successfully.");
+        return ApiResponse<bool>.Ok(true, "تم حذف المستند بنجاح.");
     }
 
     public async Task<(Stream content, string contentType, string fileName)> DownloadAsync(Guid documentId, Guid userId, string role)
@@ -576,7 +596,7 @@ public async Task<ApiResponse<DocumentDto>> UploadAsync(Guid applicationId, Uplo
         
         // Verify document belongs to this application
         if (document.ApplicationId != application.Id)
-            return ApiResponse<bool>.Fail(404, "Document does not belong to this application.");
+            return ApiResponse<bool>.Fail(404, "المستند لا ينتمي لهذا الطلب.");
         
         // Only allow deletion if user owns the document and application is in editable state
         if (application.ApplicantId != userId)

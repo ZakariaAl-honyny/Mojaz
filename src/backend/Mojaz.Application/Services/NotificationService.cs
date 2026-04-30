@@ -119,6 +119,7 @@ public class NotificationService : INotificationService
         var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
         
         var pagedItems = allNotifications.OrderByDescending(n => n.SentAt)
+                                      .ToList()
                                       .Skip((page - 1) * pageSize)
                                       .Take(pageSize)
                                       .Select(n => new NotificationDto

@@ -6,6 +6,8 @@ using Mojaz.Application.Interfaces.Services;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
+using Mojaz.Shared;
+using Mojaz.Shared.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +47,55 @@ public class AppointmentService : IAppointmentService
         _trainingService = trainingService;
         _unitOfWork = unitOfWork;
         _bookingValidator = bookingValidator;
+    }
+
+    public async Task<PagedResult<AppointmentDto>> GetAppointmentsAsync(
+        int page,
+        int pageSize,
+        AppointmentStatus? status,
+        AppointmentType? type,
+        DateOnly? from,
+        DateOnly? to,
+        string? search,
+        CancellationToken ct = default)
+    {
+        var query = _appointmentRepository.Query();
+
+        if (status.HasValue)
+            query = query.Where(a => a.Status == status.Value);
+
+        if (type.HasValue)
+            query = query.Where(a => a.AppointmentType == type.Value);
+
+        if (from.HasValue)
+            query = query.Where(a => a.ScheduledDate >= from.Value);
+
+        if (to.HasValue)
+            query = query.Where(a => a.ScheduledDate <= to.Value);
+
+        if (!string.IsNullOrWhiteSpace(search))
+            query = query.Where(a => a.Notes != null && a.Notes.Contains(search));
+
+        var totalCount = await query.CountAsync(ct);
+        var items = await query
+            .OrderBy(a => a.ScheduledDate)
+            .ThenBy(a => a.TimeSlot)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
+
+        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+        return new PagedResult<AppointmentDto>
+        {
+            Items = _mapper.Map<List<AppointmentDto>>(items),
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize,
+            TotalPages = totalPages,
+            HasPreviousPage = page > 1,
+            HasNextPage = page < totalPages
+        };
     }
 
     public async Task<List<DaySlotsDto>> GetAvailableSlotsAsync(AppointmentType type, Guid branchId, DateOnly date, CancellationToken ct = default)
@@ -102,7 +153,7 @@ public class AppointmentService : IAppointmentService
         var validation = await _bookingValidator.ValidateBookingAsync(request, ct);
         if (!validation.IsValid)
         {
-            throw new InvalidOperationException(string.Join("; ", validation.Errors));
+            throw new Mojaz.Shared.Exceptions.ValidationException(validation.Errors);
         }
 
         // Create the appointment
@@ -120,37 +171,61 @@ public class AppointmentService : IAppointmentService
         };
 
         await _appointmentRepository.AddAsync(appointment, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
         
-        // Return the created appointment as DTO
-        var createdAppointment = await _appointmentRepository.GetByIdWithApplicationAsync(appointment.Id, ct);
-        return _mapper.Map<AppointmentDto>(createdAppointment);
+        // Return the created appointment as DTO (Map directly to avoid unnecessary DB fetch and potential null issues)
+        return _mapper.Map<AppointmentDto>(appointment);
     }
 
-    public async Task<AppointmentDto?> GetAppointmentByIdAsync(Guid id, CancellationToken ct = default)
+    public async Task<AppointmentDto?> GetAppointmentByIdAsync(Guid id, Guid userId, string role, CancellationToken ct = default)
     {
         var appointment = await _appointmentRepository.GetByIdWithApplicationAsync(id, ct);
+        if (appointment == null) return null;
+
+        // Ownership check for Applicants
+        if (role == "Applicant" && appointment.Application?.ApplicantId != userId)
+            return null;
+
         return appointment != null ? _mapper.Map<AppointmentDto>(appointment) : null;
     }
 
-    public async Task<List<AppointmentDto>> GetAppointmentsByApplicationAsync(Guid applicationId, CancellationToken ct = default)
+    public async Task<List<AppointmentDto>> GetAppointmentsByApplicationAsync(Guid applicationId, Guid userId, string role, CancellationToken ct = default)
     {
+        // Get application to check ownership
+        var application = await _applicationRepository.GetByIdAsync(applicationId, ct);
+        if (application == null) return new List<AppointmentDto>();
+
+        // Ownership check for Applicants
+        if (role == "Applicant" && application.ApplicantId != userId)
+            return new List<AppointmentDto>();
+
         var appointments = await _appointmentRepository.GetByApplicationIdAsync(applicationId, ct);
         return _mapper.Map<List<AppointmentDto>>(appointments);
     }
 
-    public async Task<AppointmentDto> RescheduleAppointmentAsync(Guid appointmentId, RescheduleAppointmentRequest request, CancellationToken ct = default)
+    public async Task<AppointmentDto> RescheduleAppointmentAsync(Guid appointmentId, RescheduleAppointmentRequest request, Guid userId, string role, CancellationToken ct = default)
     {
         // Validate reschedule first
         var validation = await _bookingValidator.ValidateRescheduleAsync(appointmentId, request, ct);
         if (!validation.IsValid)
         {
-            throw new InvalidOperationException(string.Join("; ", validation.Errors));
+            throw new Mojaz.Shared.Exceptions.ValidationException(validation.Errors);
         }
 
         var appointment = await _appointmentRepository.GetByIdForRescheduleAsync(appointmentId, ct);
         if (appointment == null)
         {
-            throw new InvalidOperationException("Appointment not found");
+            throw new NotFoundException("Appointment", appointmentId);
+        }
+
+        // Ownership check for Applicants - can only reschedule their own appointments
+        if (role == "Applicant")
+        {
+            var application = await _applicationRepository.GetByIdAsync(appointment.ApplicationId, ct);
+            if (application == null || application.ApplicantId != userId)
+            {
+                throw new UnauthorizedAccessException("غير مصرح لك.");
+            }
         }
 
         // Update appointment with new values
@@ -168,17 +243,27 @@ public class AppointmentService : IAppointmentService
         return _mapper.Map<AppointmentDto>(updatedAppointment);
     }
 
-    public async Task<AppointmentDto> CancelAppointmentAsync(Guid appointmentId, CancelAppointmentRequest request, CancellationToken ct = default)
+    public async Task<AppointmentDto> CancelAppointmentAsync(Guid appointmentId, CancelAppointmentRequest request, Guid userId, string role, CancellationToken ct = default)
     {
         var appointment = await _appointmentRepository.GetByIdForRescheduleAsync(appointmentId, ct);
         if (appointment == null)
         {
-            throw new InvalidOperationException("Appointment not found");
+            throw new NotFoundException("Appointment", appointmentId);
+        }
+
+        // Ownership check for Applicants - can only cancel their own appointments
+        if (role == "Applicant")
+        {
+            var application = await _applicationRepository.GetByIdAsync(appointment.ApplicationId, ct);
+            if (application == null || application.ApplicantId != userId)
+            {
+                throw new UnauthorizedAccessException("غير مصرح لك.");
+            }
         }
 
         if (appointment.Status == AppointmentStatus.Cancelled || appointment.Status == AppointmentStatus.Completed)
         {
-            throw new InvalidOperationException("Cannot cancel an already cancelled or completed appointment");
+            throw new Mojaz.Shared.Exceptions.ValidationException(new[] { "لا يمكن إلغاء موعد ملغى بالفعل أو مكتمل" });
         }
 
         appointment.Status = AppointmentStatus.Cancelled;
@@ -199,14 +284,13 @@ public class AppointmentService : IAppointmentService
     public async Task<List<AppointmentDto>> GetMyAppointmentsAsync(Guid userId, CancellationToken ct = default)
     {
         // Get all applications submitted by this user that have pending appointments
-        var applications = await _applicationRepository.FindAsync(
-            a => a.ApplicantId == userId 
+        var applicationIds = await _applicationRepository.Query()
+            .Where(a => a.ApplicantId == userId 
                  && a.Status >= ApplicationStatus.Submitted
                  && a.Status < ApplicationStatus.Issued
-                 && !a.IsDeleted,
-            ct: ct);
-
-        var applicationIds = applications.Select(a => a.Id).ToList();
+                 && !a.IsDeleted)
+            .Select(a => a.Id)
+            .ToListAsync(ct);
         
         // Get all appointments for these applications
         var appointments = await _appointmentRepository.GetByApplicationIdsAsync(applicationIds, ct);
@@ -225,12 +309,12 @@ public class AppointmentService : IAppointmentService
         var appointment = await _appointmentRepository.GetByIdForRescheduleAsync(appointmentId, ct);
         if (appointment == null)
         {
-            throw new InvalidOperationException("Appointment not found");
+            throw new NotFoundException("Appointment", appointmentId);
         }
 
         if (appointment.Status == AppointmentStatus.Cancelled || appointment.Status == AppointmentStatus.Completed)
         {
-            throw new InvalidOperationException("Cannot check in to an already cancelled or completed appointment");
+            throw new InvalidOperationException("لا يمكن تسجيل الحضور لموعد ملغى بالفعل أو مكتمل");
         }
 
         appointment.CheckInTime = TimeOnly.FromDateTime(DateTime.UtcNow);

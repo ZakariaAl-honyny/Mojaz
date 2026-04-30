@@ -1,13 +1,11 @@
-using Mojaz.Domain.Common;
 using Mojaz.Domain.Enums;
-using System;
 
 namespace Mojaz.Domain.Entities;
 
-public class FeeStructure : AuditableEntity
+public class FeeStructure : SoftDeletableEntity
 {
     public FeeType FeeType { get; set; }
-    public Guid? LicenseCategoryId { get; set; }
+    public int? LicenseCategoryId { get; set; }
     public decimal Amount { get; set; }
     public string Currency { get; set; } = "SAR";
     public DateTime EffectiveFrom { get; set; }

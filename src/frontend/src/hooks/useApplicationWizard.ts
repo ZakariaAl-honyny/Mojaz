@@ -6,7 +6,8 @@ import { useWizardStore } from "@/stores/wizard-store";
 import { useApplicationMutation } from "@/hooks/useApplicationMutation";
 import ApplicationService from "@/services/application.service";
 import type { StepId, Step1Data, Step2Data, Step3Data, Step4Data } from "@/types/wizard.types";
-import { genderToNumber } from "@/lib/enum-utils";
+import { genderToNumber, applicantTypeToNumber } from "@/lib/enum-utils";
+import { useToast } from "@/hooks/use-toast";
 
 interface UseApplicationWizardReturn {
   currentStep: StepId;
@@ -54,6 +55,7 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
     setStep2,
     setStep3,
     setStep4,
+    setApplicationId,
     loadFromApi,
     resetWizard,
   } = useWizardStore();
@@ -63,6 +65,8 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
     updateDraftAsync, 
     submitApplicationAsync 
   } = useApplicationMutation();
+
+  const { toast } = useToast();
 
   const goTo = useCallback(
     (step: number) => {
@@ -117,7 +121,9 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
         if (currentStep === 1 && step1.serviceType) {
           // If no ID exists, create the draft, otherwise update it
           if (!applicationId) {
-            await createDraftAsync(step1.serviceType);
+            const newId = await createDraftAsync(step1.serviceType);
+            // Immediately set the applicationId in store for Step 5 submission
+            setApplicationId(newId);
           } else {
             await updateDraftAsync(applicationId, { serviceType: step1.serviceType });
           }
@@ -143,10 +149,10 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
             address: step3.address,
             city: step3.city,
             region: step3.region,
-            applicantType: step4.applicantType,
+            applicantType: applicantTypeToNumber(step4.applicantType),
             branchId: step4.preferredCenterId,
             preferredLanguage: step4.testLanguage,
-            specialNeeds: step4.specialNeedsDeclaration,
+            specialNeeds: step4.specialNeedsDeclaration ? step4.specialNeedsNote : null,
             appointmentPreference: step4.appointmentPreference,
           };
           await updateDraftAsync(applicationId, patchData);
@@ -157,9 +163,32 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
         setDirection(1);
         storeGoTo(nextStep);
         return true;
-      } catch (error) {
+      } catch (error: any) {
         console.error("Workflow progression error:", error);
-        // Toast or Error message should be handled by mutation hook or UI
+        
+        // Business rule error handling - check error codes from backend
+        const errorMessage = error?.message || String(error);
+        
+        // RULE A: LICENSE_ALREADY_EXISTS - Show error toast, block progression
+        if (error.code === "LICENSE_ALREADY_EXISTS" || errorMessage.includes("[LICENSE_ALREADY_EXISTS]")) {
+          window.dispatchEvent(new CustomEvent("wizard-error", { 
+            detail: { type: "LICENSE_ALREADY_EXISTS", message: "عفواً، أنت تملك رخصة نشطة من هذه الفئة مسبقاً. لا يمكنك إصدار رخصة جديدة." }
+          }));
+          return false;
+        }
+        
+        // RULE B: APPLICATION_IN_PROGRESS - Show info toast and redirect
+        if (error.code === "APPLICATION_IN_PROGRESS" || errorMessage.includes("[APPLICATION_IN_PROGRESS:")) {
+          const match = errorMessage.match(/APPLICATION_IN_PROGRESS:([a-f0-9-]+)/i);
+          const existingAppId = error?.existingApplicationId || match?.[1];
+          
+          window.dispatchEvent(new CustomEvent("wizard-error", { 
+            detail: { type: "APPLICATION_IN_PROGRESS", existingApplicationId: existingAppId, message: "لديك طلب قيد الإجراء لهذه الفئة مسبقاً." }
+          }));
+          return false;
+        }
+        
+        // Generic error handling
         return false;
       } finally {
         setIsSubmitting(false);
@@ -175,19 +204,26 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
     try {
       await submitApplicationAsync(applicationId);
       
+      // Show success message
+      toast({
+        title: "تم تقديم الطلب بنجاح",
+        description: "تم تقديم طلب رخصة القيادة الخاص بك. يمكنك متابعته من صفحة الطلبات.",
+        variant: "default",
+      });
+      
       // Cleanup
       resetWizard();
       sessionStorage.removeItem("mojaz-wizard-draft");
       
-      // Institutional redirect to applications detail view
-      router.push(`/applications/${applicationId}`);
+      // Redirect to applications list page
+      router.push(`/applications`);
     } catch (error) {
       console.error("Submission error:", error);
       throw error;
     } finally {
       setIsSubmitting(false);
     }
-  }, [applicationId, submitApplicationAsync, resetWizard, router]);
+  }, [applicationId, submitApplicationAsync, resetWizard, router, toast]);
 
   const setStep1Data = useCallback((data: Step1Data) => setStep1(data), [setStep1]);
   const setStep2Data = useCallback((data: Step2Data) => setStep2(data), [setStep2]);
@@ -200,7 +236,7 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
     if (hasLoadedDraft) return;
     if (!applicationId) { setHasLoadedDraft(true); return; }
 
-    ApplicationService.getApplication(applicationId)
+    ApplicationService.getApplicationById(applicationId)
       .then((response) => {
         if (!response.success || !response.data) return;
         const d = response.data;
@@ -216,10 +252,15 @@ export function useApplicationWizard(): UseApplicationWizardReturn {
           address: d.address,
           city: d.city,
           region: d.region,
+          // @ts-ignore - API response may not have these fields
           applicantType: d.applicantType,
+          // @ts-ignore
           preferredCenterId: d.branchId,
+          // @ts-ignore
           testLanguage: d.preferredLanguage,
+          // @ts-ignore
           appointmentPreference: d.appointmentPreference,
+          // @ts-ignore
           specialNeedsDeclaration: d.specialNeeds,
         });
       })

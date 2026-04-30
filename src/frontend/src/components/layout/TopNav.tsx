@@ -1,69 +1,73 @@
 'use client';
 
-import { 
-  Search, 
+import {
+  Search,
   Menu,
   HandHelping,
   Bell,
   Activity,
   ShieldCheck,
   ChevronDown,
-  Info
+  Info,
+  PanelLeftClose,
+  PanelLeft
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/stores/auth-store';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { NotificationBell } from '@/components/domain/notification/NotificationBell';
+import { getRoleLabel } from '@/lib/enums';
 
-export default function TopNav({ onMenuClick, showSidebar = true }: { onMenuClick?: () => void, showSidebar?: boolean }) {
+export default function TopNav({ 
+  onMenuClick, 
+  onDesktopMenuClick,
+  showSidebar = true 
+}: { 
+  onMenuClick?: () => void, 
+  onDesktopMenuClick?: () => void,
+  showSidebar?: boolean 
+}) {
   const router = useRouter();
   const user = useAuthStore(state => state.user);
 
-  const roleLabels: Record<string, string> = {
-    applicant: "مواطن / متقدم",
-    admin: "مدير النظام",
-    receptionist: "موظف استقبال",
-    doctor: "طبيب فاحص",
-    examiner: "ضابط فحص",
-    manager: "مدير الفرع",
-    security: "أمن الإدارة",
-  };
-
-  const userRole = user?.role;
-  let roleKey = '';
-  if (typeof userRole === 'string') {
-    roleKey = userRole.toLowerCase().trim();
-  }
-  const roleLabel = roleKey ? (roleLabels[roleKey] || 'مستفيد') : 'مستفيد';
+  const roleLabel = getRoleLabel(user?.role);
 
   return (
     <header className={cn(
-      "h-12 md:h-14 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 z-40 transition-all font-arabic",
+      "h-12 md:h-14 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-border flex items-center justify-between px-3 md:px-6 sticky top-0 z-40 transition-all font-arabic",
       !showSidebar && "px-4"
     )} dir="rtl">
-      <div className="flex items-center gap-4 md:gap-8 flex-1">
-        {!showSidebar && (
-           <button 
-             onClick={onMenuClick}
-             className="w-10 h-10 flex items-center justify-center rounded-xl bg-neutral-50 text-neutral-400 hover:text-[#1a3a8f] transition-all active:scale-95 border border-neutral-100"
-           >
-             <Menu className="w-5 h-5" />
-           </button>
-        )}
-        
-        {/* Institutional Search */}
-        <div className="relative max-w-sm w-full hidden md:block group">
-           <Search className="absolute start-4 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-300 group-focus-within:text-[#1a3a8f] transition-colors" />
-           <input 
-             type="text" 
-             placeholder="ابحث..." 
-             className="w-full h-10 bg-neutral-50 border border-neutral-100 focus:border-[#1a3a8f]/30 rounded-lg ps-12 pe-4 text-xs font-bold transition-all outline-none focus:bg-white group-hover:bg-white" 
-           />
-        </div>
+      <div className="flex items-center gap-2 md:gap-4 flex-1">
+        {/* Mobile Menu Button */}
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg bg-neutral-50 text-neutral-400 hover:text-[#1a3a8f] transition-all"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        {/* Desktop Collapse Button */}
+        <button
+          onClick={onDesktopMenuClick}
+          className="hidden lg:flex w-9 h-9 items-center justify-center rounded-lg bg-neutral-50 text-neutral-400 hover:text-[#1a3a8f] transition-all"
+        >
+          <PanelLeftClose className="w-5 h-5" />
+        </button>
       </div>
 
       <div className="flex items-center gap-4">
+        {/* Backend & Security Status - THE PROOF OF LIFE */}
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-emerald-50/50 border border-emerald-100/50 rounded-full">
+          <div className="relative">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping absolute inset-0" />
+          </div>
+          <span className="text-[9px] font-black text-emerald-700 uppercase tracking-widest leading-none">
+            متصل بالسيرفر (v1.0)
+          </span>
+        </div>
+
         {/* Support & Tools */}
         <div className="flex items-center gap-1.5 p-1.5 bg-neutral-50/50 border border-neutral-100/50 rounded-xl hidden lg:flex">
           <NotificationBell />
@@ -76,19 +80,19 @@ export default function TopNav({ onMenuClick, showSidebar = true }: { onMenuClic
         </div>
 
         {/* User Quick Profile */}
-        <button 
-           className="flex items-center gap-3 p-1.5 pe-4 rounded-full border border-transparent hover:bg-white hover:border-neutral-100 hover:shadow-lg hover:shadow-blue-900/5 transition-all group"
-           onClick={() => router.push('/profile')}
+        <button
+          className="flex items-center gap-3 p-1.5 pe-4 rounded-full border border-transparent hover:bg-white hover:border-neutral-100 hover:shadow-lg hover:shadow-blue-900/5 transition-all group"
+          onClick={() => router.push('/profile')}
         >
           <div className="w-9 h-9 bg-gradient-to-br from-[#1a3a8f] to-[#00215a] rounded-lg animate-in zoom-in duration-300 flex items-center justify-center text-white font-black text-sm shadow-md shadow-blue-900/10 group-hover:rotate-3 transition-transform border border-white/20 shrink-0">
-             {user?.fullName?.charAt(0) || 'م'}
+            {user?.fullName?.charAt(0) || 'م'}
           </div>
-          <div className="text-right hidden sm:block">
+          <div className="text-start hidden sm:block">
             <div className="flex items-center justify-end gap-1.5">
-               <p className="text-xs font-black text-neutral-800 leading-none">
-                 {user?.fullName || 'المستخدم'}
-               </p>
-               <ChevronDown className="w-3 h-3 text-neutral-300" />
+              <p className="text-xs font-black text-neutral-800 leading-none">
+                {user?.fullName || 'المستخدم'}
+              </p>
+              <ChevronDown className="w-3 h-3 text-neutral-300" />
             </div>
             <p className="text-[9px] text-[#1a3a8f] font-black uppercase tracking-widest leading-none mt-1 opacity-60">
               {roleLabel}

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, Clock, AlertCircle, Circle, MapPin } from "lucide-react";
+import { Check, Clock, AlertCircle, Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface TimelineStage {
@@ -18,16 +18,46 @@ interface ApplicationTimelineProps {
 }
 
 export function ApplicationTimeline({ stages }: ApplicationTimelineProps) {
+  // Get stage title directly in Arabic
+  const getStageTitle = (stageId: string, fallbackLabel: string): string => {
+    switch (stageId) {
+      case "01-Creation": return "إنشاء الطلب";
+      case "02-Documents": return "رفع المستندات";
+      case "03-InitialPayment": return "سداد الرسوم الإدارية";
+      case "04-MedicalExam": return "الفحص الطبي";
+      case "05-Training": return "الدورة التدريبية";
+      case "06-TheoryTest": return "الاختبار النظري";
+      case "07-PracticalTest": return "الاختبار العملي";
+      case "08-FinalApproval": return "المراجعة النهائية";
+      case "09-IssuancePayment": return "سداد رسوم الإصدار";
+      case "10-Issuance": return "إصدار الرخص";
+      default: return fallbackLabel;
+    }
+  };
+
+  // Get status description in Arabic
+  const getStatusText = (status: TimelineStage['status']): string => {
+    switch (status) {
+      case 'completed': return 'مكتمل';
+      case 'current': return 'قيد التنفيذ';
+      case 'pending': return 'بالانتظار';
+      case 'failed': return 'غير مكتمل / مرفوض';
+      default: return '';
+    }
+  };
+
   return (
-    <div className="relative space-y-6 md:space-y-8 before:absolute before:inset-0 before:mr-5 md:before:mr-[calc(50%-2px)] before:-translate-x-px md:before:translate-x-0 before:h-full before:w-[2px] before:bg-gradient-to-b before:from-transparent before:via-blue-100 before:to-transparent font-arabic" dir="rtl">
+    <div className="relative space-y-6 md:space-y-8 before:absolute before:inset-0 before:ms-5 md:before:ms-[calc(50%-2px)] before:-translate-x-px md:before:translate-x-0 before:h-full before:w-[2px] before:bg-gradient-to-b before:from-transparent before:via-blue-100 before:to-transparent font-arabic" dir="rtl">
       {stages.map((stage, index) => {
         const isCompleted = stage.status === "completed";
         const isCurrent = stage.status === "current";
         const isFailed = stage.status === "failed";
         const isPending = stage.status === "pending";
 
+        const stageKey = `stage-${stage.id || index}-${index}`;
+
         return (
-          <div key={stage.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+          <div key={stageKey} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
             {/* Icon */}
             <div
               className={cn(
@@ -58,7 +88,7 @@ export function ApplicationTimeline({ stages }: ApplicationTimelineProps) {
             >
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
                 <h3 className={cn("font-black text-lg md:text-xl tracking-tight", isCurrent ? "text-[#1a3a8f]" : isFailed ? "text-red-700" : "text-neutral-800")}>
-                  {stage.label}
+                  {getStageTitle(stage.id, stage.label)}
                 </h3>
                 {stage.timestamp && (
                   <time className="text-[10px] text-neutral-400 font-bold bg-neutral-50 px-3 py-1 rounded-full border border-neutral-100 whitespace-nowrap">
@@ -67,27 +97,24 @@ export function ApplicationTimeline({ stages }: ApplicationTimelineProps) {
                 )}
               </div>
               
-              <div className="flex items-center gap-3">
-                 <div className={cn(
-                   "w-2 h-2 rounded-full",
-                   isCompleted && "bg-emerald-500",
-                   isCurrent && "bg-[#1a3a8f] animate-pulse",
-                   isPending && "bg-neutral-200",
-                   isFailed && "bg-red-500"
-                 )} />
-                 <span className={cn(
-                   "text-sm font-black uppercase tracking-widest",
-                   isCompleted && "text-emerald-600",
-                   isCurrent && "text-[#1a3a8f]",
-                   isPending && "text-neutral-400",
-                   isFailed && "text-red-600"
-                 )}>
-                   {isCompleted && "مكتمل بنجاح"}
-                   {isCurrent && "قيد المراجعة والمعالجة"}
-                   {isPending && "قيد الانتظار"}
-                   {isFailed && "فشل في هذه المرحلة"}
-                 </span>
-              </div>
+<div className="flex items-center gap-3">
+                  <div className={cn(
+                    "w-2 h-2 rounded-full",
+                    isCompleted && "bg-emerald-500",
+                    isCurrent && "bg-[#1a3a8f] animate-pulse",
+                    isPending && "bg-neutral-200",
+                    isFailed && "bg-red-500"
+                  )} />
+                  <span className={cn(
+                    "text-sm font-black uppercase tracking-widest",
+                    isCompleted && "text-emerald-600",
+                    isCurrent && "text-[#1a3a8f]",
+                    isPending && "text-neutral-400",
+                    isFailed && "text-red-600"
+                  )}>
+                    {getStatusText(stage.status)}
+                  </span>
+               </div>
 
               {isFailed && stage.reason && (
                 <div className="mt-4 p-4 rounded-[1.25rem] bg-red-100/50 border border-red-100">

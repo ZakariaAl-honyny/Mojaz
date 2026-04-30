@@ -49,30 +49,66 @@ export const isManagerRole = (role: UserRole | number | string | undefined): boo
   return !isNaN(parsed) && parsed === UserRole.Manager;
 };
 
-export const getRoleLabel = (role: UserRole | number | string | undefined): string => {
-  if (role === undefined) return 'غير معروف';
-  
-  let roleNum: number;
-  if (typeof role === 'number') {
-    roleNum = role;
-  } else if (typeof role === 'string') {
-    roleNum = parseInt(role);
-    if (isNaN(roleNum)) {
-      // Try string match
-      switch (role) {
-        case 'Applicant': return 'متقدم';
-        case 'Receptionist': return 'موظف الاستقبال';
-        case 'Doctor': return 'طبيب';
-        case 'Examiner': return 'مفتش';
-        case 'Manager': return 'مدير';
-        case 'Admin': return 'مدير النظام';
-        case 'Security': return 'أمن';
+export const isReceptionistRole = (role: UserRole | number | string | undefined): boolean => {
+  if (role === undefined) return false;
+  if (typeof role === 'number') return role === UserRole.Receptionist;
+  if (role === 'Receptionist') return true;
+  const parsed = parseInt(role);
+  return !isNaN(parsed) && parsed === UserRole.Receptionist;
+};
+
+export const isDoctorRole = (role: UserRole | number | string | undefined): boolean => {
+  if (role === undefined) return false;
+  if (typeof role === 'number') return role === UserRole.Doctor;
+  if (role === 'Doctor') return true;
+  const parsed = parseInt(role);
+  return !isNaN(parsed) && parsed === UserRole.Doctor;
+};
+
+export const isExaminerRole = (role: UserRole | number | string | undefined): boolean => {
+  if (role === undefined) return false;
+  if (typeof role === 'number') return role === UserRole.Examiner;
+  if (role === 'Examiner') return true;
+  const parsed = parseInt(role);
+  return !isNaN(parsed) && parsed === UserRole.Examiner;
+};
+
+export const isSecurityRole = (role: UserRole | number | string | undefined): boolean => {
+  if (role === undefined) return false;
+  if (typeof role === 'number') return role === UserRole.Security;
+  if (role === 'Security') return true;
+  const parsed = parseInt(role);
+  return !isNaN(parsed) && parsed === UserRole.Security;
+};
+
+export const getRoleLabel = (role: UserRole | number | string | undefined | null): string => {
+  if (role === undefined || role === null) return 'غير معروف';
+
+  let roleIdentifier: string | number = role;
+
+  // If it's a string, try to parse it or match it case-insensitively
+  if (typeof role === 'string') {
+    const parsed = parseInt(role);
+    if (!isNaN(parsed)) {
+      roleIdentifier = parsed;
+    } else {
+      // Case-insensitive match
+      const normalized = role.toLowerCase();
+      switch (normalized) {
+        case 'applicant': return 'متقدم';
+        case 'receptionist': return 'موظف الاستقبال';
+        case 'doctor': return 'طبيب';
+        case 'examiner': return 'مفتش';
+        case 'manager': return 'مدير';
+        case 'admin': return 'مدير النظام';
+        case 'security': return 'أمن';
         default: return 'غير معروف';
       }
     }
-  } else {
-    return 'غير معروف';
   }
+
+  // Handle numeric values (including 0 for Applicant)
+  const roleNum = typeof roleIdentifier === 'number' ? roleIdentifier : -1;
 
   switch (roleNum) {
     case UserRole.Applicant: return 'متقدم';
@@ -122,7 +158,7 @@ export enum ApplicationStatus {
 // ============================================================
 // ServiceType Enum - MUST match Backend exactly
 // Backend: NewLicense=0, Renewal=1, Replacement=2, CategoryUpgrade=3,
-//          InternationalLicense=4, StatusChange=5, MedicalExtension=6, TemporaryLicense=7
+//          InternationalLicense=4, StatusChange=5, MedicalExtension=6, TemporaryLicense=7, TestRetake=8
 // ============================================================
 export enum ServiceType {
   NewLicense = 0,
@@ -132,7 +168,8 @@ export enum ServiceType {
   InternationalLicense = 4,
   StatusChange = 5,
   MedicalExtension = 6,
-  TemporaryLicense = 7
+  TemporaryLicense = 7,
+  TestRetake = 8
 }
 
 // ============================================================
@@ -250,4 +287,55 @@ export enum ApplicantType {
   Public = 1,
   Motorcycle = 2,
   Commercial = 3
+}
+
+// ============================================================
+// ReplacementReason Enum - Frontend only (for replacement service)
+// Backend doesn't have this enum, it's mapped from request
+// ============================================================
+export enum ReplacementReason {
+  Lost = 1,
+  Damaged = 2,
+  Stolen = 3
+}
+
+export enum Gender {
+  NotSpecified = 0,
+  Male = 1,
+  Female = 2
+}
+
+// ============================================================
+// ApplicationStages Enum - MUST match Backend ApplicationStages constants
+// Backend: Stage01Creation, Stage02Documents, Stage03InitialPayment, 
+//          Stage04MedicalExam, Stage05Training, Stage06TheoryTest,
+//          Stage07PracticalTest, Stage08FinalApproval, 
+//          Stage09IssuancePayment, Stage10Issuance
+// ============================================================
+export enum ApplicationStages {
+  Stage01Creation = "01-Creation",
+  Stage02Documents = "02-Documents",
+  Stage03InitialPayment = "03-InitialPayment",
+  Stage04MedicalExam = "04-MedicalExam",
+  Stage05Training = "05-Training",
+  Stage06TheoryTest = "06-TheoryTest",
+  Stage07PracticalTest = "07-PracticalTest",
+  Stage08FinalApproval = "08-FinalApproval",
+  Stage09IssuancePayment = "09-IssuancePayment",
+  Stage10Issuance = "10-Issuance"
+}
+
+// ============================================================
+// BloodType Enum - MUST match Backend exactly
+// Backend: APositive=0, ANegative=1, BPositive=2, BNegative=3, ABPositive=4, ABNegative=5, OPositive=6, ONegative=7
+// ============================================================
+export enum BloodType {
+  APositive = 0,
+  ANegative = 1,
+  BPositive = 2,
+  BNegative = 3,
+  ABPositive = 4,
+  ABNegative = 5,
+  OPositive = 6,
+  ONegative = 7
 }

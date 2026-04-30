@@ -4,6 +4,7 @@ import React from 'react';
 import { ChevronLeft, ChevronRight, Loader2, SendHorizonal, ArrowRight, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useWizardStore } from '@/stores/wizard-store';
+import { StepId } from '@/types/wizard.types';
 import { cn } from '@/lib/utils';
 
 interface WizardNavigationProps {
@@ -26,7 +27,7 @@ export default function WizardNavigation({
     if (onBack) {
       onBack();
     } else if (currentStep > 1) {
-      goTo((currentStep - 1) as any);
+      goTo((currentStep - 1) as StepId);
     }
   };
 

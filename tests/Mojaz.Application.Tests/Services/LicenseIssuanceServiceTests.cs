@@ -29,6 +29,7 @@ public class LicenseServiceTests
     private readonly Mock<IRepository<ApplicationEntity>> _applicationRepositoryMock;
     private readonly Mock<IRepository<LicenseCategory>> _licenseCategoryRepositoryMock;
     private readonly Mock<IRepository<User>> _userRepositoryMock;
+    private readonly Mock<IRepository<PaymentTransaction>> _paymentRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<IFileStorageService> _fileStorageServiceMock;
     private readonly Mock<ILicensePdfGenerator> _licensePdfGeneratorMock;
@@ -45,6 +46,7 @@ public class LicenseServiceTests
         _applicationRepositoryMock = new Mock<IRepository<ApplicationEntity>>();
         _licenseCategoryRepositoryMock = new Mock<IRepository<LicenseCategory>>();
         _userRepositoryMock = new Mock<IRepository<User>>();
+        _paymentRepositoryMock = new Mock<IRepository<PaymentTransaction>>();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _fileStorageServiceMock = new Mock<IFileStorageService>();
         _licensePdfGeneratorMock = new Mock<ILicensePdfGenerator>();
@@ -59,6 +61,7 @@ public class LicenseServiceTests
             _applicationRepositoryMock.Object,
             _licenseCategoryRepositoryMock.Object,
             _userRepositoryMock.Object,
+            _paymentRepositoryMock.Object,
             _unitOfWorkMock.Object,
             _notificationServiceMock.Object,
             _emailServiceMock.Object,
@@ -100,6 +103,14 @@ public class LicenseServiceTests
             FullNameEn = "John Doe",
             Email = "john@example.com"
         };
+        var paidPayment = new PaymentTransaction
+        {
+            Id = Guid.NewGuid(),
+            ApplicationId = applicationId,
+            FeeType = FeeType.IssuanceFee,
+            Amount = 200,
+            Status = PaymentStatus.Paid
+        };
 
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(application);
@@ -109,6 +120,8 @@ public class LicenseServiceTests
             .ReturnsAsync(holder);
         _licenseRepositoryMock.Setup(x => x.ExistsAsync(It.IsAny<System.Linq.Expressions.Expression<Func<License, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false); // No previous license
+        _paymentRepositoryMock.Setup(x => x.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<PaymentTransaction, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<PaymentTransaction> { paidPayment });
 
         _licensePdfGeneratorMock.Setup(x => x.GenerateLicensePdfAsync(It.IsAny<License>(), It.IsAny<User>(), It.IsAny<LicenseCategory>()))
             .ReturnsAsync(new byte[] { 1, 2, 3 });
@@ -173,5 +186,34 @@ public class LicenseServiceTests
         result.Success.Should().BeFalse();
         result.StatusCode.Should().Be(400);
         result.Message.Should().Be("License can only be issued for approved applications.");
+    }
+
+    [Fact]
+    public async Task IssueLicenseAsync_WhenIssuancePaymentNotCompleted_ShouldReturnBadRequest()
+    {
+        // Arrange
+        var applicationId = Guid.NewGuid();
+        var application = new ApplicationEntity
+        {
+            Id = applicationId,
+            Status = ApplicationStatus.Approved,
+            ApplicationNumber = "MOJ-2025-00000001"
+        };
+
+        _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(application);
+        _licenseRepositoryMock.Setup(x => x.ExistsAsync(It.IsAny<System.Linq.Expressions.Expression<Func<License, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+        // No paid issuance payment
+        _paymentRepositoryMock.Setup(x => x.FindAsync(It.IsAny<System.Linq.Expressions.Expression<Func<PaymentTransaction, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<PaymentTransaction>());
+
+        // Act
+        var result = await _service.IssueLicenseAsync(applicationId, Guid.NewGuid());
+
+        // Assert
+        result.Success.Should().BeFalse();
+        result.StatusCode.Should().Be(400);
+        result.Message.Should().Be("يرجى سداد رسوم الإصدار أولاً.");
     }
 }

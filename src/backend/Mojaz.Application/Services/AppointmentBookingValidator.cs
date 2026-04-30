@@ -18,6 +18,7 @@ public class AppointmentBookingValidator
 {
     private readonly IAppointmentRepository _appointmentRepository;
     private readonly IRepository<ApplicationEntity> _applicationRepository;
+    private readonly IRepository<PaymentTransaction> _paymentRepository;
     private readonly ISystemSettingsService _systemSettingsService;
     private readonly ITrainingService _trainingService;
     private readonly ITheoryService _theoryService;
@@ -26,6 +27,7 @@ public class AppointmentBookingValidator
     public AppointmentBookingValidator(
         IAppointmentRepository appointmentRepository,
         IRepository<ApplicationEntity> applicationRepository,
+        IRepository<PaymentTransaction> paymentRepository,
         ISystemSettingsService systemSettingsService,
         ITrainingService trainingService,
         ITheoryService theoryService,
@@ -33,6 +35,7 @@ public class AppointmentBookingValidator
     {
         _appointmentRepository = appointmentRepository;
         _applicationRepository = applicationRepository;
+        _paymentRepository = paymentRepository;
         _systemSettingsService = systemSettingsService;
         _trainingService = trainingService;
         _theoryService = theoryService;
@@ -48,49 +51,58 @@ public class AppointmentBookingValidator
         if (application == null)
         {
             result.IsValid = false;
-            result.Errors.Add("Application not found");
+            result.Errors.Add("الطلب غير موجود");
             return result;
         }
 
-        // Gate 1: Check if Application is in correct status for booking
-        // Only allow applications that have passed document verification and paid
-        var allowedStatuses = new[] 
-        { 
-            ApplicationStatus.Submitted.ToString(), 
-            ApplicationStatus.InReview.ToString(),
-            "MedicalPending",
-            "TheoryPending",
-            "PracticalPending"
-        };
+        // Gate 1: Check if Application status allows booking based on service type
+        // Uses PRD Section 6 service-specific workflows
         
-        if (!allowedStatuses.Contains(application.Status.ToString()))
+        // Call the method to get correct workflow by service type
+        var statusMapping = GetStatusMappingByServiceType(application.ServiceType, request.Type);
+        var allowedStatuses = statusMapping.GetValueOrDefault(request.Type, Array.Empty<ApplicationStatus>());
+        
+        if (!allowedStatuses.Contains(application.Status))
         {
             result.IsValid = false;
-            result.Errors.Add($"Application status '{application.Status}' does not allow booking. Application must be submitted and paid.");
+            var statusHint = GetStatusHintByServiceType(application.ServiceType, request.Type);
+            result.Errors.Add(statusHint);
+            return result;
+        }
+        
+        // Gate 2: Check if Application Fee is paid before booking
+        var hasApplicationFeePaid = await _paymentRepository.FindAsync(p => 
+            p.ApplicationId == request.ApplicationId && 
+            p.FeeType == FeeType.ApplicationFee && 
+            p.Status == PaymentStatus.Paid);
+        if (!hasApplicationFeePaid.Any())
+        {
+            result.IsValid = false;
+            result.Errors.Add("يجب سداد رسوم الطلب أولاً قبل حجز الموعد.");
             return result;
         }
 
-        // Gate 2: Check if no existing active appointment for same type
+        // Gate 3: Check if no existing active appointment for same type
         var existingAppointment = await _appointmentRepository.GetByApplicationIdAsync(request.ApplicationId, request.Type, ct);
         if (existingAppointment != null)
         {
             if (existingAppointment.Status == AppointmentStatus.Scheduled)
             {
                 result.IsValid = false;
-                result.Errors.Add($"An active {request.Type} appointment already exists. Please reschedule or cancel it first.");
+                result.Errors.Add($"يوجد موعد {request.Type} نشط بالفعل. يرجى إعادة جدولة الموعد أو إلغاؤه أولاً.");
                 return result;
             }
         }
 
-        // Gate 3: Check date is not in the past
+        // Gate 4: Check date is not in the past
         if (request.ScheduledDate < DateOnly.FromDateTime(DateTime.UtcNow))
         {
             result.IsValid = false;
-            result.Errors.Add("Cannot book an appointment for a past date");
+            result.Errors.Add("لا يمكن حجز موعد في تاريخ سابق");
             return result;
         }
 
-        // Gate 4: Check date is within booking window
+        // Gate 5: Check date is within booking window
         var minDaysAhead = await _systemSettingsService.GetIntAsync("MIN_BOOKING_DAYS_AHEAD") ?? 1;
         var maxDaysAhead = await _systemSettingsService.GetIntAsync("MAX_BOOKING_DAYS_AHEAD") ?? 30;
         
@@ -100,52 +112,52 @@ public class AppointmentBookingValidator
         if (request.ScheduledDate < minDate || request.ScheduledDate > maxDate)
         {
             result.IsValid = false;
-            result.Errors.Add($"Appointments must be booked between {minDate} and {maxDate}");
+            result.Errors.Add($"يجب حجز المواعيد بين {minDate} و {maxDate}");
             return result;
         }
 
-        // Gate 5: Check slot capacity
+        // Gate 6: Check slot capacity
         var maxCapacity = await _systemSettingsService.GetIntAsync("MAX_APPOINTMENTS_PER_SLOT") ?? 2;
         var bookedCount = await _appointmentRepository.GetBookedSlotCountAsync(request.BranchId, request.ScheduledDate, request.TimeSlot, ct);
         
         if (bookedCount >= maxCapacity)
         {
             result.IsValid = false;
-            result.Errors.Add("This time slot is fully booked. Please select another slot.");
+            result.Errors.Add("هذه الفترة محجوزة بالكامل. يرجى اختيار فترة أخرى.");
             return result;
         }
 
-        // Gate 6: Verify working hours
+        // Gate 7: Verify working hours
         var workingStart = await _systemSettingsService.GetAsync("WORKING_HOURS_START") ?? "08:00";
         var workingEnd = await _systemSettingsService.GetAsync("WORKING_HOURS_END") ?? "16:00";
         
         if (string.Compare(request.TimeSlot, workingStart) < 0 || string.Compare(request.TimeSlot, workingEnd) > 0)
         {
             result.IsValid = false;
-            result.Errors.Add($"Time slot must be within working hours ({workingStart} - {workingEnd})");
+            result.Errors.Add($"يجب أن تكون الفترة الزمنية ضمن ساعات العمل ({workingStart} - {workingEnd})");
             return result;
         }
 
-        // Gate 3 (Training): Check if training is complete for Theory/Practical appointments
+        // Gate 8 (Training): Check if training is complete for Theory/Practical appointments
         if (request.Type == AppointmentType.TheoryTest || request.Type == AppointmentType.PracticalTest)
         {
             var trainingComplete = await _trainingService.IsTrainingCompleteAsync(request.ApplicationId);
             if (!trainingComplete.Data)
             {
                 result.IsValid = false;
-                result.Errors.Add("Training requirement not fulfilled (Gate 3). Training status must be Completed or Exempted before booking tests.");
+                result.Errors.Add("لم يتم استيفاء متطلبات التدريب. يجب أن تكون حالة التدريب 'مكتمل' أو 'معفى' قبل حجز الاختبارات.");
                 return result;
             }
         }
 
-        // Gate 4 (Theory Test Limits): Check cooling period and max attempts
+        // Gate 9 (Theory Test Limits): Check cooling period and max attempts
         if (request.Type == AppointmentType.TheoryTest)
         {
             // Check max attempts
             if (await _theoryService.HasReachedMaxAttemptsAsync(request.ApplicationId))
             {
                 result.IsValid = false;
-                result.Errors.Add("Maximum theory test attempts have been reached. You cannot book further attempts for this application.");
+                result.Errors.Add("تم الوصول إلى الحد الأقصى لمحاولات اختبار النظري. لا يمكنك حجز محاولات إضافية لهذا الطلب.");
                 return result;
             }
 
@@ -159,19 +171,19 @@ public class AppointmentBookingValidator
                 var latestResult = history.Data?.Items.FirstOrDefault();
                 var eligibleDate = latestResult?.RetakeEligibleAfter?.ToString("yyyy-MM-dd") ?? "the required cooling period has passed";
 
-                result.Errors.Add($"You are currently in a cooling period after a failed attempt. You will be eligible to book after {eligibleDate}.");
+                result.Errors.Add($"أنت حالياً في فترة انتظار بعد محاولة غير ناجحة. ستتمكن من الحجز بعد {eligibleDate}.");
                 return result;
             }
         }
 
-        // Gate 5 (Practical Test Limits): Check cooling period and max attempts
+        // Gate 10 (Practical Test Limits): Check cooling period and max attempts
         if (request.Type == AppointmentType.PracticalTest)
         {
             // Check max attempts
             if (await _practicalService.HasReachedMaxAttemptsAsync(request.ApplicationId))
             {
                 result.IsValid = false;
-                result.Errors.Add("Maximum practical test attempts have been reached. You cannot book further attempts for this application.");
+                result.Errors.Add("تم الوصول إلى الحد الأقصى لمحاولات الاختبار العملي. لا يمكنك حجز محاولات إضافية لهذا الطلب.");
                 return result;
             }
 
@@ -179,7 +191,7 @@ public class AppointmentBookingValidator
             if (await _practicalService.HasAdditionalTrainingRequiredAsync(request.ApplicationId))
             {
                 result.IsValid = false;
-                result.Errors.Add("Additional training is required before booking another practical test.");
+                result.Errors.Add("مطلوب تدريب إضافي قبل حجز اختبار عملي آخر.");
                 return result;
             }
 
@@ -193,7 +205,7 @@ public class AppointmentBookingValidator
                 var latestResult = history.Data?.Items.FirstOrDefault();
                 var eligibleDate = latestResult?.RetakeEligibleAfter?.ToString("yyyy-MM-dd") ?? "the required cooling period has passed";
 
-                result.Errors.Add($"You are currently in a cooling period after a failed attempt. You will be eligible to book after {eligibleDate}.");
+                result.Errors.Add($"أنت حالياً في فترة انتظار بعد محاولة غير ناجحة. ستتمكن من الحجز بعد {eligibleDate}.");
                 return result;
             }
         }
@@ -210,7 +222,7 @@ public class AppointmentBookingValidator
         if (appointment == null)
         {
             result.IsValid = false;
-            result.Errors.Add("Appointment not found");
+            result.Errors.Add("الموعد غير موجود");
             return result;
         }
 
@@ -219,7 +231,7 @@ public class AppointmentBookingValidator
         if (appointment.RescheduleCount >= maxReschedule)
         {
             result.IsValid = false;
-            result.Errors.Add($"Maximum reschedule limit ({maxReschedule}) reached");
+            result.Errors.Add($"تم الوصول إلى الحد الأقصى لعدد مرات إعادة الجدولة ({maxReschedule})");
             return result;
         }
 
@@ -227,7 +239,7 @@ public class AppointmentBookingValidator
         if (appointment.Status == AppointmentStatus.Cancelled || appointment.Status == AppointmentStatus.Completed)
         {
             result.IsValid = false;
-            result.Errors.Add("Cannot reschedule a cancelled or completed appointment");
+            result.Errors.Add("لا يمكن إعادة جدولة موعد ملغي أو مكتمل");
             return result;
         }
 
@@ -235,7 +247,7 @@ public class AppointmentBookingValidator
         if (request.NewScheduledDate < DateOnly.FromDateTime(DateTime.UtcNow))
         {
             result.IsValid = false;
-            result.Errors.Add("Cannot reschedule to a past date");
+            result.Errors.Add("لا يمكن إعادة الجدولة إلى تاريخ سابق");
             return result;
         }
 
@@ -249,7 +261,7 @@ public class AppointmentBookingValidator
         if (request.NewScheduledDate < minDate || request.NewScheduledDate > maxDate)
         {
             result.IsValid = false;
-            result.Errors.Add($"Rescheduled date must be between {minDate} and {maxDate}");
+            result.Errors.Add($"يجب أن يكون تاريخ إعادة الجدولة بين {minDate} و {maxDate}");
             return result;
         }
 
@@ -266,11 +278,129 @@ public class AppointmentBookingValidator
             if (bookedCount >= maxCapacity)
             {
                 result.IsValid = false;
-                result.Errors.Add("The new time slot is fully booked. Please select another slot.");
+                result.Errors.Add("الفترة الزمنية الجديدة محجوزة بالكامل. يرجى اختيار فترة أخرى.");
                 return result;
             }
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Get allowed application statuses by service type
+    /// PRD Section 6: 8 Services Overview
+    /// - 01 New License: Full workflow (Medical → Training → Theory → Practical → Approval)
+    /// - 02 Renewal: Medical exam only (no training/tests)
+    /// - 03 Replacement: Medical exam only (lost/damaged - no training/tests)
+    /// - 04 Category Upgrade: Full workflow (same as new license)
+    /// - 05 Test Retake: Uses existing application for retake appointments
+    /// - 06-08: Not appointment-based services
+    /// </summary>
+    private Dictionary<AppointmentType, ApplicationStatus[]> GetStatusMappingByServiceType(ServiceType serviceType, AppointmentType appointmentType)
+    {
+        // New License: Full 10-stage workflow
+        if (serviceType == ServiceType.NewLicense)
+        {
+            return new Dictionary<AppointmentType, ApplicationStatus[]>
+            {
+                { AppointmentType.MedicalExam, new[] { ApplicationStatus.InReview, ApplicationStatus.MedicalExam } },
+                { AppointmentType.TheoryTest, new[] { ApplicationStatus.Training, ApplicationStatus.TheoryTest } },
+                { AppointmentType.PracticalTest, new[] { ApplicationStatus.TheoryTest, ApplicationStatus.PracticalTest } }
+            };
+        }
+        
+        // Renewal: Only Medical Exam required (PRD Section 6)
+        // "Renewal for expiring or recently expired licenses with requirement verification"
+        if (serviceType == ServiceType.Renewal)
+        {
+            return new Dictionary<AppointmentType, ApplicationStatus[]>
+            {
+                { AppointmentType.MedicalExam, new[] { ApplicationStatus.InReview, ApplicationStatus.MedicalExam } }
+            };
+        }
+        
+        // Replacement: Only Medical Exam (lost/damaged)
+        // Already has license so no training/tests needed
+        if (serviceType == ServiceType.Replacement)
+        {
+            return new Dictionary<AppointmentType, ApplicationStatus[]>
+            {
+                { AppointmentType.MedicalExam, new[] { ApplicationStatus.InReview, ApplicationStatus.MedicalExam } }
+            };
+        }
+        
+        // Category Upgrade: Same as New License (full workflow)
+        if (serviceType == ServiceType.CategoryUpgrade)
+        {
+            return new Dictionary<AppointmentType, ApplicationStatus[]>
+            {
+                { AppointmentType.MedicalExam, new[] { ApplicationStatus.InReview, ApplicationStatus.MedicalExam } },
+                { AppointmentType.TheoryTest, new[] { ApplicationStatus.Training, ApplicationStatus.TheoryTest } },
+                { AppointmentType.PracticalTest, new[] { ApplicationStatus.TheoryTest, ApplicationStatus.PracticalTest } }
+            };
+        }
+        
+        // International License (Phase 2 - deferred)
+        if (serviceType == ServiceType.InternationalLicense)
+        {
+            return new Dictionary<AppointmentType, ApplicationStatus[]>
+            {
+                { AppointmentType.MedicalExam, new[] { ApplicationStatus.InReview, ApplicationStatus.MedicalExam } }
+            };
+        }
+        
+        // Status Change, Medical Extension, Temporary License (Phase 2 - minimal workflow)
+        if (serviceType == ServiceType.StatusChange || 
+            serviceType == ServiceType.MedicalExtension || 
+            serviceType == ServiceType.TemporaryLicense)
+        {
+            return new Dictionary<AppointmentType, ApplicationStatus[]>
+            {
+                { AppointmentType.MedicalExam, new[] { ApplicationStatus.InReview, ApplicationStatus.MedicalExam } }
+            };
+        }
+        
+        // Default: New License workflow (fallback)
+        return new Dictionary<AppointmentType, ApplicationStatus[]>
+        {
+            { AppointmentType.MedicalExam, new[] { ApplicationStatus.InReview, ApplicationStatus.MedicalExam } },
+            { AppointmentType.TheoryTest, new[] { ApplicationStatus.Training, ApplicationStatus.TheoryTest } },
+            { AppointmentType.PracticalTest, new[] { ApplicationStatus.TheoryTest, ApplicationStatus.PracticalTest } }
+        };
+    }
+
+    /// <summary>
+    /// Get status hint message by service type
+    /// </summary>
+    private string GetStatusHintByServiceType(ServiceType serviceType, AppointmentType appointmentType)
+    {
+        // Renewal: Simplified
+        if (serviceType == ServiceType.Renewal)
+        {
+            return "خدمة التجديد لا تتطلب سوى فحص طبي.";
+        }
+        
+        // Replacement: Simplified
+        if (serviceType == ServiceType.Replacement)
+        {
+            return "خدمة بدل الفاقد/التالف لا تتطلب سوى فحص طبي.";
+        }
+        
+        // Other services with simplified workflow
+        if (serviceType == ServiceType.StatusChange || 
+            serviceType == ServiceType.MedicalExtension || 
+            serviceType == ServiceType.TemporaryLicense ||
+            serviceType == ServiceType.InternationalLicense)
+        {
+            return "هذه الخدمة لا تتطلب سوى فحص طبي.";
+        }
+        
+        return appointmentType switch
+        {
+            AppointmentType.MedicalExam => "يجب استكمال مرحلة المستندات وسداد الرسوم أولاً",
+            AppointmentType.TheoryTest => "يجب استكمال الفحص الطبي والتدريب بنجاح",
+            AppointmentType.PracticalTest => "يجب اجتياز الاختبار النظري بنجاح",
+            _ => "يجب استكمال المراحل السابقة"
+        };
     }
 }

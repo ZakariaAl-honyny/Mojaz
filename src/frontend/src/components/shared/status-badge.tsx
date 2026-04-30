@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import { ApplicationStatusLabels } from '@/lib/enumMappers';
 
 interface StatusBadgeProps {
-  status: ApplicationStatus | number;
+  status: ApplicationStatus | number | string;
   className?: string;
 }
 
@@ -55,10 +55,12 @@ const getStatusVariant = (status: ApplicationStatus | number): string => {
 };
 
 export const StatusBadge = memo(({ status, className }: StatusBadgeProps) => {
-  const statusNumber = typeof status === 'number' ? status : status;
-  const label = (ApplicationStatusLabels as Record<number, string>)[statusNumber] || String(statusNumber);
+  const statusNumber = typeof status === 'string' 
+    ? (ApplicationStatus[status as keyof typeof ApplicationStatus] as unknown as number)
+    : status;
+  const label = (ApplicationStatusLabels as Record<number, string>)[statusNumber] || String(status);
   const dotColor = getStatusDotColor(statusNumber);
-  const variant = getStatusVariant(statusNumber) as any;
+  const variant = getStatusVariant(statusNumber) as "default" | "secondary" | "destructive" | "outline" | "success" | "warning" | "info" | "primary" | "accent";
 
   return (
     <motion.div

@@ -1,12 +1,10 @@
-using Mojaz.Domain.Common;
 using Mojaz.Domain.Enums;
-using System;
 
 namespace Mojaz.Domain.Entities;
 
 public class OtpCode : BaseEntity
 {
-    public Guid UserId { get; set; }
+    public int UserId { get; set; }
     public string Destination { get; set; } = string.Empty;
     public DestinationType DestinationType { get; set; }
     public string CodeHash { get; set; } = string.Empty;

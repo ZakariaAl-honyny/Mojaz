@@ -6,270 +6,174 @@ using Mojaz.Domain.Enums;
 using Mojaz.Shared;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Mojaz.API.Controllers;
-
-/// <summary>
-/// Manage appointments for the Mojaz platform.
-/// Handles booking, rescheduling, and cancellation of appointments.
-/// </summary>
-[ApiController]
-[Route("api/v1/[controller]")]
-[Produces("application/json")]
-public class AppointmentsController : ControllerBase
+namespace Mojaz.API.Controllers
 {
-    private readonly IAppointmentService _appointmentService;
-
-    public AppointmentsController(IAppointmentService appointmentService)
+    [ApiController]
+    [Route("api/v1/appointments")]
+    [Produces("application/json")]
+    public class AppointmentsController : ControllerBase
     {
-        _appointmentService = appointmentService;
-    }
+        private readonly IAppointmentService _appointmentService;
+        private readonly IApplicationService _applicationService;
 
-    /// <summary>
-    /// Get available slots for a specific date and branch.
-    /// </summary>
-    [HttpGet("available-slots")]
-    [Authorize]
-    [ProducesResponseType(typeof(ApiResponse<List<DaySlotsDto>>), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
-    public async Task<IActionResult> GetAvailableSlotsAsync(
-        [FromQuery] AppointmentType type,
-        [FromQuery] Guid branchId,
-        [FromQuery] DateOnly date)
-    {
-        if (branchId == Guid.Empty)
+        public AppointmentsController(IAppointmentService appointmentService, IApplicationService applicationService)
         {
-            return BadRequest(new ApiResponse<object> 
-            { 
-                Success = false, 
-                Message = "Branch ID is required" 
-            });
+            _appointmentService = appointmentService;
+            _applicationService = applicationService;
         }
 
-        var result = await _appointmentService.GetAvailableSlotsAsync(type, branchId, date);
-        return Ok(new ApiResponse<List<DaySlotsDto>> 
-        { 
-            Success = true, 
-            Data = result, 
-            Message = "Available slots retrieved successfully" 
-        });
-    }
-
-    /// <summary>
-    /// Get all appointments for a specific application.
-    /// </summary>
-    [HttpGet("application/{applicationId}")]
-    [Authorize]
-    [ProducesResponseType(typeof(ApiResponse<List<AppointmentDto>>), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
-    public async Task<IActionResult> GetByApplicationAsync(Guid applicationId)
-    {
-        var result = await _appointmentService.GetAppointmentsByApplicationAsync(applicationId);
-        return Ok(new ApiResponse<List<AppointmentDto>> 
-        { 
-            Success = true, 
-            Data = result 
-        });
-    }
-
-    /// <summary>
-    /// Get a single appointment by ID.
-    /// </summary>
-    [HttpGet("{id}")]
-    [Authorize]
-    [ProducesResponseType(typeof(ApiResponse<AppointmentDto>), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
-    public async Task<IActionResult> GetByIdAsync(Guid id)
-    {
-        var result = await _appointmentService.GetAppointmentByIdAsync(id);
-        if (result == null)
+        /// <summary>
+        /// Get all appointments for a specific application.
+        /// Route: api/v1/appointments/application/{appIdOrNumber}
+        /// </summary>
+        [HttpGet("application/{appIdOrNumber}")]
+        [Authorize]
+        [ProducesResponseType(typeof(ApiResponse<List<AppointmentDto>>), 200)]
+        public async Task<IActionResult> GetByApplicationAsync(string appIdOrNumber)
         {
-            return NotFound(new ApiResponse<object> 
-            { 
-                Success = false, 
-                Message = "Appointment not found" 
-            });
-        }
-        return Ok(new ApiResponse<AppointmentDto> 
-        { 
-            Success = true, 
-            Data = result 
-        });
-    }
+            var appId = await ResolveAppIdAsync(appIdOrNumber);
+            if (appId == Guid.Empty)
+                return NotFound(ApiResponse<object>.Fail(404, "الطلب غير موجود."));
 
-    /// <summary>
-    /// Create a new appointment (book a slot).
-    /// </summary>
-    [HttpPost]
-    [Authorize(Roles = "Applicant,Receptionist")]
-    [ProducesResponseType(typeof(ApiResponse<AppointmentDto>), 201)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 409)]
-    public async Task<IActionResult> CreateAsync([FromBody] CreateAppointmentRequest request)
-    {
-        try
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var role = User.FindFirstValue(ClaimTypes.Role)!;
+            var result = await _appointmentService.GetAppointmentsByApplicationAsync(appId, userId, role);
+            return Ok(new ApiResponse<List<AppointmentDto>> { Success = true, Data = result });
+        }
+
+        /// <summary>
+        /// Create a new appointment for an application.
+        /// Route: api/v1/appointments/application/{appIdOrNumber}
+        /// </summary>
+        [HttpPost("application/{appIdOrNumber}")]
+        [Authorize(Roles = "Applicant,Receptionist,Manager,Admin")]
+        [ProducesResponseType(typeof(ApiResponse<AppointmentDto>), StatusCodes.Status201Created)]
+        public async Task<IActionResult> CreateAsync(string appIdOrNumber, [FromBody] CreateAppointmentRequest request)
+        {
+            var appId = await ResolveAppIdAsync(appIdOrNumber);
+            if (appId == Guid.Empty)
+                return NotFound(ApiResponse<object>.Fail(404, "الطلب غير موجود."));
+
+            if (request == null)
+                return BadRequest(ApiResponse<object>.Fail(400, "بيانات الطلب غير صالحة."));
+
+            request.ApplicationId = appId;
+            try 
+            {
+                var result = await _appointmentService.CreateAppointmentAsync(request);
+                return StatusCode(201, ApiResponse<AppointmentDto>.Ok(result));
+            }
+            catch (Mojaz.Shared.Exceptions.ValidationException valEx)
+            {
+                // Let the global handler handle this as 400
+                throw;
+            }
+            catch (Mojaz.Shared.Exceptions.NotFoundException nfEx)
+            {
+                // Let the global handler handle this as 404
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // Return detailed error for debugging (only for true 500s)
+                var errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, ApiResponse<object>.Fail(500, $"خطأ داخلي في الخادم: {errorMsg}", new List<string> { ex.StackTrace ?? "" }));
+            }
+        }
+
+        /// <summary>
+        /// Get available slots 
+        /// </summary>
+        [HttpGet("available-slots")]
+        [Authorize]
+        public async Task<IActionResult> GetAvailableSlotsAsync([FromQuery] AppointmentType type, [FromQuery] Guid branchId, [FromQuery] DateOnly date)
+        {
+            var result = await _appointmentService.GetAvailableSlotsAsync(type, branchId, date);
+            return Ok(ApiResponse<List<DaySlotsDto>>.Ok(result));
+        }
+
+        /// <summary>
+        /// Get attendance list for a specific date
+        /// </summary>
+        [HttpGet("attendance")]
+        [Authorize(Roles = "Receptionist,Security,Manager,Admin")]
+        [ProducesResponseType(typeof(ApiResponse<List<AppointmentDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetAttendanceAsync([FromQuery] DateOnly date, [FromQuery] Guid? branchId = null)
+        {
+            if (date == default)
+                return BadRequest(ApiResponse<object>.Fail(400, "التاريخ مطلوب."));
+
+            var result = await _appointmentService.GetAttendanceAsync(date, branchId ?? Guid.Empty);
+            return Ok(ApiResponse<List<AppointmentDto>>.Ok(result));
+        }
+
+        /// <summary>
+        /// Get all my appointments
+        /// </summary>
+        [HttpGet("my-appointments")]
+        [Authorize(Roles = "Applicant")]
+        public async Task<IActionResult> GetMyAppointmentsAsync()
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-            var result = await _appointmentService.CreateAppointmentAsync(request);
-            return StatusCode(201, new ApiResponse<AppointmentDto> 
-            { 
-                Success = true, 
-                Data = result, 
-                Message = "Appointment booked successfully" 
-            });
+            var result = await _appointmentService.GetMyAppointmentsAsync(userId);
+            return Ok(ApiResponse<List<AppointmentDto>>.Ok(result));
         }
-        catch (InvalidOperationException ex)
+
+        /// <summary>
+        /// Global appointment management
+        /// </summary>
+        [HttpGet]
+        [Authorize(Roles = "Receptionist,Doctor,Examiner,Manager,Admin")]
+        public async Task<IActionResult> GetAllAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] AppointmentStatus? status = null, [FromQuery] AppointmentType? type = null, [FromQuery] DateOnly? from = null, [FromQuery] DateOnly? to = null, [FromQuery] string? search = null)
         {
-            return BadRequest(new ApiResponse<object> 
-            { 
-                Success = false, 
-                Message = ex.Message 
-            });
+            var result = await _appointmentService.GetAppointmentsAsync(page, pageSize, status, type, from, to, search);
+            return Ok(ApiResponse<PagedResult<AppointmentDto>>.Ok(result));
         }
-    }
 
-    /// <summary>
-    /// Reschedule an existing appointment.
-    /// </summary>
-    [HttpPatch("{id}/reschedule")]
-    [Authorize(Roles = "Applicant,Receptionist")]
-    [ProducesResponseType(typeof(ApiResponse<AppointmentDto>), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
-    public async Task<IActionResult> RescheduleAsync(Guid id, [FromBody] RescheduleAppointmentRequest request)
-    {
-        try
+        /// <summary>
+        /// Check-in, Reschedule, Cancel
+        /// </summary>
+        [HttpPatch("{id}/check-in")]
+        [Authorize(Roles = "Receptionist,Security,Doctor,Examiner,Manager,Admin")]
+        [ProducesResponseType(typeof(ApiResponse<AppointmentDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> CheckInAsync(Guid id) 
         {
-            var result = await _appointmentService.RescheduleAppointmentAsync(id, request);
-            return Ok(new ApiResponse<AppointmentDto> 
-            { 
-                Success = true, 
-                Data = result, 
-                Message = "Appointment rescheduled successfully" 
-            });
+            var result = await _appointmentService.CheckInAsync(id);
+            return Ok(ApiResponse<AppointmentDto>.Ok(result));
         }
-        catch (InvalidOperationException ex)
+
+        [HttpPatch("{id}/reschedule")]
+        [Authorize(Roles = "Applicant,Receptionist,Examiner,Manager")]
+        public async Task<IActionResult> RescheduleAsync(Guid id, [FromBody] RescheduleAppointmentRequest request)
         {
-            return BadRequest(new ApiResponse<object> 
-            { 
-                Success = false, 
-                Message = ex.Message 
-            });
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var role = User.FindFirstValue(ClaimTypes.Role)!;
+            var result = await _appointmentService.RescheduleAppointmentAsync(id, request, userId, role);
+            return Ok(ApiResponse<AppointmentDto>.Ok(result));
         }
-    }
 
-    /// <summary>
-    /// Cancel an existing appointment.
-    /// </summary>
-    [HttpPatch("{id}/cancel")]
-    [Authorize(Roles = "Applicant,Receptionist")]
-    [ProducesResponseType(typeof(ApiResponse<AppointmentDto>), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
-    public async Task<IActionResult> CancelAsync(Guid id, [FromBody] CancelAppointmentRequest request)
-    {
-        try
+        [HttpPatch("{id}/cancel")]
+        [Authorize(Roles = "Applicant,Receptionist")]
+        public async Task<IActionResult> CancelAsync(Guid id, [FromBody] CancelAppointmentRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.Reason))
-            {
-                return BadRequest(new ApiResponse<object> 
-                { 
-                    Success = false, 
-                    Message = "Cancellation reason is required" 
-                });
-            }
-
-            var result = await _appointmentService.CancelAppointmentAsync(id, request);
-            return Ok(new ApiResponse<AppointmentDto> 
-            { 
-                Success = true, 
-                Data = result, 
-                Message = "Appointment cancelled successfully" 
-            });
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var role = User.FindFirstValue(ClaimTypes.Role)!;
+            var result = await _appointmentService.CancelAppointmentAsync(id, request, userId, role);
+            return Ok(ApiResponse<AppointmentDto>.Ok(result));
         }
-        catch (InvalidOperationException ex)
+
+        private async Task<Guid> ResolveAppIdAsync(string appIdOrNumber)
         {
-            return BadRequest(new ApiResponse<object> 
-            { 
-                Success = false, 
-                Message = ex.Message 
-            });
+            if (string.IsNullOrWhiteSpace(appIdOrNumber)) return Guid.Empty;
+            if (Guid.TryParse(appIdOrNumber.Trim(), out var id)) return id;
+
+            var result = await _applicationService.GetByApplicationNumberAsync(appIdOrNumber.Trim());
+            return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
         }
-    }
-
-    /// <summary>
-    /// Validate a booking request without actually creating the appointment.
-    /// </summary>
-    [HttpPost("validate")]
-    [Authorize]
-    [ProducesResponseType(typeof(ApiResponse<AppointmentValidationResult>), 200)]
-    public async Task<IActionResult> ValidateAsync([FromBody] CreateAppointmentRequest request)
-    {
-        var result = await _appointmentService.ValidateBookingAsync(request);
-        return Ok(new ApiResponse<AppointmentValidationResult> 
-        { 
-            Success = true, 
-            Data = result 
-        });
-    }
-
-    /// <summary>
-    /// Get all appointments for the current logged-in user (applicant's appointments).
-    /// </summary>
-    [HttpGet("my-appointments")]
-    [Authorize(Roles = "Applicant")]
-    [ProducesResponseType(typeof(ApiResponse<List<AppointmentDto>>), 200)]
-    public async Task<IActionResult> GetMyAppointmentsAsync()
-    {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var result = await _appointmentService.GetMyAppointmentsAsync(userId);
-        return Ok(new ApiResponse<List<AppointmentDto>> 
-        { 
-            Success = true, 
-            Data = result,
-            Message = "Appointments retrieved successfully"
-        });
-    }
-
-    /// <summary>
-    /// Get appointments for employee attendance tracking (for a specific date and branch).
-    /// </summary>
-    [HttpGet("attendance")]
-    [Authorize(Roles = "Receptionist,Doctor,Examiner,Manager")]
-    [ProducesResponseType(typeof(ApiResponse<List<AppointmentDto>>), 200)]
-    public async Task<IActionResult> GetAttendanceAsync([FromQuery] DateOnly date)
-    {
-        var branchIdClaim = User.FindFirstValue("BranchId");
-        if (!Guid.TryParse(branchIdClaim, out var branchId))
-        {
-            branchId = Guid.Empty;
-        }
-        
-        var result = await _appointmentService.GetAttendanceAsync(date, branchId);
-        return Ok(new ApiResponse<List<AppointmentDto>> 
-        { 
-            Success = true, 
-            Data = result,
-            Message = "Attendance appointments retrieved successfully"
-        });
-    }
-
-    /// <summary>
-    /// Check in an applicant for their appointment.
-    /// </summary>
-    [HttpPatch("{id}/check-in")]
-    [Authorize(Roles = "Receptionist,Doctor")]
-    [ProducesResponseType(typeof(ApiResponse<AppointmentDto>), 200)]
-    public async Task<IActionResult> CheckInAsync(Guid id)
-    {
-        var result = await _appointmentService.CheckInAsync(id);
-        return Ok(new ApiResponse<AppointmentDto> 
-        { 
-            Success = true, 
-            Data = result,
-            Message = "Applicant checked in successfully"
-        });
     }
 }

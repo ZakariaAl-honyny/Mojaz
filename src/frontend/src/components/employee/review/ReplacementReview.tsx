@@ -242,7 +242,7 @@ export default function ReplacementReview({ application }: ReplacementReviewProp
                           name="comments"
                           render={({ field }) => (
                              <FormItem className="space-y-4">
-                                <FormLabel className="text-xs font-black text-white/40 uppercase tracking-widest mr-2">ملاحظات التدقيق الإضافية</FormLabel>
+                                <FormLabel className="text-xs font-black text-white/40 uppercase tracking-widest me-2">ملاحظات التدقيق الإضافية</FormLabel>
                                 <FormControl>
                                    <Textarea
                                       placeholder="دون ملاحظاتك المهنية هنا لتبرير قرار القبول أو الرفض..."

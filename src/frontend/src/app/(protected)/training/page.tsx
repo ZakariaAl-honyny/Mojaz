@@ -198,7 +198,7 @@ export default function TrainingPage() {
                <div className="flex items-baseline gap-2">
                   <span className="text-2xl md:text-3xl font-black tracking-tighter tabular-nums">{sessions.totalHoursCompleted}</span>
                   <span className="text-xl font-bold text-blue-300">/ {sessions.hoursRequired}</span>
-                  <span className="text-xs font-black uppercase tracking-widest text-blue-400 mr-2">ساعة تدريبية</span>
+                  <span className="text-xs font-black uppercase tracking-widest text-blue-400 me-2">ساعة تدريبية</span>
                </div>
                <div className="h-2 bg-white/10 rounded-full overflow-hidden shadow-inner">
                   <motion.div 
@@ -262,7 +262,7 @@ export default function TrainingPage() {
             <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 group-focus-within:text-[#1a3a8f] transition-colors" />
             <Input
               placeholder="البحث في سجل المحاضرات..."
-              className="pr-12 h-12 border-neutral-100 bg-neutral-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all rounded-xl font-bold text-sm text-right"
+              className="pe-12 h-12 border-neutral-100 bg-neutral-50/50 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all rounded-xl font-bold text-sm text-end"
             />
          </div>
 
@@ -347,7 +347,7 @@ export default function TrainingPage() {
                     </div>
                     <Badge className="bg-[#1a3a8f]/10 text-[#1a3a8f] rounded-lg text-[9px] font-black uppercase tracking-widest">{session.duration} ساعة</Badge>
                   </div>
-                  <p className="text-xs font-bold text-neutral-600 leading-relaxed italic border-r-2 border-primary-100 pr-3">
+                  <p className="text-xs font-bold text-neutral-600 leading-relaxed italic border-s-2 border-primary-100 ps-3">
                      {session.notes}
                   </p>
                 </div>

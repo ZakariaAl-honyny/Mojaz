@@ -24,9 +24,11 @@ public class AppointmentServiceTests
 {
     private readonly Mock<IAppointmentRepository> _appointmentRepositoryMock;
     private readonly Mock<IRepository<ApplicationEntity>> _applicationRepositoryMock;
+    private readonly Mock<IRepository<PaymentTransaction>> _paymentRepositoryMock;
     private readonly Mock<ISystemSettingsService> _systemSettingsServiceMock;
     private readonly Mock<INotificationService> _notificationServiceMock;
     private readonly Mock<ITrainingService> _trainingServiceMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<ITheoryService> _theoryServiceMock;
     private readonly Mock<IPracticalService> _practicalServiceMock;
     private readonly IMapper _mapper;
@@ -36,9 +38,11 @@ public class AppointmentServiceTests
     {
         _appointmentRepositoryMock = new Mock<IAppointmentRepository>();
         _applicationRepositoryMock = new Mock<IRepository<ApplicationEntity>>();
+        _paymentRepositoryMock = new Mock<IRepository<PaymentTransaction>>();
         _systemSettingsServiceMock = new Mock<ISystemSettingsService>();
         _notificationServiceMock = new Mock<INotificationService>();
         _trainingServiceMock = new Mock<ITrainingService>();
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
         _theoryServiceMock = new Mock<ITheoryService>();
         _practicalServiceMock = new Mock<IPracticalService>();
 
@@ -52,6 +56,7 @@ public class AppointmentServiceTests
         var validator = new AppointmentBookingValidator(
             _appointmentRepositoryMock.Object,
             _applicationRepositoryMock.Object,
+            _paymentRepositoryMock.Object,
             _systemSettingsServiceMock.Object,
             _trainingServiceMock.Object,
             _theoryServiceMock.Object,
@@ -64,6 +69,7 @@ public class AppointmentServiceTests
             _notificationServiceMock.Object,
             _mapper,
             _trainingServiceMock.Object,
+            _unitOfWorkMock.Object,
             validator);
     }
 
@@ -334,8 +340,10 @@ public class AppointmentServiceTests
             .Setup(x => x.GetByIdForRescheduleAsync(appointmentId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Appointment?)null);
 
+        var userId = Guid.NewGuid();
+
         // Act & Assert
-        await FluentActions.Invoking(() => _service.RescheduleAppointmentAsync(appointmentId, request))
+        await FluentActions.Invoking(() => _service.RescheduleAppointmentAsync(appointmentId, request, userId, "Applicant"))
             .Should().ThrowAsync<InvalidOperationException>()
             .WithMessage("*not found*");
     }
@@ -368,8 +376,10 @@ public class AppointmentServiceTests
             .Setup(x => x.GetIntAsync("MAX_RESCHEDULE_COUNT"))
             .ReturnsAsync(3);
 
+        var userId = Guid.NewGuid();
+
         // Act & Assert
-        await FluentActions.Invoking(() => _service.RescheduleAppointmentAsync(appointmentId, request))
+        await FluentActions.Invoking(() => _service.RescheduleAppointmentAsync(appointmentId, request, userId, "Applicant"))
             .Should().ThrowAsync<InvalidOperationException>()
             .WithMessage("*Maximum reschedule limit*");
     }
@@ -435,8 +445,10 @@ public class AppointmentServiceTests
             .Setup(x => x.GetByIdWithApplicationAsync(appointmentId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(appointment);
 
+        var userId = Guid.NewGuid();
+
         // Act
-        var result = await _service.RescheduleAppointmentAsync(appointmentId, request);
+        var result = await _service.RescheduleAppointmentAsync(appointmentId, request, userId, "Applicant");
 
         // Assert
         result.Should().NotBeNull();
@@ -464,8 +476,10 @@ public class AppointmentServiceTests
             .Setup(x => x.GetByIdForRescheduleAsync(appointmentId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((Appointment?)null);
 
+        var userId = Guid.NewGuid();
+
         // Act & Assert
-        await FluentActions.Invoking(() => _service.CancelAppointmentAsync(appointmentId, request))
+        await FluentActions.Invoking(() => _service.CancelAppointmentAsync(appointmentId, request, userId, "Applicant"))
             .Should().ThrowAsync<InvalidOperationException>()
             .WithMessage("*not found*");
     }
@@ -491,8 +505,10 @@ public class AppointmentServiceTests
             .Setup(x => x.GetByIdForRescheduleAsync(appointmentId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(appointment);
 
+        var userId = Guid.NewGuid();
+
         // Act & Assert
-        await FluentActions.Invoking(() => _service.CancelAppointmentAsync(appointmentId, request))
+        await FluentActions.Invoking(() => _service.CancelAppointmentAsync(appointmentId, request, userId, "Applicant"))
             .Should().ThrowAsync<InvalidOperationException>()
             .WithMessage("*already cancelled*");
     }
@@ -535,8 +551,10 @@ public class AppointmentServiceTests
             .Setup(x => x.GetByIdWithApplicationAsync(appointmentId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(appointment);
 
+        var userId = Guid.NewGuid();
+
         // Act
-        var result = await _service.CancelAppointmentAsync(appointmentId, request);
+        var result = await _service.CancelAppointmentAsync(appointmentId, request, userId, "Applicant");
 
         // Assert
         result.Should().NotBeNull();

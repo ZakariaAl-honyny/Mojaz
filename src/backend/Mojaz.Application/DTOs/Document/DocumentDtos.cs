@@ -50,3 +50,10 @@ public class BulkApproveResponse
     public int ApprovedCount { get; set; }
     public List<Guid> ApprovedDocumentIds { get; set; } = new();
 }
+
+public class RequestMissingDocumentsRequest
+{
+    public List<string> MissingDocumentsAr { get; set; } = new();
+    public List<string> MissingDocumentsEn { get; set; } = new();
+    public DateTime? Deadline { get; set; }
+}

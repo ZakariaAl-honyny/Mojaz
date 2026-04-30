@@ -86,7 +86,7 @@ export const ManagerDashboard = ({ data }: ManagerDashboardProps) => {
         </motion.div>
 
         <div className="flex items-center gap-3">
-          <div className="text-left md:text-right">
+          <div className="text-end">
              <p className="text-[9px] font-black text-neutral-400 uppercase tracking-widest leading-none mb-1">توقيت الخادم</p>
              <p className="text-xs font-black text-neutral-900 leading-none">
                 {new Date().toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit' })}

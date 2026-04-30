@@ -56,14 +56,14 @@ export function HeroSection() {
                 <ShieldCheck className="w-4 h-4" />
                 <span>الجمهورية اليمنية • الإدارة العامة للمرور</span>
               </div>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.15] font-arabic ltr:font-english">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.15] font-arabic ltr:font-english">
                 نظام إصدار رخص القيادة الإلكتروني
               </h1>
             </StaggeredItem>
 
             <StaggeredItem>
-              <p className="text-lg md:text-xl text-neutral-100/80 max-w-2xl leading-relaxed">
-                منصة متكاملة لإصدار وإدارة رخص القيادة بكفاءة وسهولة
+              <p className="text-base md:text-lg text-neutral-100/80 max-w-2xl leading-relaxed font-bold">
+                منصة متكاملة لإصدار وإدارة رخص القيادة بكفاءة وسهولة وفق أعلى المعايير السيادية.
               </p>
             </StaggeredItem>
 
@@ -122,13 +122,13 @@ export function HeroSection() {
                 }}
                 className="w-[420px] aspect-[1.6/1] bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-8 relative overflow-hidden group"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4A017]/10 blur-[40px] rounded-full -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute top-0 start-0 w-32 h-32 bg-[#D4A017]/10 blur-[40px] rounded-full -translate-y-1/2 translate-x-1/2" />
 
                 <div className="flex justify-between items-start mb-12">
                   <div className="w-16 h-16 rounded-full bg-white/10 animate-pulse" />
-                  <div className="space-y-2 text-right">
-                    <div className="h-4 w-32 bg-white/20 rounded ml-auto" />
-                    <div className="h-3 w-20 bg-white/10 rounded ml-auto" />
+                  <div className="space-y-2 text-end">
+                    <div className="h-4 w-32 bg-white/20 rounded ms-auto" />
+                    <div className="h-3 w-20 bg-white/10 rounded ms-auto" />
                   </div>
                 </div>
 
@@ -140,7 +140,7 @@ export function HeroSection() {
                   </div>
                 </div>
 
-                <div className="absolute bottom-8 right-8 text-white/20 font-bold text-3xl select-none group-hover:text-secondary-500/30 transition-colors uppercase tracking-widest">
+                <div className="absolute bottom-8 end-8 text-white/20 font-bold text-3xl select-none group-hover:text-secondary-500/30 transition-colors uppercase tracking-widest">
                   نظام إصدار رخص القيادة
                 </div>
               </motion.div>
@@ -156,7 +156,7 @@ export function HeroSection() {
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                className="absolute top-10 right-0 w-28 h-28 bg-[#D4A017]/20 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl flex flex-col items-center justify-center p-4"
+                className="absolute top-10 start-0 w-28 h-28 bg-[#D4A017]/20 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl flex flex-col items-center justify-center p-4"
               >
                 <ShieldCheck className="w-12 h-12 text-[#D4A017] mb-2" />
                 <span className="text-[10px] font-black text-white text-center leading-tight">التحقق<br />السيادي</span>
@@ -173,7 +173,7 @@ export function HeroSection() {
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                className="absolute bottom-10 left-0 w-20 h-20 bg-[#1a3a8f]/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl flex items-center justify-center"
+                className="absolute bottom-10 start-0 w-20 h-20 bg-[#1a3a8f]/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl flex items-center justify-center"
               >
                 <UserCheck className="w-10 h-10 text-white opacity-50" />
               </motion.div>

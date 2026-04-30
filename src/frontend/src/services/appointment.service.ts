@@ -5,6 +5,10 @@ import { AppointmentType } from '@/lib/enums';
 export interface AppointmentDto {
   id: string;
   applicationId: string;
+  applicationNumber?: string;
+  applicantName?: string;
+  nationalId?: string;
+  phoneNumber?: string;
   appointmentType: AppointmentType;
   scheduledDate: string;
   timeSlot: string;
@@ -70,7 +74,7 @@ const AppointmentService = {
     branchId: string,
     date: string
   ): Promise<ApiResponse<DaySlotsDto[]>> {
-    const response = await apiClient.get('/appointments/available-slots', {
+    const response = await apiClient.get('appointments/available-slots', {
       params: { type, branchId, date }
     });
     return response.data;
@@ -79,8 +83,8 @@ const AppointmentService = {
   /**
    * Get all appointments for a specific application
    */
-  async getByApplication(applicationId: string): Promise<ApiResponse<AppointmentDto[]>> {
-    const response = await apiClient.get(`/appointments/application/${applicationId}`);
+  async getByApplication(idOrNumber: string): Promise<ApiResponse<AppointmentDto[]>> {
+    const response = await apiClient.get(`appointments/application/${idOrNumber}`);
     return response.data;
   },
 
@@ -88,15 +92,15 @@ const AppointmentService = {
    * Get a single appointment by ID
    */
   async getById(id: string): Promise<ApiResponse<AppointmentDto>> {
-    const response = await apiClient.get(`/appointments/${id}`);
+    const response = await apiClient.get(`appointments/${id}`);
     return response.data;
   },
 
   /**
    * Create a new appointment (book a slot)
    */
-  async createAppointment(request: CreateAppointmentRequest): Promise<ApiResponse<AppointmentDto>> {
-    const response = await apiClient.post('/appointments', request);
+  async createAppointment(idOrNumber: string, request: CreateAppointmentRequest): Promise<ApiResponse<AppointmentDto>> {
+    const response = await apiClient.post(`appointments/application/${idOrNumber}`, request);
     return response.data;
   },
 
@@ -107,7 +111,7 @@ const AppointmentService = {
     id: string,
     request: RescheduleAppointmentRequest
   ): Promise<ApiResponse<AppointmentDto>> {
-    const response = await apiClient.patch(`/appointments/${id}/reschedule`, request);
+    const response = await apiClient.patch(`appointments/${id}/reschedule`, request);
     return response.data;
   },
 
@@ -118,7 +122,7 @@ const AppointmentService = {
     id: string,
     request: CancelAppointmentRequest
   ): Promise<ApiResponse<AppointmentDto>> {
-    const response = await apiClient.patch(`/appointments/${id}/cancel`, request);
+    const response = await apiClient.patch(`appointments/${id}/cancel`, request);
     return response.data;
   },
 
@@ -126,33 +130,46 @@ const AppointmentService = {
    * Validate a booking request without creating the appointment
    */
   async validateBooking(request: CreateAppointmentRequest): Promise<ApiResponse<AppointmentValidationResult>> {
-    const response = await apiClient.post('/appointments/validate', request);
+    const response = await apiClient.post('appointments/validate', request);
     return response.data;
   },
 
   /**
    * Get all appointments for the current logged-in user (applicant)
-   * This fetches the user's submitted/active applications and gets their appointments
    */
   async getMyAppointments(): Promise<ApiResponse<AppointmentDto[]>> {
-    const response = await apiClient.get('/appointments/my-appointments');
+    const response = await apiClient.get('appointments/my-appointments');
     return response.data;
   },
 
   /**
-   * Get appointments for employee attendance tracking (for a specific date and branch)
+   * Get appointments for employee attendance tracking
    */
   async getAttendance(date: string): Promise<ApiResponse<AppointmentDto[]>> {
-    const response = await apiClient.get('/appointments/attendance', { params: { date } });
+    const response = await apiClient.get('appointments/attendance', { params: { date } });
     return response.data;
   },
 
   /**
-   * Check in an applicant for their appointment
+   * Check-in an applicant for their appointment
    */
   async checkIn(appointmentId: string): Promise<ApiResponse<AppointmentDto>> {
-    const response = await apiClient.patch(`/appointments/${appointmentId}/check-in`);
+    const response = await apiClient.patch(`appointments/${appointmentId}/check-in`);
     return response.data;
+  },
+
+  /**
+   * Get default branch ID from settings
+   * Returns the default branch for appointments
+   */
+  async getDefaultBranch(): Promise<string | null> {
+    try {
+      const response = await apiClient.get('settings/DEFAULT_BRANCH_ID');
+      return response.data?.data?.value || null;
+    } catch {
+      // If setting not found, return a default placeholder
+      return '00000000-0000-0000-0000-000000000001';
+    }
   }
 };
 

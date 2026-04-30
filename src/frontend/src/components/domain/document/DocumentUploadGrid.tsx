@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { UploadCard } from './UploadCard';
-import { useUploadDocument } from '@/hooks/useDocuments';
+import { useUploadDocument, useDeleteDocument } from '@/hooks/useDocuments';
 import { DocumentRequirementDto, DocumentDto, UploadDocumentRequest } from '@/types/document.types';
 import toast from 'react-hot-toast';
 import { cn } from '@/lib/utils';
@@ -20,6 +20,7 @@ export function DocumentUploadGrid({
   documents,
 }: DocumentUploadGridProps) {
   const uploadMutation = useUploadDocument(applicationId);
+  const deleteMutation = useDeleteDocument(applicationId);
 
   // Track upload progress per document type
   const [uploadProgress, setUploadProgress] = useState<Record<number, number>>({});
@@ -69,13 +70,11 @@ export function DocumentUploadGrid({
   // Handle delete
   const handleDelete = async (documentId: string) => {
     try {
-      const { useDeleteDocument } = await import('@/hooks/useDocuments');
-      const deleteMutation = useDeleteDocument(applicationId);
       await deleteMutation.mutateAsync(documentId);
       toast.success('تم حذف المستند بنجاح');
     } catch (error) {
       console.error('Delete failed:', error);
-      toast.error('عذراً، المستند غير موجود أو تم حذفه مسبقاً.');
+      toast.error('عذراً، فشل حذف المستند. يرجى المحاولة مرة أخرى.');
     }
   };
 

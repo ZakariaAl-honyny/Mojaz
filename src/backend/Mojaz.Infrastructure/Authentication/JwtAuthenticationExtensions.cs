@@ -35,7 +35,7 @@ public static class JwtAuthenticationExtensions
                 ValidIssuer = jwtSettings.Issuer,
                 ValidAudience = jwtSettings.Audience,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
-                ClockSkew = TimeSpan.Zero // Set to zero to expire immediately
+                ClockSkew = TimeSpan.FromMinutes(5) // Allow 5 minute clock skew for token validity
             };
 
             options.Events = new JwtBearerEvents
@@ -51,13 +51,19 @@ public static class JwtAuthenticationExtensions
             };
         });
 
-        // Add policies based on roles if needed here
+        // Add Mojaz role-based authorization policies
+        // Admin has access to EVERYTHING - include Admin in all employee policies
         services.AddAuthorization(options =>
         {
+            options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+            options.AddPolicy("EmployeeOnly", policy => policy.RequireRole("Admin", "Receptionist", "Doctor", "Examiner", "Manager", "Security"));
+            options.AddPolicy("ApplicantOnly", policy => policy.RequireRole("Applicant"));
+            options.AddPolicy("ReceptionistOrAbove", policy => policy.RequireRole("Admin", "Receptionist", "Doctor", "Manager"));
+            options.AddPolicy("ExaminerOrAbove", policy => policy.RequireRole("Admin", "Receptionist", "Doctor", "Examiner", "Manager"));
+            options.AddPolicy("ManagerOrAbove", policy => policy.RequireRole("Admin", "Manager"));
             options.AddPolicy("RequiresAdmin", policy => policy.RequireRole("Admin"));
             options.AddPolicy("RequiresApplicant", policy => policy.RequireRole("Applicant"));
-            // Employees have specific roles like Receptionist, Doctor, Examiner, Manager, Security
-            options.AddPolicy("RequiresEmployee", policy => policy.RequireRole("Receptionist", "Doctor", "Examiner", "Manager", "Security"));
+            options.AddPolicy("RequiresEmployee", policy => policy.RequireRole("Admin", "Receptionist", "Doctor", "Examiner", "Manager", "Security"));
         });
 
         return services;

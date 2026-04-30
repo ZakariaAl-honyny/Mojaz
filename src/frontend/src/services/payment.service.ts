@@ -1,8 +1,11 @@
 import api from "@/lib/api-client";
-import { ApiResponse, PaginatedResult, FeeType, PaymentStatus } from "@/types/api.types";
+import { ApiResponse, PaginatedResult } from "@/types/api.types";
+import { FeeType, PaymentStatus, PaymentMethod } from "@/types/payment.types";
+import type { PaymentDto } from "@/types/payment.types";
 
 // Re-export for convenience
-export { FeeType, PaymentStatus };
+export { FeeType, PaymentStatus, PaymentMethod };
+export type { PaymentDto };
 
 export interface PaymentInitiateRequest {
   feeType: FeeType;
@@ -15,28 +18,17 @@ export interface PaymentConfirmRequest {
   isSuccessful: boolean;
 }
 
-export interface PaymentDto {
-  id: string;
-  applicationId: string;
-  applicationNumber: string;
-  applicantFullName: string;
-  feeType: string; // Using string for flexibility (e.g., 'ApplicationFee')
-  amount: number;
-  status: string; // Using string for flexibility (e.g., 'Pending')
-  dueDate?: string;
-  transactionReference?: string;
-  paidAt?: string;
-  paymentMethod?: string;
-  receiptNumber?: string;
-  createdAt: string;
-}
+// Internal lock for payment confirmations
+const _activeConfirmations = new Set<string>();
+
+const getBaseUrl = (idOrNumber: string) => `payments/application/${idOrNumber}`;
 
 export const paymentService = {
   /**
    * Get current applicant's payments
    */
   getMyPayments: async (): Promise<ApiResponse<PaymentDto[]>> => {
-    const response = await api.get<ApiResponse<PaymentDto[]>>(`/payments/my-payments`);
+    const response = await api.get<ApiResponse<PaymentDto[]>>(`payments/my-payments`);
     return response.data;
   },
 
@@ -44,65 +36,100 @@ export const paymentService = {
    * Get all payments (for employees/managers)
    */
   getAllPayments: async (page = 1, pageSize = 20, status?: string, search?: string): Promise<ApiResponse<PaginatedResult<PaymentDto>>> => {
-    const response = await api.get<ApiResponse<PaginatedResult<PaymentDto>>>(`/payments`, {
+    const response = await api.get<ApiResponse<PaginatedResult<PaymentDto>>>(`payments`, {
       params: { page, pageSize, status, search }
     });
     return response.data;
   },
 
   /**
-   * Initiate a new payment for an application by application number
+   * Initiate a new payment for an application
    */
-  initiatePayment: async (applicationNumber: string, data: PaymentInitiateRequest) => {
+  initiatePayment: async (idOrNumber: string, data: PaymentInitiateRequest) => {
     const response = await api.post<ApiResponse<PaymentDto>>(
-      `/payments/initiate-by-number/${applicationNumber}`,
+      `${getBaseUrl(idOrNumber)}/initiate`,
       data
     );
     return response.data;
   },
 
   /**
-   * List all payment transactions for an application by application number
-   * @param applicationNumber - The application number (e.g., MOJ-2025-XXXXXXXX)
+   * List all payment transactions for an application
    */
-  getPaymentsByApplication: async (applicationNumber: string) => {
-    const response = await api.get<ApiResponse<PaymentDto[]>>(
-      `/payments/by-number/${applicationNumber}`
-    );
+  getPaymentsByApplication: async (idOrNumber: string) => {
+    const response = await api.get<ApiResponse<PaymentDto[]>>(getBaseUrl(idOrNumber));
     return response.data;
   },
 
   /**
-   * Get a single payment by ID
-   * @param paymentId - The payment ID
+   * Get a single payment by ID and its receipt info
    */
   getPaymentById: async (paymentId: string): Promise<ApiResponse<PaymentDto>> => {
-    const response = await api.get<ApiResponse<PaymentDto>>(
-      `/payments/${paymentId}`
-    );
+    const response = await api.get<ApiResponse<PaymentDto>>(`payments/receipt/${paymentId}`);
     return response.data;
   },
 
+/**
+    * Confirm a payment success or failure
+    */
+  confirmPayment: async (data: PaymentConfirmRequest): Promise<ApiResponse<PaymentDto>> => {
+    if (_activeConfirmations.has(data.paymentId)) {
+      return { 
+        success: false, 
+        message: "عملية الدفع قيد المعالجة حالياً", 
+        statusCode: 429 
+      } as any;
+    }
+
+    try {
+      _activeConfirmations.add(data.paymentId);
+      const response = await api.post<ApiResponse<PaymentDto>>(`payments/confirm`, data);
+      return response.data;
+    } finally {
+      _activeConfirmations.delete(data.paymentId);
+    }
+  },
+
   /**
-   * Confirm a payment success or failure (simulated)
+   * Process payment (simulate success) - for demo
    */
-  confirmPayment: async (data: PaymentConfirmRequest) => {
-    const response = await api.post<ApiResponse<PaymentDto>>(
-      `/payments/confirm`,
-      data
-    );
-    return response.data;
+  processPayment: async (paymentId: string): Promise<ApiResponse<PaymentDto>> => {
+    try {
+      const response = await api.post<ApiResponse<PaymentDto>>(`payments/${paymentId}/process`);
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.response?.data?.message || 'فشل في معالجة الدفع',
+        statusCode: error.response?.statusCode || 500
+      };
+    }
+  },
+
+  /**
+   * Get pending payment for an application
+   */
+  getPendingPayment: async (applicationId: string): Promise<ApiResponse<PaymentDto>> => {
+    try {
+      const response = await api.get<ApiResponse<PaymentDto>>(`applications/${applicationId}/pending-payment`);
+      return response.data;
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.response?.data?.message || 'لم يتم العثور على دفع معلقة',
+        statusCode: 404
+      };
+    }
   },
 
   /**
    * Download payment receipt as PDF
    */
   downloadReceipt: async (paymentId: string) => {
-    const response = await api.get(`/payments/${paymentId}/receipt`, {
+    const response = await api.get(`payments/${paymentId}/receipt`, {
       responseType: "blob",
     });
     
-    // Create a URL for the blob and trigger download
     const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement("a");
     link.href = url;

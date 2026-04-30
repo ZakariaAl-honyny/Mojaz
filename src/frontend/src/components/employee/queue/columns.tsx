@@ -11,11 +11,11 @@ import { cn } from '@/lib/utils';
 export const columns: ColumnDef<ApplicationSummaryDto>[] = [
   {
     accessorKey: 'applicationNumber',
-    header: () => <div className="text-right">رقم الطلب</div>,
+    header: () => <div className="text-start">رقم الطلب</div>,
     cell: ({ row }) => {
       const app = row.original;
       return (
-        <div className="flex items-center gap-4 text-right">
+        <div className="flex items-center gap-4 text-start">
           <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center shrink-0 border border-primary-100/50">
              <Tag className="w-5 h-5 text-[#1a3a8f]" />
           </div>
@@ -33,7 +33,7 @@ export const columns: ColumnDef<ApplicationSummaryDto>[] = [
   },
   {
     accessorKey: 'applicantName',
-    header: () => <div className="text-right">مقدم الطلب</div>,
+    header: () => <div className="text-start">مقدم الطلب</div>,
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center border border-neutral-200">
@@ -52,7 +52,7 @@ export const columns: ColumnDef<ApplicationSummaryDto>[] = [
   },
   {
     accessorKey: 'licenseCategoryCode',
-    header: () => <div className="text-right">الفئة</div>,
+    header: () => <div className="text-start">الفئة</div>,
     cell: ({ row }) => (
       <div className="inline-flex items-center px-3 py-1 rounded-lg bg-neutral-100 text-neutral-900 text-[10px] font-black border border-neutral-200 uppercase tracking-widest">
         {row.getValue('licenseCategoryCode')}
@@ -61,7 +61,7 @@ export const columns: ColumnDef<ApplicationSummaryDto>[] = [
   },
   {
     accessorKey: 'currentStage',
-    header: () => <div className="text-right">المرحلة الحالية</div>,
+    header: () => <div className="text-start">المرحلة الحالية</div>,
     cell: ({ row }) => (
       <div className="flex items-center gap-2 text-[11px] text-neutral-600 font-bold justify-start">
         <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
@@ -71,7 +71,7 @@ export const columns: ColumnDef<ApplicationSummaryDto>[] = [
   },
   {
     accessorKey: 'status',
-    header: () => <div className="text-right">الحالة</div>,
+    header: () => <div className="text-start">الحالة</div>,
     cell: ({ row }) => (
       <div className="flex justify-start">
         <StatusBadge status={row.getValue('status')} />
@@ -80,7 +80,7 @@ export const columns: ColumnDef<ApplicationSummaryDto>[] = [
   },
   {
     accessorKey: 'submittedDate',
-    header: () => <div className="text-right">تاريخ التقديم</div>,
+    header: () => <div className="text-start">تاريخ التقديم</div>,
     cell: ({ row }) => (
       <div className="flex flex-col items-start gap-1">
         <span className="text-xs text-neutral-900 font-black tracking-tight leading-none">

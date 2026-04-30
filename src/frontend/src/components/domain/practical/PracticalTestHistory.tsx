@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { practicalService } from '@/services/practical.service';
+import { TestResult } from '@/lib/enums';
 import { TestAttemptBadge } from './TestAttemptBadge';
 import { Calendar, User, FileText, CheckCircle2, AlertCircle, History, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -74,14 +75,14 @@ export function PracticalTestHistory({ applicationId }: PracticalTestHistoryProp
             {/* Timeline dot */}
             <div className={cn(
               "absolute start-0 top-0 w-14 h-14 rounded-2xl shadow-xl border-4 border-white flex items-center justify-center z-10 transition-all duration-500",
-              String(test.result) === 'Pass' ? "bg-emerald-500 text-white shadow-emerald-500/20" : "bg-red-500 text-white shadow-red-500/20"
+              test.result === TestResult.Pass ? "bg-emerald-500 text-white shadow-emerald-500/20" : "bg-red-500 text-white shadow-red-500/20"
             )}>
               <Car className="w-6 h-6" />
             </div>
 
             <div className={cn(
               "rounded-[2.5rem] p-10 border transition-all duration-500 hover:shadow-2xl hover:shadow-blue-900/5",
-              String(test.result) === 'Pass' 
+              test.result === TestResult.Pass 
                 ? "bg-emerald-50/20 border-emerald-100/30" 
                 : "bg-white border-neutral-100"
             )}>
@@ -93,7 +94,7 @@ export function PracticalTestHistory({ applicationId }: PracticalTestHistoryProp
                     {formatDateAr(test.conductedAt)}
                   </div>
                 </div>
-                <TestAttemptBadge result={test.result as any} />
+                <TestAttemptBadge result={test.result} />
               </div>
 
               {test.isAbsent ? (

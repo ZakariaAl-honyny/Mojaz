@@ -22,7 +22,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             // OTP SystemSettings seed data
             builder.HasData(
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000001001"), SettingKey = "OTP_VALIDITY_MINUTES_SMS", SettingValue = "5", Category = "OTP", Description = "OTP validity in minutes for SMS", IsEncrypted = false },
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000001002"), SettingKey = "OTP_VALIDITY_MINUTES_EMAIL", SettingValue = "10", Category = "OTP", Description = "OTP validity in minutes for Email", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000001002"), SettingKey = "OTP_VALIDITY_MINUTES_EMAIL", SettingValue = "15", Category = "OTP", Description = "OTP validity in minutes for Email", IsEncrypted = false },
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000001003"), SettingKey = "OTP_MAX_ATTEMPTS", SettingValue = "3", Category = "OTP", Description = "Max OTP verification attempts", IsEncrypted = false },
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000001004"), SettingKey = "OTP_RESEND_COOLDOWN_SECONDS", SettingValue = "60", Category = "OTP", Description = "Cooldown in seconds before resending OTP", IsEncrypted = false },
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000001005"), SettingKey = "OTP_MAX_RESEND_PER_HOUR", SettingValue = "3", Category = "OTP", Description = "Max OTP resends per hour", IsEncrypted = false }
@@ -74,7 +74,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
                 
                 // Category Upgrade SystemSettings seed data
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012001"), SettingKey = "MIN_HOLDING_PERIOD_UPGRADE_MONTHS", SettingValue = "12", Category = "Upgrade", Description = "Minimum months a license must be held before upgrading", IsEncrypted = false },
-                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012002"), SettingKey = "ALLOWED_UPGRADE_PATHS", SettingValue = "B-C,C-D,D-E,F-B", Category = "Upgrade", Description = "Allowed category upgrade paths (Format: FROM-TO, separated by comma)", IsEncrypted = false },
+                new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012002"), SettingKey = "ALLOWED_UPGRADE_PATHS", SettingValue = "B-C,B-D,B-E,C-D,C-E,D-E,F-B", Category = "Upgrade", Description = "Allowed category upgrade paths (Format: FROM-TO, separated by comma)", IsEncrypted = false },
                 new SystemSetting { Id = Guid.Parse("00000000-0000-0000-0000-000000012003"), SettingKey = "UPGRADE_TRAINING_REDUCTION_PCNT", SettingValue = "50", Category = "Upgrade", Description = "Percentage reduction in training hours for category upgrades", IsEncrypted = false },
 
                 // Security Hardening seed data

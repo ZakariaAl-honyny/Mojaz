@@ -2,6 +2,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Mojaz.Application.DTOs.SystemSettings;
 
+public class CreateSettingRequest
+{
+    [Required]
+    public string Key { get; set; } = string.Empty;
+    
+    [Required]
+    public string Value { get; set; } = string.Empty;
+    
+    public string? Category { get; set; }
+    
+    public string? Description { get; set; }
+    
+    public bool IsEncrypted { get; set; }
+}
+
 public class UpdateSettingRequest
 {
     [Required]
@@ -12,6 +27,7 @@ public class SystemSettingDto
 {
     public string Key { get; set; } = string.Empty;
     public string Value { get; set; } = string.Empty;
+    public string? Category { get; set; }
     public string? DataType { get; set; }
     public string? Description { get; set; }
     public DateTime? UpdatedAt { get; set; }

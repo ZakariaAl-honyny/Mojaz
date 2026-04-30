@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import type { Notification, NotificationPreferences, DeviceInfo } from '@/types/notification.types';
 
 interface NotificationState {
@@ -72,6 +72,7 @@ export const useNotificationStore = create<NotificationState>()(
     }),
     {
       name: 'mojaz-notifications',
+      storage: createJSONStorage(() => sessionStorage),
       partialize: (state) => ({ 
         notifications: state.notifications.slice(0, 50),
         unreadCount: state.unreadCount,

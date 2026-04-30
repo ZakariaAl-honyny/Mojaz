@@ -21,7 +21,7 @@ namespace Mojaz.Infrastructure.Persistence.Repositories
             _dbSet = context.Set<T>();
         }
 
-        public async Task<T?> GetByIdAsync(Guid id, CancellationToken ct = default)
+        public async Task<T?> GetByIdAsync(int id, CancellationToken ct = default)
         {
             return await _dbSet.FindAsync(new object[] { id }, cancellationToken: ct);
         }
@@ -49,7 +49,7 @@ namespace Mojaz.Infrastructure.Persistence.Repositories
 
         public void Remove(T entity)
         {
-            if (entity is Mojaz.Domain.Common.SoftDeletableEntity softDeletable)
+            if (entity is Mojaz.Domain.Entities.SoftDeletableEntity softDeletable)
             {
                 softDeletable.IsDeleted = true;
                 softDeletable.DeletedAt = DateTime.UtcNow;

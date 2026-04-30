@@ -43,7 +43,7 @@
 
 ## 1. Executive Summary
 
-**Mojaz (مُجاز)** is a comprehensive government digital platform for managing the complete driving license lifecycle. The system simulates real Saudi government systems (inspired by Absher Design System) with full Arabic RTL and English LTR support.
+**Mojaz (مُجاز)** is a comprehensive government digital platform for  yemen sanaa  managing the complete driving license lifecycle. The system simulates real Yemen sanaa government systems (inspired by Absher Design System) with full Arabic RTL support.
 
 The driving license issuance system is an integrated government electronic platform aimed at digitizing and automating the entire process of issuing driving licenses, from application submission to final license receipt.
 
@@ -75,7 +75,7 @@ The driving license issuance system is an integrated government electronic platf
 | Real Integrations | 3 (Email + SMS + Push) |
 | Application Form Fields | 21 |
 | Required Documents | 8 |
-| Database Tables | 21 |
+| Database Tables | 24 |
 | API Endpoints | ~52 |
 | UI Screens | 21 |
 | Core Reports | 7 |
@@ -91,7 +91,7 @@ The first version (MVP) focuses on:
 - **6 license categories** which are the most commonly used (including agricultural vehicles)
 - **7 user roles** with clear permissions
 - **10 detailed workflow stages** for new license issuance
-- **Bilingual support** (Arabic RTL / English LTR)
+- **Bilingual support** (Arabic RTL )
 - **Real integration** with SMS + Email + Push Notifications
 - **All other integrations simulated** to accelerate launch
 
@@ -203,7 +203,7 @@ The first version (MVP) focuses on:
 
 | Requirement | Detail |
 |-------------|--------|
-| Bilingual support | Arabic RTL / English LTR — instant switch affects entire layout |
+| Bilingual support | Arabic RTL — instant switch affects entire layout |
 | Dark/Light mode | Full theme support |
 | Multiple themes | Switchable government themes |
 | Responsive design | Fully responsive |
@@ -768,7 +768,7 @@ Issuance Fees (ISSUANCE_FEE_[CATEGORY]) — Varies by category
 | Theory Test | TBD | ✅ | Before test booking |
 | Practical Test | TBD | ✅ | Before test booking |
 | Retake Test | TBD | ✅ | Before rebooking |
-| License Issuance A-F | TBD per category | ✅ | Before issuance |
+| License Issuance A-F | TBD\ per category | ✅ | Before issuance |
 
 ### 10.4 Fee Management Rules
 
@@ -1184,43 +1184,157 @@ User can control notification channels from account settings:
 
 - **Two separate portals:** Applicant Portal + Employee/Admin Portal
 - **Design:** Modern, simple, official government style
+- **Note:** All screens are bilingual (Arabic RTL / English LTR) and support Dark/Light mode
 
-### 19.2 Applicant Portal — 9 Screens
+---
 
-| # | Screen |
-|---|--------|
-| 1 | Registration / Login (email or phone with real OTP) |
-| 2 | Personal Dashboard |
-| 3 | New Application Form (Multi-step Wizard) |
-| 4 | Document Upload |
-| 5 | Appointment Booking / Management |
-| 6 | Payment Page (Simulation) |
-| 7 | Application Status Tracking (Timeline) |
-| 8 | Results and Notifications View (Internal + Push) |
-| 9 | Digital License Download (PDF) |
+### 19.2 Applicant Portal Screens (المتقدم)
 
-### 19.3 Employee Portal — 7 Screens
+| # | Screen | Arabic | Route | Purpose | Form Fields |
+|---|--------|--------|-------|---------|-----------|
+| 1 | Login | تسجيل الدخول | /login | Authenticate | Email/Phone, Password, OTP |
+| 2 | Registration | التسجيل | /register | Create account | FullName, Email/Phone, Password, NationalId, DOB, Nationality, Gender, Photo |
+| 3 | Dashboard | لوحة التحكم | /dashboard | Overview | Stats cards, Recent applications, Quick actions |
+| 4 | New Application | طلب جديد | /applications/new | Service request wizard | ServiceType, Category, PersonalInfo, Documents, Declaration (multi-step) |
+| 5 | My Applications | طلباتي | /applications | List & track | Filters, Search, Table with status |
+| 6 | Application Details | تفاصيل الطلب | /applications/[id] | Full view | Timeline, Documents, Payments, Appointments, Actions |
+| 7 | Document Upload | رفع المستندات | /applications/[id]/documents | Submit docs | File upload, Type selection, Preview |
+| 8 | Appointment Booking | حجز الموعد | /appointments | Book medical/test | Center, Date, Time slot selection |
+| 9 | Payments | المدفوعات | /payments | Pay fees | Fee list, Payment method, Confirmation |
+| 10 | Notifications | التنبيهات | /notifications | View alerts | List, Mark read, Filter by type |
+| 11 | My License | رخصتي | /licenses/[id] | View/download | License card, QR, PDF download |
+| 12 | Profile | الملف الشخصي | /profile | Manage account | Personal info, Password, Preferences |
 
-| # | Screen |
-|---|--------|
-| 1 | Role-based Dashboard |
-| 2 | Applications List Referred to Role |
-| 3 | Detailed Application Review Screen |
-| 4 | Results Recording Screen (Exam/Test) |
-| 5 | Appointment and Capacity Management |
-| 6 | Approval / Rejection Screen |
-| 7 | Reports and Statistics |
+**Total: 12 Applicant Screens**
 
-### 19.4 System Admin Portal — 4 Screens
+---
 
-| # | Screen |
-|---|--------|
-| 1 | User and Permission Management |
-| 2 | Policy and Fee Management |
-| 3 | Audit Logs |
-| 4 | General System Settings |
+### 19.3 Receptionist Portal Screens (موظف الاستقبال)
 
-**Total:** Landing Page + 9 + 7 + 4 = **21 Screens/Pages**
+| # | Screen | Arabic | Route | Purpose | Form Fields |
+|---|--------|--------|-------|---------|-----------|
+| 1 | Dashboard | لوحة التحكم | /employee/receptionist | Overview | Stats, Queue, Recent work |
+| 2 | Application Queue | طابور المعاملات | /employee/receptionist/applications | Pending apps | Filters, Search, Table |
+| 3 | Application Review | مراجعة الطلب | /employee/receptionist/applications/[id] | Verify docs | Doc review checklist, Notes, Approve/Reject |
+| 4 | Create Application | إنشاء طلب | /employee/receptionist/applications/new | Walk-in app | Applicant data form, Documents |
+| 5 | Missing Documents | المستندات الناقصة | /employee/receptionist/applications/[id]/request-docs | Request docs | Document list, Message |
+| 6 | Appointments | المواعيد | /employee/receptionist/appointments | Manage schedule | Calendar, Slots, Booking |
+| 7 | Reports | التقارير | /employee/receptionist/reports | Statistics | Date filters, Export |
+
+**Total: 7 Receptionist Screens**
+
+---
+
+### 19.4 Doctor/Medical Portal Screens (الطبيب)
+
+| # | Screen | Arabic | Route | Purpose | Form Fields |
+|---|--------|--------|-------|---------|-----------|
+| 1 | Dashboard | لوحة التحكم | /employee/doctor | Overview | Stats, Today's exams |
+| 2 | Examination Queue | طابور الفحص | /employee/doctor/examinations | Pending exams | Filters, Search, Table |
+| 3 | Medical Exam | الفحص الطبي | /employee/doctor/examinations/[id] | Record result | Measurements, Vision, Hearing, Blood pressure, Fitness status |
+| 4 | Medical History | السجل الطبي | /employee/doctor/history | Past exams | Search, Table, Details |
+| 5 | Reports | التقارير | /employee/doctor/reports | Statistics | Date filters, Export |
+
+**Total: 5 Doctor Screens**
+
+---
+
+### 19.5 Examiner Portal Screens (الفاحص)
+
+| # | Screen | Arabic | Route | Purpose | Form Fields |
+|---|--------|--------|-------|---------|-----------|
+| 1 | Dashboard | لوحة التحكم | /employee/examiner | Overview | Stats, Today's tests |
+| 2 | Theory Test Queue | طابور النظري | /employee/examiner/theory | Pending theory | Filters, Search, Table |
+| 3 | Practical Test Queue | طابور العملي | /employee/examiner/practical | Pending practical | Filters, Search, Table |
+| 4 | Theory Test | الاختبار النظري | /employee/examiner/theory/[id] | Record result | Questions, Answers, Score, Pass/Fail |
+| 5 | Practical Test | الاختبار العملي | /employee/examiner/practical/[id] | Record result | Checklist, Score, Observations, Pass/Fail |
+| 6 | Test History | سجل الاختبارات | /employee/examiner/history | Past tests | Search, Table, Details |
+| 7 | Reports | التقارير | /employee/examiner/reports | Statistics | Date filters, Export |
+
+**Total: 7 Examiner Screens**
+
+---
+
+### 19.6 Manager/Supervisor Portal Screens (المدير)
+
+| # | Screen | Arabic | Route | Purpose | Form Fields |
+|---|--------|--------|-------|---------|-----------|
+| 1 | Dashboard | لوحة التحكم | /employee/manager | Overview | KPIs, Charts, Alerts |
+| 2 | All Applications | جميع الطلبات | /employee/manager/applications | Monitor all | Advanced filters, Table, Export |
+| 3 | Application Details | تفاصيل الطلب | /employee/manager/applications/[id] | Full review | All data, Timeline, Approve/Reject |
+| 4 | Users | المستخدمين | /employee/manager/users | Manage staff | Table, Add/Edit, Roles |
+| 5 | Attendance | الحضور والانصراف | /employee/manager/attendance | Monitor staff | Calendar, Status |
+| 6 | Reports | التقارير | /employee/manager/reports | Statistics | 7 core reports, Export |
+| 7 | Settings | الإعدادات | /employee/manager/settings | Workflow config | Stages, Gates, Alerts |
+
+**Total: 7 Manager Screens**
+
+---
+
+### 19.7 Security Portal Screens (الجهة الأمنية)
+
+| # | Screen | Arabic | Route | Purpose | Form Fields |
+|---|--------|--------|-------|---------|-----------|
+| 1 | Dashboard | لوحة التحكم | /employee/security | Overview | Stats, Queue |
+| 2 | Security Queue | طابور التحقق | /employee/security/queue | Pending review | Filters, Search, Table |
+| 3 | Security Verification | التحقق الأمني | /employee/security/verify/[id] | Review app | Checklist, Notes, Approve/Block |
+| 4 | User Management | إدارة المستخدمين | /employee/security/users | Block users | Search, Block/Unblock toggle |
+| 5 | Reports | التقارير | /employee/security/reports | Statistics | Date filters, Export |
+
+**Total: 5 Security Screens**
+
+---
+
+### 19.8 Admin Portal Screens (مسؤول النظام)
+
+| # | Screen | Arabic | Route | Purpose | Form Fields |
+|---|--------|--------|-------|---------|-----------|
+| 1 | Dashboard | لوحة التحكم | /admin | Overview | KPIs, System health |
+| 2 | Users | المستخدمين | /admin/users | Manage users | Table, Add/Edit, Roles, Permissions |
+| 3 | User Details | تفاصيل المستخدم | /admin/users/[id] | Edit user | Profile, Roles, Status |
+| 4 | Roles | الأدوار | /admin/roles | Manage roles | Permissions matrix |
+| 5 | Settings | الإعدادات | /admin/settings | System config | All configurable settings |
+| 6 | Fees | الرسوم | /admin/fees | Manage fees | Fee list, Add/Edit, Activate/Deactivate |
+| 7 | Workflow | سير العمل | /admin/workflow | Configure stages | Stage order, Gates |
+| 8 | License Categories | فئات الرخص | /admin/categories | Manage categories | Category config |
+| 9 | Audit Logs | سج�� ال��قابة | /admin/audit-logs | View logs | Filters, Search, Export |
+| 10 | Reports | التقارير | /admin/reports | Statistics | All reports, Export |
+
+**Total: 10 Admin Screens**
+
+---
+
+### 19.9 Screen Summary by Role
+
+| Role | Screens Count | Key Forms |
+|------|:-------------:|----------|
+| Applicant | 12 | Application wizard, Document upload, Payment |
+| Receptionist | 7 | Document review, Application creation |
+| Doctor | 5 | Medical exam recording |
+| Examiner | 7 | Test result recording |
+| Manager | 7 | User management, Reports |
+| Security | 5 | Security verification |
+| Admin | 10 | User/Role/Fee/Settings management |
+| **Total** | **53** | — |
+
+**Note:** This excludes shared components (header, sidebar, notification bell, etc.) and Landing Page.
+
+---
+
+### 19.10 Common Form Elements by Role
+
+| Element | Applicant | Receptionist | Doctor | Examiner | Manager | Security | Admin |
+|---------|:---------:|:------------:|:------:|:--------:|:-------:|:--------:|:-----:|
+| Application form | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Document upload | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Result recording | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Approval/Rejection | ❌ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ |
+| License issuance | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| User management | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
+| Fee management | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| System settings | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
+| Reports/Analytics | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Audit logs | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 
 ---
 
@@ -1248,397 +1362,611 @@ User can control notification channels from account settings:
 
 ---
 
-## 21. Database Schema (21 Tables)
+## 21. Database Schema (24 Tables)
 
 > **ملاحظة:** جميع أعمدة الـ Enum مخزنة كـ `TINYINT` في قاعدة البيانات لتحسين الأداء وكفاءة التخزين.
 > يتم التحويل من/إلى نص في طبقة العرض (Frontend) فقط.
 
+### Base Entity Inheritance
+
+```sql
+-- BaseEntity (All tables inherit)
+Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
+CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt       DATETIME2 NULL
+
+-- AuditableEntity (Inherits BaseEntity)
+CreatedBy       UNIQUEIDENTIFIER FK → Users NULL
+UpdatedBy       UNIQUEIDENTIFIER FK → Users NULL
+
+-- SoftDeletableEntity (Inherits AuditableEntity)
+IsDeleted       BIT DEFAULT 0
+DeletedAt       DATETIME2 NULL
+DeletedBy       UNIQUEIDENTIFIER FK → Users NULL
+```
+
 ### 21.1 Users — المستخدمون
 
 ```sql
-Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-FullName            NVARCHAR(200) NOT NULL
-Email               NVARCHAR(200) UNIQUE NULL
-Phone               NVARCHAR(20) UNIQUE NULL
-PasswordHash        NVARCHAR(500) NOT NULL
-Role                TINYINT NOT NULL            -- 0=Applicant,1=Receptionist,2=Doctor,3=Examiner,4=Manager,5=Security,6=Admin
-RegistrationMethod  TINYINT NOT NULL             -- 0=Email,1=Phone
-IsEmailVerified     BIT DEFAULT 0
-IsPhoneVerified     BIT DEFAULT 0
-EmailVerifiedAt     DATETIME2 NULL
-PhoneVerifiedAt     DATETIME2 NULL
-LastLoginAt         DATETIME2 NULL
-FailedLoginAttempts INT DEFAULT 0
-LockedUntil         DATETIME2 NULL
-IsActive            BIT DEFAULT 1
-PreferredLanguage   TINYINT DEFAULT 0           -- 0=Arabic,1=English
-CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
-UpdatedAt           DATETIME2 NULL
-IsDeleted           BIT DEFAULT 0
-CONSTRAINT CK_Users_Contact CHECK (Email IS NOT NULL OR Phone IS NOT NULL)
-```
-
-### 21.2 Applicants — المتقدمون
-
-```sql
-Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-UserId          UNIQUEIDENTIFIER FK → Users(Id)
-NationalId      NVARCHAR(20) NOT NULL UNIQUE
-DateOfBirth     DATE NOT NULL
-Gender          TINYINT NOT NULL               -- 0=Male,1=Female
-Nationality     NVARCHAR(100) NOT NULL
-BloodType       TINYINT NULL                   -- 0=A+,1=A-,2=B+,3=B-,4=AB+,5=AB-,6=O+,7=O-
-Address         NVARCHAR(500) NULL
-City            NVARCHAR(100) NULL
-Region          NVARCHAR(100) NULL
-ApplicantType   TINYINT NOT NULL               -- 0=Citizen,1=Resident
-CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
-```
-
-### 21.3 Applications — الطلبات
-
-```sql
 Id                      UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-ApplicationNumber       NVARCHAR(20) NOT NULL UNIQUE    -- MOJ-2025-XXXXXXXX
-ApplicantId             UNIQUEIDENTIFIER FK → Applicants
-ServiceType             TINYINT NOT NULL          -- 0=NewLicense,1=Renewal,2=LostReplacement,3=DamagedReplacement,4=CategoryUpgrade,5=TestRetake,6=AppointmentBooking,7=Cancellation,8=DocumentDownload
-LicenseCategoryId       INT FK → LicenseCategories
-BranchId                INT NULL
-Status                  TINYINT NOT NULL DEFAULT 0  -- 0=Draft,1=Submitted,2=InReview,3=PendingDocuments,4=DocumentsApproved,5=MedicalExamPending,6=MedicalExamPassed,7=TrainingPending,8=TrainingCompleted,9=TheoryTestPending,10=TheoryTestPassed,11=PracticalTestPending,12=PracticalTestPassed,13=FinalApprovalPending,14=Approved,15=Rejected,16=Cancelled,17=Expired,18=IssuancePending,19=Issued
-CurrentStage            TINYINT NULL              -- 0=Application,1=Documents,2=Payment,3=MedicalExam,4=Training,5=TheoryTest,6=PracticalTest,7=FinalApproval,8=IssuancePayment,9=Issuance
-PreferredLanguage       TINYINT NULL             -- 0=Arabic,1=English
-SpecialNeeds            NVARCHAR(500) NULL
-DataAccuracyConfirmed   BIT DEFAULT 0
-ExpiresAt               DATETIME2 NULL
-CancelledAt             DATETIME2 NULL
-CancellationReason      NVARCHAR(500) NULL
+FullNameAr              NVARCHAR(200) NOT NULL
+FullNameEn              NVARCHAR(200) NOT NULL
+NationalId              NVARCHAR(20) NOT NULL
+Email                   NVARCHAR(200) NOT NULL
+PhoneNumber             NVARCHAR(20) NOT NULL
+PasswordHash            NVARCHAR(500) NOT NULL
+Role                    TINYINT NOT NULL            -- Enum: UserRole
+AppRole                 TINYINT NULL                -- Enum: AppRole
+DateOfBirth             DATE NULL
+Gender                  TINYINT NULL                -- Enum: GenderEnum
+Nationality             NVARCHAR(100) NULL
+BloodType               TINYINT NULL                -- Enum: BloodTypeEnum
+Address                 NVARCHAR(500) NULL
+City                    NVARCHAR(100) NULL
+Region                  NVARCHAR(100) NULL
+ApplicantType           TINYINT NULL                -- Enum: ApplicantType
+PreferredLanguage       NVARCHAR(10) DEFAULT 'ar'
+AppointmentPreference   NVARCHAR(100) NULL
+NotificationPreferences NVARCHAR(MAX) NULL
+RegistrationMethod      TINYINT NOT NULL            -- Enum: RegistrationMethod
+IsEmailVerified         BIT DEFAULT 0
+IsPhoneVerified         BIT DEFAULT 0
+EmailVerifiedAt         DATETIME2 NULL
+PhoneVerifiedAt         DATETIME2 NULL
+IsActive                BIT DEFAULT 1
+IsLocked                BIT DEFAULT 0
+RequiresPasswordReset   BIT DEFAULT 0
+EnableEmail             BIT DEFAULT 1
+EnableSms               BIT DEFAULT 1
+EnablePush              BIT DEFAULT 1
+IsSecurityBlocked       BIT DEFAULT 0
+FailedLoginAttempts     INT DEFAULT 0
+LockoutEnd               DATETIME2 NULL
+LastLoginAt              DATETIME2 NULL
 CreatedAt               DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt               DATETIME2 NULL
 IsDeleted               BIT DEFAULT 0
+DeletedAt               DATETIME2 NULL
+DeletedBy               UNIQUEIDENTIFIER NULL
+CreatedBy               UNIQUEIDENTIFIER NULL
+UpdatedBy               UNIQUEIDENTIFIER NULL
 ```
 
-### 21.4 LicenseCategories — فئات الرخص
+### 21.2 Applications — الطلبات
+
+```sql
+Id                          UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
+ApplicationNumber           NVARCHAR(20) NOT NULL UNIQUE    -- MOJ-2025-XXXXXXXX
+ApplicantId                  UNIQUEIDENTIFIER FK → Users
+ServiceType                 TINYINT NOT NULL          -- Enum: ServiceType
+LicenseCategoryId           UNIQUEIDENTIFIER FK → LicenseCategories
+BranchId                    UNIQUEIDENTIFIER NULL
+Status                      TINYINT NOT NULL DEFAULT 0  -- Enum: ApplicationStatus
+CurrentStage                NVARCHAR(50) NOT NULL
+PreferredLanguage           NVARCHAR(10) DEFAULT 'ar'
+SpecialNeeds                NVARCHAR(500) NULL
+DataAccuracyConfirmed       BIT DEFAULT 0
+SubmittedAt                 DATETIME2 NULL
+ReviewedBy                  UNIQUEIDENTIFIER NULL
+ReviewedAt                  DATETIME2 NULL
+Notes                       NVARCHAR(MAX) NULL
+RejectionReason             NVARCHAR(500) NULL
+ExpiresAt                   DATETIME2 NULL
+CancelledAt                 DATETIME2 NULL
+CancellationReason          NVARCHAR(500) NULL
+TheoryAttemptCount          INT DEFAULT 0
+PracticalAttemptCount       INT DEFAULT 0
+AdditionalTrainingRequired  BIT DEFAULT 0
+FinalDecision               TINYINT NULL                -- Enum: FinalDecisionType
+FinalDecisionBy             UNIQUEIDENTIFIER NULL
+FinalDecisionAt             DATETIME2 NULL
+FinalDecisionReason         NVARCHAR(500) NULL
+ReturnToStage               NVARCHAR(50) NULL
+ManagerNotes                NVARCHAR(500) NULL
+CreatedAt                   DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt                   DATETIME2 NULL
+IsDeleted                   BIT DEFAULT 0
+DeletedAt                   DATETIME2 NULL
+DeletedBy                   UNIQUEIDENTIFIER NULL
+CreatedBy                   UNIQUEIDENTIFIER NULL
+UpdatedBy                   UNIQUEIDENTIFIER NULL
+```
+
+### 21.3 LicenseCategories — فئات الرخص
 
 ```sql
 Id               UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-Code             NVARCHAR(5) NOT NULL UNIQUE    -- A|B|C|D|E|F
+Code             TINYINT NOT NULL UNIQUE          -- Enum: LicenseCategoryCode
 NameAr           NVARCHAR(100) NOT NULL
 NameEn           NVARCHAR(100) NOT NULL
 MinimumAge       INT NOT NULL
 RequiresTraining BIT DEFAULT 1
 IsActive         BIT DEFAULT 1
+ValidityYears    INT NOT NULL
+CreatedAt        DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt        DATETIME2 NULL
+CreatedBy        UNIQUEIDENTIFIER NULL
+UpdatedBy        UNIQUEIDENTIFIER NULL
 ```
 
-### 21.5 Documents — المستندات
+### 21.4 ApplicationDocuments — مستندات الطلب
 
 ```sql
 Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 ApplicationId   UNIQUEIDENTIFIER FK → Applications
-DocumentType    TINYINT NOT NULL           -- 0=NationalIdCopy,1=Photo,2=MedicalReport,3=TrainingCertificate,4=ResidenceProof,5=GuardianConsent,6=PreviousLicense,7=AccessibilityDocs
-FileName        NVARCHAR(255) NOT NULL
-FilePath        NVARCHAR(500) NOT NULL
-FileSize        BIGINT NULL
-MimeType        NVARCHAR(100) NULL
-IsRequired      BIT DEFAULT 1
-Status          TINYINT DEFAULT 0          -- 0=Uploaded,1=UnderReview,2=Approved,3=Rejected
-ReviewedBy      UNIQUEIDENTIFIER FK → Users NULL
-ReviewedAt      DATETIME2 NULL
+DocumentType    TINYINT NOT NULL           -- Enum: DocumentType
+OriginalFileName NVARCHAR(255) NOT NULL
+StoredFileName   NVARCHAR(255) NOT NULL
+FilePath         NVARCHAR(500) NOT NULL
+FileSizeBytes    BIGINT NOT NULL
+ContentType      NVARCHAR(100) NOT NULL
+IsRequired       BIT DEFAULT 1
+Status           TINYINT DEFAULT 0          -- Enum: DocumentStatus
+ReviewedBy       UNIQUEIDENTIFIER NULL
+ReviewedAt       DATETIME2 NULL
 RejectionReason NVARCHAR(500) NULL
-UploadedAt      DATETIME2 DEFAULT GETUTCDATE()
+CreatedAt        DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt        DATETIME2 NULL
+IsDeleted        BIT DEFAULT 0
+DeletedAt        DATETIME2 NULL
+DeletedBy        UNIQUEIDENTIFIER NULL
+CreatedBy        UNIQUEIDENTIFIER NULL
+UpdatedBy        UNIQUEIDENTIFIER NULL
 ```
 
-### 21.6 Appointments — المواعيد
+### 21.5 Appointments — المواعيد
 
 ```sql
 Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 ApplicationId       UNIQUEIDENTIFIER FK → Applications
-AppointmentType     TINYINT NOT NULL          -- 0=Medical,1=Theory,2=Practical
+AppointmentType     TINYINT NOT NULL          -- Enum: AppointmentType
 ScheduledDate       DATE NOT NULL
 TimeSlot            NVARCHAR(20) NOT NULL
-BranchId            INT NULL
-Status              TINYINT DEFAULT 0         -- 0=Scheduled,1=Confirmed,2=Completed,3=Cancelled,4=Rescheduled,5=NoShow
+BranchId            UNIQUEIDENTIFIER NULL
+AssignedStaffId     UNIQUEIDENTIFIER NULL
+Status              TINYINT DEFAULT 0         -- Enum: AppointmentStatus
+Notes               NVARCHAR(500) NULL
 CancelledAt         DATETIME2 NULL
 CancellationReason  NVARCHAR(500) NULL
+CheckInTime         TIME NULL
+RescheduleCount     INT DEFAULT 0
+ReminderSent        BIT DEFAULT 0
+RowVersion          TIMESTAMP NULL
 CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt           DATETIME2 NULL
+IsDeleted           BIT DEFAULT 0
+DeletedAt           DATETIME2 NULL
+DeletedBy           UNIQUEIDENTIFIER NULL
+CreatedBy           UNIQUEIDENTIFIER NULL
+UpdatedBy           UNIQUEIDENTIFIER NULL
 ```
 
-### 21.7 MedicalExams — الفحص الطبي
+### 21.6 MedicalExaminations — الفحوصات الطبية
 
 ```sql
-Id              INT PK
-ApplicationId   INT FK → Applications
-ExamDate        DATETIME2 NULL
-DoctorId        UNIQUEIDENTIFIER FK → Users NULL
-FitnessResult   TINYINT NULL              -- 0=Fit,1=Unfit,2=ConditionalFit,3=RequiresReexam
-BloodType       TINYINT NULL              -- 0=A+,1=A-,2=B+,3=B-,4=AB+,5=AB-,6=O+,7=O-
-Notes           NVARCHAR(1000) NULL
+Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
+ApplicationId   UNIQUEIDENTIFIER FK → Applications
+DoctorId        UNIQUEIDENTIFIER FK → Users
+ExaminedAt      DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+FitnessResult   TINYINT NOT NULL          -- Enum: MedicalFitnessResult
+BloodType       TINYINT NULL               -- Enum: BloodTypeEnum
+Notes           NVARCHAR(MAX) NULL
 ReportReference NVARCHAR(100) NULL
-ValidUntil      DATE NULL
+ValidUntil      DATETIME2 NULL
+CertificatePath NVARCHAR(500) NULL
 CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt       DATETIME2 NULL
+IsDeleted       BIT DEFAULT 0
+DeletedAt       DATETIME2 NULL
+DeletedBy       UNIQUEIDENTIFIER NULL
+CreatedBy       UNIQUEIDENTIFIER NULL
+UpdatedBy       UNIQUEIDENTIFIER NULL
 ```
 
-### 21.8 TrainingRecords — سجلات التدريب
+### 21.7 TrainingRecords — سجلات التدريب
 
 ```sql
 Id                      UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 ApplicationId           UNIQUEIDENTIFIER FK → Applications
-SchoolName              NVARCHAR(200) NULL
+SchoolName              NVARCHAR(200) NOT NULL
 CertificateNumber       NVARCHAR(100) NULL
-CompletedHours          INT NULL
-RequiredHours           INT NULL
-IsExempt                BIT DEFAULT 0
+CompletedHours          INT NOT NULL
+TotalHoursRequired      INT NOT NULL
+TrainingStatus          TINYINT NOT NULL DEFAULT 0  -- Enum: TrainingStatus
+IsExempted              BIT DEFAULT 0
 ExemptionReason         NVARCHAR(500) NULL
-ExemptionApprovedBy     INT FK → Users NULL
-Status                  TINYINT NULL             -- 0=NotRequired,1=PendingRegistration,2=InTraining,3=Completed,4=Absent,5=Exempt
+ExemptionDocumentId     UNIQUEIDENTIFIER NULL
+ExemptionApprovedBy     UNIQUEIDENTIFIER NULL
+ExemptionApprovedAt     DATETIME2 NULL
+ExemptionRejectionReason NVARCHAR(500) NULL
 CompletedAt             DATETIME2 NULL
+TrainingDate            DATE NULL
+TrainerName             NVARCHAR(200) NULL
+CenterName              NVARCHAR(200) NULL
 CreatedAt               DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt               DATETIME2 NULL
+IsDeleted               BIT DEFAULT 0
+DeletedAt               DATETIME2 NULL
+DeletedBy               UNIQUEIDENTIFIER NULL
+CreatedBy               UNIQUEIDENTIFIER NULL
+UpdatedBy               UNIQUEIDENTIFIER NULL
 ```
 
-### 21.9 TheoryTests — الاختبار النظري
+### 21.8 TheoryTests — الاختبارات النظرية
 
 ```sql
-Id              INT PK
-ApplicationId   INT FK → Applications
-AttemptNumber   INT NOT NULL
-TestDate        DATETIME2 NULL
-ExaminerId      INT FK → Users NULL
-Score           DECIMAL(5,2) NULL
-PassingScore    DECIMAL(5,2) NULL
-Result          TINYINT NULL             -- 0=Pass,1=Fail,2=Absent
-Notes           NVARCHAR(1000) NULL
-CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
+Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
+ApplicationId   UNIQUEIDENTIFIER FK → Applications
+ExaminerId       UNIQUEIDENTIFIER FK → Users
+AttemptNumber    INT NOT NULL
+ConductedAt      DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+Score            INT NULL
+PassingScore     INT NOT NULL
+Result           TINYINT NOT NULL          -- Enum: TestResult
+IsAbsent         BIT DEFAULT 0
+Notes            NVARCHAR(MAX) NULL
+CreatedAt        DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt        DATETIME2 NULL
+IsDeleted        BIT DEFAULT 0
+DeletedAt        DATETIME2 NULL
+DeletedBy        UNIQUEIDENTIFIER NULL
+CreatedBy        UNIQUEIDENTIFIER NULL
+UpdatedBy        UNIQUEIDENTIFIER NULL
 ```
 
-### 21.10 PracticalTests — الاختبار العملي
+### 21.9 PracticalTests — الاختبارات العملية
 
 ```sql
-Id                          INT PK
-ApplicationId               INT FK → Applications
-AttemptNumber               INT NOT NULL
-TestDate                    DATETIME2 NULL
-ExaminerId                  INT FK → Users NULL
-Result                      TINYINT NULL            -- 0=Pass,1=Fail,2=Absent
-Notes                       NVARCHAR(1000) NULL
-RequiresAdditionalTraining  BIT DEFAULT 0
-AdditionalHoursRequired     INT NULL
-CreatedAt                   DATETIME2 DEFAULT GETUTCDATE()
+Id                          UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
+ApplicationId               UNIQUEIDENTIFIER FK → Applications
+ExaminerId                   UNIQUEIDENTIFIER FK → Users
+AttemptNumber                INT NOT NULL
+ConductedAt                  DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+Score                        INT NULL
+PassingScore                 INT NOT NULL
+IsAbsent                     BIT DEFAULT 0
+Result                       TINYINT NOT NULL          -- Enum: TestResult
+Notes                       NVARCHAR(MAX) NULL
+VehicleUsed                  NVARCHAR(100) NULL
+RequiresAdditionalTraining   BIT DEFAULT 0
+AdditionalHoursRequired      INT NULL
+CreatedAt                    DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt                    DATETIME2 NULL
+IsDeleted                    BIT DEFAULT 0
+DeletedAt                    DATETIME2 NULL
+DeletedBy                    UNIQUEIDENTIFIER NULL
+CreatedBy                    UNIQUEIDENTIFIER NULL
+UpdatedBy                    UNIQUEIDENTIFIER NULL
 ```
 
-### 21.11 Payments — المدفوعات
+### 21.10 PaymentTransactions — المعاملات المالية
 
 ```sql
 Id                      UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 ApplicationId           UNIQUEIDENTIFIER FK → Applications
-FeeType                 TINYINT NOT NULL         -- 0=ApplicationFee,1=MedicalExamFee,2=TheoryTestFee,3=PracticalTestFee,4=IssuanceFee,5=RetakeFee
-Amount                  DECIMAL(10,2) NOT NULL
+FeeType                 TINYINT NOT NULL         -- Enum: FeeType
+Amount                  DECIMAL(18,2) NOT NULL
 Currency                NVARCHAR(5) DEFAULT 'SAR'
-Status                  TINYINT DEFAULT 0       -- 0=Pending,1=Processing,2=Paid,3=Failed,4=Refunded,5=Expired
-PaymentMethod           TINYINT NULL             -- 0=Card,1=BankTransfer,2=Wallet,3=Cash
+Status                  TINYINT NOT NULL DEFAULT 0  -- Enum: PaymentStatus
+PaymentMethod           NVARCHAR(50) NULL
 TransactionReference    NVARCHAR(100) NULL
 PaidAt                  DATETIME2 NULL
 FailedAt                DATETIME2 NULL
 FailureReason           NVARCHAR(500) NULL
+ReceiptPath             NVARCHAR(500) NULL
+ReceiptNumber           NVARCHAR(100) NULL
 CreatedAt               DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt               DATETIME2 NULL
+IsDeleted               BIT DEFAULT 0
+DeletedAt               DATETIME2 NULL
+DeletedBy               UNIQUEIDENTIFIER NULL
+CreatedBy               UNIQUEIDENTIFIER NULL
+UpdatedBy               UNIQUEIDENTIFIER NULL
 ```
 
-### 21.12 FeeStructures — هيكل الرسوم
+### 21.11 FeeStructures — هيكل الرسوم
 
 ```sql
 Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-FeeType             NVARCHAR(50) NOT NULL
+FeeType             TINYINT NOT NULL          -- Enum: FeeType
 LicenseCategoryId   UNIQUEIDENTIFIER FK → LicenseCategories NULL
-Amount              DECIMAL(10,2) NOT NULL
+Amount              DECIMAL(18,2) NOT NULL
 Currency            NVARCHAR(5) DEFAULT 'SAR'
+EffectiveFrom       DATETIME2 NOT NULL
+EffectiveTo         DATETIME2 NULL
 IsActive            BIT DEFAULT 1
-EffectiveFrom       DATE NOT NULL
-EffectiveTo         DATE NULL
-UpdatedBy           INT FK → Users NULL
+CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt           DATETIME2 NULL
+CreatedBy           UNIQUEIDENTIFIER NULL
+UpdatedBy           UNIQUEIDENTIFIER NULL
 ```
 
-### 21.13 Licenses — الرخص المصدرة
+### 21.12 Licenses — الرخص المصدرة
 
 ```sql
 Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 LicenseNumber   NVARCHAR(20) NOT NULL UNIQUE    -- MOJ-2025-XXXXXXXX
 ApplicationId   UNIQUEIDENTIFIER FK → Applications
-ApplicantId     UNIQUEIDENTIFIER FK → Applicants
-CategoryId      UNIQUEIDENTIFIER FK → LicenseCategories
-IssueDate       DATE NOT NULL
-ExpiryDate      DATE NOT NULL
-Status          TINYINT DEFAULT 0           -- 0=Active,1=Expired,2=Suspended,3=Revoked,4=Cancelled
-IssuedBy        UNIQUEIDENTIFIER FK → Users
+HolderId        UNIQUEIDENTIFIER FK → Users
+LicenseCategoryId UNIQUEIDENTIFIER FK → LicenseCategories
+BranchId        UNIQUEIDENTIFIER NULL
+IssuedAt        DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+ExpiresAt       DATETIME2 NOT NULL
+IssuedBy        UNIQUEIDENTIFIER NULL
+Status          TINYINT NOT NULL DEFAULT 0  -- Enum: LicenseStatus
+QrCode          NVARCHAR(500) NULL
+BlobUrl         NVARCHAR(500) NULL
 PrintedAt       DATETIME2 NULL
 DownloadedAt    DATETIME2 NULL
 CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt       DATETIME2 NULL
+IsDeleted       BIT DEFAULT 0
+DeletedAt       DATETIME2 NULL
+DeletedBy       UNIQUEIDENTIFIER NULL
+CreatedBy       UNIQUEIDENTIFIER NULL
+UpdatedBy       UNIQUEIDENTIFIER NULL
 ```
 
-### 21.14 Notifications — الإشعارات الداخلية
+### 21.13 LicenseRenewals — تجديد الرخصة
 
 ```sql
 Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-UserId          UNIQUEIDENTIFIER FK → Users
-ApplicationId   UNIQUEIDENTIFIER FK → Applications NULL
-TitleAr         NVARCHAR(200) NULL
-TitleEn         NVARCHAR(200) NULL
-MessageAr       NVARCHAR(1000) NULL
-MessageEn       NVARCHAR(1000) NULL
-EventType       TINYINT NULL              -- 0=ApplicationCreated,1=DocumentsRequested,2=ApplicationApproved,3=ApplicationRejected,4=PaymentSuccess,5=PaymentFailed,6=AppointmentBooked,7=AppointmentReminder,8=MedicalExamResult,9=TestResult,10=FinalApproval,11=LicenseIssued,12=ApplicationCancelled
-IsRead          BIT DEFAULT 0
-ReadAt          DATETIME2 NULL
+LicenseId       UNIQUEIDENTIFIER FK → Licenses
+ApplicationId   UNIQUEIDENTIFIER FK → Applications
+RenewedAt       DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+NewExpiresAt    DATETIME2 NOT NULL
+ProcessedBy     UNIQUEIDENTIFIER NULL
 CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt       DATETIME2 NULL
+CreatedBy       UNIQUEIDENTIFIER NULL
+UpdatedBy       UNIQUEIDENTIFIER NULL
 ```
 
-### 21.15 PushTokens — توكنات Push
+### 21.14 LicenseReplacements — بدل الرخصة
+
+```sql
+Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
+LicenseId       UNIQUEIDENTIFIER FK → Licenses
+ApplicationId   UNIQUEIDENTIFIER FK → Applications
+Reason          TINYINT NOT NULL          -- Enum: ReplacementReason
+IsReportVerified BIT DEFAULT 0
+ReviewComments  NVARCHAR(500) NULL
+ProcessedAt     DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+ProcessedBy     UNIQUEIDENTIFIER NULL
+CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt       DATETIME2 NULL
+CreatedBy       UNIQUEIDENTIFIER NULL
+UpdatedBy       UNIQUEIDENTIFIER NULL
+```
+
+### 21.15 CategoryUpgrades — ترقية الفئة
+
+```sql
+Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
+LicenseId       UNIQUEIDENTIFIER FK → Licenses
+ApplicationId   UNIQUEIDENTIFIER FK → Applications
+FromCategory    TINYINT NOT NULL          -- Enum: LicenseCategoryCode
+ToCategory      TINYINT NOT NULL          -- Enum: LicenseCategoryCode
+UpgradedAt      DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+ProcessedBy     UNIQUEIDENTIFIER NULL
+CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt       DATETIME2 NULL
+CreatedBy       UNIQUEIDENTIFIER NULL
+UpdatedBy       UNIQUEIDENTIFIER NULL
+```
+
+### 21.16 Notifications — الإشعارات الداخلية
+
+```sql
+Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
+UserId              UNIQUEIDENTIFIER FK → Users
+ApplicationId       UNIQUEIDENTIFIER NULL
+EventType           TINYINT NOT NULL          -- Enum: NotificationEventType
+TitleAr             NVARCHAR(200) NOT NULL
+TitleEn             NVARCHAR(200) NOT NULL
+MessageAr           NVARCHAR(1000) NOT NULL
+MessageEn           NVARCHAR(1000) NOT NULL
+IsRead              BIT DEFAULT 0
+ReadAt              DATETIME2 NULL
+SentAt              DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+RelatedEntityId      UNIQUEIDENTIFIER NULL
+RelatedEntityType    NVARCHAR(100) NULL
+CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt           DATETIME2 NULL
+```
+
+### 21.17 PushTokens — توكنات الإشعارات
 
 ```sql
 Id          UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 UserId      UNIQUEIDENTIFIER FK → Users
 Token       NVARCHAR(500) NOT NULL
-DeviceType  TINYINT NULL               -- 0=WebChrome,1=WebFirefox,2=WebSafari,3=WebEdge,4=Android,5=iOS
+DeviceType  NVARCHAR(50) NOT NULL
+LastUsedAt  DATETIME2 NULL
 IsActive    BIT DEFAULT 1
 CreatedAt   DATETIME2 DEFAULT GETUTCDATE()
-LastUsedAt  DATETIME2 NULL
+UpdatedAt   DATETIME2 NULL
+IsDeleted   BIT DEFAULT 0
+DeletedAt   DATETIME2 NULL
+DeletedBy   UNIQUEIDENTIFIER NULL
+CreatedBy   UNIQUEIDENTIFIER NULL
+UpdatedBy   UNIQUEIDENTIFIER NULL
 ```
 
-### 21.16 AuditLogs — سجلات التدقيق
+### 21.18 AuditLogs — سجلات التدقيق
 
 ```sql
-Id          UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-UserId      UNIQUEIDENTIFIER NULL
-Action      NVARCHAR(100) NOT NULL
-EntityType  NVARCHAR(100) NULL
-EntityId    NVARCHAR(100) NULL
-OldValues   NVARCHAR(MAX) NULL    -- JSON
-NewValues   NVARCHAR(MAX) NULL    -- JSON
-IpAddress   NVARCHAR(50) NULL
-UserAgent   NVARCHAR(500) NULL
-Timestamp   DATETIME2 DEFAULT GETUTCDATE()
+Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
+UserId          UNIQUEIDENTIFIER NULL
+ActionType      NVARCHAR(100) NOT NULL
+ActionCategory  NVARCHAR(100) NOT NULL
+EntityName      NVARCHAR(100) NOT NULL
+EntityId        NVARCHAR(100) NOT NULL
+Payload         NVARCHAR(MAX) NOT NULL    -- JSON
+IpAddress       NVARCHAR(50) NULL
+UserAgent       NVARCHAR(500) NULL
+IsSuccess       BIT DEFAULT 1
+Timestamp       DATETIME2 NOT NULL DEFAULT GETUTCDATE()
 ```
 
-### 21.17 SystemSettings — إعدادات النظام
+### 21.19 SystemSettings — إعدادات النظام
 
 ```sql
 Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
 SettingKey      NVARCHAR(100) NOT NULL UNIQUE
-SettingValue    NVARCHAR(1000) NULL
-Category        NVARCHAR(50) NULL
+SettingValue    NVARCHAR(1000) NOT NULL
+Category        NVARCHAR(100) NULL
 Description     NVARCHAR(500) NULL
-UpdatedBy       UNIQUEIDENTIFIER FK → Users NULL
+IsEncrypted     BIT DEFAULT 0
+CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
 UpdatedAt       DATETIME2 NULL
+CreatedBy       UNIQUEIDENTIFIER NULL
+UpdatedBy       UNIQUEIDENTIFIER NULL
 ```
 
-### 21.18 OtpCodes — رموز التحقق
+### 21.20 OtpCodes — رموز التحقق
 
 ```sql
 Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-UserId              UNIQUEIDENTIFIER FK → Users NULL
+UserId              UNIQUEIDENTIFIER NOT NULL
 Destination         NVARCHAR(200) NOT NULL
-DestinationType     TINYINT NOT NULL         -- 0=Email,1=Phone
-CodeHash            NVARCHAR(500) NOT NULL    -- Hashed OTP
-Purpose             TINYINT NOT NULL        -- 0=Registration,1=Login,2=PasswordReset
+DestinationType     TINYINT NOT NULL          -- Enum: DestinationType
+CodeHash            NVARCHAR(500) NOT NULL   -- Hashed OTP
+Purpose             TINYINT NOT NULL          -- Enum: OtpPurpose
 ExpiresAt           DATETIME2 NOT NULL
 IsUsed              BIT DEFAULT 0
 UsedAt              DATETIME2 NULL
+IsInvalidated       BIT DEFAULT 0
 AttemptCount        INT DEFAULT 0
 MaxAttempts         INT DEFAULT 3
-CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
 IpAddress           NVARCHAR(50) NULL
+CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt           DATETIME2 NULL
 ```
 
-### 21.19 RefreshTokens — توكنات التحديث
+### 21.21 RefreshTokens — توكنات التحديث
 
 ```sql
 Id                   UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-UserId              UNIQUEIDENTIFIER FK → Users
+UserId              UNIQUEIDENTIFIER NOT NULL
 Token               NVARCHAR(500) NOT NULL UNIQUE
 ExpiresAt           DATETIME2 NOT NULL
 IsRevoked           BIT DEFAULT 0
 RevokedAt           DATETIME2 NULL
 ReplacedByToken     NVARCHAR(500) NULL
-CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
 CreatedByIp         NVARCHAR(50) NULL
+CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt           DATETIME2 NULL
 ```
 
-### 21.20 EmailLogs — سجل رسائل البريد
+### 21.22 EmailLogs — سجل رسائل البريد
 
 ```sql
 Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-UserId              UNIQUEIDENTIFIER FK → Users NULL
-ToEmail             NVARCHAR(200) NOT NULL
-Subject             NVARCHAR(500) NULL
-TemplateName        NVARCHAR(100) NULL
-Status              TINYINT NOT NULL         -- 0=Sent,1=Failed,2=Bounced
-ProviderMessageId   NVARCHAR(200) NULL
-FailureReason       NVARCHAR(500) NULL
-SentAt              DATETIME2 NULL
-CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
+RecipientEmail       NVARCHAR(200) NOT NULL
+TemplateName         NVARCHAR(100) NOT NULL
+ReferenceId          NVARCHAR(100) NOT NULL
+Status               TINYINT NOT NULL          -- Enum: EmailStatus
+RetryCount           INT DEFAULT 0
+SentAt               DATETIME2 NOT NULL
+ErrorMessage         NVARCHAR(500) NULL
+IsDeleted            BIT DEFAULT 0
+CreatedAt            DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt            DATETIME2 NULL
+CreatedBy            UNIQUEIDENTIFIER NULL
+UpdatedBy            UNIQUEIDENTIFIER NULL
 ```
 
-### 21.21 SmsLogs — سجل الرسائل النصية
+### 21.23 SmsLogs — سجل الرسائل النصية
 
 ```sql
 Id                  UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
-UserId              UNIQUEIDENTIFIER FK → Users NULL
-ToPhone             NVARCHAR(20) NOT NULL
-MessageType         TINYINT NOT NULL         -- 0=OTP,1=Notification,2=Reminder
-Status              TINYINT NOT NULL         -- 0=Pending,1=Sent,2=Delivered,3=Failed,4=Undelivered
-ProviderMessageId   NVARCHAR(200) NULL
-FailureReason       NVARCHAR(500) NULL
-Cost                DECIMAL(8,4) NULL
-SentAt              DATETIME2 NULL
-CreatedAt           DATETIME2 DEFAULT GETUTCDATE()
+ApplicationId        UNIQUEIDENTIFIER NULL
+UserId              UNIQUEIDENTIFIER NOT NULL
+RecipientNumber      NVARCHAR(20) NOT NULL
+TemplateType         NVARCHAR(100) NOT NULL
+Status               TINYINT NOT NULL          -- Enum: SmsStatus
+TwilioMessageId      NVARCHAR(200) NULL
+Cost                 DECIMAL(10,4) NULL
+ErrorMessage         NVARCHAR(500) NULL
+IsDeleted            BIT DEFAULT 0
+CreatedAt            DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt            DATETIME2 NULL
+CreatedBy            UNIQUEIDENTIFIER NULL
+UpdatedBy            UNIQUEIDENTIFIER NULL
 ```
 
-### 21.22 Enum Reference Table
+### 21.24 ApplicationStatusHistory — تاريخ حالة الطلب
+
+```sql
+Id              UNIQUEIDENTIFIER PK PRIMARY KEY DEFAULT NEWID()
+ApplicationId   UNIQUEIDENTIFIER NOT NULL
+FromStatus      TINYINT NOT NULL          -- Enum: ApplicationStatus
+ToStatus        TINYINT NOT NULL          -- Enum: ApplicationStatus
+ChangedBy       UNIQUEIDENTIFIER NOT NULL
+Notes           NVARCHAR(500) NULL
+ChangedAt       DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+CreatedAt       DATETIME2 DEFAULT GETUTCDATE()
+UpdatedAt       DATETIME2 NULL
+```
+
+### 21.25 Enum Reference Table
 
 | Enum Name | Values |
 |-----------|--------|
 | **UserRole** | 0=Applicant, 1=Receptionist, 2=Doctor, 3=Examiner, 4=Manager, 5=Security, 6=Admin |
+| **AppRole** | 0=None, 1=Admin, 2=Manager, 3=Receptionist, 4=Doctor, 5=Examiner |
 | **RegistrationMethod** | 0=Email, 1=Phone |
-| **PreferredLanguage** | 0=Arabic, 1=English |
-| **Gender** | 0=Male, 1=Female |
-| **BloodType** | 0=A+, 1=A-, 2=B+, 3=B-, 4=AB+, 5=AB-, 6=O+, 7=O- |
+| **GenderEnum** | 0=Male, 1=Female |
+| **BloodTypeEnum** | 0=A+, 1=A-, 2=B+, 3=B-, 4=AB+, 5=AB-, 6=O+, 7=O- |
 | **ApplicantType** | 0=Citizen, 1=Resident |
 | **ServiceType** | 0=NewLicense, 1=Renewal, 2=LostReplacement, 3=DamagedReplacement, 4=CategoryUpgrade, 5=TestRetake, 6=AppointmentBooking, 7=Cancellation, 8=DocumentDownload |
 | **ApplicationStatus** | 0=Draft, 1=Submitted, 2=InReview, 3=PendingDocuments, 4=DocumentsApproved, 5=MedicalExamPending, 6=MedicalExamPassed, 7=TrainingPending, 8=TrainingCompleted, 9=TheoryTestPending, 10=TheoryTestPassed, 11=PracticalTestPending, 12=PracticalTestPassed, 13=FinalApprovalPending, 14=Approved, 15=Rejected, 16=Cancelled, 17=Expired, 18=IssuancePending, 19=Issued |
-| **ApplicationStage** | 0=Application, 1=Documents, 2=Payment, 3=MedicalExam, 4=Training, 5=TheoryTest, 6=PracticalTest, 7=FinalApproval, 8=IssuancePayment, 9=Issuance |
+| **FinalDecisionType** | 0=None, 1=Approved, 2=Rejected, 3=ReturnForReconciliation |
+| **LicenseCategoryCode** | 0=A, 1=B, 2=C, 3=D, 4=E, 5=F |
 | **DocumentType** | 0=NationalIdCopy, 1=Photo, 2=MedicalReport, 3=TrainingCertificate, 4=ResidenceProof, 5=GuardianConsent, 6=PreviousLicense, 7=AccessibilityDocs |
-| **DocumentStatus** | 0=Uploaded, 1=UnderReview, 2=Approved, 3=Rejected |
+| **DocumentStatus** | 0=Pending, 1=UnderReview, 2=Approved, 3=Rejected |
 | **AppointmentType** | 0=Medical, 1=Theory, 2=Practical |
 | **AppointmentStatus** | 0=Scheduled, 1=Confirmed, 2=Completed, 3=Cancelled, 4=Rescheduled, 5=NoShow |
-| **FitnessResult** | 0=Fit, 1=Unfit, 2=ConditionalFit, 3=RequiresReexam |
-| **TrainingStatus** | 0=NotRequired, 1=PendingRegistration, 2=InTraining, 3=Completed, 4=Absent, 5=Exempt |
+| **MedicalFitnessResult** | 0=Fit, 1=Unfit, 2=ConditionalFit, 3=RequiresReexam |
+| **TrainingStatus** | 0=Required, 1=PendingRegistration, 2=InTraining, 3=Completed, 4=Absent, 5=Exempt |
 | **TestResult** | 0=Pass, 1=Fail, 2=Absent |
 | **FeeType** | 0=ApplicationFee, 1=MedicalExamFee, 2=TheoryTestFee, 3=PracticalTestFee, 4=IssuanceFee, 5=RetakeFee |
 | **PaymentStatus** | 0=Pending, 1=Processing, 2=Paid, 3=Failed, 4=Refunded, 5=Expired |
-| **PaymentMethod** | 0=Card, 1=BankTransfer, 2=Wallet, 3=Cash |
 | **LicenseStatus** | 0=Active, 1=Expired, 2=Suspended, 3=Revoked, 4=Cancelled |
-| **NotificationEvent** | 0=ApplicationCreated, 1=DocumentsRequested, 2=ApplicationApproved, 3=ApplicationRejected, 4=PaymentSuccess, 5=PaymentFailed, 6=AppointmentBooked, 7=AppointmentReminder, 8=MedicalExamResult, 9=TestResult, 10=FinalApproval, 11=LicenseIssued, 12=ApplicationCancelled |
-| **DeviceType** | 0=WebChrome, 1=WebFirefox, 2=WebSafari, 3=WebEdge, 4=Android, 5=iOS |
-| **OtpDestinationType** | 0=Email, 1=Phone |
-| **OtpPurpose** | 0=Registration, 1=Login, 2=PasswordReset |
-| **EmailStatus** | 0=Sent, 1=Failed, 2=Bounced |
-| **SmsMessageType** | 0=OTP, 1=Notification, 2=Reminder |
+| **NotificationEventType** | 0=ApplicationCreated, 1=DocumentsRequested, 2=ApplicationApproved, 3=ApplicationRejected, 4=PaymentSuccess, 5=PaymentFailed, 6=AppointmentBooked, 7=AppointmentReminder, 8=MedicalExamResult, 9=TestResult, 10=FinalApproval, 11=LicenseIssued, 12=ApplicationCancelled |
+| **ReplacementReason** | 0=Lost, 1=Damaged, 2=DataCorrection |
+| **OtpPurpose** | 0=Registration, 1=Login, 2=PasswordReset, 3=PhoneVerification, 4=EmailVerification |
+| **DestinationType** | 0=Email, 1=Phone |
+| **EmailStatus** | 0=Pending, 1=Sent, 2=Failed, 3=Bounced |
 | **SmsStatus** | 0=Pending, 1=Sent, 2=Delivered, 3=Failed, 4=Undelivered |
 
-### 21.22 Entity Relationships (ERD)
+### 21.26 Entity Relationships (ERD)
 
 ```
-Users ──1:1──> Applicants
+Users ──1:N──> Applications, Licenses (HolderId)
 Users ──1:N──> AuditLogs, Notifications, OtpCodes, PushTokens
 Users ──1:N──> EmailLogs, SmsLogs, RefreshTokens
+Users ──1:N──> MedicalExaminations, TheoryTests, PracticalTests (ExaminerId)
+Users ──1:N──> LicenseRenewals, LicenseReplacements, CategoryUpgrades (ProcessedBy)
 
-Applicants ──1:N──> Applications, Licenses
-
-Applications ──1:N──> Documents, Appointments, MedicalExams
-Applications ──1:N──> TrainingRecords, TheoryTests, PracticalTests
-Applications ──1:N──> Payments, Notifications
-Applications ──1:1──> Licenses
+Applications ──1:N──> ApplicationDocuments
+Applications ──1:N──> Appointments
+Applications ──1:N──> MedicalExaminations
+Applications ──1:N──> TrainingRecords
+Applications ──1:N:N──> TheoryTests
+Applications ──1:N──> PracticalTests
+Applications ──1:N──> PaymentTransactions
+Applications ──1:N──> ApplicationStatusHistory
+Applications ──1:1──> Licenses (via ApplicationId)
 Applications ──N:1──> LicenseCategories
 
-LicenseCategories ──1:N──> FeeStructures, Licenses
+LicenseCategories ──1:N──> FeeStructures
+LicenseCategories ──1:N──> Licenses
+
+Licenses ──1:N──> LicenseRenewals
+Licenses ──1:N──> LicenseReplacements
+Licenses ──1:N──> CategoryUpgrades
 ```
 
 ---
@@ -1913,7 +2241,7 @@ GET    /api/v1/audit-logs/{entityType}/{entityId}
 | **Real Integration Points** | **3 (Email + SMS + Push)** |
 | Application Form Fields | 21 |
 | Required Documents | 8 |
-| Database Tables | 21 |
+| Database Tables | 24 |
 | API Endpoints | ~52 |
 | Screens/Pages | 21 |
 | Core Reports | 7 |

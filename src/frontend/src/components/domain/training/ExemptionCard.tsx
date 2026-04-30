@@ -38,7 +38,7 @@ export function ExemptionCard({ record, onReview, className }: ExemptionCardProp
                   APP-2025-{record.applicationId.substring(0, 8)}
                 </h3>
               </div>
-              <div className="text-right space-y-1">
+              <div className="text-end space-y-1">
                 <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">
                   {t('lastUpdated')}
                 </span>

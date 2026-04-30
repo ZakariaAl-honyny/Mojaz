@@ -14,5 +14,250 @@
       "status": "Status",
       "submittedDate": "Submission Date"
     }
+  },
+  "doctor": {
+    "dashboard": {
+      "title": "Medical Examination Dashboard",
+      "subtitle": "Medical Examinations & Licensing Management",
+      "pending": "Pending",
+      "completed": "Completed",
+      "today": "Today",
+      "fitRate": "Fitness Rate",
+      "pendingDesc": "Applications awaiting medical exam",
+      "completedDesc": "Exams completed today",
+      "todayDesc": "Scheduled exams today",
+      "fitRateDesc": "Fitness percentage",
+      "queue": "Medical Exam Queue",
+      "queueDesc": "Applications pending medical examination",
+      "openQueue": "Open Queue",
+      "results": "Results History",
+      "resultsDesc": "View previous exam results",
+      "openResults": "View History"
+    },
+    "queue": {
+      "title": "Medical Exam Queue",
+      "subtitle": "Applications pending medical examination",
+      "searchPlaceholder": "Search by application number or name...",
+      "noResults": "No pending applications for medical exam",
+      "noResultsDesc": "All applications have been medically examined",
+      "columns": {
+        "applicationNumber": "Application No.",
+        "applicantName": "Applicant",
+        "nationalId": "National ID",
+        "category": "License Category",
+        "submittedDate": "Submission Date",
+        "action": "Action"
+      },
+      "actions": {
+        "startExam": "Start Exam"
+      }
+    },
+    "exam": {
+      "title": "Medical Exam for Application No: {appNumber}",
+      "applicantInfo": "Applicant Information",
+      "fullName": "Full Name",
+      "nationalId": "National ID",
+      "dateOfBirth": "Date of Birth",
+      "licenseCategory": "License Category",
+      "address": "Address",
+      "examForm": "Medical Examination Form",
+      "visionTest": "Vision Test",
+      "visionLeft": "Left Eye",
+      "visionRight": "Right Eye",
+      "pass": "Pass",
+      "fail": "Fail",
+      "hearingTest": "Hearing Test",
+      "physicalExam": "Physical Examination",
+      "generalHealth": "General Health",
+      "bloodPressure": "Blood Pressure",
+      "result": "Overall Result",
+      "fit": "Fit",
+      "conditionallyFit": "Conditionally Fit",
+      "unfit": "Unfit",
+      "notes": "Physician Notes",
+      "notesPlaceholder": "Enter any notes related to the patient's condition...",
+      "submit": "Save Exam Results",
+      "submitting": "Saving...",
+      "success": "Medical exam results saved successfully",
+      "error": "Error saving medical exam results",
+      "warning": "Warning: Choosing 'Unfit' will automatically reject the application"
+    }
+  },
+  "security": {
+    "dashboard": {
+      "title": "Security Dashboard",
+      "subtitle": "Application Review & Security Verification",
+      "pendingVerifications": "Pending",
+      "todayVerifications": "Today",
+      "blockedUsers": "Blocked",
+      "totalApplications": "Total",
+      "pendingDesc": "Security Check",
+      "completedDesc": "Completed",
+      "blockedDesc": "Blocked Accounts",
+      "totalDesc": "Processed",
+      "queue": "Verification Queue",
+      "queueDesc": "Applications pending security verification",
+      "openQueue": "Open Queue",
+      "users": "User Management",
+      "usersDesc": "Verify user accounts and block when needed",
+      "openUsers": "Open Management"
+    },
+    "queue": {
+      "title": "Security Verification Queue",
+      "subtitle": "Applications pending security review",
+      "searchPlaceholder": "Search by name or application number...",
+      "fromDate": "From date",
+      "toDate": "To date",
+      "columns": {
+        "applicationNumber": "Application No.",
+        "applicantName": "Applicant",
+        "nationalId": "National ID",
+        "category": "Category",
+        "submittedDate": "Submission Date",
+        "verify": "Verify"
+      },
+      "noResults": "No Applications",
+      "noResultsDesc": "All applications have been reviewed",
+      "pagination": "Page {current} of {total}"
+    },
+    "verify": {
+      "title": "Review Application No: {appNumber}",
+      "applicantInfo": "Applicant Information",
+      "nationalId": "National ID",
+      "dateOfBirth": "Date of Birth",
+      "licenseCategory": "License Category",
+      "address": "Address",
+      "securityCheck": "Security Check",
+      "selectDecision": "Select Verification Decision",
+      "clear": "Clear",
+      "clearDesc": "Applicant has no security concerns",
+      "block": "Block",
+      "blockDesc": "Applicant has security concerns",
+      "notes": "Notes (Optional)",
+      "notesPlaceholder": "Enter any notes related to this application...",
+      "cancel": "Cancel",
+      "submit": "Submit Decision",
+      "submitting": "Submitting...",
+      "warning": "This application will be rejected due to security concerns. This action cannot be undone."
+    },
+    "users": {
+      "title": "User Management",
+      "subtitle": "Control security-blocked accounts",
+      "searchPlaceholder": "Search by name or national ID...",
+      "columns": {
+        "fullName": "User Name",
+        "nationalId": "National ID",
+        "phone": "Phone Number",
+        "email": "Email",
+        "status": "Security Status",
+        "action": "Action"
+      },
+      "status": {
+        "blocked": "Blocked",
+        "active": "Active"
+      },
+      "noResults": "No Data",
+      "noResultsDesc": "No users found",
+      "warning": "When blocking is enabled, the user will be prevented from submitting new applications until the block is lifted.",
+      "toggle": {
+        "block": "Block",
+        "unblock": "Unblock"
+      },
+      "success": "Block status updated successfully",
+      "error": "Failed to update block status"
+    }
+  },
+  "reports": {
+    "title": "Employee Reports & Statistics",
+    "subtitle": "Work Performance & Statistics",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "custom": "Custom",
+    "totalProcessed": "Total Processed",
+    "passRate": "Pass Rate",
+    "avgTime": "Average Time",
+    "efficiency": "Efficiency",
+    "trends": "Trends",
+    "charts": "Charts",
+    "details": "Details",
+    "dateFrom": "From",
+    "dateTo": "To",
+    "generate": "Generate Report",
+    "noData": "No data for the selected period",
+    "columns": {
+      "applicationNumber": "Application No.",
+      "result": "Result",
+      "processingTime": "Processing Time",
+      "date": "Date",
+      "category": "Category"
+    },
+    "result": {
+      "passed": "Passed",
+      "failed": "Failed",
+      "pending": "Pending"
+    },
+    "metrics": {
+      "totalProcessed": "Total Processed",
+      "passRate": "Pass Rate",
+      "avgProcessingTime": "Avg. Processing Time",
+      "efficiencyTrend": "Efficiency Trend"
+    }
+  },
+  "manager": {
+    "dashboard": {
+      "title": "Manager Dashboard",
+      "subtitle": "Command Center & General Management",
+      "pendingApprovals": "Pending",
+      "approvedToday": "Approved Today",
+      "rejectedToday": "Rejected Today",
+      "thisMonth": "This Month",
+      "pendingSingular": "pending",
+      "pendingPlural": "pending",
+      "pendingDesc": "Applications awaiting final approval",
+      "viewPending": "View Pending Approvals",
+      "viewPendingBtn": "Open Approvals Queue",
+      "processApproval": "Process Final Approval",
+      "processApprovalDesc": "Process final approval for applications",
+      "processApprovalBtn": "Process Approval",
+      "finalApproval": "Final Approval",
+      "recentActivity": "Recent Activity",
+      "recentActivityDesc": "Latest transactions processed",
+      "viewAll": "View All",
+      "columns": {
+        "applicationNumber": "Application No.",
+        "applicant": "Applicant",
+        "category": "Category",
+        "decision": "Decision",
+        "date": "Date"
+      },
+      "categoryLabel": "Cat.",
+      "sampleApplicant": "Applicant #{number}",
+      "decision": {
+        "approved": "Approved",
+        "pending": "Pending",
+        "rejected": "Rejected"
+      },
+      "status": {
+        "draft": "Draft",
+        "submitted": "Submitted",
+        "documentReview": "Document Review",
+        "inReview": "In Review",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "reports": {
+        "title": "Reports & Statistics"
+      },
+      "monthlyStats": "Monthly Statistics",
+      "monthlyStatsDesc": "View monthly transaction statistics",
+      "approvalRate": "Approval Rate",
+      "approvalRateDesc": "Approved and rejected applications ratio",
+      "processingTime": "Processing Time",
+      "processingTimeDesc": "Average transaction processing time",
+      "openReport": "Open Report",
+      "footerText": "Traffic Management System - General Traffic Department",
+      "version": "Dashboard v2.4 • Sana'a"
+    }
   }
 }

@@ -14,7 +14,9 @@ public class ApplicationProfile : Profile
             .ForMember(dest => dest.LicenseCategoryNameEn, opt => opt.MapFrom(src => src.LicenseCategory != null ? src.LicenseCategory.NameEn : string.Empty))
             .ForMember(dest => dest.LicenseCategoryNameAr, opt => opt.MapFrom(src => src.LicenseCategory != null ? src.LicenseCategory.NameAr : string.Empty))
             .ForMember(dest => dest.LicenseCategoryCode, opt => opt.MapFrom(src => src.LicenseCategory != null ? src.LicenseCategory.Code.ToString() : string.Empty))
-            .ForMember(dest => dest.ApplicantName, opt => opt.MapFrom(src => src.Applicant != null ? src.Applicant.FullNameAr : string.Empty));
+            .ForMember(dest => dest.ApplicantName, opt => opt.MapFrom(src => src.Applicant != null ? src.Applicant.FullNameAr : string.Empty))
+            .ForMember(dest => dest.SecurityStatus, opt => opt.MapFrom(src => src.SecurityStatus))
+            .ForMember(dest => dest.SecurityVerifiedAt, opt => opt.MapFrom(src => src.SecurityVerifiedAt));
 
         CreateMap<DomainApplication, ApplicationListDto>()
             .ForMember(dest => dest.LicenseCategoryNameEn, opt => opt.MapFrom(src => src.LicenseCategory != null ? src.LicenseCategory.NameEn : string.Empty))

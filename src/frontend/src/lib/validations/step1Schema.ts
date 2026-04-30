@@ -3,7 +3,7 @@ import { ServiceType } from '@/types/wizard.types';
 
 export const step1Schema = z.object({
   serviceType: z.nativeEnum(ServiceType, {
-    required_error: 'wizard.validation.step1.serviceRequired',
+    required_error: 'يرجى تحديد نوع الخدمة المطلوبة للمضي قدماً في إجراءات المعاملة السيادية.',
   }),
 });
 

@@ -128,7 +128,7 @@ export function PracticalResultForm({ applicationId, onSuccess }: PracticalResul
               {/* Score & Vehicle */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div className="space-y-4">
-                  <Label className="text-sm font-black text-[#1a3a8f] mr-2">درجة الاختبار (0 - 100)</Label>
+                  <Label className="text-sm font-black text-[#1a3a8f] me-2">درجة الاختبار (0 - 100)</Label>
                   <div className="relative">
                     <Input
                       type="number"
@@ -144,7 +144,7 @@ export function PracticalResultForm({ applicationId, onSuccess }: PracticalResul
                 </div>
                 
                 <div className="space-y-4">
-                  <Label className="text-sm font-black text-[#1a3a8f] mr-2 text-start">المركبة المستخدمة</Label>
+                  <Label className="text-sm font-black text-[#1a3a8f] me-2 text-start">المركبة المستخدمة</Label>
                   <div className="relative">
                     <Input
                       placeholder="رقم اللوحة أو نوع المركبة..."
@@ -186,7 +186,7 @@ export function PracticalResultForm({ applicationId, onSuccess }: PracticalResul
           {/* Notes Sections */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <Label className="text-sm font-black text-[#1a3a8f] mr-2">ملاحظات عامة (تظهر للمتقدم)</Label>
+              <Label className="text-sm font-black text-[#1a3a8f] me-2">ملاحظات عامة (تظهر للمتقدم)</Label>
               <Textarea
                 placeholder="قدم نصائح أو أذكر أسباب النتيجة للمتقدم..."
                 {...register('notes')}
@@ -196,7 +196,7 @@ export function PracticalResultForm({ applicationId, onSuccess }: PracticalResul
             </div>
 
             <div className="space-y-4">
-              <Label className="text-sm font-black text-amber-600 mr-2 flex items-center gap-2">
+              <Label className="text-sm font-black text-amber-600 me-2 flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4" />
                 ملاحظات الفاحص السرية (للاستخدام الداخلي فقط)
               </Label>
@@ -239,7 +239,7 @@ export function PracticalResultForm({ applicationId, onSuccess }: PracticalResul
                 animate={{ opacity: 1, height: 'auto' }}
                 className="pt-6 border-t border-white/10 space-y-4"
               >
-                <Label className="text-sm font-black text-white/80 mr-2">عدد الساعات المقترحة</Label>
+                <Label className="text-sm font-black text-white/80 me-2">عدد الساعات المقترحة</Label>
                 <div className="relative max-w-[200px]">
                   <Input
                     type="number"

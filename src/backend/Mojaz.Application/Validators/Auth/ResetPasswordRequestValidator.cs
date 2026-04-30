@@ -7,7 +7,7 @@ public class ResetPasswordRequestValidator : AbstractValidator<ResetPasswordRequ
 {
     public ResetPasswordRequestValidator()
     {
-        RuleFor(x => x.UserId)
+        RuleFor(x => x.Identifier)
             .NotEmpty().WithMessage("User ID is required.");
 
         RuleFor(x => x.Code)

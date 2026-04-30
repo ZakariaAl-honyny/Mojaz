@@ -9,7 +9,8 @@ namespace Mojaz.Application.Mappings
         public LicenseProfile()
         {
             CreateMap<License, LicenseDto>()
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.LicenseCategory != null ? src.LicenseCategory.NameAr : string.Empty));
         }
     }
 }

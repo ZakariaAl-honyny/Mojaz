@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mojaz.Application.DTOs.Medical;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Shared;
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -19,47 +21,52 @@ namespace Mojaz.API.Controllers
     public class MedicalExamsController : ControllerBase
     {
         private readonly IMedicalService _medicalService;
+        private readonly IApplicationService _applicationService;
 
-        public MedicalExamsController(IMedicalService medicalService)
+        public MedicalExamsController(IMedicalService medicalService, IApplicationService applicationService)
         {
             _medicalService = medicalService;
+            _applicationService = applicationService;
         }
 
         /// <summary>
         /// Create a medical examination result for an application
+        /// Route: api/v1/medical-exams/application/{appIdOrNumber}
         /// </summary>
-        /// <param name="request">Medical exam result details</param>
-        /// <returns>Created medical exam result</returns>
-        [HttpPost]
+        [HttpPost("application/{appIdOrNumber}")]
         [Authorize(Roles = "Doctor")]
         [ProducesResponseType(typeof(ApiResponse<MedicalResultDto>), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> CreateMedicalExam([FromBody] CreateMedicalResultRequest request)
+        public async Task<IActionResult> CreateMedicalExam(string appIdOrNumber, [FromBody] CreateMedicalResultRequest request)
         {
+            var applicationId = await ResolveAppIdAsync(appIdOrNumber);
+            if (applicationId == Guid.Empty)
+                return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
+
             var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(nameIdentifier) || !Guid.TryParse(nameIdentifier, out var doctorId))
             {
                 return Unauthorized(ApiResponse<object>.Fail(401, "Invalid user identification."));
             }
 
+            // Ensure the request's ApplicationId matches the resolved one
+            request.ApplicationId = applicationId;
+            
             var result = await _medicalService.CreateMedicalResultAsync(request, doctorId);
             return StatusCode(result.StatusCode, result);
         }
 
         /// <summary>
-        /// Get medical examination result by application ID
+        /// Get medical examination result by application ID or Number
+        /// Route: api/v1/medical-exams/application/{appIdOrNumber}
         /// </summary>
-        /// <param name="applicationId">Application identifier</param>
-        /// <returns>Medical exam result for the application</returns>
-        [HttpGet("{applicationId}")]
+        [HttpGet("application/{appIdOrNumber}")]
         [ProducesResponseType(typeof(ApiResponse<MedicalResultDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetByApplicationId(Guid applicationId)
+        public async Task<IActionResult> GetByApplicationId(string appIdOrNumber)
         {
+            var applicationId = await ResolveAppIdAsync(appIdOrNumber);
+            if (applicationId == Guid.Empty)
+                return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
+
             var result = await _medicalService.GetByApplicationIdAsync(applicationId);
             return StatusCode(result.StatusCode, result);
         }
@@ -67,26 +74,25 @@ namespace Mojaz.API.Controllers
         /// <summary>
         /// Update medical examination result
         /// </summary>
-        /// <param name="id">Medical exam identifier</param>
-        /// <param name="request">Updated result details</param>
-        /// <returns>Updated medical exam result</returns>
         [HttpPatch("{id}/result")]
         [Authorize(Roles = "Doctor")]
         [ProducesResponseType(typeof(ApiResponse<MedicalResultDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateResult(Guid id, [FromBody] UpdateMedicalResultRequest request)
         {
             var result = await _medicalService.UpdateResultAsync(id, request.Result, request.Notes);
             return StatusCode(result.StatusCode, result);
         }
+
+        private async Task<Guid> ResolveAppIdAsync(string appIdOrNumber)
+        {
+            if (string.IsNullOrWhiteSpace(appIdOrNumber)) return Guid.Empty;
+            if (Guid.TryParse(appIdOrNumber.Trim(), out var id)) return id;
+
+            var result = await _applicationService.GetByApplicationNumberAsync(appIdOrNumber.Trim());
+            return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
+        }
     }
 
-    /// <summary>
-    /// Request model for updating medical exam result
-    /// </summary>
     public class UpdateMedicalResultRequest
     {
         public Mojaz.Domain.Enums.MedicalFitnessResult Result { get; set; }

@@ -39,6 +39,16 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<DateTime?>("AssignedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("AssignedToId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AssignmentNotes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<Guid?>("BranchId")
                         .HasColumnType("uniqueidentifier");
 
@@ -121,6 +131,18 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<Guid?>("ReviewedBy")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("SecurityNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte>("SecurityStatus")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime?>("SecurityVerifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("SecurityVerifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<byte>("ServiceType")
                         .HasColumnType("tinyint");
 
@@ -153,6 +175,9 @@ namespace Mojaz.Infrastructure.Migrations
                     b.HasIndex("ApplicationNumber")
                         .IsUnique()
                         .HasDatabaseName("IX_Applications_ApplicationNumber");
+
+                    b.HasIndex("AssignedToId")
+                        .HasDatabaseName("IX_Applications_AssignedToId");
 
                     b.HasIndex("LicenseCategoryId");
 
@@ -307,6 +332,9 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<DateTime?>("CancelledAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<TimeOnly?>("CheckInTime")
+                        .HasColumnType("time");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -383,13 +411,13 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.Property<string>("ActionCategory")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ActionType")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("EntityId")
                         .IsRequired()
@@ -398,8 +426,8 @@ namespace Mojaz.Infrastructure.Migrations
 
                     b.Property<string>("EntityName")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("IpAddress")
                         .HasMaxLength(64)
@@ -561,6 +589,12 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasMaxLength(8)
                         .HasColumnType("nvarchar(8)");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("EffectiveFrom")
                         .HasColumnType("datetime2");
 
@@ -571,6 +605,9 @@ namespace Mojaz.Infrastructure.Migrations
                         .HasColumnType("tinyint");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<Guid?>("LicenseCategoryId")
@@ -651,6 +688,9 @@ namespace Mojaz.Infrastructure.Migrations
                     b.Property<string>("QrCode")
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
+
+                    b.Property<int>("ReplacementCount")
+                        .HasColumnType("int");
 
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint");
@@ -746,7 +786,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
                             Code = (byte)0,
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 890, DateTimeKind.Utc).AddTicks(8883),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 733, DateTimeKind.Utc).AddTicks(9096),
                             IsActive = true,
                             MinimumAge = 16,
                             NameAr = "دراجة نارية",
@@ -758,7 +798,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000002"),
                             Code = (byte)1,
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 890, DateTimeKind.Utc).AddTicks(8931),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 733, DateTimeKind.Utc).AddTicks(9122),
                             IsActive = true,
                             MinimumAge = 18,
                             NameAr = "خصوصي",
@@ -770,7 +810,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000003"),
                             Code = (byte)2,
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 890, DateTimeKind.Utc).AddTicks(8937),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 733, DateTimeKind.Utc).AddTicks(9126),
                             IsActive = true,
                             MinimumAge = 21,
                             NameAr = "نقل عام",
@@ -782,7 +822,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000004"),
                             Code = (byte)3,
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 890, DateTimeKind.Utc).AddTicks(8941),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 733, DateTimeKind.Utc).AddTicks(9130),
                             IsActive = true,
                             MinimumAge = 21,
                             NameAr = "مركبات ثقيلة",
@@ -794,7 +834,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000005"),
                             Code = (byte)4,
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 890, DateTimeKind.Utc).AddTicks(8946),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 733, DateTimeKind.Utc).AddTicks(9134),
                             IsActive = true,
                             MinimumAge = 21,
                             NameAr = "مركبات صناعية",
@@ -806,7 +846,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000006"),
                             Code = (byte)5,
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 890, DateTimeKind.Utc).AddTicks(8950),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 733, DateTimeKind.Utc).AddTicks(9138),
                             IsActive = true,
                             MinimumAge = 18,
                             NameAr = "مركبات زراعية",
@@ -1504,7 +1544,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000001001"),
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3609),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6445),
                             Description = "OTP validity in minutes for SMS",
                             IsEncrypted = false,
                             SettingKey = "OTP_VALIDITY_MINUTES_SMS",
@@ -1514,17 +1554,17 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000001002"),
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3634),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6477),
                             Description = "OTP validity in minutes for Email",
                             IsEncrypted = false,
                             SettingKey = "OTP_VALIDITY_MINUTES_EMAIL",
-                            SettingValue = "10"
+                            SettingValue = "15"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000001003"),
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3639),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6482),
                             Description = "Max OTP verification attempts",
                             IsEncrypted = false,
                             SettingKey = "OTP_MAX_ATTEMPTS",
@@ -1534,7 +1574,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000001004"),
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3643),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6486),
                             Description = "Cooldown in seconds before resending OTP",
                             IsEncrypted = false,
                             SettingKey = "OTP_RESEND_COOLDOWN_SECONDS",
@@ -1544,7 +1584,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000001005"),
                             Category = "OTP",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3647),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6489),
                             Description = "Max OTP resends per hour",
                             IsEncrypted = false,
                             SettingKey = "OTP_MAX_RESEND_PER_HOUR",
@@ -1554,7 +1594,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000007001"),
                             Category = "Email",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3708),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6542),
                             Description = "Deduplication window in seconds for outgoing emails",
                             IsEncrypted = false,
                             SettingKey = "EMAIL_DEDUP_WINDOW_SECONDS",
@@ -1564,7 +1604,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000007002"),
                             Category = "Email",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3713),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6546),
                             Description = "Maximum retry attempts for failed emails",
                             IsEncrypted = false,
                             SettingKey = "EMAIL_MAX_RETRIES",
@@ -1574,7 +1614,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000007003"),
                             Category = "Email",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3718),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6551),
                             Description = "Base delay in seconds for email retry exponential backoff",
                             IsEncrypted = false,
                             SettingKey = "EMAIL_RETRY_BASE_DELAY_SECONDS",
@@ -1584,7 +1624,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000008001"),
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3730),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6563),
                             Description = "Maximum number of times an applicant can reschedule an appointment",
                             IsEncrypted = false,
                             SettingKey = "MAX_RESCHEDULE_COUNT",
@@ -1594,7 +1634,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000008002"),
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3735),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6632),
                             Description = "Default duration of an appointment slot in minutes",
                             IsEncrypted = false,
                             SettingKey = "DEFAULT_APPOINTMENT_DURATION_MINUTES",
@@ -1604,7 +1644,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000008003"),
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3739),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6639),
                             Description = "Maximum number of appointments allowed per time slot per branch",
                             IsEncrypted = false,
                             SettingKey = "MAX_APPOINTMENTS_PER_SLOT",
@@ -1614,7 +1654,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000008004"),
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3746),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6643),
                             Description = "Buffer time between appointments in minutes",
                             IsEncrypted = false,
                             SettingKey = "SLOT_BUFFER_MINUTES",
@@ -1624,7 +1664,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000008005"),
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3750),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6648),
                             Description = "Start of working hours for appointments (24-hour format)",
                             IsEncrypted = false,
                             SettingKey = "WORKING_HOURS_START",
@@ -1634,7 +1674,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000008006"),
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3754),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6652),
                             Description = "End of working hours for appointments (24-hour format)",
                             IsEncrypted = false,
                             SettingKey = "WORKING_HOURS_END",
@@ -1644,7 +1684,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000008007"),
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3757),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6656),
                             Description = "Hours before appointment to send reminder notification",
                             IsEncrypted = false,
                             SettingKey = "REMINDER_HOURS_BEFORE",
@@ -1654,7 +1694,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000008008"),
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3773),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6660),
                             Description = "Minimum days in advance an appointment must be booked",
                             IsEncrypted = false,
                             SettingKey = "MIN_BOOKING_DAYS_AHEAD",
@@ -1664,7 +1704,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000008009"),
                             Category = "Appointment",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3776),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6664),
                             Description = "Maximum days in advance an appointment can be booked",
                             IsEncrypted = false,
                             SettingKey = "MAX_BOOKING_DAYS_AHEAD",
@@ -1674,7 +1714,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000009001"),
                             Category = "Training",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3780),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6668),
                             Description = "Minimum training hours for Category A (Motorcycle)",
                             IsEncrypted = false,
                             SettingKey = "MIN_TRAINING_HOURS_CATEGORY_A",
@@ -1684,7 +1724,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000009002"),
                             Category = "Training",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3784),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6672),
                             Description = "Minimum training hours for Category B (Private)",
                             IsEncrypted = false,
                             SettingKey = "MIN_TRAINING_HOURS_CATEGORY_B",
@@ -1694,7 +1734,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000009003"),
                             Category = "Training",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3788),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6675),
                             Description = "Minimum training hours for Category C (Public Transport)",
                             IsEncrypted = false,
                             SettingKey = "MIN_TRAINING_HOURS_CATEGORY_C",
@@ -1704,7 +1744,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000009004"),
                             Category = "Training",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3791),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6679),
                             Description = "Minimum training hours for Category D (Heavy Vehicles)",
                             IsEncrypted = false,
                             SettingKey = "MIN_TRAINING_HOURS_CATEGORY_D",
@@ -1714,7 +1754,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000009005"),
                             Category = "Training",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3795),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6683),
                             Description = "Minimum training hours for Category E (Industrial)",
                             IsEncrypted = false,
                             SettingKey = "MIN_TRAINING_HOURS_CATEGORY_E",
@@ -1724,7 +1764,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000009006"),
                             Category = "Training",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3799),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6687),
                             Description = "Minimum training hours for Category F (Agricultural)",
                             IsEncrypted = false,
                             SettingKey = "MIN_TRAINING_HOURS_CATEGORY_F",
@@ -1734,7 +1774,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000009007"),
                             Category = "Training",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3811),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(6707),
                             Description = "Minimum age for Category F (Agricultural)",
                             IsEncrypted = false,
                             SettingKey = "MIN_AGE_CATEGORY_F",
@@ -1744,7 +1784,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000010002"),
                             Category = "Theory",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3837),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7224),
                             Description = "Number of theory test questions for Category F (Agricultural)",
                             IsEncrypted = false,
                             SettingKey = "THEORY_QUESTIONS_CATEGORY_F",
@@ -1754,7 +1794,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000011004"),
                             Category = "License",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3841),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7229),
                             Description = "License validity in years for Category F (Agricultural)",
                             IsEncrypted = false,
                             SettingKey = "VALIDITY_YEARS_CATEGORY_F",
@@ -1764,7 +1804,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000010001"),
                             Category = "Theory",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3844),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7233),
                             Description = "Minimum passing score for theory test",
                             IsEncrypted = false,
                             SettingKey = "MIN_PASS_SCORE_THEORY",
@@ -1774,7 +1814,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000011001"),
                             Category = "Practical",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3848),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7236),
                             Description = "Minimum passing score for practical test",
                             IsEncrypted = false,
                             SettingKey = "MIN_PASS_SCORE_PRACTICAL",
@@ -1784,7 +1824,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000011002"),
                             Category = "Practical",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3851),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7240),
                             Description = "Maximum number of practical test attempts",
                             IsEncrypted = false,
                             SettingKey = "MAX_PRACTICAL_ATTEMPTS",
@@ -1794,7 +1834,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000011003"),
                             Category = "Practical",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3855),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7244),
                             Description = "Days applicant must wait before rebooking after practical test failure",
                             IsEncrypted = false,
                             SettingKey = "COOLING_PERIOD_DAYS_PRACTICAL",
@@ -1804,7 +1844,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000012001"),
                             Category = "Upgrade",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3859),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7249),
                             Description = "Minimum months a license must be held before upgrading",
                             IsEncrypted = false,
                             SettingKey = "MIN_HOLDING_PERIOD_UPGRADE_MONTHS",
@@ -1814,17 +1854,17 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000012002"),
                             Category = "Upgrade",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3862),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7252),
                             Description = "Allowed category upgrade paths (Format: FROM-TO, separated by comma)",
                             IsEncrypted = false,
                             SettingKey = "ALLOWED_UPGRADE_PATHS",
-                            SettingValue = "B-C,C-D,D-E,F-B"
+                            SettingValue = "B-C,B-D,B-E,C-D,C-E,D-E,F-B"
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000012003"),
                             Category = "Upgrade",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3867),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7258),
                             Description = "Percentage reduction in training hours for category upgrades",
                             IsEncrypted = false,
                             SettingKey = "UPGRADE_TRAINING_REDUCTION_PCNT",
@@ -1834,7 +1874,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000013001"),
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3870),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7263),
                             Description = "Retention period for Audit Logs in days",
                             IsEncrypted = false,
                             SettingKey = "SECURITY_LOG_RETENTION_DAYS",
@@ -1844,7 +1884,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000013002"),
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3874),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7267),
                             Description = "Number of permits for authentication endpoints per window",
                             IsEncrypted = false,
                             SettingKey = "RATE_LIMIT_AUTH_PERMIT",
@@ -1854,7 +1894,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000013003"),
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3878),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7270),
                             Description = "Time window in seconds for authentication rate limiting",
                             IsEncrypted = false,
                             SettingKey = "RATE_LIMIT_AUTH_WINDOW",
@@ -1864,7 +1904,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000013004"),
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3882),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7273),
                             Description = "Number of permits for global API endpoints per window",
                             IsEncrypted = false,
                             SettingKey = "RATE_LIMIT_GLOBAL_PERMIT",
@@ -1874,7 +1914,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000013005"),
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3885),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7277),
                             Description = "Time window in seconds for global rate limiting",
                             IsEncrypted = false,
                             SettingKey = "RATE_LIMIT_GLOBAL_WINDOW",
@@ -1884,7 +1924,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000013006"),
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3889),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7280),
                             Description = "Maximum allowed file size for uploads in bytes (Default 5MB)",
                             IsEncrypted = false,
                             SettingKey = "MAX_FILE_SIZE_BYTES",
@@ -1894,7 +1934,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000013007"),
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3893),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7283),
                             Description = "Number of failed login attempts before sending security alert",
                             IsEncrypted = false,
                             SettingKey = "SECURITY_ALERT_THRESHOLD",
@@ -1904,7 +1944,7 @@ namespace Mojaz.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000013008"),
                             Category = "Security",
-                            CreatedAt = new DateTime(2026, 4, 24, 17, 56, 16, 908, DateTimeKind.Utc).AddTicks(3896),
+                            CreatedAt = new DateTime(2026, 4, 29, 3, 22, 7, 748, DateTimeKind.Utc).AddTicks(7287),
                             Description = "Time window in minutes for security alert threshold",
                             IsEncrypted = false,
                             SettingKey = "SECURITY_ALERT_WINDOW_MINS",

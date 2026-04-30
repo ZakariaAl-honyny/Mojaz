@@ -41,7 +41,7 @@ public class ApplicationWorkflowService : IApplicationWorkflowService
     public async Task<ApiResponse<bool>> AdvanceStageAsync(Guid applicationId, ApplicationStatus nextStatus, string notes, Guid userId)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
-        if (application == null) return ApiResponse<bool>.Fail(404, "Application not found.");
+        if (application == null) return ApiResponse<bool>.Fail(404, "الطلب غير موجود.");
 
         var oldStatus = application.Status;
         application.Status = nextStatus;
@@ -85,13 +85,13 @@ public class ApplicationWorkflowService : IApplicationWorkflowService
             }
         }
 
-        return ApiResponse<bool>.Ok(true, "Application stage advanced.");
+        return ApiResponse<bool>.Ok(true, "تم نقل الطلب إلى المرحلة التالية.");
     }
 
     public async Task<ApiResponse<bool>> RejectAsync(Guid applicationId, string reason, Guid userId)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
-        if (application == null) return ApiResponse<bool>.Fail(404, "Application not found.");
+        if (application == null) return ApiResponse<bool>.Fail(404, "الطلب غير موجود.");
 
         application.Status = ApplicationStatus.Rejected;
         application.RejectionReason = reason;
@@ -128,15 +128,15 @@ public class ApplicationWorkflowService : IApplicationWorkflowService
             }));
         }
 
-        return ApiResponse<bool>.Ok(true, "Application rejected.");
+        return ApiResponse<bool>.Ok(true, "تم رفض الطلب.");
     }
 
     private string GetStageNameFromStatus(ApplicationStatus status) => status switch
     {
-        ApplicationStatus.Submitted => "01: Submission",
-        ApplicationStatus.InReview => "02: Document Review",
-        ApplicationStatus.Approved => "10: Completed",
-        ApplicationStatus.Rejected => "Rejected",
-        _ => "Processing"
+        ApplicationStatus.Submitted => "01: التقديم",
+        ApplicationStatus.InReview => "02: مراجعة المستندات",
+        ApplicationStatus.Approved => "10: مكتمل",
+        ApplicationStatus.Rejected => "مرفوض",
+        _ => "قيد المعالجة"
     };
 }

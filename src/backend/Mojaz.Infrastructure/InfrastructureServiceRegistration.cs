@@ -24,11 +24,13 @@ public static class InfrastructureServiceRegistration
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // EF Core DbContext
+        // EF Core DbContext - SQL Server 2008 R2 compatibility
         services.AddDbContext<MojazDbContext>(options =>
             options.UseSqlServer(
                 configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly(typeof(MojazDbContext).Assembly.FullName)));
+                b => b
+                    .MigrationsAssembly(typeof(MojazDbContext).Assembly.FullName)
+                    .UseCompatibilityLevel(100))); // SQL Server 2008 compatibility
 
         // Repository & UnitOfWork
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -60,7 +62,7 @@ public static class InfrastructureServiceRegistration
         services.AddScoped<Application.Interfaces.Services.IAuditService, Services.AuditService>();
         services.AddScoped<Application.Interfaces.Services.ISystemSettingsService, Services.SystemSettingsService>();
 
-        // Hangfire (Phase 3 Fix)
+        // Hangfire
         services.AddHangfire(config => config
             .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
             .UseSimpleAssemblyNameTypeSerializer()
@@ -76,20 +78,7 @@ public static class InfrastructureServiceRegistration
 
         services.AddHangfireServer();
 
-        // SendGrid Client
-        var sendGridApiKey = configuration["SendGridSettings:ApiKey"];
-        if (!string.IsNullOrEmpty(sendGridApiKey))
-        {
-            services.AddScoped<ISendGridClient>(_ => new SendGridClient(sendGridApiKey));
-        }
-        else
-        {
-            // Fallback for development
-            services.AddScoped<ISendGridClient>(_ => new SendGridClient("SG.test-key"));
-        }
-
         // Notification & Push
-        services.AddScoped<Application.Interfaces.Services.IEmailService, Services.EmailService>();
         services.AddScoped<Application.Interfaces.Services.ISmsService, Services.SmsService>();
         services.AddScoped<Application.Interfaces.Infrastructure.ISmsService, Services.TwilioSmsService>();
         services.AddScoped<Application.Interfaces.Services.IPushNotificationService>(provider => 
@@ -99,7 +88,6 @@ public static class InfrastructureServiceRegistration
                 provider.GetRequiredService<MojazDbContext>()
             ));
         services.AddScoped<Application.Interfaces.Services.IOtpService, Services.OtpService>();
-        services.AddScoped<Application.Interfaces.Services.ISystemSettingsService, Services.SystemSettingsService>();
         services.AddScoped<Application.Interfaces.Security.IFileValidationService, Security.Services.FileValidationService>();
         services.AddScoped<Application.Interfaces.Security.ISecurityAlertService, Security.Services.SecurityAlertService>();
         services.AddScoped<Application.Interfaces.Infrastructure.IFileStorageService, Services.LocalFileStorageService>();
@@ -114,6 +102,9 @@ public static class InfrastructureServiceRegistration
 
         // Category Upgrade Service
         services.AddScoped<Application.Interfaces.Services.ICategoryUpgradeService, Application.Services.CategoryUpgradeService>();
+
+        // Test Retake Service
+        services.AddScoped<Application.Interfaces.Services.ITestRetakeService, Application.Services.TestRetakeService>();
 
         // JWT Authentication & Authorization
         services.AddMojazAuthentication(configuration);

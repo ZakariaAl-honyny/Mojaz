@@ -37,7 +37,7 @@ export interface AuditLogQueryRequest {
 }
 
 export const ACTION_TYPES = [
-  { value: '', label: 'all' },
+  { value: 'all', label: 'all' },
   { value: 'CREATE', label: 'create' },
   { value: 'UPDATE', label: 'update' },
   { value: 'DELETE', label: 'delete' },
@@ -47,7 +47,7 @@ export const ACTION_TYPES = [
 ] as const;
 
 export const ENTITY_TYPES = [
-  { value: '', label: 'all' },
+  { value: 'all', label: 'all' },
   { value: 'User', label: 'user' },
   { value: 'Application', label: 'application' },
   { value: 'License', label: 'license' },
@@ -59,8 +59,8 @@ export const ENTITY_TYPES = [
 export const auditService = {
   async getAuditLogs(request: AuditLogQueryRequest): Promise<AuditLogResponse> {
     const params = new URLSearchParams();
-    if (request.entityName) params.append('entityName', request.entityName);
-    if (request.actionType) params.append('actionType', request.actionType);
+    if (request.entityName && request.entityName !== 'all') params.append('entityName', request.entityName);
+    if (request.actionType && request.actionType !== 'all') params.append('actionType', request.actionType);
     if (request.userId) params.append('userId', request.userId);
     if (request.fromDate) params.append('fromDate', request.fromDate);
     if (request.toDate) params.append('toDate', request.toDate);
@@ -70,12 +70,12 @@ export const auditService = {
     if (request.sortBy) params.append('sortBy', request.sortBy);
     if (request.sortDir) params.append('sortDir', request.sortDir);
 
-    const response = await axios.get<{ data: AuditLogResponse }>(`/audit-logs?${params}`);
+    const response = await axios.get<{ data: AuditLogResponse }>(`audit-logs?${params}`);
     return response.data.data;
   },
 
   async getAuditLogById(id: string): Promise<AuditLogDto> {
-    const response = await axios.get<{ data: AuditLogDto }>(`/audit-logs/${id}`);
+    const response = await axios.get<{ data: AuditLogDto }>(`audit-logs/${id}`);
     return response.data.data;
   },
 };

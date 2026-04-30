@@ -1,12 +1,10 @@
-using Mojaz.Domain.Common;
 using Mojaz.Domain.Enums;
-using System;
 
 namespace Mojaz.Domain.Entities;
 
 public class PaymentTransaction : SoftDeletableEntity
 {
-    public Guid ApplicationId { get; set; }
+    public int ApplicationId { get; set; }
     public FeeType FeeType { get; set; }
     public decimal Amount { get; set; }
     public string Currency { get; set; } = "SAR";

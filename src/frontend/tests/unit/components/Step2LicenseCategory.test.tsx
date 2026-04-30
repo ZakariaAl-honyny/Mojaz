@@ -47,7 +47,7 @@ const mockCategories = [
 ];
 
 // Import mocks after jest.mock declarations
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/lib/static-translations";
 import { useQuery } from "@tanstack/react-query";
 
 // Setup translation mock implementation

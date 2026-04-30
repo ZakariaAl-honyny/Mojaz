@@ -15,16 +15,16 @@ export const DashboardSurface = ({ children, className, withGrain = true }: Dash
       {/* Background Mesh Gradients - King Blue Institutional Theme */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div 
-          className="absolute -top-[15%] -right-[5%] w-[65%] h-[65%] rounded-full blur-[140px] opacity-[0.07]"
-          style={{ background: 'radial-gradient(circle, #1a3a8f 0%, transparent 75%)' }}
+          className="absolute -top-[15%] -end-[5%] w-[65%] h-[65%] rounded-full blur-[140px] opacity-[0.07]"
+          style={{ backgroundColor: '#1a3a8f' }}
         />
         <div 
-          className="absolute top-[35%] -left-[10%] w-[55%] h-[55%] rounded-full blur-[120px] opacity-[0.04]"
-          style={{ background: 'radial-gradient(circle, #1a3a8f 0%, transparent 75%)' }}
+          className="absolute top-[35%] -start-[10%] w-[55%] h-[55%] rounded-full blur-[120px] opacity-[0.04]"
+          style={{ backgroundColor: '#D4A017' }}
         />
         <div 
-          className="absolute -bottom-[15%] right-[15%] w-[60%] h-[60%] rounded-full blur-[130px] opacity-[0.05]"
-          style={{ background: 'radial-gradient(circle, #000000 0%, transparent 75%)' }}
+          className="absolute -bottom-[15%] end-[15%] w-[60%] h-[60%] rounded-full blur-[130px] opacity-[0.05]"
+          style={{ backgroundColor: '#1a3a8f' }}
         />
         
         {/* Submarine Lines / Pattern */}

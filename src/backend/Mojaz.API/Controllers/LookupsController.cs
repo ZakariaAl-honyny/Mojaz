@@ -26,13 +26,13 @@ public class LookupsController : ControllerBase
 
     private static readonly List<LookupItem> ExamCenters = new()
     {
-        new LookupItem { Code = "EC001", NameAr = "مركز فحص القيادة المركزي", NameEn = "Central Driving Test Center", RegionCode = "SA", RegionNameAr = "العاصمة صنعاء" },
-        new LookupItem { Code = "EC002", NameAr = "مركز فحص القيادة - عدن", NameEn = "Driving Test Center - Aden", RegionCode = "AD", RegionNameAr = "عدن" },
-        new LookupItem { Code = "EC003", NameAr = "مركز فحص القيادة - تعز", NameEn = "Driving Test Center - Taiz", RegionCode = "TZ", RegionNameAr = "تعز" },
-        new LookupItem { Code = "EC004", NameAr = "مركز فحص القيادة - الحديدة", NameEn = "Driving Test Center - Hodeidah", RegionCode = "HD", RegionNameAr = "الحديدة" },
-        new LookupItem { Code = "EC005", NameAr = "مركز فحص القيادة - إب", NameEn = "Driving Test Center - Ibb", RegionCode = "IB", RegionNameAr = "إب" },
-        new LookupItem { Code = "EC006", NameAr = "مركز فحص القيادة - صعدة", NameEn = "Driving Test Center - Saadah", RegionCode = "SD", RegionNameAr = "صعدة" },
-        new LookupItem { Code = "EC007", NameAr = "مركز فحص القيادة - المكلا", NameEn = "Driving Test Center - Mukalla", RegionCode = "HM", RegionNameAr = "المكلا" }
+        new LookupItem { Code = "9a3e6f21-7d1a-4c9b-8e1f-4d2eaa1b2c3d", NameAr = "مركز فحص القيادة المركزي", NameEn = "Central Driving Test Center", RegionCode = "SA", RegionNameAr = "العاصمة صنعاء" },
+        new LookupItem { Code = "8b4f7a32-8e2b-5d0c-9f2a-5e3fbb2c3d4e", NameAr = "مركز فحص القيادة - عدن", NameEn = "Driving Test Center - Aden", RegionCode = "AD", RegionNameAr = "عدن" },
+        new LookupItem { Code = "7c5a8b43-9f3c-6e1d-0a3b-6f4acc3d4e5f", NameAr = "مركز فحص القيادة - تعز", NameEn = "Driving Test Center - Taiz", RegionCode = "TZ", RegionNameAr = "تعز" },
+        new LookupItem { Code = "6d6b9c54-0a4d-7f2e-1b4c-705bdd4e5f60", NameAr = "مركز فحص القيادة - الحديدة", NameEn = "Driving Test Center - Hodeidah", RegionCode = "HD", RegionNameAr = "الحديدة" },
+        new LookupItem { Code = "5e7c0d65-1b5e-803f-2c5d-816cee5f6071", NameAr = "مركز فحص القيادة - إب", NameEn = "Driving Test Center - Ibb", RegionCode = "IB", RegionNameAr = "إب" },
+        new LookupItem { Code = "4f8d1e76-2c6f-9140-3d6e-927dff607182", NameAr = "مركز فحص القيادة - صعدة", NameEn = "Driving Test Center - Saadah", RegionCode = "SD", RegionNameAr = "صعدة" },
+        new LookupItem { Code = "3a9e2f87-3d70-a251-4e7f-038e00718293", NameAr = "مركز فحص القيادة - المكلا", NameEn = "Driving Test Center - Mukalla", RegionCode = "HM", RegionNameAr = "المكلا" }
     };
 
     private static readonly List<LookupItem> Nationalities = new()
@@ -124,11 +124,26 @@ public class LookupsController : ControllerBase
     /// </summary>
     /// <returns>List of governorates</returns>
     [HttpGet("regions")]
+    [HttpGet("provinces")]
     [ProducesResponseType(typeof(Mojaz.Shared.ApiResponse<List<LookupItem>>), StatusCodes.Status200OK)]
     public IActionResult GetRegions()
     {
         return Ok(Mojaz.Shared.ApiResponse<List<LookupItem>>.Ok(
             Governorates,
             "تم جلب المحافظات بنجاح"));
+    }
+
+    /// <summary>
+    /// Get all lookups in one call.
+    /// </summary>
+    [HttpGet]
+    public IActionResult GetAllLookups()
+    {
+        return Ok(Mojaz.Shared.ApiResponse<object>.Ok(new
+        {
+            ExamCenters,
+            Nationalities,
+            Governorates
+        }, "تم جلب جميع البيانات المرجعية بنجاح"));
     }
 }

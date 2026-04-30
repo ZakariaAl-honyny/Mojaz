@@ -1,0 +1,933 @@
+#وثائق DevOps والنشر لمنصة Mojaz (مُجاز)
+
+##مقدمة
+
+تقدّم هذه الوثائق دليلاً تقنياً شاملاً لإعداد وبناء ونشر تطبيق منصة مُجاز الحكومي للحصول على رخصة القيادة. تشمل هذه الوثائق جميع جوانب البنية التحتية وإدارة عمليات النشر المستمر، بدءاً من إعداد الحاويات وصولاً إلى مراقبة النظام في البيئة الإنتاجية.
+
+---
+
+##القسم الأول: إعداد Docker للحاويات
+
+###١.١ Dockerfile للواجهة الخلفية (ASP.NET Core 8)
+
+يستخدم ملف Dockerfile للواجهة الخلفية بناءً متعدد المراحل (Multi-stage Build) لتحسين حجم الصورة النهائية وتقليل مساحة التخزين المطلوبة. تبدأ المرحلة الأولى (Build Stage) بتثبيت SDK اللازم لإنشاء المشروع، بينما تنتهي المرحلة الثانية (Runtime Stage) بنسخ الملفات المُنتَجة إلى صورة نهائية خفيفة تحتوي فقط على بيئة التشغيل.
+
+```dockerfile
+# المرحلة الأولى: بناء التطبيق
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# نسخ ملفات المشروع
+COPY ["src/Mojaz.API/Mojaz.API.csproj", "src/Mojaz.API/"]
+COPY ["src/Mojaz.Application/Mojaz.Application.csproj", "src/Mojaz.Application/"]
+COPY ["src/Mojaz.Domain/Mojaz.Domain.csproj", "src/Mojaz.Domain/"]
+COPY ["src/Mojaz.Infrastructure/Mojaz.Infrastructure.csproj", "src/Mojaz.Infrastructure/"]
+COPY ["src/Mojaz.Shared/Mojaz.Shared.csproj", "src/MojazShared/"]
+
+# استعادة الحزم
+RUN dotnet restore "src/Mojaz.API/Mojaz.API.csproj"
+
+# نسخ جميع الملفات المصدر
+COPY src/ ./src/
+
+# بناء التطبيق
+WORKDIR "/src/src/Mojaz.API"
+RUN dotnet build "Mojaz.API.csproj" -c Release -o /app/build
+
+# مرحلة النشر
+FROM build AS publish
+RUN dotnet publish "Mojaz.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+# المرحلة النهائية: صورة التشغيل
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+
+# إنشاء المستخدم غير الجذر
+RUN groupadd -r mojaz && useradd -r -g mojaz mojaz
+
+# نسخ الملفات المنشورة
+COPY --from=publish /app/publish .
+
+# تعيين الأذونات
+RUN chown -R mojaz:mojaz /app
+
+# تبديل المستخدم
+USER mojaz
+
+# تحديد المنفذ
+EXPOSE 5000
+
+# بيئة التشغيل
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_URLS=http://+:5000
+
+# نقطة الدخول
+ENTRYPOINT ["dotnet", "Mojaz.API.dll"]
+```
+
+يحتوي هذا الملف على عدة تحسينات أمنية أهمها تشغيل الحاوية بمستخدم غير جذر (Non-root User) لتجنب الثغرات الأمنية، كذلك استخدام صورة ASP.NET Core Runtime بدلاً من SDK لتقليل حجم الصورة النهائية. يُعرَض المنفذ 5000 خارجياً كما هو موطلوب في مواصفات المشروع.
+
+###١.٢ Dockerfile للواجهة الأمامية (Next.js 15)
+
+يستخدم ملف Dockerfile للواجهة الأمامية بناءً متعدد المراحل أيضاً مع التركيز على تحسين الأداء وتقليل حجم الصورة. يستخدم Node.js LTS للإستقرار، ويطبق تكوين الإنتاج (Production Build) للحصول على أداء أفضل.
+
+```dockerfile
+# المرحلة الأولى: التبعيات
+FROM node:20-alpine AS deps
+WORKDIR /app
+
+# نسخ ملف الحزم
+COPY package.json package-lock.json* ./
+
+# تثبيت الحزم مع تنظيف Cache
+RUN npm ci --only=production && npm cache clean --force
+
+# المرحلة الثانية: البناء
+FROM node:20-alpine AS builder
+WORKDIR /app
+
+# نسخ依赖يات
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# توليد المتغيرات البيئية
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_APP_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
+
+# بناء التطبيق للإنتاج
+RUN npm run build
+
+# المرحلة الثالثة: التشغيل
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+# إنشاء مستخدم غير جذر
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# نسخ الملفات المنشورة
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# تحديد المنفذ
+EXPOSE 3000
+
+# متغيرات البيئة
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# المستخدم النهائي
+USER nextjs
+
+CMD ["node", "server.js"]
+```
+
+يستخدام هذا التكوين وضع Standalone في Next.js الذي يولّد ملف 服务器 قابل للتنفيذ بشكل مستقل، مما يقلل من مساحة الصورة النهائية. يعمل التطبيق بمستخدم غير جذر لتطبيق أفضل ممارسات الأمان.
+
+###١.٣ docker-compose.yml للتصميم الكامل
+
+يُعرِّف ملف Docker Compose جميع خدمات التطبيق مع إعداداتها الكاملة بما في ذلك قاعدة البيانات والواجهة الأمامية والخلفية وإدارة الذاكرة المؤقتة.
+
+```yaml
+version: '3.8'
+
+services:
+  # الواجهة الخلفية
+  api:
+    build:
+      context: .
+      dockerfile: src/Mojaz.API/Dockerfile
+    container_name: mojaz_api
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=${DB_CONNECTION_STRING}
+      - Jwt__SecretKey=${JWT_SECRET_KEY}
+      - Jwt__AccessTokenExpiryMinutes=60
+      - Jwt__RefreshTokenExpiryDays=7
+      - Email__SmtpHost=${SMTP_HOST}
+      - Email__SmtpPort=${SMTP_PORT}
+      - Email__Username=${SMTP_USERNAME}
+      - Email__Password=${SMTP_PASSWORD}
+      - Email__FromEmail=${EMAIL_FROM}
+      - SMS__Provider=${SMS_PROVIDER}
+      - SMS__ApiKey=${SMS_API_KEY}
+      - Serilog__WriteTo__0__Args__connectionString=${DB_CONNECTION_STRING}
+      - Serilog__WriteTo__0__Args__tableName=Logs
+    depends_on:
+      - sqlserver
+      - redis
+    networks:
+      - mojaz_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # الواجهة الأمامية
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:5000
+        - NEXT_PUBLIC_APP_URL=http://localhost:3000
+    container_name: mojaz_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - api
+    networks:
+      - mojaz_network
+    restart: unless-stopped
+
+  # خادم SQL Server
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mojaz_sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - mojaz_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${SA_PASSWORD} -Q 'SELECT 1'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Redis للإدارة المؤقتة
+  redis:
+    image: redis:7-alpine
+    container_name: mojaz_redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - mojaz_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Nginx كوكيل عكسي
+  nginx:
+    image: nginx:alpine
+    container_name: mojaz_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - api
+      - frontend
+    networks:
+      - mojaz_network
+    restart: unless-stopped
+
+networks:
+  mojaz_network:
+    driver: bridge
+
+volumes:
+  sqlserver_data:
+  redis_data:
+```
+
+يُنشئ هذا التكوين شبكة خاصة (Bridge Network) لعزل الخدمات عن بعضها البعض، ويستخدم Health Check لكل خدمة للتأكد من جاهزيتها قبل اعتمادها. تُعرَّض الخدمات الرئيسيةPorts المحدودة فقط لتجنب التعرض المباشر للشبكة الخارجية.
+
+---
+
+##القسم الثاني: CI/CD (النشر المستمر والتكامل المستمر)
+
+###٢.١ GitHub Actions - سير العمل الرئيسي
+
+يُعرِّض سير العمل في GitHub Actions عملية كاملة من البناء والاختبار والنشر عبر ثلاث بيئات: التطوير (Development) والاختبار (Staging) والإنتاج (Production).
+
+```yaml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # فحص الكود و البناء
+  build-and-test:
+    runs-on: ubuntu-latest
+    outputs:
+      backend_image: ${{ steps.meta.outputs.tags }}
+      frontend_image: ${{ steps.meta_fe.outputs.tags }}
+    
+    steps:
+      - Checkout
+            
+      - Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - Backend Metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-api
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha
+      
+      - Frontend Metadata
+        id: meta_fe
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha
+      
+      - Build and push Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: src/Mojaz.API/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      
+      - Build and push Frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta_fe.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}
+      
+      - Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: images
+          path: |
+            backend: ${{ steps.meta.outputs.tags }}
+            frontend: ${{ steps.meta_fe.outputs.tags }}
+
+  # النشر إلى بيئة التطوير
+  deploy-development:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    environment: development
+    
+    steps:
+      - name: Deploy to Development Server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.DEV_USERNAME }}
+          key: ${{ secrets.DEV_SSH_KEY }}
+          script: |
+            cd /opt/mojaz
+            docker-compose pull
+            docker-compose up -d
+            docker system prune -f
+
+  # النشر إلى بيئة الاختبار
+  deploy-staging:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'release')
+    environment: staging
+    
+    steps:
+      - name: Deploy to Staging Server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USERNAME }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+            cd /opt/mojaz
+            docker-compose pull
+            docker-compose up -d
+            docker system prune -f
+
+  # النشر إلى بيئة الإنتاج
+  deploy-production:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    environment: production
+    
+    steps:
+      - name: Deploy to Production Server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USERNAME }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            cd /opt/mojaz
+            docker-compose pull
+            docker-compose up -d
+            docker system prune -f
+            docker restart api
+```
+
+يستخدم هذا السیر العملGitHub Actions Cache لتسريع عمليات البناء المستقبلية، ويُعرِّف ثلاث بيئات مختلفة مع شروط نشر محددة لكل منها. يُجرى التنظيف التلقائي لمساحة القرص بعد كل عملية نشر لتوفير المساحة.
+
+###٢.٢ إدارة الأسرار والمتغيرات البيئية
+
+يُخزَّن جميع الأسرار (Secrets) في إعدادات المستودع على GitHub ولا تُنسخ أبداً إلى الكود المصدري. تُعرَّف المتغيرات البيئية حسب البيئة المستهدفة.
+
+```bash
+# متغيرات الواجهة الخلفية
+DB_CONNECTION_STRING=Server=sqlserver;Database=Mojaz;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+JWT_SECRET_KEY=YourSuperSecretKeyThatIsAtLeast32CharactersLong!
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USERNAME=noreply@mojaz.gov.sa
+SMTP_PASSWORD=YourSMTPPassword
+EMAIL_FROM=noreply@mojaz.gov.sa
+SMS_PROVIDER=Twilio
+SMS_API_KEY=YourSMSAPIKey
+
+# رابط API للواجهة الأمامية
+NEXT_PUBLIC_API_URL=https://api.mojaz.gov.sa
+NEXT_PUBLIC_APP_URL=https://www.mojaz.gov.sa
+```
+
+يجب تغيير جميع كلمات المرور والأسرار في البيئة الإنتاجية واستخدام مدير الأسرار (Secrets Manager) في بيئة الإنتاج الحقيقية.
+
+---
+
+##القسم الثالث: إعداد البيئات المختلفة
+
+###٣.١ بيئة التطوير (Development Environment)
+
+تُستخدم بيئة التطوير من قبل فريق التطوير للاختبار والتطوير المحلي. تعمل جميع الخدمات في وضع التصحيح (Debug Mode) مع تسجيل مفصّل للأخطاء.
+
+```yaml
+# docker-compose.dev.yml
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: src/Mojaz.API/Dockerfile.dev
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_DETAILEDERRORS=true
+      -Logging__LogLevel__Default=Debug
+    volumes:
+      - ./src:/app
+    command: dotnet watch run
+
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=DevPassword123!
+    ports:
+      - "1433:1433"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+```
+
+تستخدم هذه البيئة Volume Mapping لتحديث الكود بشكل فوري دون إعادة بناء الحاويات، مما يسرّع دورة التطوير.
+
+###٣.٢ بيئة الاختبار (Staging Environment)
+
+تُحاكي بيئة الاختبار بيئة الإنتاج الحقيقية لاختبار التكامل والنشر. تعمل الخدمات في وضع الإنتاج مع سجلات مفصّلة للتصحيح.
+
+```yaml
+# docker-compose.staging.yml
+version: '3.8'
+
+services:
+  api:
+    image: ${REGISTRY}/mojaz-api:${VERSION}
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Staging
+      - ASPNETCORE_ENVIRONMENT=Production
+    env_file:
+      - .env.staging
+    Health Check مُفعَّل
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  frontend:
+    image: ${REGISTRY}/mojaz-frontend:${VERSION}
+    environment:
+      - NODE_ENV=staging
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/staging.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+```
+
+###٣.٣ بيئة الإنتاج (Production Environment)
+
+تُعنى بيئة الإنتاج بالأمان والموثوقية والأداء العالي. تعمل جميع الخدمات في وضع الإنتاج الكامل مع SSL مُفعَّل وتشفير البيانات.
+
+```yaml
+# docker-compose.prod.yml
+version: '3.8'
+
+services:
+  api:
+    image: ${REGISTRY}/mojaz-api:${VERSION}
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "https://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "10"
+    networks:
+      - mojaz_internal
+
+  frontend:
+    image: ${REGISTRY}/mojaz-frontend:${VERSION}
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    restart: always
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/prod.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+
+networks:
+  mojaz_internal:
+    driver: bridge
+    internal: false
+```
+
+يحدّد هذا التكوين موارد محددة لكل خدمة (CPU والذاكرة) مع تدوير السجلات (Log Rotation) للحفاظ على مساحة القرص.
+
+---
+
+##القسم الرابع: البنية التحتية
+
+###٤.١ متطلبات الخادم
+
+####خادم التطوير والاختبار
+
+| المكون | المواصفات الدنيا | المواصفات الموصى بها |
+|--------|-------------------|---------------------|
+| المعالج | 4 أنوية | 8 أنوية |
+| الذاكرة | 8 GB | 16 GB |
+| التخزين | 100 GB SSD | 250 GB SSD |
+| نظام التشغيل | Ubuntu 22.04 LTS | Ubuntu 22.04 LTS |
+| الشبكة | 100 Mbps | 1 Gbps |
+
+####خادم الإنتاج
+
+| المكون | المواصفات الموصى بها |
+|--------|---------------------|
+| المعالج | 16 أنوية (8 على الأقل) |
+| الذاكرة | 32 GB DDR4 |
+| التخزين | 500 GB NVMe SSD |
+| نظام التشغيل | Ubuntu 22.04 LTS |
+| الشبكة | 10 Gbps |
+| النسخ الاحتياطي | تخزين خارجي 1 TB |
+
+###٤.٢ إعداد قاعدة البيانات (SQL Server 2022)
+
+```bash
+#!/bin/bash
+# إعداد قاعدة البيانات
+
+# إنشاء مجلد البيانات
+mkdir -p /opt/mssql/data
+mkdir -p /opt/mssql/log
+mkdir -p /opt/mssql/backup
+
+# تشغيل الحاوية
+docker run -d \
+  --name mojaz_sqlserver \
+  -e "ACCEPT_EULA=Y" \
+  -e "SA_PASSWORD=YourStrong@Passw0rd" \
+  -e "MSSQL_PID=Developer" \
+  -p 1433:1433 \
+  -v /opt/mssql/data:/var/opt/mssql/data \
+  -v /opt/mssql/log:/var/opt/mssql/log \
+  -v /opt/mssql/backup:/var/opt/mssql/backup \
+  mcr.microsoft.com/mssql/server:2022-latest
+
+# تكوين النسخ الاحتياطي التلقائي
+# 매일 2:00 صباحاً
+0 2 * * * docker exec mojaz_sqlserver /opt/mssql-tools/bin/sqlcmd \
+  -S localhost -U sa -P YourStrong@Passw0rd \
+  -Q "BACKUP DATABASE Mojaz TO DISK = '/var/opt/mssql/backup/mojaz_backup.bak' WITH COMPRESSION"
+```
+
+###٤.٣ إعداد SSL/HTTPS
+
+يستخدم Nginx jako逆转代理 مع شهادة SSL من Let's Encrypt للتشفير التلقائي.
+
+```nginx
+# nginx/prod.conf
+events {
+    worker_connections 1024;
+}
+
+http {
+    upstream backend {
+        server api:5000;
+    }
+
+    upstream frontend {
+        server frontend:3000;
+    }
+
+    # إعادة التوجيه HTTP إلى HTTPS
+    server {
+        listen 80;
+        server_name api.mojaz.gov.sa www.mojaz.gov.sa;
+        
+        location /.well-known/acme-challenge/ {
+            root /var/www/certbot;
+        }
+        
+        location / {
+            return 301 https://$host$request_uri;
+        }
+    }
+
+    # خادم HTTPS
+    server {
+        listen 443 ssl http2;
+        server_name api.mojaz.gov.sa;
+        
+        ssl_certificate /etc/nginx/ssl/cert.pem;
+        ssl_certificate_key /etc/nginx/ssl/key.pem;
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256;
+        ssl_prefer_server_ciphers off;
+        
+        location / {
+            proxy_pass http://backend;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            
+            #Timeouts
+            proxy_connect_timeout 60s;
+            proxy_send_timeout 60s;
+            proxy_read_timeout 60s;
+        }
+        
+        # Health check بدون تشفير
+        location /health {
+            proxy_pass http://backend/health;
+            access_log off;
+        }
+    }
+
+    # الواجهة الأمامية
+    server {
+        listen 443 ssl http2;
+        server_name www.mojaz.gov.sa;
+        
+        ssl_certificate /etc/nginx/ssl/cert.pem;
+        ssl_certificate_key /etc/nginx/ssl/key.pem;
+        
+        location / {
+            proxy_pass http://frontend;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            
+            # WebSocket support
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+        }
+    }
+}
+```
+
+---
+
+##القسم الخامس: المراقبة والتسجيل
+
+###٥.١ إعداد Serilog للواجهة الخلفية
+
+يستخدم التطبيق سجل Serilog للتسجيل المركزي مع دعم SQL Server للتخزين الدائم.
+
+```csharp
+// Program.cs
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Application", "Mojaz.API")
+    .Enrich.WithProperty("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"))
+    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.File(
+        path: "logs/mojaz-.log",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 30,
+        fileSizeLimitBytes: 10_000_000,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.MSSqlConnection(
+        connectionString: configuration.GetConnectionString("DefaultConnection"),
+        tableName: "Logs",
+        restrictedToMinimumLevel: LogEventLevel.Warning,
+        batchSize: 50,
+        period: TimeSpan.FromSeconds(15))
+    .CreateLogger();
+
+try
+{
+    Log.Information("بدء تشغيل الواجهة الخلفية لمنصة Mojaz");
+    
+    var app = builder.Build();
+    
+    // Health check endpoint
+    app.MapGet("/health", () => Results.Ok(new {
+        Status = "Healthy",
+        Timestamp = DateTime.UtcNow,
+        Version = "1.0.0"
+    }));
+    
+    app.UseSerilogRequestLogging();
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "خطأ فادح في تشغيل التطبيق");
+    throw;
+}
+finally
+{
+    Log.CloseAndFlush();
+}
+```
+
+###٥.٢ Health Checks
+
+يُعرَّف Health Check للتأكد من جاهزية جميع الخدمات تابعة قبل استلام الطلبات.
+
+```csharp
+// HealthChecks
+public class DatabaseHealthCheck : IHealthCheck
+{
+    private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
+
+    public DatabaseHealthCheck(IDbContextFactory<ApplicationDbContext> contextFactory)
+    {
+        _contextFactory = contextFactory;
+    }
+
+    public async Task<HealthCheckResult> CheckHealthAsync(
+        HealthCheckContext context,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
+            await context.Database.ExecuteSqlRawAsync(
+                "SELECT 1",
+                cancellationToken);
+            
+            return HealthCheckResult.Healthy("قاعدة البيانات متصلة");
+        }
+        catch (Exception ex)
+        {
+            return HealthCheckResult.Unhealthy(
+                "فشل الاتصال بقاعدة البيانات",
+                ex);
+        }
+    }
+}
+
+public class RedisHealthCheck : IHealthCheck
+{
+    private readonly IConnectionMultiplexer _redis;
+
+    public RedisHealthCheck(IConnectionMultiplexer redis)
+    {
+        _redis = redis;
+    }
+
+    public async Task<HealthCheckResult> CheckHealthAsync(
+        HealthCheckContext context,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var db = _redis.GetDatabase();
+            await db.PingAsync();
+            
+            return HealthCheckResult.Healthy("Redis متصل");
+        }
+        catch (Exception ex)
+        {
+            return HealthCheckResult.Unhealthy(
+                "فشل الاتصال بـ Redis",
+                ex);
+        }
+    }
+}
+```
+
+###٥.٣ تتبع الأخطاء
+
+يُستخدم Sentry لتتبع الأخطاء في بيئة الإنتاج مع إشعارات فورية.
+
+```csharp
+// Program.cs - إضافة Sentry
+builder.WebHost.UseSentry(options =>
+{
+    options.Dsn = Environment.GetEnvironmentVariable("SENTRY_DSN");
+    options.TracesSampleRate = 0.1;
+    options.Environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+    options.Release = "mojaz@1.0.0";
+    options.SendDefaultPii = false;
+    options.ServerName = Environment.MachineName;
+    
+    options.BeforeSendBreadcrumb = breadcrumb =>
+    {
+        // استبعاد السجلات الحساسة
+        if (breadcrumb.Message?.Contains("Password") == true ||
+            breadcrumb.Message?.Contains("Token") == true)
+        {
+            return null;
+        }
+        return breadcrumb;
+    };
+});
+```
+
+---
+
+##القسم السادس: قائمة ضوابط الأمان
+
+###٦.١ أمان الحاويات
+
+- تشغيل جميع الحاويات بمستخدم غير جذر
+- استخدام صور رسمية فقط من Docker Hub
+- تطبيق مبدأ الحد الأدنى من الأذونات (Principle of Least Privilege)
+- تحديث الصور بانتظام للتصحيح الأمنية
+- استخدام Secrets Manager للأسرار الحساسة
+
+###٦.٢ أمان الشبكة
+
+- استخدام HTTPS فقط في جميع الاتصالات
+- تفعيل Firewall限制了 الوصول إلى المنافذ الضرورية
+- استخدام VLAN لعزل الخدمات الحساسة
+- تطبيق Rate Limiting على نقاط النهاية العامة
+- مراقبة حركة الشبكة بشكل مستمر
+
+###٦.٣ أمان البيانات
+
+- تشفير البيانات في حالة السكون (Data at Rest)
+- تشفير البيانات في النقل (Data in Transit)
+- تطبيق النسخ الاحتياطي المنتظم
+- تشفير كلمات مرور باستخدام BCrypt
+- تطبيق Soft Delete بدلاً من الحذف النهائي
+
+---
+
+##الخاتمة
+
+تقدّم هذه الوثائق أساس متين لإعداد وبناء ونشر تطبيق منصة مُجاز. يُنصح بمراجعة وتحديث هذه الوثائق بشكل دوري لمواكبة التطورات التكنولوجية والمتطلبات الحكومية. يجب اختبار جميع التكوينات في بيئة الاختبار قبل نشرها في بيئة الإنتاج، والالتزام بأفضل ممارسات الأمان في جميع الأوقات.
+
+---
+
+##المرجعيات
+
+- Docker Documentation: https://docs.docker.com/
+- GitHub Actions Documentation: https://docs.github.com/en/actions
+- ASP.NET Core Documentation: https://docs.microsoft.com/aspnet/core
+- Next.js Documentation: https://nextjs.org/docs
+- Nginx Documentation: https://nginx.org/en/docs/
+
+---
+
+*وثيقة مُعدّة لمنصة Mojaz - مشروع التخرج*
+*آخر تحديث: أبريل ٢٠٢٦*

@@ -126,16 +126,15 @@ public class IntegrationTestBase : IDisposable
 
     protected async Task AuthenticateAsUserAsync(Guid userId, string role = "Applicant")
     {
-        // This is a simplified auth helper. In a real scenario, 
-        // it would generate a real JWT token.
-        // For integration tests, we can use a test-specific auth handler or a mock token.
-        
-        // Here we assume the API has a test endpoint to get a token or we mock the identity
-        // Since we don't have a mock token generator here, we'll implement a basic one
-        // or use a fixed token that the Test Auth Handler recognizes.
-        
+        // This generates a test token that the TestAuthHandler recognizes
+        // Format: test-token-{userId}-{role}
         var token = "test-token-" + userId + "-" + role;
         Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+    }
+
+    protected async Task ClearAuthentication()
+    {
+        Client.DefaultRequestHeaders.Authorization = null;
     }
 
     protected async Task<T> PostAsJsonAsync<T>(string url, object data)

@@ -37,7 +37,7 @@ export default function WorkflowTimeline() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.08 }}
-              className="text-3xl md:text-4xl font-black text-[#0f1e4a] tracking-tight leading-snug"
+              className="text-3xl md:text-4xl font-black text-[#0f1e4a] tracking-tight leading-snug text-start"
             >
               كيف تحصل على
               <br />
@@ -49,7 +49,7 @@ export default function WorkflowTimeline() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.15 }}
-            className="text-base text-neutral-500 font-semibold max-w-sm leading-relaxed border-r-2 border-[#D4A017] pr-4 lg:text-end"
+            className="text-base text-neutral-500 font-semibold max-w-sm leading-relaxed border-s-2 border-[#D4A017] ps-4 text-start"
           >
             قمنا بتبسيط الإجراءات الحكومية في خطوات واضحة وشفافة تضمن لك السرعة والدقة.
           </motion.p>
@@ -70,7 +70,7 @@ export default function WorkflowTimeline() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.08, duration: 0.45 }}
-                  className="group flex flex-col items-center lg:items-start text-center lg:text-right"
+                  className="group flex flex-col items-center lg:items-start text-center lg:text-start"
                 >
                   {/* Icon circle */}
                   <div
@@ -80,13 +80,13 @@ export default function WorkflowTimeline() {
                     <Icon className="w-6 h-6" />
                   </div>
                   {/* Step number */}
-                  <span className="text-xs font-black text-neutral-300 mb-1.5 tracking-widest">
+                  <span className="text-xs font-black text-neutral-300 mb-1.5 tracking-widest text-start">
                     الخطوة {step.num}
                   </span>
-                  <h3 className="text-sm font-black text-neutral-800 mb-2 group-hover:text-[#1a3a8f] transition-colors">
+                  <h3 className="text-sm font-black text-neutral-800 mb-2 group-hover:text-[#1a3a8f] transition-colors text-start">
                     {step.title}
                   </h3>
-                  <p className="text-xs text-neutral-400 font-semibold leading-relaxed">
+                  <p className="text-xs text-neutral-400 font-semibold leading-relaxed text-start">
                     {step.desc}
                   </p>
                 </motion.div>

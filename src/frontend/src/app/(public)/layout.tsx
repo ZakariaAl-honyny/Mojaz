@@ -1,17 +1,16 @@
 import type { Metadata } from 'next';
-import { LocaleProvider } from '@/lib/translations';
-import { LanguageSwitcher } from '@/components/landing/LanguageSwitcher';
+
 
 // SEO Metadata
 export const metadata: Metadata = {
   title: {
-    default: 'مُجاز - منصة رخص القيادة الإلكترونية | Mojaz - Electronic Driving License Platform',
+    default: 'مُجاز - منصة رخص القيادة الإلكترونية',
     template: '%s | منصة مُجاز',
   },
-  description: 'النظام الرسمي الموحد لإصدار وتجديد رخص القيادة في الجمهورية اليمنية. أنجز معاملتك إلكترونياً بأمان تام وسرعة سيادية. The official unified system for issuing and renewing driving licenses.',
-  keywords: ['رخص قيادة', 'مرور', 'إلكتروني', ' Yemen', 'driving license', 'traffic', 'electronic', 'government'],
+  description: 'النظام الرسمي الموحد لإصدار وتجديد رخص القيادة في الجمهورية اليمنية. أنجز معاملتك إلكترونياً بأمان تام وسرعة سيادية.',
+  keywords: ['رخص قيادة', 'مرور', 'إلكتروني', 'اليمن', 'نظام المرور', 'وزارة الداخلية'],
   authors: [{ name: 'الإدارة العامة للمرور' }],
-  creator: 'الإدارة العامة للمرور - Republic of Yemen',
+  creator: 'الإدارة العامة للمرور - الجمهورية اليمنية',
   publisher: 'الإدارة العامة للمرور',
   formatDetection: {
     email: false,
@@ -21,24 +20,19 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://mojaz.traffic.gov.ye'),
   alternates: {
     canonical: '/',
-    languages: {
-      'ar': '/ar',
-      'en': '/en',
-    },
   },
   openGraph: {
     type: 'website',
-    locale: 'ar_SA',
-    alternateLocale: 'en_US',
-    siteName: 'منصة مُجاز - Mojaz Platform',
+    locale: 'ar_YE',
+    siteName: 'منصة مُجاز',
     title: 'مُجاز - منصة رخص القيادة الإلكترونية',
-    description: 'النظام الرسمي الموحد لإصدار وتجديد رخص القيادة. أنجز معاملتك إلكترونياً.',
+    description: 'أنجز معاملتك إلكترونياً بأمان تام وسرعة سيادية.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'منصة مُجاز - Mojaz Platform',
+        alt: 'منصة مُجاز',
       },
     ],
   },
@@ -51,16 +45,6 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  verification: {
-    google: 'google-site-verification-code',
   },
 };
 
@@ -74,19 +58,14 @@ const jsonLd = {
   provider: {
     '@type': 'GovernmentOrganization',
     name: 'الإدارة العامة للمرور',
-    alternateName: 'General Traffic Department',
     url: 'https://traffic.gov.ye',
   },
   areaServed: {
     '@type': 'Country',
     name: 'الجمهورية اليمنية',
-    alternateName: 'Republic of Yemen',
   },
-  serviceType: ['إصدار رخص القيادة', 'تجديد الرخص', 'رخص دولية', 'Driving License Services'],
+  serviceType: ['إصدار رخص القيادة', 'تجديد الرخص', 'رخص دولية'],
 };
-
-import PublicHeader from '@/components/layout/PublicHeader';
-import Footer from '@/components/layout/Footer';
 
 export default function LandingPageLayout({
   children,
@@ -94,22 +73,8 @@ export default function LandingPageLayout({
   children: React.ReactNode;
 }) {
   return (
-    <LocaleProvider initialLocale="ar">
-      {/* JSON-LD Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      
-      <div className="flex flex-col min-h-screen">
-        <PublicHeader />
-        
-        <main className="flex-1">
-          {children}
-        </main>
-        
-        <Footer />
-      </div>
-    </LocaleProvider>
+      <main className="flex-1">
+        {children}
+      </main>
   );
 }

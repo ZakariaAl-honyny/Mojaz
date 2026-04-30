@@ -134,7 +134,7 @@ export function TheoryResultForm({ applicationId, applicantName, onSuccess }: Th
                       name="score"
                       render={({ field }) => (
                         <FormItem className="space-y-3">
-                          <FormLabel className="text-sm font-black text-[#1a3a8f] mr-2">درجة الاختبار (من 100)</FormLabel>
+                          <FormLabel className="text-sm font-black text-[#1a3a8f] me-2">درجة الاختبار (من 100)</FormLabel>
                           <FormControl>
                             <div className="relative">
                               <Input 
@@ -171,7 +171,7 @@ export function TheoryResultForm({ applicationId, applicantName, onSuccess }: Th
               name="notes"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel className="text-sm font-black text-[#1a3a8f] mr-2">ملاحظات الفاحص الإضافية</FormLabel>
+                  <FormLabel className="text-sm font-black text-[#1a3a8f] me-2">ملاحظات الفاحص الإضافية</FormLabel>
                   <FormControl>
                     <Textarea 
                       placeholder="دون أي ملاحظات حول سير الاختبار أو تحديات واجهت المتقدم..."

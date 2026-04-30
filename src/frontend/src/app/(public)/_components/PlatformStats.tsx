@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useSpring, useTransform, useInView } from "framer-motion";
+import { motion, useSpring, useTransform, useInView, animate } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { 
   Users, 
@@ -12,29 +12,27 @@ import {
 } from "lucide-react";
 
 function Counter({ value, suffix = "" }: { value: number; suffix?: string }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
-  
-  const spring = useSpring(0, {
-    mass: 1,
-    stiffness: 70,
-    damping: 30,
-  });
-  
-  const displayValue = useTransform(spring, (current) => 
-    Math.round(current).toLocaleString() + suffix
-  );
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   useEffect(() => {
-    if (isInView) {
-      spring.set(value);
+    if (isInView && ref.current) {
+      const node = ref.current;
+      const controls = animate(0, value, {
+        duration: 2,
+        ease: "easeOut",
+        onUpdate(value) {
+          node.textContent = Math.round(value).toLocaleString() + suffix;
+        },
+      });
+      return () => controls.stop();
     }
-  }, [isInView, spring, value]);
+  }, [isInView, value, suffix]);
 
   return (
-    <motion.span ref={ref} className="tabular-nums">
-      {displayValue}
-    </motion.span>
+    <span ref={ref} className="tabular-nums">
+      0{suffix}
+    </span>
   );
 }
 

@@ -78,6 +78,12 @@ public class CancelApplicationRequest
     public string Reason { get; set; } = string.Empty;
 }
 
+public class AssignApplicationRequest
+{
+    public Guid StaffId { get; set; }
+    public string? Notes { get; set; }
+}
+
 public class UpdateApplicationRequest
 {
     public ServiceType? ServiceType { get; set; }
@@ -111,6 +117,15 @@ public class ApplicationDto
     public string LicenseCategoryCode { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    
+    // Security Verification fields (Gate 4)
+    public SecurityStatus SecurityStatus { get; set; }
+    public DateTime? SecurityVerifiedAt { get; set; }
+    
+    // Staff Assignment fields
+    public Guid? AssignedToId { get; set; }
+    public DateTime? AssignedAt { get; set; }
+    public string? AssignmentNotes { get; set; }
 }
 
 public class ApplicationListDto
@@ -253,4 +268,30 @@ public class ReplacementEligibilityResponse
     public string LicenseNumber { get; set; } = string.Empty;
     public DateTime ExpiryDate { get; set; }
     public string? Message { get; set; }
+}
+
+/// <summary>
+/// Security verification record request
+/// </summary>
+public class SecurityVerificationRequest
+{
+    public bool IsCleared { get; set; }
+    public string? Notes { get; set; }
+}
+
+/// <summary>
+/// Forward application to a specific stage request (Screen 3)
+/// </summary>
+public class ForwardApplicationRequest
+{
+    public string? ForwardToStage { get; set; } // "Medical", "Training", "DocumentReview"
+    public string? Notes { get; set; }
+}
+
+public class EligibilityResponseDto
+{
+    public bool IsEligible { get; set; }
+    public string? Message { get; set; }
+    public Guid? ExistingApplicationId { get; set; }
+    public string? ExistingApplicationNumber { get; set; }
 }

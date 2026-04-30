@@ -20,12 +20,15 @@ interface FeeBreakdownProps {
 }
 
 const feeTypeLabelsAr: Record<FeeType, string> = {
-  ApplicationFee: 'رسوم تقديم الطلب',
-  MedicalFee: 'رسوم الفحص الطبي',
-  TheoryFee: 'رسوم الاختبار النظري',
-  PracticalFee: 'رسوم الاختبار العملي',
-  IssuanceFee: 'رسوم إصدار الرخصة',
-  RetakeFee: 'رسوم إعادة الاختبار',
+  [FeeType.ApplicationFee]: 'رسوم تقديم الطلب',
+  [FeeType.MedicalExamFee]: 'رسوم الفحص الطبي',
+  [FeeType.TheoryTestFee]: 'رسوم الاختبار النظري',
+  [FeeType.PracticalTestFee]: 'رسوم الاختبار العملي',
+  [FeeType.IssuanceFee]: 'رسوم إصدار الرخصة',
+  [FeeType.RetakeFee]: 'رسوم إعادة الاختبار',
+  [FeeType.RenewalFee]: 'رسوم تجديد الرخصة',
+  [FeeType.ReplacementFee]: 'رسوم استخراج بدل',
+  [FeeType.CategoryUpgrade]: 'رسوم ترقية الفئة',
 };
 
 export function FeeBreakdown({ fees, total, paid, pending, className }: FeeBreakdownProps) {
@@ -87,17 +90,12 @@ export function FeeBreakdown({ fees, total, paid, pending, className }: FeeBreak
                 )}>
                   {feeTypeLabelsAr[fee.type]}
                 </p>
-                {fee.status === 'Overdue' && (
-                  <p className="flex items-center gap-1 text-[10px] font-black text-red-500 mt-1 uppercase tracking-widest">
-                    <AlertCircle className="w-3 h-3" />
-                    تجاوز تاريخ الاستحقاق
-                  </p>
-                )}
+                {/* Overdue logic can be added here if 'Overdue' is added to PaymentStatus backend enum */}
               </div>
             </div>
 
             {/* Amount */}
-            <div className="text-left font-arabic">
+            <div className="text-end font-arabic">
               <p className={cn(
                 'text-lg font-black',
                 fee.isPaid ? 'text-emerald-600' : 'text-[#1a3a8f]'

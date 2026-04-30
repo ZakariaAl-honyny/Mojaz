@@ -5,7 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Mojaz.Application.DTOs.Application;
+using Mojaz.Application.Interfaces.Repositories;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Application.Mappings;
 using Mojaz.Application.Services;
@@ -22,10 +24,13 @@ public class FinalApprovalServiceTests
 {
     private readonly Mock<IRepository<Mojaz.Domain.Entities.Application>> _applicationRepositoryMock;
     private readonly Mock<IRepository<User>> _userRepositoryMock;
+    private readonly Mock<IRepository<PaymentTransaction>> _paymentRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<IAuditService> _auditServiceMock;
     private readonly Mock<INotificationService> _notificationServiceMock;
     private readonly Mock<IGate4ValidationService> _gate4ValidationServiceMock;
+    private readonly Mock<IFeeStructureRepository> _feeStructureRepositoryMock;
+    private readonly Mock<ILogger<FinalApprovalService>> _loggerMock;
     private readonly IMapper _mapper;
     private readonly FinalApprovalService _service;
 
@@ -33,10 +38,13 @@ public class FinalApprovalServiceTests
     {
         _applicationRepositoryMock = new Mock<IRepository<Mojaz.Domain.Entities.Application>>();
         _userRepositoryMock = new Mock<IRepository<User>>();
+        _paymentRepositoryMock = new Mock<IRepository<PaymentTransaction>>();
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _auditServiceMock = new Mock<IAuditService>();
         _notificationServiceMock = new Mock<INotificationService>();
         _gate4ValidationServiceMock = new Mock<IGate4ValidationService>();
+        _feeStructureRepositoryMock = new Mock<IFeeStructureRepository>();
+        _loggerMock = new Mock<ILogger<FinalApprovalService>>();
 
         var config = new MapperConfiguration(cfg =>
         {
@@ -47,11 +55,14 @@ public class FinalApprovalServiceTests
         _service = new FinalApprovalService(
             _applicationRepositoryMock.Object,
             _userRepositoryMock.Object,
+            _paymentRepositoryMock.Object,
             _unitOfWorkMock.Object,
             _mapper,
             _auditServiceMock.Object,
             _notificationServiceMock.Object,
-            _gate4ValidationServiceMock.Object);
+            _gate4ValidationServiceMock.Object,
+            _feeStructureRepositoryMock.Object,
+            _loggerMock.Object);
         
         // Mock UnitOfWork repository for status history
         _unitOfWorkMock.Setup(x => x.Repository<ApplicationStatusHistory>()).Returns(new Mock<IRepository<ApplicationStatusHistory>>().Object);
@@ -63,12 +74,14 @@ public class FinalApprovalServiceTests
         // Arrange
         var applicationId = Guid.NewGuid();
         var managerId = Guid.NewGuid();
+        var categoryId = Guid.NewGuid();
         var application = new Mojaz.Domain.Entities.Application 
         { 
             Id = applicationId, 
             CurrentStage = "08-FinalApproval", 
             Status = ApplicationStatus.InReview,
-            ApplicationNumber = "MOJ-2025-12345678"
+            ApplicationNumber = "MOJ-2025-12345678",
+            LicenseCategoryId = categoryId
         };
         
         var request = new FinalizeApplicationRequest
@@ -79,6 +92,8 @@ public class FinalApprovalServiceTests
 
         _applicationRepositoryMock.Setup(x => x.GetByIdAsync(applicationId, It.IsAny<CancellationToken>())).ReturnsAsync(application);
         _gate4ValidationServiceMock.Setup(x => x.ValidateAsync(applicationId)).ReturnsAsync(new Gate4ValidationResult { IsFullyPassed = true, Conditions = new List<Gate4Condition>() });
+        _feeStructureRepositoryMock.Setup(x => x.GetActiveFeeAsync(FeeType.IssuanceFee, categoryId))
+            .ReturnsAsync(new FeeStructure { Amount = 200, IsActive = true });
         
         // Act
         var result = await _service.FinalizeAsync(applicationId, request, managerId);

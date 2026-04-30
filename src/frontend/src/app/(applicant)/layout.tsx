@@ -4,35 +4,29 @@ import DashboardLayout from '@/components/layout/DashboardLayout';
 import { useAuthStore } from '@/stores/auth-store';
 import { isApplicantRole } from '@/lib/enums';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 
 export default function ApplicantLayout({ children }: { children: React.ReactNode }) {
-  const { user, isAuthenticated } = useAuthStore();
+  const { user, isAuthenticated, _hasHydrated } = useAuthStore();
   const router = useRouter();
-  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Wait for hydration to complete before checking auth
+  // Auth guard - wait for REAL hydration before checking
   useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
-  // Auth guard - redirect if not authenticated or if user is not an Applicant
-  useEffect(() => {
-    if (!isHydrated) return;
+    if (!_hasHydrated) return;
     
     if (!isAuthenticated) {
       router.push('/login');
     } else if (!isApplicantRole(user?.role)) {
       router.push('/dashboard');
     }
-  }, [isHydrated, isAuthenticated, user, router]);
+  }, [_hasHydrated, isAuthenticated, user, router]);
 
-  // Show loading while hydrating OR not authenticated
-  if (!isHydrated || !isAuthenticated) {
+  // Block rendering until Zustand is rehydrated
+  if (!_hasHydrated || !isAuthenticated) {
     return (
       <div className="h-screen w-full flex flex-col items-center justify-center gap-4 bg-white">
-        <Loader2 className="w-12 h-12 animate-spin text-primary-500" />
+        <Loader2 className="w-12 h-12 animate-spin text-[#1a3a8f]" />
         <p className="font-bold text-neutral-500 tracking-widest uppercase text-xs animate-pulse">
            جاري تأمين بوابة المتقدمين...
         </p>
@@ -40,11 +34,11 @@ export default function ApplicantLayout({ children }: { children: React.ReactNod
     );
   }
 
-  // If user is authenticated but not an Applicant, still show loading (redirect will happen)
+  // If user is authenticated but not an Applicant, show loading (redirect will happen)
   if (!isApplicantRole(user?.role)) {
     return (
       <div className="h-screen w-full flex flex-col items-center justify-center gap-4 bg-white">
-        <Loader2 className="w-12 h-12 animate-spin text-primary-500" />
+        <Loader2 className="w-12 h-12 animate-spin text-[#1a3a8f]" />
         <p className="font-bold text-neutral-500 tracking-widest uppercase text-xs animate-pulse">
            جاري تحويلك...
         </p>

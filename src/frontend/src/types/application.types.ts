@@ -1,62 +1,31 @@
 // ============================================================
-// ApplicationStatus - matches backend numeric values (Mojaz.Domain/Enums/ApplicationStatus.cs)
-// Backend: Draft=0, Submitted=1, DocumentReview=2, InReview=3, MedicalExam=4,
-//          Training=5, TheoryTest=6, PracticalTest=7, Approved=8, Payment=9,
-//          Issued=10, Active=11, Rejected=12, Cancelled=13, Expired=14
+// Application Types - Re-export numeric enums from single source
 // ============================================================
-export enum ApplicationStatus {
-  Draft = 0,
-  Submitted = 1,
-  DocumentReview = 2,
-  InReview = 3,
-  MedicalExam = 4,
-  Training = 5,
-  TheoryTest = 6,
-  PracticalTest = 7,
-  Approved = 8,
-  Payment = 9,
-  Issued = 10,
-  Active = 11,
-  Rejected = 12,
-  Cancelled = 13,
-  Expired = 14,
-}
 
-// Display labels for ApplicationStatus
-export const ApplicationStatusLabels = {
-  [ApplicationStatus.Draft]: { ar: 'مسودة', en: 'Draft' },
-  [ApplicationStatus.Submitted]: { ar: 'مُقدَّم', en: 'Submitted' },
-  [ApplicationStatus.DocumentReview]: { ar: 'مراجعة المستندات', en: 'Document Review' },
-  [ApplicationStatus.InReview]: { ar: 'قيد المراجعة', en: 'In Review' },
-  [ApplicationStatus.MedicalExam]: { ar: 'الفحص الطبي', en: 'Medical Exam' },
-  [ApplicationStatus.Training]: { ar: 'التدريب', en: 'Training' },
-  [ApplicationStatus.TheoryTest]: { ar: 'الاختبار النظري', en: 'Theory Test' },
-  [ApplicationStatus.PracticalTest]: { ar: 'الاختبار العملي', en: 'Practical Test' },
-  [ApplicationStatus.Approved]: { ar: 'مقبول', en: 'Approved' },
-  [ApplicationStatus.Payment]: { ar: 'الدفع', en: 'Payment' },
-  [ApplicationStatus.Issued]: { ar: 'تم الإصدار', en: 'Issued' },
-  [ApplicationStatus.Active]: { ar: 'نشط', en: 'Active' },
-  [ApplicationStatus.Rejected]: { ar: 'مرفوض', en: 'Rejected' },
-  [ApplicationStatus.Cancelled]: { ar: 'ملغى', en: 'Cancelled' },
-  [ApplicationStatus.Expired]: { ar: 'منتهي الصلاحية', en: 'Expired' },
-} as const;
+import { ApplicationStatus, ReplacementReason } from '@/lib/enums';
 
-export enum ReplacementReason {
-  Lost = 1,
-  Damaged = 2,
-  Stolen = 3
-}
+// Re-export from single source
+export { ApplicationStatus, ReplacementReason } from '@/lib/enums';
+
+// ============================================================
+// Additional Type Definitions
+// ============================================================
 
 export interface ApplicationSummaryDto {
   id: string;
   applicationNumber: string;
   applicantName: string;
-  licenseCategoryCode: number;
+  licenseCategoryCode: string;  // Changed from number to string to match backend
   serviceType: number;
   currentStage: string;
   status: ApplicationStatus;
   submittedDate: string;
   updatedAt: string;
+  // Additional fields from backend ApplicationDto
+  licenseCategoryId?: string;
+  licenseCategoryNameAr?: string;
+  licenseCategoryNameEn?: string;
+  createdAt?: string;
 }
 
 export interface TimelineStageDto {
@@ -123,11 +92,11 @@ export interface StatusDistributionDto {
 export interface DailyLoadDto {
     date: string;
     count: number;
-  }
+}
 
 export interface VerifyStolenReportRequest {
-  isApproved: boolean;
-  comments: string;
+  isApproved?: boolean;
+  comments?: string;
 }
 
 export interface VerifyStolenReportResponse {

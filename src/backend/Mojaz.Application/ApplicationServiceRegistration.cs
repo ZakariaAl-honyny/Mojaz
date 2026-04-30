@@ -1,8 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
+using FluentValidation;
 using Mojaz.Application.Interfaces;
 using Mojaz.Application.Interfaces.Services;
 using Mojaz.Application.Services;
-using FluentValidation;
+using Mojaz.Domain.Entities;
+using Mojaz.Domain.Enums;
+using Mojaz.Domain.Interfaces;
 
 namespace Mojaz.Application;
 
@@ -52,7 +55,15 @@ public static class ApplicationServiceRegistration
 
         // ─── Appointments ───
         services.AddScoped<IAppointmentService, AppointmentService>();
-        services.AddScoped<AppointmentBookingValidator>();
+        services.AddScoped<AppointmentBookingValidator>(sp => 
+            new AppointmentBookingValidator(
+                sp.GetRequiredService<IAppointmentRepository>(),
+                sp.GetRequiredService<IRepository<Domain.Entities.Application>>(),
+                sp.GetRequiredService<IRepository<PaymentTransaction>>(),
+                sp.GetRequiredService<ISystemSettingsService>(),
+                sp.GetRequiredService<ITrainingService>(),
+                sp.GetRequiredService<ITheoryService>(),
+                sp.GetRequiredService<IPracticalService>()));
 
         // ─── Medical Examination ───
         services.AddScoped<IMedicalService, MedicalService>();
@@ -63,6 +74,12 @@ public static class ApplicationServiceRegistration
 
         // ─── License Renewal (Feature 025) ───
         services.AddScoped<IRenewalService, RenewalService>();
+
+        // ─── Replace License ───
+        services.AddScoped<IReplaceLicenseService, ReplaceLicenseService>();
+
+        // ─── Fee Structure Management (Admin) ───
+        services.AddScoped<IFeeStructureService, FeeStructureService>();
 
         return services;
     }

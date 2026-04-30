@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
-import { ApplicationStatus, ApplicationStatusLabels } from '@/types/application.types';
+import { ApplicationStatus } from '@/types/application.types';
+import { ApplicationStatusLabels } from '@/lib/enumMappers';
 
 interface StatusDistributionChartProps {
   data: { status: number; count: number }[];
@@ -11,7 +12,7 @@ interface StatusDistributionChartProps {
 // Convert numeric status to display label
 const getStatusLabel = (status: number): string => {
   const label = ApplicationStatusLabels[status as ApplicationStatus];
-  return label?.ar ?? String(status);
+  return label ?? String(status);
 };
 
 const COLORS = ['#1a3a8f', '#D4A017', '#10B981', '#EF4444', '#3B82F6', '#F59E0B', '#9CA3AF', '#8B5CF6', '#EC4899', '#06B6D4'];

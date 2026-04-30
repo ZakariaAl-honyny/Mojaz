@@ -35,7 +35,7 @@ public class ForgotPasswordRequest
 
 public class ResetPasswordRequest
 {
-    public Guid UserId { get; set; }
+    public string Identifier { get; set; } = string.Empty;
     public string Code { get; set; } = string.Empty;
     public string NewPassword { get; set; } = string.Empty;
 }

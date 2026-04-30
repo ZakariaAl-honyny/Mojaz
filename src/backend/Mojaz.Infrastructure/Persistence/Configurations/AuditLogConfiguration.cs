@@ -10,7 +10,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
         {
             builder.ToTable("AuditLogs");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.ActionType).IsRequired().HasMaxLength(128);
+            builder.Property(x => x.ActionType).IsRequired().HasMaxLength(500);
             builder.Property(x => x.ActionCategory).IsRequired().HasMaxLength(128);
             builder.Property(x => x.EntityName).IsRequired().HasMaxLength(128);
             builder.Property(x => x.EntityId).IsRequired().HasMaxLength(64);

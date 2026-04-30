@@ -32,10 +32,10 @@ export function ReceiptDownloadButton({
     try {
       setIsDownloading(true);
       await paymentService.downloadReceipt(paymentId);
-      toast.success(t("receipt.downloadSuccess") || "Receipt downloaded successfully");
+      toast.success(t("receipt.downloadSuccess") || "تم تحميل الفاتورة بنجاح.");
     } catch (error) {
       console.error("Receipt download error:", error);
-      toast.error(t("receipt.downloadError") || "Failed to download receipt");
+      toast.error(t("receipt.downloadError") || "فشل في تحميل الفاتورة.");
     } finally {
       setIsDownloading(false);
     }
@@ -54,7 +54,7 @@ export function ReceiptDownloadButton({
       ) : showIcon ? (
         <Download className="w-4 h-4 me-2" />
       ) : null}
-      {isDownloading ? (t("receipt.downloading") || "Downloading...") : (t("receipt.downloadButton") || "Download Receipt")}
+      {isDownloading ? (t("receipt.downloading") || "جاري التحميل...") : (t("receipt.downloadButton") || "تحميل الفاتورة")}
     </Button>
   );
 }

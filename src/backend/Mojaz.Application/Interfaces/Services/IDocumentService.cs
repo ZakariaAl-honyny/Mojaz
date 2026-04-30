@@ -13,8 +13,8 @@ public interface IDocumentService
     Task<ApiResponse<DocumentDto>> UploadByApplicationNumberAsync(string applicationNumber, UploadDocumentRequest request, Guid userId);
     Task<ApiResponse<IEnumerable<DocumentDto>>> GetByApplicationIdAsync(Guid applicationId, Guid userId, string role);
     Task<ApiResponse<IEnumerable<DocumentDto>>> GetByApplicationNumberAsync(string applicationNumber, Guid userId, string role);
-    Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequirementsAsync(Guid applicationId, Guid userId);
-    Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequirementsByApplicationNumberAsync(string applicationNumber, Guid userId);
+    Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequirementsAsync(Guid applicationId, Guid userId, string role);
+    Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequirementsByApplicationNumberAsync(string applicationNumber, Guid userId, string role);
     Task<ApiResponse<BulkApproveResponse>> BulkApproveByApplicationNumberAsync(string applicationNumber, Guid reviewerId);
     Task<ApiResponse<DocumentDto>> ReviewAsync(Guid documentId, DocumentReviewRequest request, Guid reviewerId);
     Task<ApiResponse<BulkApproveResponse>> BulkApproveAsync(Guid applicationId, Guid reviewerId);

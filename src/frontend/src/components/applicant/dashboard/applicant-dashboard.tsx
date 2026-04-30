@@ -8,17 +8,25 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/shared/status-badge';
-import { DashboardSummaryDto } from '@/types/application.types';
+import { DashboardSummaryDto, ApplicationSummaryDto } from '@/types/application.types';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { FormattedDate } from '@/components/shared/FormattedDate';
+
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: React.ElementType;
+  color: string;
+  delay?: number;
+}
 
 interface ApplicantDashboardProps {
   data: DashboardSummaryDto;
   userName: string;
 }
 
-const StatCard = memo(({ title, value, icon: Icon, color, delay = 0 }: any) => (
+const StatCard = memo(({ title, value, icon: Icon, color, delay = 0 }: StatCardProps) => (
   <motion.div
     initial={{ opacity: 0, y: 16 }}
     animate={{ opacity: 1, y: 0 }}
@@ -146,18 +154,18 @@ export const ApplicantDashboard = ({ data, userName }: ApplicantDashboardProps) 
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
-                <table className="w-full text-right">
+                <table className="w-full text-start">
                   <thead>
                     <tr className="bg-neutral-50/50">
                       <th className="px-4 md:px-6 py-2.5 md:py-3.5 text-[9px] md:text-[10px] font-black text-neutral-400 uppercase tracking-widest">رقم الطلب</th>
                       <th className="px-4 md:px-6 py-2.5 md:py-3.5 text-[9px] md:text-[10px] font-black text-neutral-400 uppercase tracking-widest">الفئة</th>
                       <th className="px-4 md:px-6 py-2.5 md:py-3.5 text-[9px] md:text-[10px] font-black text-neutral-400 uppercase tracking-widest">المرحلة الحالية</th>
                       <th className="px-4 md:px-6 py-2.5 md:py-3.5 text-[9px] md:text-[10px] font-black text-neutral-400 uppercase tracking-widest text-center">الحالة</th>
-                      <th className="px-4 md:px-6 py-2.5 md:py-3.5 text-[9px] md:text-[10px] font-black text-neutral-400 uppercase tracking-widest text-left">التاريخ</th>
+                      <th className="px-4 md:px-6 py-2.5 md:py-3.5 text-[9px] md:text-[10px] font-black text-neutral-400 uppercase tracking-widest text-end">التاريخ</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-neutral-100">
-                    {data?.applications?.map((app) => (
+                    {data?.applications?.map((app: ApplicationSummaryDto) => (
                       <tr key={app.id} className="hover:bg-neutral-50/50 transition-colors group cursor-pointer border-b last:border-0 border-neutral-50">
                         <td className="px-4 md:px-6 py-3.5 md:py-4 font-black text-[#1a3a8f] text-xs md:text-sm tracking-tight group-hover:underline">
                           <Link href={`/applications/${app.id}`}>
@@ -175,7 +183,7 @@ export const ApplicantDashboard = ({ data, userName }: ApplicantDashboardProps) 
                         <td className="px-4 md:px-6 py-3.5 md:py-4 text-center">
                           <StatusBadge status={app.status} />
                         </td>
-                        <td className="px-4 md:px-6 py-3.5 md:py-4 text-left text-[9px] md:text-[10px] font-bold text-neutral-400">
+                        <td className="px-4 md:px-6 py-3.5 md:py-4 text-end text-[9px] md:text-[10px] font-bold text-neutral-400">
                           <FormattedDate date={app.updatedAt} />
                         </td>
                       </tr>
@@ -209,9 +217,14 @@ export const ApplicantDashboard = ({ data, userName }: ApplicantDashboardProps) 
                     استعد للاختبارات النظرية والعملية عبر الاطلاع على دليل الإرشادات المعتمد.
                   </p>
                 </div>
-                <Button className="w-full h-10 md:h-11 bg-[#1a3a8f] hover:bg-[#152d6f] text-white rounded-lg text-[10px] md:text-xs font-black transition-all gap-2 md:gap-3 shadow-lg shadow-blue-900/10">
-                  تحميل الدليل (PDF)
-                  <Download className="w-3.5 h-3.5" />
+                <Button 
+                  asChild
+                  className="w-full h-10 md:h-11 bg-[#1a3a8f] hover:bg-[#152d6f] text-white rounded-lg text-[10px] md:text-xs font-black transition-all gap-2 md:gap-3 shadow-lg shadow-blue-900/10"
+                >
+                  <a href="/docs/success-guide.html" target="_blank">
+                    تحميل الدليل (PDF)
+                    <Download className="w-3.5 h-3.5" />
+                  </a>
                 </Button>
              </div>
           </div>
@@ -220,9 +233,9 @@ export const ApplicantDashboard = ({ data, userName }: ApplicantDashboardProps) 
           <div className="p-5 md:p-6 bg-[#D4A017]/5 border border-[#D4A017]/10 rounded-xl space-y-2 md:space-y-3">
              <div className="flex items-center gap-2 md:gap-3">
                 <HelpCircle className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#D4A017]" />
-                <h4 className="font-black text-[#856404] text-[9px] md:text-[11px] uppercase tracking-widest text-right">معلومة سريعة</h4>
+                <h4 className="font-black text-[#856404] text-[9px] md:text-[11px] uppercase tracking-widest text-start">معلومة سريعة</h4>
              </div>
-             <p className="text-[10px] md:text-xs text-[#856404] font-bold leading-relaxed text-right">
+             <p className="text-[10px] md:text-xs text-[#856404] font-bold leading-relaxed text-start">
                 يمكنك التحقق من صلاحية رخصتك في أي وقت من خلال قسم "تراخيصي" في القائمة الجانبية.
              </p>
           </div>

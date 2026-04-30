@@ -19,7 +19,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import notificationService from '@/services/notification.service';
+import { notificationService } from '@/services/notification.service';
 
 const getDeviceIcon = (type: string) => {
   switch (type) {

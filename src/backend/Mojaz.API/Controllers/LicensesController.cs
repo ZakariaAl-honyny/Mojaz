@@ -10,6 +10,9 @@ using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Shared;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -24,25 +27,33 @@ public class LicensesController : ControllerBase
     private readonly ILicenseService _licenseService;
     private readonly IFileStorageService _fileStorageService;
     private readonly IReplaceLicenseService _replaceLicenseService;
+    private readonly IApplicationService _applicationService;
 
-    public LicensesController(ILicenseService licenseService, IFileStorageService fileStorageService, IReplaceLicenseService replaceLicenseService)
+    public LicensesController(
+        ILicenseService licenseService, 
+        IFileStorageService fileStorageService, 
+        IReplaceLicenseService replaceLicenseService,
+        IApplicationService applicationService)
     {
         _licenseService = licenseService;
         _fileStorageService = fileStorageService;
         _replaceLicenseService = replaceLicenseService;
+        _applicationService = applicationService;
     }
 
     /// <summary>
     /// Issue a new driving license for an approved application.
-    /// This endpoint performs metadata generation, PDF creation, and secure storage.
+    /// Route: api/v1/licenses/application/{appIdOrNumber}/issue
     /// </summary>
-    [HttpPost("issue/{applicationId}")]
-    [Authorize(Roles = "Manager,Security,Admin")]
+    [HttpPost("application/{appIdOrNumber}/issue")]
+    [Authorize(Roles = "Manager,Admin")]
     [ProducesResponseType(typeof(ApiResponse<LicenseDto>), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 409)]
-    public async Task<IActionResult> IssueAsync(Guid applicationId)
+    public async Task<IActionResult> IssueAsync(string appIdOrNumber)
     {
+        var applicationId = await ResolveIdAsync(appIdOrNumber);
+        if (applicationId == Guid.Empty)
+            return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
+
         var issuerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _licenseService.IssueLicenseAsync(applicationId, issuerId);
         return StatusCode(result.StatusCode, result);
@@ -50,14 +61,17 @@ public class LicensesController : ControllerBase
 
     /// <summary>
     /// Issue a replacement driving license for a validated replacement application.
+    /// Route: api/v1/licenses/application/{appIdOrNumber}/issue-replacement
     /// </summary>
-    [HttpPost("issue-replacement/{applicationId}")]
-    [Authorize(Roles = "Manager,Security,Admin")]
+    [HttpPost("application/{appIdOrNumber}/issue-replacement")]
+    [Authorize(Roles = "Manager,Admin")]
     [ProducesResponseType(typeof(ApiResponse<Guid>), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 409)]
-    public async Task<IActionResult> IssueReplacementAsync(Guid applicationId)
+    public async Task<IActionResult> IssueReplacementAsync(string appIdOrNumber)
     {
+        var applicationId = await ResolveIdAsync(appIdOrNumber);
+        if (applicationId == Guid.Empty)
+            return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
+
         var issuerId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _replaceLicenseService.IssueReplacementAsync(applicationId, issuerId);
         return StatusCode(result.StatusCode, result);
@@ -65,23 +79,19 @@ public class LicensesController : ControllerBase
 
     /// <summary>
     /// Securely download the license PDF.
-    /// Only the license holder or authorized employees can download.
     /// </summary>
     [HttpGet("{id}/download")]
     [Authorize]
-    [ProducesResponseType(typeof(FileStreamResult), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 404)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 403)]
     public async Task<IActionResult> DownloadAsync(Guid id)
     {
-        var licenseResult = await _licenseService.GetByIdAsync(id);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var role = User.FindFirstValue(ClaimTypes.Role)!;
+
+        var licenseResult = await _licenseService.GetByIdAsync(id, userId, role);
         if (!licenseResult.Success || licenseResult.Data == null)
         {
             return StatusCode(licenseResult.StatusCode, licenseResult);
         }
-
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var role = User.FindFirstValue(ClaimTypes.Role)!;
 
         // Security check: Only holder or Employee roles can download
         var isAdminOrEmployee = role == "Admin" || role == "Manager" || role == "Security" || role == "Receptionist";
@@ -112,62 +122,15 @@ public class LicensesController : ControllerBase
     }
 
     /// <summary>
-    /// Preview the license PDF layout with sample data (Internal only).
-    /// </summary>
-    [HttpGet("preview")]
-    [Authorize(Roles = "Manager,Admin")]
-    [ProducesResponseType(typeof(FileStreamResult), 200)]
-    public async Task<IActionResult> PreviewAsync()
-    {
-        var license = new License
-        {
-            LicenseNumber = "MOJ-2025-00000000",
-            IssuedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.AddYears(10)
-        };
-        var holder = new User
-        {
-            FullNameEn = "John Doe Sample",
-            NationalId = "1234567890"
-        };
-        var category = new LicenseCategory
-        {
-            Code = LicenseCategoryCode.B,
-            NameEn = "Private License",
-            NameAr = "رخصة خاصة"
-        };
-
-        var generator = HttpContext.RequestServices.GetService(typeof(ILicensePdfGenerator)) as ILicensePdfGenerator;
-        if (generator == null) return StatusCode(500, "Generator not found");
-
-        var pdfBytes = await generator.GenerateLicensePdfAsync(license, holder, category);
-        return File(pdfBytes, "application/pdf", "preview.pdf");
-    }
-
-    /// <summary>
-    /// Check if the current user is eligible for license replacement
-    /// </summary>
-    [HttpGet("mine/replacement-eligibility")]
-    [Authorize(Roles = "Applicant")]
-    [ProducesResponseType(typeof(ApiResponse<ReplacementEligibilityDto>), 200)]
-    [ProducesResponseType(typeof(ApiResponse<object>), 400)]
-    public async Task<IActionResult> GetReplacementEligibilityAsync()
-    {
-        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var result = await _replaceLicenseService.CheckEligibilityAsync(userId);
-        return StatusCode(result.StatusCode, result);
-    }
-
-    /// <summary>
     /// Get current user's licenses
     /// </summary>
-    [HttpGet("my")]
+    [HttpGet]
     [Authorize(Roles = "Applicant")]
-    [ProducesResponseType(typeof(ApiResponse<List<LicenseDto>>), 200)]
     public async Task<IActionResult> GetMyLicensesAsync()
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var result = await _licenseService.GetUserLicensesAsync(userId);
+        var role = User.FindFirstValue(ClaimTypes.Role)!;
+        var result = await _licenseService.GetUserLicensesAsync(userId, role);
         return StatusCode(result.StatusCode, result);
     }
 
@@ -176,10 +139,18 @@ public class LicensesController : ControllerBase
     /// </summary>
     [HttpGet("{id}/upgrade-targets")]
     [Authorize(Roles = "Applicant")]
-    [ProducesResponseType(typeof(ApiResponse<List<UpgradeTargetCategoryDto>>), 200)]
     public async Task<IActionResult> GetUpgradeTargetsAsync(Guid id)
     {
         var result = await _licenseService.GetUpgradeTargetsAsync(id);
         return StatusCode(result.StatusCode, result);
+    }
+
+    private async Task<Guid> ResolveIdAsync(string idOrNumber)
+    {
+        if (Guid.TryParse(idOrNumber, out var id))
+            return id;
+
+        var result = await _applicationService.GetByApplicationNumberAsync(idOrNumber);
+        return result.Data?.FirstOrDefault()?.Id ?? Guid.Empty;
     }
 }

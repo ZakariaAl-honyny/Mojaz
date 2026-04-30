@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from '@/lib/static-translations';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { FeeType, PaymentMethod } from '@/types/payment.types';
+import { FeeType, PaymentMethod, PaymentStatus } from '@/types/payment.types';
 import {
   CheckCircle,
   Download,
@@ -21,22 +21,34 @@ const mockSuccessfulPayment = {
   applicationId: 'app-001',
   applicationNumber: 'MOJ-2025-12345678',
   applicantFullName: 'أحمد محمد',
-  feeType: 'ApplicationFee' as FeeType,
+  feeType: FeeType.ApplicationFee,
   amount: 200,
-  status: 'Paid' as const,
+  status: PaymentStatus.Paid,
   dueDate: '2025-04-20',
   paidAt: new Date().toISOString(),
-  paymentMethod: 'BankTransfer' as PaymentMethod,
+  paymentMethod: PaymentMethod.BankTransfer,
   transactionId: 'TXN-SUCCESS-123',
 };
 
 const feeTypeKeys: Record<FeeType, string> = {
-  ApplicationFee: 'applicationFee',
-  MedicalFee: 'medicalFee',
-  TheoryFee: 'theoryFee',
-  PracticalFee: 'practicalFee',
-  IssuanceFee: 'issuanceFee',
-  RetakeFee: 'retakeFee',
+  [FeeType.ApplicationFee]: 'applicationFee',
+  [FeeType.MedicalExamFee]: 'medicalFee',
+  [FeeType.TheoryTestFee]: 'theoryFee',
+  [FeeType.PracticalTestFee]: 'practicalFee',
+  [FeeType.IssuanceFee]: 'issuanceFee',
+  [FeeType.RetakeFee]: 'retakeFee',
+  [FeeType.RenewalFee]: 'renewalFee',
+  [FeeType.ReplacementFee]: 'replacementFee',
+  [FeeType.CategoryUpgrade]: 'categoryUpgrade',
+};
+
+const paymentMethodKeys: Record<PaymentMethod, string> = {
+  [PaymentMethod.Mada]: 'mada',
+  [PaymentMethod.Visa]: 'visa',
+  [PaymentMethod.MasterCard]: 'masterCard',
+  [PaymentMethod.ApplePay]: 'applePay',
+  [PaymentMethod.BankTransfer]: 'bankTransfer',
+  [PaymentMethod.Jeeb]: 'jeeb',
 };
 
 export default function PaymentSuccessPage() {
@@ -134,7 +146,7 @@ export default function PaymentSuccessPage() {
             <div className="flex items-center gap-2">
               <CreditCard className="w-4 h-4 text-neutral-400" />
               <span className="text-neutral-900">
-                {t(payment.paymentMethod.toLowerCase())}
+                {t(paymentMethodKeys[payment.paymentMethod])}
               </span>
             </div>
           </div>

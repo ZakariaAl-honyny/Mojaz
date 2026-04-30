@@ -25,7 +25,7 @@ export default function Navbar() {
   return (
     <nav 
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500 font-arabic px-6 lg:px-12 flex items-center justify-center",
+        "fixed top-0 start-0 end-0 z-50 transition-all duration-500 font-arabic px-6 lg:px-12 flex items-center justify-center",
         isScrolled ? "h-20 bg-white/90 backdrop-blur-xl shadow-[0_10px_40px_-10px_rgba(26,58,143,0.1)] border-b border-blue-50/50" : "h-28"
       )} 
       dir="rtl"
@@ -53,15 +53,15 @@ export default function Navbar() {
           <div className="hidden xl:flex items-center gap-10">
             <Link href="/services" className="text-xs font-black uppercase tracking-widest text-neutral-400 hover:text-[#1a3a8f] transition-all relative group py-2">
               الخدمات الإلكترونية
-              <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-[#1a3a8f] group-hover:w-full transition-all duration-500 rounded-full"></span>
+              <span className="absolute -bottom-1 end-0 w-0 h-0.5 bg-[#1a3a8f] group-hover:w-full transition-all duration-500 rounded-full"></span>
             </Link>
             <Link href="/manual" className="text-xs font-black uppercase tracking-widest text-neutral-400 hover:text-[#1a3a8f] transition-all relative group py-2">
               دليل الاستخدام
-              <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-[#1a3a8f] group-hover:w-full transition-all duration-500 rounded-full"></span>
+              <span className="absolute -bottom-1 end-0 w-0 h-0.5 bg-[#1a3a8f] group-hover:w-full transition-all duration-500 rounded-full"></span>
             </Link>
             <Link href="/centers" className="text-xs font-black uppercase tracking-widest text-neutral-400 hover:text-[#1a3a8f] transition-all relative group py-2">
               المراكز المعتمدة
-              <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-[#1a3a8f] group-hover:w-full transition-all duration-500 rounded-full"></span>
+              <span className="absolute -bottom-1 end-0 w-0 h-0.5 bg-[#1a3a8f] group-hover:w-full transition-all duration-500 rounded-full"></span>
             </Link>
             <Link href="/verify" className="text-xs font-black uppercase tracking-widest text-neutral-400 hover:text-[#1a3a8f] transition-all relative group py-2">
               التحقق من البيانات

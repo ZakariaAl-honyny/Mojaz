@@ -8,6 +8,7 @@ using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Mojaz.API.Extensions;
 using Mojaz.API.Filters;
@@ -98,9 +99,7 @@ builder.Services.AddHangfireServer();
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
-// ─── Global Error Handling ───
-builder.Services.AddExceptionHandler<Mojaz.Infrastructure.Security.Middleware.GlobalExceptionHandler>();
-builder.Services.AddProblemDetails();
+
 
 // ─── Controllers & Filters ───
 builder.Services.AddControllers(options => 
@@ -115,7 +114,16 @@ builder.Services.AddControllers(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    // Handle DateOnly serialization/deserialization
+    options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    options.JsonSerializerOptions.Converters.Add(new Mojaz.Shared.Utilities.DateOnlyJsonConverter());
 });
+
+// ─── Swagger ───
+builder.Services.AddMojazSwagger();
+
+// ─── CORS ───
+builder.Services.AddMojazCors(builder.Configuration);
 
 // ─── Request Size Limits (Global Security) ───
 builder.WebHost.ConfigureKestrel(options =>
@@ -130,15 +138,11 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(optio
 
 builder.Services.AddHttpContextAccessor();
 
-// ─── Modular Extensions (Phase 3 Fix) ───
-builder.Services.AddMojazCors(builder.Configuration);
-builder.Services.AddMojazSwagger();
+// ─── Custom Authorization Handler (Role-based) ───
+builder.Services.AddScoped<AuthorizationHandler>();
 
-// ─── Authorization Policies ───
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicies();
-});
+// ─── Custom Authorization Result Handler (Returns JSON on 403/401) ───
+builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, AuthorizationResponseHandler>();
 
 // ─── Health Checks ───
 builder.Services.AddHealthChecks()
@@ -163,7 +167,8 @@ var app = builder.Build();
 // ─── Middleware Pipeline (Modularized) ───
 
 app.UseMojazSecurityHeaders();
-app.UseExceptionHandler(); // Enable global exception handler
+// Use ONLY the middleware-based exception handler (not IExceptionHandler which conflicts)
+app.UseMojazExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
@@ -171,10 +176,11 @@ if (app.Environment.IsDevelopment())
     app.UseMojazSwagger();
 }
 
-app.UseMojazExceptionHandler();
+
 app.UseMojazRequestLogging();
 
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseMojazCors();
 
 // ─── Monitoring Middleware ───
@@ -192,7 +198,7 @@ app.MapHealthChecks("/health").AllowAnonymous();
 app.MapMetrics().AllowAnonymous();
 
 // ─── Auto-Migration (Production Safe) ───
-if (app.Environment.IsProduction() || app.Configuration.GetValue<bool>("AutoMigrate"))
+if (app.Environment.IsProduction() || app.Configuration.GetValue<bool>("AutoMigrate") || app.Configuration.GetValue<bool>("AlwaysMigrate"))
 {
     using (var scope = app.Services.CreateScope())
     {
@@ -200,11 +206,19 @@ if (app.Environment.IsProduction() || app.Configuration.GetValue<bool>("AutoMigr
         try
         {
             var context = services.GetRequiredService<MojazDbContext>();
-            if (context.Database.GetPendingMigrations().Any())
+            
+            // Run pending migrations to ensure schema is up to date
+            Log.Information("Checking for pending migrations...");
+            var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+            if (pendingMigrations.Any())
             {
-                Log.Information("Applying pending migrations...");
-                context.Database.Migrate();
-                Log.Information("Migrations applied successfully.");
+                Log.Information("Applying {Count} pending migrations...", pendingMigrations.Count());
+                await context.Database.MigrateAsync();
+                Log.Information("Database migrations applied successfully.");
+            }
+            else
+            {
+                Log.Information("Database is up to date. No pending migrations.");
             }
 
             // Always run seeding to ensure mandatory data (settings, roles) exists

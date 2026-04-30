@@ -121,4 +121,15 @@ public class ReportsController : ControllerBase
         var csvBytes = await _reportService.ExportReportsToCsvAsync(filter);
         return File(csvBytes, "text/csv", $"mojaz-report-{DateTime.UtcNow:yyyyMMddHHmmss}.csv");
     }
+
+    /// <summary>
+    /// Export reports data to PDF
+    /// </summary>
+    [HttpGet("export-pdf")]
+    [Produces("application/pdf")]
+    public async Task<IActionResult> ExportPdfAsync([FromQuery] ReportingFilter filter)
+    {
+        var pdfBytes = await _reportService.ExportReportsToPdfAsync(filter);
+        return File(pdfBytes, "application/pdf", $"mojaz-sovereign-report-{DateTime.UtcNow:yyyyMMddHHmmss}.pdf");
+    }
 }

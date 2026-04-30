@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { paymentService, PaymentDto } from "@/services/payment.service";
+import { paymentService } from "@/services/payment.service";
+import { PaymentDto, PaymentStatus, FeeType } from "@/types/payment.types";
 import { ReceiptDownloadButton } from "./ReceiptDownloadButton";
 import { 
   Card, 
@@ -10,20 +11,23 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { StatusBadge } from "@/components/domain/application/StatusBadge";
-import { ApplicationStatus } from "@/types/api.types";
+import { ApplicationStatus } from "@/lib/enums";
 import { CreditCard, Calendar, Hash, Receipt, ArrowLeftRight, Clock, CheckCircle2, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 
 // Fee type names mapping
-const FEE_TYPE_NAMES: Record<number, string> = {
-  1: 'رسوم الطلب',
-  2: 'الفحص الطبي',
-  3: 'الاختبار النظري',
-  4: 'الاختبار العملي',
-  5: 'صدار الرخصة',
-  6: 'إعادة الاختبار',
+const FEE_TYPE_NAMES: Record<FeeType, string> = {
+  [FeeType.ApplicationFee]: 'رسوم الطلب',
+  [FeeType.MedicalExamFee]: 'الفحص الطبي',
+  [FeeType.TheoryTestFee]: 'الاختبار النظري',
+  [FeeType.PracticalTestFee]: 'الاختبار العملي',
+  [FeeType.IssuanceFee]: 'إصدار الرخصة',
+  [FeeType.RetakeFee]: 'إعادة الاختبار',
+  [FeeType.RenewalFee]: 'تجديد الرخصة',
+  [FeeType.ReplacementFee]: 'استخراج بدل',
+  [FeeType.CategoryUpgrade]: 'ترقية الفئة',
 };
 
 interface PaymentHistoryListProps {
@@ -39,6 +43,8 @@ export function PaymentHistoryList({ applicationNumber }: PaymentHistoryListProp
   }, [applicationNumber]);
 
   const fetchPayments = async () => {
+    if (!applicationNumber) return;
+    
     try {
       setIsLoading(true);
       const res = await paymentService.getPaymentsByApplication(applicationNumber);
@@ -92,7 +98,7 @@ export function PaymentHistoryList({ applicationNumber }: PaymentHistoryListProp
   return (
     <Card className="border border-neutral-200 shadow-sm rounded-xl md:rounded-2xl bg-white overflow-hidden font-arabic" dir="rtl">
       <CardHeader className="bg-white p-4 md:p-6 border-b border-neutral-50">
-        <div className="flex items-center gap-3 md:gap-4">
+        <div className="flex gap-3 md:gap-4 gap-start-center">
            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-blue-50 flex items-center justify-center text-[#1a3a8f]">
               <ArrowLeftRight className="w-5 h-5 md:w-6 md:h-6" />
            </div>
@@ -110,9 +116,9 @@ export function PaymentHistoryList({ applicationNumber }: PaymentHistoryListProp
                 <div className="flex items-start gap-4 md:gap-6">
                   <div className={cn(
                     "mt-1 w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-500",
-                    payment.status === 1 ? "bg-emerald-50 text-emerald-600" : "bg-neutral-50 text-neutral-300"
+                    payment.status === PaymentStatus.Paid ? "bg-emerald-50 text-emerald-600" : "bg-neutral-50 text-neutral-300"
                   )}>
-                    {payment.status === 1 ? <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6" /> : (payment.status === 2 ? <AlertCircle className="w-5 h-5 md:w-6 md:h-6" /> : <Clock className="w-5 h-5 md:w-6 md:h-6" />)}
+                    {payment.status === PaymentStatus.Paid ? <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6" /> : (payment.status === PaymentStatus.Failed ? <AlertCircle className="w-5 h-5 md:w-6 md:h-6" /> : <Clock className="w-5 h-5 md:w-6 md:h-6" />)}
                   </div>
                   <div className="space-y-1.5 md:space-y-2">
                     <div className="flex items-center gap-3 md:gap-4">
@@ -129,17 +135,17 @@ export function PaymentHistoryList({ applicationNumber }: PaymentHistoryListProp
                     <div className="flex flex-wrap gap-x-4 md:gap-x-6 gap-y-1.5 pt-1.5">
                       <div className="flex items-center gap-1.5 text-[10px] md:text-xs font-bold text-neutral-400">
                         <Calendar className="w-3.5 h-3.5" />
-                        {format(new Date(payment.createdAt), "PPP", { locale: ar })}
+                        {payment.paidAt ? format(new Date(payment.paidAt), "PPP", { locale: ar }) : '-'}
                       </div>
                       <div className="flex items-center gap-1.5 text-[10px] md:text-xs font-bold text-neutral-400">
                         <Hash className="w-3.5 h-3.5" />
-                        المرجع: {payment.transactionReference}
+                        المرجع: {payment.transactionId || '-'}
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {payment.status === 1 && (
+                {payment.status === PaymentStatus.Paid && (
                   <ReceiptDownloadButton 
                     paymentId={payment.id} 
                     className="md:w-auto w-full h-10 md:h-12 px-6 rounded-lg md:rounded-xl bg-neutral-50 hover:bg-blue-50 text-neutral-900 font-bold transition-all border border-neutral-100" 
@@ -154,12 +160,13 @@ export function PaymentHistoryList({ applicationNumber }: PaymentHistoryListProp
   );
 }
 
-// Helper to map numeric enum to string for StatusBadge
-function getStatusString(status: number): string {
+// Helper to map enum status to StatusBadge format
+function getStatusString(status: PaymentStatus): ApplicationStatus {
   switch (status) {
-    case 0: return "Submitted"; // Pending
-    case 1: return "Approved";  // Paid
-    case 2: return "Rejected";  // Failed
-    default: return "Submitted";
+    case PaymentStatus.Pending: return ApplicationStatus.Submitted;
+    case PaymentStatus.Paid: return ApplicationStatus.Approved;
+    case PaymentStatus.Failed: return ApplicationStatus.Rejected;
+    case PaymentStatus.Refunded: return ApplicationStatus.Cancelled;
+    default: return ApplicationStatus.Submitted;
   }
 }

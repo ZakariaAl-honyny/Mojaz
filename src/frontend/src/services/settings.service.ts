@@ -1,11 +1,7 @@
 import axios from '@/lib/api-client';
+import { ApiResponse, PaginatedResult, SystemSettingDto } from '@/types/api.types';
 
-export interface SystemSettingDto {
-  key: string;
-  value: string;
-  description?: string;
-  updatedAt?: string;
-}
+export type { SystemSettingDto };
 
 export interface UpdateSettingRequest {
   value: string;
@@ -13,12 +9,12 @@ export interface UpdateSettingRequest {
 
 export const settingsService = {
   async getAllSettings(): Promise<SystemSettingDto[]> {
-    const response = await axios.get<{ data: SystemSettingDto[] }>('/settings');
-    return response.data.data;
+    const response = await axios.get<ApiResponse<PaginatedResult<SystemSettingDto>>>('settings');
+    return response.data.data?.items || [];
   },
 
   async updateSetting(key: string, value: string): Promise<void> {
-    await axios.put(`/settings/${key}`, { value });
+    await axios.put(`settings/${key}`, { value });
   },
 };
 
