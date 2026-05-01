@@ -23,9 +23,10 @@ const TrainingService = {
 
   /**
    * Create initial training record (if it doesn't exist)
+   * Backend: POST /api/v1/training
    */
   async createRecord(request: CreateTrainingRecordRequest): Promise<ApiResponse<TrainingRecordDto>> {
-    const response = await apiClient.post('Training', request);
+    const response = await apiClient.post('training', request);
     return response.data;
   },
 

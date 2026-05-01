@@ -47,27 +47,31 @@ const MedicalService = {
   },
 
   /**
-   * Get medical exam history for an application
+   * Get medical exam for an application
+   * Backend: GET /api/v1/medical-exams/application/{appIdOrNumber}
    * @param applicationId - The application ID
    */
-  async getMedicalExamHistory(
+  async getMedicalExamByApplication(
     applicationId: string
   ): Promise<ApiResponse<MedicalExamDto>> {
     const response = await apiClient.get<ApiResponse<MedicalExamDto>>(
-      `medical-exams/application/${applicationId}/history`
+      `medical-exams/application/${applicationId}`
     );
     return response.data;
   },
 
   /**
-   * Get a specific medical exam by ID
+   * Update medical exam result
+   * Backend: PATCH /api/v1/medical-exams/{id}/result
    * @param examId - Medical exam ID
    */
-  async getMedicalExamById(
-    examId: string
+  async updateMedicalExamResult(
+    examId: number,
+    request: SubmitMedicalExamRequest
   ): Promise<ApiResponse<MedicalExamDto>> {
-    const response = await apiClient.get<ApiResponse<MedicalExamDto>>(
-      `medical-exams/${examId}`
+    const response = await apiClient.patch<ApiResponse<MedicalExamDto>>(
+      `medical-exams/${examId}/result`,
+      request
     );
     return response.data;
   }

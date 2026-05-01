@@ -127,15 +127,8 @@ const AppointmentService = {
   },
 
   /**
-   * Validate a booking request without creating the appointment
-   */
-  async validateBooking(request: CreateAppointmentRequest): Promise<ApiResponse<AppointmentValidationResult>> {
-    const response = await apiClient.post('appointments/validate', request);
-    return response.data;
-  },
-
-  /**
    * Get all appointments for the current logged-in user (applicant)
+   * Note: validateBooking was removed - backend doesn't have /appointments/validate endpoint
    */
   async getMyAppointments(): Promise<ApiResponse<AppointmentDto[]>> {
     const response = await apiClient.get('appointments/my-appointments');

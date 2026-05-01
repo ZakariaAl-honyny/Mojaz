@@ -366,14 +366,16 @@ const ApplicationService = {
 
   /**
    * Get documents for an application
+   * Backend: GET /api/v1/documents/application/{appIdOrNumber}
    */
   async getApplicationDocuments(applicationId: number): Promise<ApiResponse<DocumentDto[]>> {
-    const response = await apiClient.get(`/applications/${applicationId}/documents`);
+    const response = await apiClient.get(`/documents/application/${applicationId}`);
     return response.data;
   },
 
   /**
    * Review a single document
+   * Backend: PATCH /api/v1/documents/{documentId}/review
    */
   async reviewDocument(
     applicationId: number,
@@ -381,7 +383,7 @@ const ApplicationService = {
     review: DocumentReviewRequest
   ): Promise<ApiResponse<DocumentDto>> {
     const response = await apiClient.patch(
-      `/applications/${applicationId}/documents/${documentId}/review`,
+      `/documents/${documentId}/review`,
       review
     );
     return response.data;
@@ -389,6 +391,7 @@ const ApplicationService = {
 
   /**
    * Review all documents for an application (bulk approve)
+   * Backend: PATCH /api/v1/documents/application/{appIdOrNumber}/bulk-approve
    */
   async reviewAllDocuments(
     applicationId: number,
@@ -396,7 +399,7 @@ const ApplicationService = {
     rejectionReason?: string
   ): Promise<ApiResponse<{ reviewResults: DocumentDto[] }>> {
     const response = await apiClient.patch(
-      `/applications/${applicationId}/documents/review-all`,
+      `/documents/application/${applicationId}/bulk-approve`,
       { approved, rejectionReason }
     );
     return response.data;
