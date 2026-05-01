@@ -1,6 +1,8 @@
+using System.IO;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Mojaz.API.Extensions;
 
@@ -14,7 +16,7 @@ public static class SwaggerExtensions
             options.CustomSchemaIds(type => type.FullName);
             options.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "Mojaz API — مُجاز",
+                Title = "Mojaz API",
                 Version = "v1",
                 Description = "Government Driving License Platform API",
                 Contact = new OpenApiContact { Name = "Mojaz Team" }
@@ -31,7 +33,7 @@ public static class SwaggerExtensions
             // JWT Auth in Swagger
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+                Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' followed by space and token.",
                 Name = "Authorization",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,
@@ -63,7 +65,24 @@ public static class SwaggerExtensions
         app.UseSwaggerUI(c =>
         {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "Mojaz API v1");
-            c.RoutePrefix = "swagger"; // Standard
+            c.RoutePrefix = "swagger"; // Standard: /swagger
+            
+            // UI Options - Ensure Try It Out button is enabled
+            c.DisplayRequestDuration();
+            c.EnableDeepLinking();
+            c.ShowExtensions();
+            
+            // Explicitly enable all HTTP methods for Try It Out
+            c.SupportedSubmitMethods(SubmitMethod.Get, SubmitMethod.Post, SubmitMethod.Put, SubmitMethod.Patch, SubmitMethod.Delete);
+            
+            c.EnableValidator();
+            
+            // Enable OAuth2 authorization flow in Swagger UI
+            c.OAuthClientId("mojaz-api-swagger");
+            c.OAuthAppName("Mojaz API");
+            
+            // Add "Authorize" button at the top
+            c.DocumentTitle = "Mojaz Driving License API";
         });
 
         return app;
