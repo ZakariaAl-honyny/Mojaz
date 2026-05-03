@@ -104,17 +104,13 @@ Official  ·  Accessible  ·  Bilingual  ·  Secure  ·  Modern
 
 <div align="center">
 
-| Landing Page (Arabic RTL) | Dashboard (Dark Mode) |
+| Landing Page | Login |
 |:---:|:---:|
-| ![Landing AR](docs/screenshots/landing-ar.png) | ![Dashboard Dark](docs/screenshots/dashboard-dark.png) |
+| ![Landing Page](Screenshots/LandingPage.png) | ![Login](Screenshots/Login.png) |
 
-| Application Wizard | Status Timeline |
+| Applicant Dashboard | Admin Dashboard |
 |:---:|:---:|
-| ![Wizard](docs/screenshots/wizard.png) | ![Timeline](docs/screenshots/timeline.png) |
-
-| Employee Portal | Reports & Analytics |
-|:---:|:---:|
-| ![Employee](docs/screenshots/employee.png) | ![Reports](docs/screenshots/reports.png) |
+| ![Applicant Dashboard](Screenshots/ApplicantDashboard.png) | ![Admin Dashboard](Screenshots/AdminDashboard.png) |
 
 </div>
 
