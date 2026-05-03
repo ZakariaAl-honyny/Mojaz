@@ -14,19 +14,19 @@ public class ApplicationDiagnostics
 {
     public static async Task Run(IServiceProvider services)
     {
-        var appId = 1;
+        var appId = 6;
         using var scope = services.CreateScope();
         var applicationRepo = scope.ServiceProvider.GetRequiredService<IRepository<Mojaz.Domain.Entities.Application>>();
-        var paymentRepo = scope.ServiceProvider.GetRequiredService<IRepository<PaymentTransaction>>();
-        var appointmentRepo = scope.ServiceProvider.GetRequiredService<IAppointmentRepository>();
+        var medicalRepo = scope.ServiceProvider.GetRequiredService<IRepository<MedicalExamination>>();
         
         var app = await applicationRepo.Query()
             .Include(a => a.LicenseCategory)
+            .Include(a => a.Applicant)
             .FirstOrDefaultAsync(a => a.Id == appId);
             
         if (app == null)
         {
-            Console.WriteLine("Application NOT FOUND.");
+            Console.WriteLine($"Application ID {appId} NOT FOUND.");
             return;
         }
         
@@ -35,20 +35,20 @@ public class ApplicationDiagnostics
         Console.WriteLine($"Number: {app.ApplicationNumber}");
         Console.WriteLine($"Status: {app.Status}");
         Console.WriteLine($"Stage: {app.CurrentStage}");
-        Console.WriteLine($"Created: {app.CreatedAt}");
+        Console.WriteLine($"Applicant: {app.Applicant?.FullNameAr}");
         
-        Console.WriteLine("\n--- Payments ---");
-        var payments = await paymentRepo.FindAsync(p => p.ApplicationId == appId);
-        foreach (var p in payments)
+        Console.WriteLine("\n--- Medical Examination ---");
+        var medical = await medicalRepo.Query()
+            .FirstOrDefaultAsync(m => m.ApplicationId == appId);
+        if (medical != null)
         {
-            Console.WriteLine($"- Type: {p.FeeType}, Status: {p.Status}, Date: {p.CreatedAt}");
+            Console.WriteLine($"- Result: {medical.FitnessResult}");
+            Console.WriteLine($"- Notes: {medical.Notes}");
+            Console.WriteLine($"- Date: {medical.CreatedAt}");
         }
-        
-        Console.WriteLine("\n--- Appointments ---");
-        var appointments = await appointmentRepo.GetByApplicationIdAsync(appId);
-        foreach (var a in appointments)
+        else
         {
-            Console.WriteLine($"- Type: {a.AppointmentType}, Status: {a.Status}, Date: {a.ScheduledDate}, Slot: {a.TimeSlot}");
+            Console.WriteLine("- No medical examination found.");
         }
     }
 }

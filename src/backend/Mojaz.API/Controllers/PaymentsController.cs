@@ -166,7 +166,7 @@ namespace Mojaz.API.Controllers
         /// Route: api/v1/payments/application/{appIdOrNumber}/initiate
         /// </summary>
         [HttpPost("application/{appIdOrNumber}/initiate")]
-        [Authorize(Roles = "Applicant,Receptionist")]
+        [Authorize(Roles = "Applicant,Receptionist,Admin")]
         [ProducesResponseType(typeof(ApiResponse<PaymentDto>), 201)]
         public async Task<IActionResult> InitiatePaymentAsync(string appIdOrNumber, [FromBody] InitiatePaymentRequest request)
         {

@@ -1,0 +1,62 @@
+{
+  "description": "Test user accounts for Playwright API tests - all use password: Password123!",
+  "baseUrl": "http://localhost:5013",
+  "accounts": {
+    "applicant": {
+      "email": "applicant@mojaz.gov.sa",
+      "phone": "0500000001",
+      "password": "Password123!",
+      "role": "Applicant",
+      "roleId": 0,
+      "nationalId": "1000000001"
+    },
+    "receptionist": {
+      "email": "receptionist@mojaz.gov.sa",
+      "phone": "0500000002",
+      "password": "Password123!",
+      "role": "Receptionist",
+      "roleId": 1,
+      "nationalId": "1000000002"
+    },
+    "doctor": {
+      "email": "doctor@mojaz.gov.sa",
+      "phone": "0500000003",
+      "password": "Password123!",
+      "role": "Doctor",
+      "roleId": 2,
+      "nationalId": "1000000003"
+    },
+    "examiner": {
+      "email": "examiner@mojaz.gov.sa",
+      "phone": "0500000004",
+      "password": "Password123!",
+      "role": "Examiner",
+      "roleId": 3,
+      "nationalId": "1000000004"
+    },
+    "manager": {
+      "email": "manager@mojaz.gov.sa",
+      "phone": "0500000005",
+      "password": "Password123!",
+      "role": "Manager",
+      "roleId": 4,
+      "nationalId": "1000000005"
+    },
+    "security": {
+      "email": "security@mojaz.gov.sa",
+      "phone": "0500000007",
+      "password": "Password123!",
+      "role": "Security",
+      "roleId": 5,
+      "nationalId": "1000000007"
+    },
+    "admin": {
+      "email": "admin@mojaz.gov.sa",
+      "phone": "0500000006",
+      "password": "Password123!",
+      "role": "Admin",
+      "roleId": 6,
+      "nationalId": "1000000006"
+    }
+  }
+}

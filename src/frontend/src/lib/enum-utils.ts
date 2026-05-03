@@ -1,14 +1,32 @@
 // Enum utilities for converting between frontend display values and backend numeric values
-// Backend uses tinyint enums, frontend uses numeric enums that match backend exactly
+// Backend uses JsonStringEnumConverter — ALL enums must be sent as string names, not numbers.
 
 import { ServiceType, ApplicationStatus, UserRole, Gender } from '@/lib/enums';
 import { RegistrationMethod, OtpPurpose } from '@/types/auth.types';
 
 // ============================================================
 // ServiceType conversions
-// Backend: NewLicense=0, Renewal=1, Replacement=2, CategoryUpgrade=3, 
+// Backend: NewLicense=0, Renewal=1, Replacement=2, CategoryUpgrade=3,
 //          InternationalLicense=4, StatusChange=5, MedicalExtension=6, TemporaryLicense=7
 // ============================================================
+
+/** Convert numeric ServiceType to its string name for backend (JsonStringEnumConverter). */
+export const serviceTypeToString = (value: ServiceType | number | null | undefined): string | null => {
+  if (value === null || value === undefined) return null;
+  const names: Record<number, string> = {
+    0: 'NewLicense',
+    1: 'Renewal',
+    2: 'Replacement',
+    3: 'CategoryUpgrade',
+    4: 'InternationalLicense',
+    5: 'StatusChange',
+    6: 'MedicalExtension',
+    7: 'TemporaryLicense',
+    8: 'TestRetake',
+  };
+  const num = typeof value === 'number' ? value : Number(value);
+  return names[num] ?? null;
+};
 
 export const serviceTypeToNumber = (value: ServiceType | number | null | undefined): number | null => {
   if (value === null || value === undefined) return null;
@@ -93,6 +111,14 @@ export const userRoleFromNumber = (value: number | string | null | undefined): U
 // Frontend: Gender enum (numeric) matching backend
 // ============================================================
 
+/** Convert numeric Gender to its string name for backend (JsonStringEnumConverter). */
+export const genderToString = (value: Gender | number | null | undefined): string | null => {
+  if (value === null || value === undefined) return null;
+  const names: Record<number, string> = { 0: 'NotSpecified', 1: 'Male', 2: 'Female' };
+  const num = typeof value === 'number' ? value : Number(value);
+  return names[num] ?? null;
+};
+
 export const genderToNumber = (value: Gender | number | null | undefined): number | null => {
   if (value === null || value === undefined) return null;
   // If already number, return directly (Gender enum is numeric)
@@ -112,15 +138,20 @@ export const genderFromNumber = (value: number | string | null | undefined): Gen
 // Backend: NationalId=0, Email=1, Phone=2
 // ============================================================
 
-export const registrationMethodToNumber = (value: RegistrationMethod | number | null | undefined): number | null => {
+export const registrationMethodToNumber = (value: RegistrationMethod | string | number | null | undefined): number | null => {
   if (value === null || value === undefined) return null;
-  if (typeof value === 'number') return value;
-  return value;
+  if (value === RegistrationMethod.NationalId || value === 'NationalId' || value === 0) return 0;
+  if (value === RegistrationMethod.Email || value === 'Email' || value === 1) return 1;
+  if (value === RegistrationMethod.Phone || value === 'Phone' || value === 2) return 2;
+  return typeof value === 'number' ? value : null;
 };
 
 export const registrationMethodFromNumber = (value: number | string | null | undefined): RegistrationMethod | null => {
   if (value === null || value === undefined) return null;
-  return Number(value) as RegistrationMethod;
+  if (value === 0 || value === '0' || value === 'NationalId') return RegistrationMethod.NationalId;
+  if (value === 1 || value === '1' || value === 'Email') return RegistrationMethod.Email;
+  if (value === 2 || value === '2' || value === 'Phone') return RegistrationMethod.Phone;
+  return null;
 };
 
 // ============================================================
@@ -141,14 +172,27 @@ export const otpPurposeFromNumber = (value: number | string | null | undefined):
 
 // ============================================================
 // ApplicantType conversions (Step 4)
-// Frontend: "Citizen" | "Resident"
-// Backend: 0 = Citizen, 1 = Resident
+// Frontend: "Citizen" | "Resident" (mapped to backend "Private" | "Public")
+// Backend ApplicantType: Private=0, Public=1, Motorcycle=2, Commercial=3
 // ============================================================
+
+/**
+ * Convert frontend applicantType string/number to backend string name.
+ * "Citizen" → "Private", "Resident" → "Public"
+ */
+export const applicantTypeToString = (value: 'Citizen' | 'Resident' | string | number | null | undefined): string | null => {
+  if (value === null || value === undefined) return null;
+  if (value === 'Citizen' || value === 0) return 'Private';
+  if (value === 'Resident' || value === 1) return 'Public';
+  // Already a backend string name
+  if (value === 'Private' || value === 'Public' || value === 'Motorcycle' || value === 'Commercial') return value as string;
+  return null;
+};
 
 export const applicantTypeToNumber = (value: 'Citizen' | 'Resident' | string | number | null | undefined): number | null => {
   if (value === null || value === undefined) return null;
-  if (value === 'Citizen' || value === 0) return 0;
-  if (value === 'Resident' || value === 1) return 1;
+  if (value === 'Citizen' || value === 'Private' || value === 0) return 0;
+  if (value === 'Resident' || value === 'Public' || value === 1) return 1;
   return null;
 };
 

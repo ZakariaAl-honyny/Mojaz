@@ -1,0 +1,353 @@
+{
+  "controllers": [
+    {
+      "controller": "UnifiedNotificationsController",
+      "file": "tests/api/controllers/UnifiedNotificationsController.spec.ts",
+      "targetApi": "http://localhost:5013/api/v1/notifications-unified",
+      "totalEndpoints": 4,
+      "status": "completed",
+      "assignedTo": "Test Engineer",
+      "createdAt": "2026-05-01",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/v1/notifications-unified",
+          "description": "Get all notifications for the current user (paginated)",
+          "roles": ["Authenticated"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/notifications-unified/unread-count",
+          "description": "Get unread notification count for the current user",
+          "roles": ["Authenticated"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/v1/notifications-unified/{id}/read",
+          "description": "Mark a single notification as read",
+          "roles": ["Authenticated"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/v1/notifications-unified/read-all",
+          "description": "Mark all notifications as read for the current user",
+          "roles": ["Authenticated"]
+        }
+      ]
+    },
+    {
+      "controller": "AdministrativeController",
+      "file": "tests/api/controllers/AdministrativeController.spec.ts",
+      "targetApi": "http://localhost:5013/api/v1/administrative",
+      "totalEndpoints": 1,
+      "status": "completed",
+      "assignedTo": "Test Engineer",
+      "createdAt": "2026-05-01",
+      "endpoints": [
+        {
+          "method": "PATCH",
+          "path": "/api/v1/administrative/applications/{idOrNumber}/verify-stolen-report",
+          "description": "Verify a stolen police report for a replacement application",
+          "roles": ["Admin", "Manager", "Receptionist"]
+        }
+      ]
+    },
+    {
+      "controller": "RenewalController",
+      "file": "tests/api/controllers/RenewalController.spec.ts",
+      "targetApi": "http://localhost:5013/api/v1/licenses/renewal",
+      "totalEndpoints": 5,
+      "status": "completed",
+      "assignedTo": "Test Engineer",
+      "createdAt": "2026-05-01",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/v1/licenses/renewal/eligibility",
+          "description": "Check eligibility for license renewal",
+          "roles": ["Applicant"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/licenses/renewal",
+          "description": "Create new renewal application",
+          "roles": ["Applicant"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/licenses/renewal/{applicationId}/medical-result",
+          "description": "Submit medical examination result",
+          "roles": ["Doctor"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/licenses/renewal/{applicationId}/pay",
+          "description": "Process payment for renewal fee",
+          "roles": ["Applicant"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/licenses/renewal/{applicationId}/issue",
+          "description": "Issue renewed license",
+          "roles": ["Manager", "Security", "Admin"]
+        }
+      ]
+    },
+    {
+      "controller": "DashboardsController",
+      "file": "tests/api/controllers/DashboardsController.spec.ts",
+      "targetApi": "http://localhost:5013/api/v1/dashboards",
+      "totalEndpoints": 7,
+      "status": "completed",
+      "assignedTo": "Test Engineer",
+      "createdAt": "2026-05-01",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/v1/dashboards/applicant",
+          "description": "Get applicant dashboard summary",
+          "roles": ["Applicant"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/dashboards/manager",
+          "description": "Get manager KPI dashboard",
+          "roles": ["Manager", "Admin", "Receptionist", "Doctor", "Examiner"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/dashboards/admin",
+          "description": "Get admin dashboard with comprehensive statistics",
+          "roles": ["Admin"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/dashboards/employee",
+          "description": "Get employee dashboard (Receptionist/Doctor/Examiner)",
+          "roles": ["Admin", "Receptionist", "Doctor", "Examiner", "Manager", "Security"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/dashboards/receptionist",
+          "description": "Get receptionist dashboard",
+          "roles": ["Admin", "Receptionist", "Manager", "Security"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/dashboards/stats",
+          "description": "Get general statistics (accessible by all authenticated users)",
+          "roles": ["All Authenticated"]
+        }
+      ]
+    },
+    {
+      "controller": "AppointmentsController",
+      "file": "tests/api/controllers/AppointmentsController.spec.ts",
+      "targetApi": "http://localhost:5013/api/v1/appointments",
+      "totalEndpoints": 8,
+      "status": "completed",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/v1/appointments",
+          "description": "List all appointments (paginated)",
+          "roles": ["Receptionist", "Doctor", "Examiner", "Manager", "Admin"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/appointments/application/{appIdOrNumber}",
+          "description": "Get appointments by application",
+          "roles": ["Authenticated"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/appointments/application/{appIdOrNumber}",
+          "description": "Create new appointment for application",
+          "roles": ["Applicant", "Receptionist", "Manager", "Admin"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/appointments/available-slots",
+          "description": "Get available appointment slots",
+          "roles": ["Authenticated"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/v1/appointments/{id}/check-in",
+          "description": "Check-in to appointment",
+          "roles": ["Receptionist", "Security", "Doctor", "Examiner", "Manager", "Admin"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/v1/appointments/{id}/reschedule",
+          "description": "Reschedule appointment",
+          "roles": ["Applicant", "Receptionist", "Examiner", "Manager"]
+        },
+        {
+          "method": "PATCH",
+          "path": "/api/v1/appointments/{id}/cancel",
+          "description": "Cancel appointment",
+          "roles": ["Applicant", "Receptionist"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/appointments/attendance",
+          "description": "Get attendance list for date",
+          "roles": ["Receptionist", "Security", "Manager", "Admin"]
+        }
+      ]
+    },
+    {
+      "controller": "FeesController",
+      "file": "tests/api/controllers/FeesController.spec.ts",
+      "targetApi": "http://localhost:5013/api/v1/fees",
+      "totalEndpoints": 5,
+      "status": "completed",
+      "assignedTo": "Test Engineer",
+      "createdAt": "2026-05-01",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/v1/fees",
+          "description": "Get all fee structures",
+          "roles": ["Admin"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/fees/{id}",
+          "description": "Get fee structure by ID",
+          "roles": ["Admin"]
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/fees",
+          "description": "Create new fee structure",
+          "roles": ["Admin"]
+        },
+        {
+          "method": "PUT",
+          "path": "/api/v1/fees/{id}",
+          "description": "Update fee structure",
+          "roles": ["Admin"]
+        },
+        {
+          "method": "DELETE",
+          "path": "/api/v1/fees/{id}",
+          "description": "Delete (soft) fee structure",
+          "roles": ["Admin"]
+        }
+      ]
+    },
+    {
+      "controller": "TheoryTestsController",
+      "file": "tests/api/controllers/TheoryTestsController.spec.ts",
+      "targetApi": "http://localhost:5013/api/v1/theory-tests",
+      "totalEndpoints": 2,
+      "status": "completed",
+      "assignedTo": "Test Engineer",
+      "createdAt": "2026-05-01",
+      "endpoints": [
+        {
+          "method": "POST",
+          "path": "/api/v1/theory-tests/application/{appIdOrNumber}/result",
+          "description": "Submit a theory test result for an application",
+          "roles": ["Examiner"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/theory-tests/application/{appIdOrNumber}/history",
+          "description": "Get all theory test attempts for an application",
+          "roles": ["Applicant", "Receptionist", "Doctor", "Examiner", "Manager", "Security", "Admin", "SuperAdmin", "Support"]
+        }
+      ]
+    },
+    {
+      "controller": "ServicesController",
+      "file": "tests/api/controllers/ServicesController.spec.ts",
+      "targetApi": "http://localhost:5013/api/v1/services",
+      "totalEndpoints": 1,
+      "status": "completed",
+      "assignedTo": "Test Engineer",
+      "createdAt": "2026-05-01",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/v1/services",
+          "description": "Get all available license services",
+          "roles": ["AllowAnonymous"]
+        }
+      ]
+    },
+    {
+      "controller": "ReportsController",
+      "file": "tests/api/controllers/ReportsController.spec.ts",
+      "targetApi": "http://localhost:5013/api/v1/reports",
+      "totalEndpoints": 10,
+      "status": "completed",
+      "assignedTo": "Test Engineer",
+      "createdAt": "2026-05-01",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/v1/reports/summary",
+          "description": "Get reporting dashboard summary",
+          "roles": ["Manager", "Admin"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/reports/status-distribution",
+          "description": "Get status distribution data",
+          "roles": ["Manager", "Admin"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/reports/service-distribution",
+          "description": "Get service distribution data",
+          "roles": ["Manager", "Admin"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/reports/delayed-applications",
+          "description": "Get delayed applications list",
+          "roles": ["Manager", "Admin"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/reports/test-performance",
+          "description": "Get test performance metrics",
+          "roles": ["Manager", "Admin"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/reports/branch-throughput",
+          "description": "Get branch throughput data",
+          "roles": ["Manager", "Admin"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/reports/employee-activity",
+          "description": "Get employee productivity metrics",
+          "roles": ["Manager", "Admin"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/reports/issuance-timeline",
+          "description": "Get issuance timeline trends",
+          "roles": ["Manager", "Admin"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/reports/export-csv",
+          "description": "Export reports data to CSV",
+          "roles": ["Manager", "Admin"]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/reports/export-pdf",
+          "description": "Export reports data to PDF",
+          "roles": ["Manager", "Admin"]
+        }
+      ]
+    }
+  ]
+}

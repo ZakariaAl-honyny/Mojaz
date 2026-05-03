@@ -5,7 +5,7 @@ import { useWizardStore } from "@/stores/wizard-store";
 import { useApplicationMutation } from "@/hooks/useApplicationMutation";
 import ApplicationService from "@/services/application.service";
 import { useQuery } from "@tanstack/react-query";
-import { applicantTypeToNumber } from "@/lib/enum-utils";
+import { applicantTypeToString } from "@/lib/enum-utils";
 
 const AUTO_SAVE_INTERVAL = 30_000; // 30 seconds
 
@@ -91,8 +91,8 @@ export function useWizardAutoSave() {
         address: step3.address,
         city: step3.city,
         region: step3.region,
-        applicantType: applicantTypeToNumber(step4.applicantType), // Now mapped in mutation hook
-        branchId: step4.preferredCenterId,
+        applicantType: applicantTypeToString(step4.applicantType) as any, // Now mapped in mutation hook
+        branchId: step4.preferredCenterId ? Number(step4.preferredCenterId) : undefined,
         preferredLanguage: step4.testLanguage,
         specialNeeds: step4.specialNeedsDeclaration ? step4.specialNeedsNote : null,
         appointmentPreference: step4.appointmentPreference,

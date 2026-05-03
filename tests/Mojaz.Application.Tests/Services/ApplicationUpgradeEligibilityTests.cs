@@ -7,6 +7,7 @@ using Mojaz.Domain.Interfaces;
 using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -28,6 +29,7 @@ public class ApplicationUpgradeEligibilityTests
     private readonly Mock<IAuditService> _auditMock;
     private readonly Mock<INotificationService> _notificationMock;
     private readonly Mock<IPaymentService> _paymentServiceMock;
+    private readonly Mock<ILogger<ApplicationService>> _loggerMock;
     private readonly ApplicationService _service;
 
     public ApplicationUpgradeEligibilityTests()
@@ -44,6 +46,7 @@ public class ApplicationUpgradeEligibilityTests
         _auditMock = new Mock<IAuditService>();
         _notificationMock = new Mock<INotificationService>();
         _paymentServiceMock = new Mock<IPaymentService>();
+        _loggerMock = new Mock<ILogger<ApplicationService>>();
 
         _service = new ApplicationService(
             _appRepoMock.Object,
@@ -57,7 +60,9 @@ public class ApplicationUpgradeEligibilityTests
             _mapperMock.Object,
             _auditMock.Object,
             _notificationMock.Object,
-            _paymentServiceMock.Object);
+            _paymentServiceMock.Object,
+            _loggerMock.Object
+            );
     }
 
     // Note: CheckEligibilityAsync method is not implemented in ApplicationService yet

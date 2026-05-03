@@ -59,7 +59,11 @@ public class AppointmentService : IAppointmentService
         string? search,
         CancellationToken ct = default)
     {
-        var query = _appointmentRepository.Query();
+        var query = _appointmentRepository.Query()
+            .Include(a => a.Application)
+                .ThenInclude(app => app.Applicant)
+            .Include(a => a.Branch)
+            .AsNoTracking();
 
         if (status.HasValue)
             query = query.Where(a => a.Status == status.Value);
@@ -74,7 +78,8 @@ public class AppointmentService : IAppointmentService
             query = query.Where(a => a.ScheduledDate <= to.Value);
 
         if (!string.IsNullOrWhiteSpace(search))
-            query = query.Where(a => a.Notes != null && a.Notes.Contains(search));
+            query = query.Where(a => (a.Notes != null && a.Notes.Contains(search)) || 
+                                     (a.Application != null && a.Application.ApplicationNumber.Contains(search)));
 
         var totalCount = await query.CountAsync(ct);
         var items = await query
@@ -170,11 +175,16 @@ public class AppointmentService : IAppointmentService
             ReminderSent = false
         };
 
+        Console.WriteLine($"[AppointmentService] Attempting to save appointment: AppId={appointment.ApplicationId}, Type={appointment.AppointmentType}, Date={appointment.ScheduledDate}, Slot={appointment.TimeSlot}");
+
         await _appointmentRepository.AddAsync(appointment, ct);
         await _unitOfWork.SaveChangesAsync(ct);
         
+        Console.WriteLine($"[AppointmentService] Success! Appointment saved with ID: {appointment.Id}");
+        
         // Return the created appointment as DTO (Map directly to avoid unnecessary DB fetch and potential null issues)
-        return _mapper.Map<AppointmentDto>(appointment);
+        var createdAppointment = await _appointmentRepository.GetByIdWithApplicationAsync(appointment.Id, ct);
+        return _mapper.Map<AppointmentDto>(createdAppointment ?? appointment);
     }
 
     public async Task<AppointmentDto?> GetAppointmentByIdAsync(int id, int userId, string role, CancellationToken ct = default)
@@ -238,6 +248,7 @@ public class AppointmentService : IAppointmentService
         appointment.RescheduleCount++;
 
         _appointmentRepository.Update(appointment);
+        await _unitOfWork.SaveChangesAsync(ct);
 
         var updatedAppointment = await _appointmentRepository.GetByIdWithApplicationAsync(appointmentId, ct);
         return _mapper.Map<AppointmentDto>(updatedAppointment);
@@ -271,6 +282,7 @@ public class AppointmentService : IAppointmentService
         appointment.CancellationReason = request.Reason;
 
         _appointmentRepository.Update(appointment);
+        await _unitOfWork.SaveChangesAsync(ct);
 
         var cancelledAppointment = await _appointmentRepository.GetByIdWithApplicationAsync(appointmentId, ct);
         return _mapper.Map<AppointmentDto>(cancelledAppointment);
@@ -283,24 +295,36 @@ public class AppointmentService : IAppointmentService
 
     public async Task<List<AppointmentDto>> GetMyAppointmentsAsync(int userId, CancellationToken ct = default)
     {
-        // Get all applications submitted by this user that have pending appointments
-        var applicationIds = await _applicationRepository.Query()
-            .Where(a => a.ApplicantId == userId 
-                 && a.Status >= ApplicationStatus.Submitted
-                 && a.Status < ApplicationStatus.Issued
-                 && !a.IsDeleted)
-            .Select(a => a.Id)
+        // Get all appointments for applications submitted by this user
+        var appointments = await _appointmentRepository.Query()
+            .Include(a => a.Application)
+                .ThenInclude(app => app.Applicant)
+            .Include(a => a.Branch)
+            .Where(a => a.Application.ApplicantId == userId && !a.IsDeleted)
+            .OrderByDescending(a => a.ScheduledDate)
+            .ThenByDescending(a => a.CreatedAt)
             .ToListAsync(ct);
-        
-        // Get all appointments for these applications
-        var appointments = await _appointmentRepository.GetByApplicationIdsAsync(applicationIds, ct);
         
         return _mapper.Map<List<AppointmentDto>>(appointments);
     }
 
     public async Task<List<AppointmentDto>> GetAttendanceAsync(DateOnly date, int branchId, CancellationToken ct = default)
     {
-        var appointments = await _appointmentRepository.GetByBranchAndDateAsync(branchId, date, ct);
+        var query = _appointmentRepository.Query()
+            .Include(a => a.Application)
+                .ThenInclude(app => app.Applicant)
+            .Include(a => a.Branch)
+            .Where(x => 
+                x.ScheduledDate == date &&
+                x.Status != AppointmentStatus.Cancelled &&
+                !x.IsDeleted);
+
+        if (branchId > 0)
+        {
+            query = query.Where(a => a.BranchId == branchId);
+        }
+
+        var appointments = await query.ToListAsync(ct);
         return _mapper.Map<List<AppointmentDto>>(appointments);
     }
 

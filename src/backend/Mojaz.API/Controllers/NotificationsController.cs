@@ -49,7 +49,7 @@ namespace Mojaz.API.Controllers
             {
                 var empty = new PagedResult<NotificationDto>();
                 empty.Items = new List<NotificationDto>();
-                return Ok(ApiResponse<PagedResult<NotificationDto>>.Ok(empty, "No notifications"));
+                return Ok(ApiResponse<PagedResult<NotificationDto>>.Ok(empty, "لا توجد إشعارات"));
             }
         }
 
@@ -68,38 +68,48 @@ namespace Mojaz.API.Controllers
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var result = await _notificationService.GetUnreadCountAsync(userId);
             var response = new UnreadCountResponse { UnreadCount = result.Success ? result.Data : 0 };
-            return Ok(ApiResponse<UnreadCountResponse>.Ok(response, "Unread count retrieved"));
+            return Ok(ApiResponse<UnreadCountResponse>.Ok(response, "تم استرجاع عدد الإشعارات غير المقروءة"));
         }
 
-        /// <summary>
+/// <summary>
         /// Mark all notifications as read for the current user.
         /// </summary>
-        /// <returns>Success message</returns>
+        /// <returns>Success message with count of marked notifications</returns>
         /// <response code="200">All notifications marked as read</response>
         /// <response code="401">Unauthorized (missing or invalid JWT)</response>
+        /// <response code="500">Internal server error</response>
         [HttpPatch("read-all")]
         [Authorize]
         [ProducesResponseType(typeof(ApiResponse<MarkAllReadResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> MarkAllAsRead()
         {
             try
             {
-                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-                var success = await _notificationService.MarkAllAsReadAsync(userId);
-                if (success)
+                var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userIdClaim))
                 {
-                    return Ok(ApiResponse<MarkAllReadResponse>.Ok(
-                        new MarkAllReadResponse { Success = true, Message = "All notifications marked as read" },
-                        "All notifications marked as read"));
+                    return StatusCode(401, ApiResponse<object>.Unauthorized("المستخدم غير مصرح له"));
                 }
-                return BadRequest(ApiResponse<MarkAllReadResponse>.Fail("Failed to mark all as read"));
+                
+                var userId = int.Parse(userIdClaim);
+                var count = await _notificationService.MarkAllAsReadAsync(userId);
+                
+                var response = new MarkAllReadResponse 
+                { 
+                    Success = true, 
+                    Message = count > 0 
+                        ? $"تم تحديد {count} إشعار كمقروء" 
+                        : "لا توجد إشعارات غير مقروءة",
+                    Count = count
+                };
+                
+                return Ok(ApiResponse<MarkAllReadResponse>.Ok(response, response.Message));
             }
-            catch
+            catch (Exception ex)
             {
-                return Ok(ApiResponse<MarkAllReadResponse>.Ok(
-                    new MarkAllReadResponse { Success = true, Message = "No notifications to mark" },
-                    "No notifications to mark"));
+                return StatusCode(500, ApiResponse<object>.Fail("فشل في تحديد الإشعارات كمقروءة", 500, new List<string> { ex.Message }));
             }
         }
 
@@ -141,9 +151,6 @@ namespace Mojaz.API.Controllers
         /// <returns>Success result</returns>
         /// <response code="200">Token registered successfully</response>
         /// <response code="401">Unauthorized (missing or invalid JWT)</response>
-        /// <remarks>
-        /// Registers a new push notification token for the authenticated user. Used for web push notifications via Firebase Cloud Messaging (FCM).
-        /// </remarks>
         [HttpPost("push/register-token")]
         [Authorize]
         public async Task<IActionResult> RegisterToken([FromBody] RegisterPushTokenRequest request)
@@ -160,9 +167,6 @@ namespace Mojaz.API.Controllers
         /// <returns>Success result</returns>
         /// <response code="200">Token unregistered successfully</response>
         /// <response code="401">Unauthorized (missing or invalid JWT)</response>
-        /// <remarks>
-        /// Revokes a push notification token for the authenticated user. The token will no longer receive push notifications.
-        /// </remarks>
         [HttpDelete("push/unregister-token")]
         [Authorize]
         public async Task<IActionResult> UnregisterToken([FromQuery] string token)
@@ -178,14 +182,7 @@ namespace Mojaz.API.Controllers
     /// </summary>
     public class RegisterPushTokenRequest
     {
-        /// <summary>
-        /// The FCM device token to register.
-        /// </summary>
         public string Token { get; set; } = string.Empty;
-
-        /// <summary>
-        /// The device type (e.g., "web", "android", "ios").
-        /// </summary>
         public string DeviceType { get; set; } = string.Empty;
     }
 
@@ -204,5 +201,6 @@ namespace Mojaz.API.Controllers
     {
         public bool Success { get; set; }
         public string Message { get; set; } = string.Empty;
+        public int Count { get; set; }
     }
 }

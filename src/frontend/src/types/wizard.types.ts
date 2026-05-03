@@ -65,7 +65,7 @@ export interface Step3Data {
 
 export interface Step4Data {
   applicantType?: 'Citizen' | 'Resident';
-  preferredCenterId?: number;
+  preferredCenterId?: string;
   testLanguage?: 'ar' | 'en';
   appointmentPreference?: 'Morning' | 'Afternoon' | 'Evening' | 'NoPreference';
   specialNeedsDeclaration?: boolean;
@@ -139,7 +139,7 @@ export interface WizardState {
   incrementSaveFailures: () => void;
   resetSaveFailures: () => void;
   resetWizard: () => void;
-  
+
   // Transient/Local State
   stepValidators: Record<number, { trigger: any; setFocus: any; isValid?: boolean } | null>;
   setStepValidator: (step: number, validator: { trigger: any; setFocus: any; isValid?: boolean } | null) => void;
@@ -159,7 +159,7 @@ export interface WizardState {
     city?: string | null;
     region?: string | null;
     applicantType?: string | null;
-    preferredCenterId?: number | null;
+    preferredCenterId?: string | null;
     testLanguage?: string | null;
     appointmentPreference?: string | null;
     specialNeedsDeclaration?: boolean | null;

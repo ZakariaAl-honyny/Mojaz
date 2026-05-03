@@ -8,11 +8,11 @@ namespace Mojaz.API.Controllers
 {
     /// <summary>
     /// Endpoints for in-app and unified notifications.
-    /// DUPLICATE - Disabled to fix route conflict with NotificationsController
+    /// Route: /api/v1/notifications-unified
     /// </summary>
-    // [ApiController]
-    // [Route("api/v1/notifications")]
-    // [Produces("application/json")]
+    [ApiController]
+    [Route("api/v1/notifications-unified")]
+    [Produces("application/json")]
     public class UnifiedNotificationsController : ControllerBase
     {
         private readonly INotificationService _notificationService;
@@ -79,12 +79,12 @@ namespace Mojaz.API.Controllers
         public async Task<IActionResult> MarkAllAsRead()
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-            var result = await _notificationService.MarkAllAsReadAsync(userId);
-            if (result)
+            var count = await _notificationService.MarkAllAsReadAsync(userId);
+            if (count > 0)
             {
-                return Ok(ApiResponse<object>.Ok(new { }, "All notifications marked as read."));
+                return Ok(ApiResponse<object>.Ok(new { Count = count }, $"تم تحديد {count} إشعار كمقروء"));
             }
-            return Ok(ApiResponse<object>.Ok(new { }, "No unread notifications to mark."));
+            return Ok(ApiResponse<object>.Ok(new { Count = 0 }, "لا توجد إشعارات غير مقروءة"));
         }
     }
 }

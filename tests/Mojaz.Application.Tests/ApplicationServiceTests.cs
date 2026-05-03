@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Mojaz.Application.DTOs.Application;
 using Mojaz.Application.Interfaces.Repositories;
 using Mojaz.Application.Interfaces.Services;
@@ -33,6 +34,7 @@ public class ApplicationServiceTests
     private readonly Mock<IAuditService> _auditService = new();
     private readonly Mock<INotificationService> _notificationService = new();
     private readonly Mock<IPaymentService> _paymentService = new();
+    private readonly Mock<ILogger<ApplicationService>> _logger = new();
 
     private ApplicationService CreateService() => new(
         _applicationRepo.Object,
@@ -46,7 +48,8 @@ public class ApplicationServiceTests
         _mapper.Object,
         _auditService.Object,
         _notificationService.Object,
-        _paymentService.Object
+        _paymentService.Object,
+        _logger.Object
     );
 
     // Note: CheckEligibilityAsync is not implemented in ApplicationService yet

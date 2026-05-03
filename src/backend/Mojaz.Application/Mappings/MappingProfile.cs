@@ -9,12 +9,15 @@ namespace Mojaz.Application.Mappings
     {
         public MappingProfile()
         {
-            // Appointment mappings
-            CreateMap<Appointment, AppointmentDto>()
-                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
-                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt));
-            
-            CreateMap<AppointmentDto, Appointment>();
+            // Use convention-based mapping to avoid referencing unknown members on DTO/entity.
+            // If you later add properties to AppointmentDto (e.g., ApplicationNumber, ApplicantName, etc.)
+            // you can add explicit ForMember mappings mapping from appropriate Appointment/Application fields.
+            CreateMap<Appointment, AppointmentDto>();
+
+            // Reverse map: ignore timestamps (or any navigational properties that may not exist on DTO/entity)
+            CreateMap<AppointmentDto, Appointment>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore());
 
             // Medical mappings
             CreateMap<MedicalExamination, MedicalResultDto>();

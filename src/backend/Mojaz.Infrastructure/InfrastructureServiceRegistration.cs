@@ -24,13 +24,13 @@ public static class InfrastructureServiceRegistration
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // EF Core DbContext - SQL Server 2008 R2 compatibility
+        // EF Core DbContext - SQL Server 2012+ compatibility (supports OFFSET/FETCH)
         services.AddDbContext<MojazDbContext>(options =>
             options.UseSqlServer(
                 configuration.GetConnectionString("DefaultConnection"),
                 b => b
                     .MigrationsAssembly(typeof(MojazDbContext).Assembly.FullName)
-                    .UseCompatibilityLevel(100))); // SQL Server 2008 compatibility
+                    .UseCompatibilityLevel(110))); // SQL Server 2012 compatibility - supports OFFSET/FETCH
 
         // Repository & UnitOfWork
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

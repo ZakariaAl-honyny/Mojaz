@@ -12,9 +12,8 @@ using System.Threading.Tasks;
 namespace Mojaz.API.Controllers;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[Route("api/v1/practical-tests")]
 [Produces("application/json")]
-[Authorize]
 public class PracticalTestsController : ControllerBase
 {
     private readonly IPracticalService _practicalService;

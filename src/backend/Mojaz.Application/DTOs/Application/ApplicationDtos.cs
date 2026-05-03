@@ -37,8 +37,8 @@ public class CreateApplicationRequest
     // Step 1: Service
     public ServiceType ServiceType { get; set; }
 
-    // Step 2: Category
-    public int LicenseCategoryId { get; set; }
+    // Step 2: Category (nullable for drafts - will be set in Step 2)
+    public int? LicenseCategoryId { get; set; }
 
     // Step 3: Personal Information (Updating Applicant profile)
     public string NationalId { get; set; } = string.Empty;
@@ -202,9 +202,9 @@ public class ApplicationWizardDto
     // Step 1: Service
     public ServiceType ServiceType { get; set; }
 
-    // Step 2: Category
-    public int LicenseCategoryId { get; set; }
-    public string LicenseCategoryCode { get; set; } = string.Empty;
+    // Step 2: Category (nullable for drafts)
+    public int? LicenseCategoryId { get; set; }
+    public string? LicenseCategoryCode { get; set; }
     public string LicenseCategoryNameAr { get; set; } = string.Empty;
     public string LicenseCategoryNameEn { get; set; } = string.Empty;
 

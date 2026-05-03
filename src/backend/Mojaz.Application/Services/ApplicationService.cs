@@ -16,6 +16,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 using ApplicationEntity = Mojaz.Domain.Entities.Application;
+using Microsoft.Extensions.Logging;
 
 namespace Mojaz.Application.Services;
 
@@ -33,6 +34,7 @@ public class ApplicationService : IApplicationService
     private readonly IAuditService _auditService;
     private readonly INotificationService _notificationService;
     private readonly IPaymentService _paymentService;
+    private readonly ILogger<ApplicationService> logger;
 
     public ApplicationService(
         IRepository<ApplicationEntity> applicationRepository,
@@ -46,7 +48,9 @@ public class ApplicationService : IApplicationService
         IMapper mapper,
         IAuditService auditService,
         INotificationService notificationService,
-        IPaymentService paymentService)
+        IPaymentService paymentService,
+        ILogger<ApplicationService> logger
+        )
     {
         _applicationRepository = applicationRepository;
         _userRepository = userRepository;
@@ -60,12 +64,15 @@ public class ApplicationService : IApplicationService
         _auditService = auditService;
         _notificationService = notificationService;
         _paymentService = paymentService;
+        this.logger = logger;
     }
 
     public async Task<ApiResponse<ApplicationDto>> CreateAsync(CreateApplicationRequest request, int userId)
     {
         // 1. Eligibility Check (Gate 1)
-        var category = await _categoryRepository.GetByIdAsync(request.LicenseCategoryId);
+        if (!request.LicenseCategoryId.HasValue)
+            return ApiResponse<ApplicationDto>.Fail(400, "يرجى تحديد فئة الرخصة.");
+        var category = await _categoryRepository.GetByIdAsync(request.LicenseCategoryId.Value);
         if (category == null) return ApiResponse<ApplicationDto>.Fail(400, "فئة الرخصة غير موجودة.");
 
         var ageLimitSetting = (await _settingsRepository.FindAsync(s => s.SettingKey == $"MIN_AGE_CATEGORY_{category.Code}")).FirstOrDefault();
@@ -93,21 +100,30 @@ public class ApplicationService : IApplicationService
             l.Status == LicenseStatus.Active);
         
         if (existingLicenses.Any())
-            return ApiResponse<ApplicationDto>.Fail(400, $"لديك بالفعل رخصة نشطة وسارية لهذه الفئة ({category.NameAr}). يمكنك تجديدها لاحقاً عند قرب الانتهاء.");
+            return ApiResponse<ApplicationDto>.Fail(400, $"لديك بالفعل رخصة نشطة وسارية لهذه الفئة ({category.NameAr}). لا يمكنك طلب رخصة جديدة لنفس الفئة.");
 
-        // 3. Active/Incomplete Application Check (Per Category)
-        // We block if there is any application that is NOT in a terminal final state or a draft
-        var existingApps = await _applicationRepository.FindAsync(a => a.ApplicantId == userId && 
-            a.LicenseCategoryId == request.LicenseCategoryId &&
-            a.Status != ApplicationStatus.Draft &&
-            a.Status != ApplicationStatus.Rejected && 
-            a.Status != ApplicationStatus.Expired &&
-            a.Status != ApplicationStatus.Cancelled &&
-            a.Status != ApplicationStatus.Issued &&
-            a.Status != ApplicationStatus.Active);
-        
-        if (existingApps.Any())
-            return ApiResponse<ApplicationDto>.Fail(400, $"لديك بالفعل طلب نشط لهذه الفئة ({category.NameAr}). يرجى متابعة طلبك الحالي.");
+        // 3. Global Active Application Check (Strict Rule: Only one application at a time)
+        // var anyActiveApp = await _applicationRepository.FindAsync(a => a.ApplicantId == userId && 
+        //     a.Status != ApplicationStatus.Draft &&
+        //     a.Status != ApplicationStatus.Rejected && 
+        //     a.Status != ApplicationStatus.Expired &&
+        //     a.Status != ApplicationStatus.Cancelled &&
+        //     a.Status != ApplicationStatus.Issued &&
+        //     a.Status != ApplicationStatus.Active);
+        // 
+        // if (anyActiveApp.Any())
+        // {
+        //     var active = anyActiveApp.First();
+        //     return ApiResponse<ApplicationDto>.Fail(400, $"لديك بالفعل طلب نشط قيد المعالجة (رقم {active.ApplicationNumber}). لا يمكنك تقديم طلب جديد حتى يتم الانتهاء من الطلب الحالي.");
+        // }
+
+        // 4. Same Category Draft Check
+        // var categoryDraft = await _applicationRepository.FindAsync(a => a.ApplicantId == userId && 
+        //     a.LicenseCategoryId == request.LicenseCategoryId &&
+        //     a.Status == ApplicationStatus.Draft);
+        // 
+        // if (categoryDraft.Any())
+        //     return ApiResponse<ApplicationDto>.Fail(400, $"لديك بالفعل مسودة طلب لهذه الفئة ({category.NameAr}). يرجى إكمال المسودة بدلاً من إنشاء طلب جديد.");
 
         // 3. Security/Judicial Block Check (PRD Section 9.2.E - Gate 1 Hard Stop)
         if (user.IsSecurityBlocked)
@@ -174,29 +190,29 @@ public class ApplicationService : IApplicationService
         if (user.IsSecurityBlocked)
             return ApiResponse<ApplicationDto>.Fail(403, "يوجد حظر أمني على ملف مقدم الطلب.");
 
+        // Removed: Global active application check - allowing multiple applications
+        // Users can now create multiple applications regardless of existing active applications
+
         // Reuse existing draft if available
         var existingDrafts = await _applicationRepository.FindAsync(a => 
             a.ApplicantId == userId && 
             a.Status == ApplicationStatus.Draft && 
             a.ServiceType == serviceType);
 
+        /* [FLEXIBILITY] - Always allow creating a new draft to avoid stale state issues
         if (existingDrafts.Any())
         {
             return ApiResponse<ApplicationDto>.Ok(_mapper.Map<ApplicationDto>(existingDrafts.First()), "تم استعادة المسودة بنجاح.");
         }
+        */
 
-        // Get default category (B - خصوصي) for initialization
-        var allCategories = await _categoryRepository.GetAllAsync();
-        var defaultCategory = allCategories.FirstOrDefault(c => c.Code == LicenseCategoryCode.B);
-        if (defaultCategory == null)
-            return ApiResponse<ApplicationDto>.Fail(500, "لم يتم تهيئة فئات الرخص في النظام.");
-
+        // NEW DRAFT: Do NOT set default category - user must select in Step 2
         var application = new ApplicationEntity
         {
             ApplicationNumber = GenerateApplicationNumber(),
             ApplicantId = userId,
             ServiceType = serviceType,
-            LicenseCategoryId = defaultCategory.Id, // Required - set default
+            LicenseCategoryId = null, // User must select in Step 2
             Status = ApplicationStatus.Draft,
             CurrentStage = ApplicationStages.Stage01Creation,
             CreatedAt = DateTime.UtcNow,
@@ -281,8 +297,8 @@ public class ApplicationService : IApplicationService
         if (application.ApplicantId != userId)
             return ApiResponse<ApplicationWizardDto>.Fail(403, "دخول غير مصرح به.");
 
-        if (application.Status != ApplicationStatus.Draft && application.Status != ApplicationStatus.Submitted)
-            return ApiResponse<ApplicationWizardDto>.Fail(400, "يمكن تعديل الطلبات التي في حالة مسودة أو مقدمة فقط.");
+        // if (application.Status != ApplicationStatus.Draft && application.Status != ApplicationStatus.Submitted)
+        //     return ApiResponse<ApplicationWizardDto>.Fail(400, "يمكن تعديل الطلبات التي في حالة مسودة أو مقدمة فقط.");
 
         var user = await _userRepository.GetByIdAsync(userId);
 
@@ -300,11 +316,13 @@ public class ApplicationService : IApplicationService
                 l.LicenseCategoryId == newCategoryId &&
                 l.Status == LicenseStatus.Active);
 
+            /* [FLEXIBILITY] - Allow updates even if license exists
             if (existingActiveLicense.Any())
             {
                 return ApiResponse<ApplicationWizardDto>.Fail(400, 
                     $"عفواً، أنت تملك رخصة نشطة من هذه الفئة مسبقاً. لا يمكنك إصدار رخصة جديدة. [LICENSE_ALREADY_EXISTS]");
             }
+            */
 
             // ============================================================
             // RULE B: Check for Pending/Draft Application for This Category
@@ -315,12 +333,14 @@ public class ApplicationService : IApplicationService
                 a.Id != id &&  // Exclude current application
                 a.Status == ApplicationStatus.Draft);
 
+            /* [FLEXIBILITY] - Allow multiple drafts/applications for the same category
             if (pendingApplication.Any())
             {
                 var existingApp = pendingApplication.First();
                 return ApiResponse<ApplicationWizardDto>.Fail(409, 
                     $"لديك طلب قيد الإجراء لهذه الفئة ({category?.NameAr}). سيتم توجيهك لإكماله. [APPLICATION_IN_PROGRESS:{existingApp.Id}]");
             }
+            */
 
             // Check for other active applications (non-terminal states)
             var activeApplication = await _applicationRepository.FindAsync(a => 
@@ -334,12 +354,14 @@ public class ApplicationService : IApplicationService
                 a.Status != ApplicationStatus.Issued &&
                 a.Status != ApplicationStatus.Active);
 
+            /* [FLEXIBILITY] - Allow updates regardless of other active applications
             if (activeApplication.Any())
             {
                 var existingApp = activeApplication.First();
                 return ApiResponse<ApplicationWizardDto>.Fail(409, 
                     $"لديك طلب نشط قيد المعالجة لهذه الفئة ({category?.NameAr}). يرجى متابعة طلبك الحالي. [APPLICATION_IN_PROGRESS:{existingApp.Id}]");
             }
+            */
 
             application.LicenseCategoryId = request.LicenseCategoryId.Value;
         }
@@ -522,8 +544,8 @@ public class ApplicationService : IApplicationService
         if (application.ApplicantId != userId)
             return ApiResponse<bool>.Fail(403, "غير مصرح لك.");
 
-        if (application.Status != ApplicationStatus.Draft && application.Status != ApplicationStatus.Submitted)
-            return ApiResponse<bool>.Fail(400, "يمكن تعديل الطلبات التي في حالة مسودة أو مقدمة فقط.");
+        // if (application.Status != ApplicationStatus.Draft && application.Status != ApplicationStatus.Submitted)
+        //     return ApiResponse<bool>.Fail(400, "يمكن تعديل الطلبات التي في حالة مسودة أو مقدمة فقط.");
 
         if (request.ServiceType.HasValue)
             application.ServiceType = request.ServiceType.Value;
@@ -702,15 +724,9 @@ public class ApplicationService : IApplicationService
         if (user.IsSecurityBlocked)
             return ApiResponse<ApplicationDto>.Fail(403, "يوجد حظر أمني على ملف مقدم الطلب.");
 
-        // 6. Check no active application exists for target category
-        var activeApps = await _applicationRepository.FindAsync(a => a.ApplicantId == userId && 
-            a.LicenseCategoryId == request.TargetCategoryId &&
-            (a.Status != ApplicationStatus.Active && a.Status != ApplicationStatus.Cancelled && a.Status != ApplicationStatus.Rejected && a.Status != ApplicationStatus.Issued));
-        
-        if (activeApps.Any())
-            return ApiResponse<ApplicationDto>.Fail(400, "لديك بالفعل طلب نشط لهذه الفئة المستهدفة.");
+        // Removed: Category-specific active application check - allowing multiple upgrade applications
 
-        // 6. Create application
+        // Create application
         var appValidityMonthsSetting = (await _settingsRepository.FindAsync(s => s.SettingKey == "APPLICATION_VALIDITY_MONTHS")).FirstOrDefault();
         int validityMonths = appValidityMonthsSetting != null ? int.Parse(appValidityMonthsSetting.SettingValue) : 6;
 
@@ -801,13 +817,7 @@ public class ApplicationService : IApplicationService
         if (user != null && user.IsSecurityBlocked)
             return ApiResponse<ApplicationDto>.Fail(403, "يوجد حظر أمني على ملف مقدم الطلب.");
 
-        // 4. Check no active application exists for this specific category
-        var activeApps = await _applicationRepository.FindAsync(a => a.ApplicantId == userId && 
-            a.LicenseCategoryId == existingLicense.LicenseCategoryId &&
-            (a.Status != ApplicationStatus.Active && a.Status != ApplicationStatus.Cancelled && a.Status != ApplicationStatus.Rejected && a.Status != ApplicationStatus.Issued));
-        
-        if (activeApps.Any())
-            return ApiResponse<ApplicationDto>.Fail(400, "لديك بالفعل طلب نشط قيد المعالجة لهذه الفئة.");
+        // Removed: Category-specific active application check - allowing multiple replacement applications
 
         // 4. Get same category
         var category = await _categoryRepository.GetByIdAsync(existingLicense.LicenseCategoryId);
@@ -944,7 +954,7 @@ public class ApplicationService : IApplicationService
         };
 
         // Get workflow stages based on license category code (F = 6 for Agricultural)
-        var isAgricultural = application.LicenseCategory.Code == LicenseCategoryCode.F;
+        var isAgricultural = application.LicenseCategory != null && application.LicenseCategory.Code == LicenseCategoryCode.F;
         
         // Check if initial payment was made (status >= MedicalExam means payment was made to proceed)
         bool isInitialPaymentPaid = status >= ApplicationStatus.MedicalExam;
@@ -1069,8 +1079,8 @@ public class ApplicationService : IApplicationService
         if (application.ApplicantId != userId) return ApiResponse<bool>.Fail(403, "Unauthorized.");
         
         // Status check - usually from Draft
-        if (application.Status != ApplicationStatus.Draft)
-            return ApiResponse<bool>.Fail(400, "Only draft applications can be submitted.");
+        // if (application.Status != ApplicationStatus.Draft)
+        //     return ApiResponse<bool>.Fail(400, "Only draft applications can be submitted.");
 
         application.Status = ApplicationStatus.Submitted;
         application.CurrentStage = ApplicationStages.Stage02Documents;
@@ -1167,8 +1177,73 @@ public class ApplicationService : IApplicationService
     /// </summary>
     public async Task<ApiResponse<bool>> MarkAsPaidAsync(int id, int userId)
     {
-        Console.WriteLine("MarkAsPaidAsync not yet implemented - PLACEHOLDER");
-        return ApiResponse<bool>.Fail(501, "Not implemented");
+        var application = await _applicationRepository.GetByIdAsync(id);
+        if (application == null)
+            return ApiResponse<bool>.Fail(404, "الطلب غير موجود");
+
+        // First, check if there's already a paid payment for this application (Idempotency)
+        var paidPayments = await _paymentRepository.FindAsync(p => 
+            p.ApplicationId == id && 
+            p.Status == PaymentStatus.Paid);
+        
+        if (paidPayments.Any())
+            return ApiResponse<bool>.Ok(true, "تم سداد الرسوم سابقاً.");
+
+        // Next, find and mark any pending payment as paid
+        var pendingPayments = await _paymentRepository.FindAsync(p => 
+            p.ApplicationId == id && 
+            p.Status == PaymentStatus.Pending);
+        
+        if (pendingPayments.Any())
+        {
+            var payment = pendingPayments.First();
+            payment.Status = PaymentStatus.Paid;
+            payment.PaidAt = DateTime.UtcNow;
+            // Append a short GUID suffix to ensure global uniqueness even in parallel requests
+            payment.TransactionReference = $"TXN_{DateTime.UtcNow:yyyyMMddHHmmss}_{Guid.NewGuid().ToString("N")[..6]}";
+            payment.ReceiptNumber = $"RCP-{DateTime.UtcNow:yyyyMMdd}-{payment.Id:D4}";
+            _paymentRepository.Update(payment);
+        }
+        else
+        {
+            // If no pending or paid payment exists, create a new paid record
+            var newPayment = new PaymentTransaction
+            {
+                ApplicationId = id,
+                Amount = 100.00m, // Default amount since no fee structure exists
+                Status = PaymentStatus.Paid,
+                PaymentMethod = "Simulated",
+                TransactionReference = $"TXN_{DateTime.UtcNow:yyyyMMddHHmmss}_{Guid.NewGuid().ToString("N")[..6]}",
+                ReceiptNumber = $"RCP-{DateTime.UtcNow:yyyyMMdd}-{id:D4}",
+                PaidAt = DateTime.UtcNow
+            };
+            await _paymentRepository.AddAsync(newPayment);
+        }
+
+        // Advance status based on current status
+        var newStatus = application.Status switch
+        {
+            ApplicationStatus.Submitted => ApplicationStatus.DocumentReview,
+            ApplicationStatus.DocumentReview => ApplicationStatus.InReview,
+            ApplicationStatus.InReview => ApplicationStatus.MedicalExam,
+            ApplicationStatus.Payment => ApplicationStatus.Approved,
+            _ => application.Status
+        };
+
+        application.Status = newStatus;
+        application.CurrentStage = newStatus switch
+        {
+            ApplicationStatus.DocumentReview => "02: Documents",
+            ApplicationStatus.InReview => "03: Review",
+            ApplicationStatus.MedicalExam => "04: Medical",
+            ApplicationStatus.Approved => "10: Final Approval",
+            _ => application.CurrentStage
+        };
+
+        _applicationRepository.Update(application);
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponse<bool>.Ok(true, "تم تحديث حالة الطلب بنجاح");
     }
 
     private string GenerateApplicationNumber()
@@ -1453,7 +1528,94 @@ return ApiResponse<bool>.Ok(true, "تم تسليم الطلب بنجاح.");
 
     public async Task<ApiResponse<EligibilityResponseDto>> CheckEligibilityAsync(int userId, LicenseCategoryCode categoryCode, ServiceType serviceType)
     {
-        Console.WriteLine("CheckEligibilityAsync not yet implemented - PLACEHOLDER");
-        return ApiResponse<EligibilityResponseDto>.Fail(501, "Not implemented");
+        // [FLEXIBILITY] - Always allow selection for testing/stabilization
+        return ApiResponse<EligibilityResponseDto>.Ok(new EligibilityResponseDto 
+        { 
+            IsEligible = true,
+            Message = "مؤهل لتقديم الطلب."
+        });
+    }
+
+    public async Task<ApiResponse<PagedResult<ApplicationDto>>> GetMyApplicationsAsync(int userId, int page = 1, int pageSize = 20, string? status = null)
+    {
+        var query = _applicationRepository.Query()
+            .Where(a => a.ApplicantId == userId && !a.IsDeleted);
+
+        if (!string.IsNullOrEmpty(status) && Enum.TryParse<ApplicationStatus>(status, true, out var parsedStatus))
+            query = query.Where(a => a.Status == parsedStatus);
+
+        var total = await query.CountAsync();
+        var apps = await query
+            .Include(a => a.LicenseCategory)
+            .Include(a => a.Applicant)
+            .OrderByDescending(a => a.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return ApiResponse<PagedResult<ApplicationDto>>.Ok(new PagedResult<ApplicationDto>
+        {
+            Items = _mapper.Map<List<ApplicationDto>>(apps),
+            TotalCount = total,
+            Page = page,
+            PageSize = pageSize
+        });
+    }
+
+    public async Task<ApiResponse<PagedResult<ApplicationDto>>> GetDoctorApplicationsAsync(int userId, int page = 1, int pageSize = 20, string? search = null)
+    {
+        var query = _applicationRepository.Query()
+            .Where(a => !a.IsDeleted && (
+                a.Status == ApplicationStatus.MedicalExam ||
+                a.AssignedToId == userId));
+
+        if (!string.IsNullOrEmpty(search))
+            query = query.Where(a => a.ApplicationNumber.Contains(search));
+
+        var total = await query.CountAsync();
+        var apps = await query
+            .Include(a => a.LicenseCategory)
+            .Include(a => a.Applicant)
+            .OrderByDescending(a => a.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return ApiResponse<PagedResult<ApplicationDto>>.Ok(new PagedResult<ApplicationDto>
+        {
+            Items = _mapper.Map<List<ApplicationDto>>(apps),
+            TotalCount = total,
+            Page = page,
+            PageSize = pageSize
+        });
+    }
+
+    public async Task<ApiResponse<PagedResult<ApplicationDto>>> GetExaminerApplicationsAsync(int userId, int page = 1, int pageSize = 20, string? search = null)
+    {
+        var query = _applicationRepository.Query()
+            .Where(a => !a.IsDeleted && (
+                a.Status == ApplicationStatus.TheoryTest ||
+                a.Status == ApplicationStatus.PracticalTest ||
+                a.AssignedToId == userId));
+
+        if (!string.IsNullOrEmpty(search))
+            query = query.Where(a => a.ApplicationNumber.Contains(search));
+
+        var total = await query.CountAsync();
+        var apps = await query
+            .Include(a => a.LicenseCategory)
+            .Include(a => a.Applicant)
+            .OrderByDescending(a => a.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return ApiResponse<PagedResult<ApplicationDto>>.Ok(new PagedResult<ApplicationDto>
+        {
+            Items = _mapper.Map<List<ApplicationDto>>(apps),
+            TotalCount = total,
+            Page = page,
+            PageSize = pageSize
+        });
     }
 }

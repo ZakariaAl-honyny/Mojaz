@@ -30,16 +30,18 @@ public static class SwaggerExtensions
                 options.IncludeXmlComments(xmlPath);
             }
 
-            // JWT Auth in Swagger
+            // JWT Auth in Swagger - FIXED for proper Authorization header injection
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' followed by space and token.",
+                Description = "JWT Authorization header using the Bearer scheme.\r\n\r\nEnter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"",
                 Name = "Authorization",
                 In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = "Bearer"
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
             });
 
+            // Make sure ALL endpoints require this security scheme
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
@@ -49,9 +51,12 @@ public static class SwaggerExtensions
                         {
                             Type = ReferenceType.SecurityScheme,
                             Id = "Bearer"
-                        }
+                        },
+                        Scheme = "bearer",
+                        Name = "Authorization",
+                        In = ParameterLocation.Header
                     },
-                    Array.Empty<string>()
+                    new List<string>()
                 }
             });
         });
@@ -77,12 +82,13 @@ public static class SwaggerExtensions
             
             c.EnableValidator();
             
-            // Enable OAuth2 authorization flow in Swagger UI
-            c.OAuthClientId("mojaz-api-swagger");
-            c.OAuthAppName("Mojaz API");
-            
-            // Add "Authorize" button at the top
+            // Add "Authorize" button at the top for Bearer token
             c.DocumentTitle = "Mojaz Driving License API";
+            
+            // Configure OAuth2 Implicit flow for Bearer token
+            c.OAuthClientId("mojaz-swagger");
+            c.OAuthAppName("Mojaz API - Swagger");
+            c.OAuthUsePkce();
         });
 
         return app;

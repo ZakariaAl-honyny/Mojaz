@@ -14,6 +14,7 @@ using Polly;
 using Polly.Retry;
 using Mojaz.Infrastructure.Authentication;
 using Mojaz.Infrastructure.Persistence;
+using Microsoft.Extensions.Logging;
 
 namespace Mojaz.Infrastructure.Services
 {
@@ -25,19 +26,22 @@ namespace Mojaz.Infrastructure.Services
         private readonly IRazorLightEngine _razorEngine;
         private readonly ISendGridClient _sendGridClient;
         private readonly AsyncRetryPolicy _retryPolicy;
+        private readonly ILogger<SendGridEmailService> _logger;
 
         public SendGridEmailService(
             IOptions<SendGridSettings> settings,
             IEmailLogRepository emailLogRepository,
             MojazDbContext dbContext,
             IRazorLightEngine razorEngine,
-            ISendGridClient sendGridClient)
+            ISendGridClient sendGridClient,
+            ILogger<SendGridEmailService> logger)
         {
             _settings = settings.Value;
             _emailLogRepository = emailLogRepository;
             _dbContext = dbContext;
             _razorEngine = razorEngine;
             _sendGridClient = sendGridClient;
+            _logger = logger;
             _retryPolicy = Policy
                 .Handle<Exception>(ex => ex is HttpRequestException)
                 .WaitAndRetryAsync(new[] { TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(4) });
@@ -45,6 +49,10 @@ namespace Mojaz.Infrastructure.Services
 
         public async Task SendEmailAsync(string to, string subject, string body)
         {
+            _logger.LogInformation("[SENDGRID] Attempting to send email to: {To}, Subject: {Subject}", to, subject);
+            _logger.LogInformation("[SENDGRID] API Key present: {HasKey}, Sender: {Sender}", 
+                !string.IsNullOrEmpty(_settings.ApiKey), _settings.SenderEmail);
+            
             var msg = new SendGridMessage()
             {
                 From = new EmailAddress(_settings.SenderEmail, _settings.SenderName),
@@ -53,14 +61,24 @@ namespace Mojaz.Infrastructure.Services
             };
             msg.AddTo(new EmailAddress(to));
             
-            await _retryPolicy.ExecuteAsync(async () =>
+            var response = await _sendGridClient.SendEmailAsync(msg);
+            
+            var responseBody = await response.Body.ReadAsStringAsync();
+            _logger.LogInformation("[SENDGRID] Response Status: {StatusCode}, Body: {ResponseBody}", 
+                response.StatusCode, responseBody);
+            
+            if (response.StatusCode >= HttpStatusCode.InternalServerError)
             {
-                var response = await _sendGridClient.SendEmailAsync(msg);
-                if (response.StatusCode >= HttpStatusCode.InternalServerError)
-                {
-                    throw new Exception($"SendGrid 5xx error: {response.StatusCode}");
-                }
-            });
+                throw new Exception($"SendGrid 5xx error: {response.StatusCode} - {responseBody}");
+            }
+            
+            if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                _logger.LogError("[SENDGRID] AUTH ERROR - API Key may be revoked! Status: {StatusCode}", response.StatusCode);
+                throw new Exception($"SendGrid authentication failed: {response.StatusCode} - {responseBody}");
+            }
+            
+            _logger.LogInformation("[SENDGRID] Email sent successfully to {To}", to);
         }
 
         public async Task SendTemplatedAsync(TemplatedEmailRequest request)

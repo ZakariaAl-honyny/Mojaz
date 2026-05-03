@@ -41,20 +41,36 @@ foreach (var setting in requiredSettings)
 }
 
 
-// Initialize Firebase Admin SDK
-var firebaseConfig = builder.Configuration.GetSection("Firebase");
-var serviceAccountPath = firebaseConfig["ServiceAccountPath"];
-if (!string.IsNullOrEmpty(serviceAccountPath) && File.Exists(serviceAccountPath))
+// Initialize Firebase Admin SDK (only if not already initialized)
+try
 {
-    FirebaseApp.Create(new AppOptions
-    {
-        Credential = GoogleCredential.FromFile(serviceAccountPath),
-        ProjectId = firebaseConfig["ProjectId"]
-    });
+    var existingApp = FirebaseApp.GetInstance("[DEFAULT]");
+    // Firebase already initialized
 }
-else
+catch
 {
-    Console.WriteLine("Warning: Firebase ServiceAccountPath not found or file does not exist. Push notifications will be disabled.");
+    // Firebase not initialized, try to initialize
+    try
+    {
+        var firebaseConfig = builder.Configuration.GetSection("Firebase");
+        var serviceAccountPath = firebaseConfig["ServiceAccountPath"];
+        if (!string.IsNullOrEmpty(serviceAccountPath) && File.Exists(serviceAccountPath))
+        {
+            FirebaseApp.Create(new AppOptions
+            {
+                Credential = GoogleCredential.FromFile(serviceAccountPath),
+                ProjectId = firebaseConfig["ProjectId"]
+            });
+        }
+        else
+        {
+            Console.WriteLine("Warning: Firebase ServiceAccountPath not found or file does not exist. Push notifications will be disabled.");
+        }
+    }
+    catch
+    {
+        // Failed to initialize Firebase, continue without it
+    }
 }
 
 // ─── Serilog Configuration ───
@@ -114,6 +130,7 @@ builder.Services.AddControllers(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
     // Handle DateOnly serialization/deserialization
     options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     options.JsonSerializerOptions.Converters.Add(new Mojaz.Shared.Utilities.DateOnlyJsonConverter());
@@ -137,12 +154,6 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(optio
 });
 
 builder.Services.AddHttpContextAccessor();
-
-// ─── Custom Authorization Handler (Role-based) ───
-builder.Services.AddScoped<AuthorizationHandler>();
-
-// ─── Custom Authorization Result Handler (Returns JSON on 403/401) ───
-builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, AuthorizationResponseHandler>();
 
 // ─── Health Checks ───
 builder.Services.AddHealthChecks()

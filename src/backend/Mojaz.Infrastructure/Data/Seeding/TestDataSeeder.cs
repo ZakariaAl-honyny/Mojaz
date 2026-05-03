@@ -1,11 +1,11 @@
-using Mojaz.Domain.Entities;
-using Mojaz.Domain.Enums;
-using Mojaz.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
+using Microsoft.EntityFrameworkCore;
+using Mojaz.Domain.Entities;
+using Mojaz.Domain.Enums;
+using Mojaz.Infrastructure.Persistence;
 
 namespace Mojaz.Infrastructure.Data.Seeding
 {
@@ -13,9 +13,32 @@ namespace Mojaz.Infrastructure.Data.Seeding
     {
         /// <summary>
         /// Seeds test users with correct BCrypt hashes for "Password123!"
-        /// Hash format: $2a$12$ + 22-char salt = 31 chars total
+        /// Hash will be generated at runtime to ensure valid 60-character BCrypt hash
         /// </summary>
-        private const string TestPasswordHash = "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/X4b5V7d4I5v4X4qKS";
+        private static readonly Lazy<string> _testPasswordHash = new(() => BCrypt.Net.BCrypt.HashPassword("Password123!", 12));
+
+        private static string TestPasswordHash => _testPasswordHash.Value;
+
+        private static async Task FixInvalidPasswordHashesAsync(MojazDbContext context)
+        {
+            // Find users with test email domains - ALWAYS fix their password hashes to ensure they match "Password123!"
+            var testUsers = await context.Users
+                .Where(u => u.Email != null && u.Email.EndsWith("@mojaz.gov.sa"))
+                .ToListAsync();
+            
+            var fixedCount = 0;
+            foreach (var user in testUsers)
+            {
+                // ALWAYS regenerate to ensure it's correct - don't check length
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!", 12);
+                fixedCount++;
+            }
+            
+            if (fixedCount > 0)
+            {
+                await context.SaveChangesAsync();
+            }
+        }
 
         private static async Task SeedFeeStructuresIfEmptyAsync(MojazDbContext context)
         {
@@ -80,11 +103,36 @@ namespace Mojaz.Infrastructure.Data.Seeding
 
         public static async Task SeedAsync(MojazDbContext context)
         {
+            // Seed branches first (required for appointments)
+            if (!context.Branches.Any())
+            {
+                var branches = new List<Branch>
+                {
+                    new Branch { Name = "الفرع الرئيسي", Address = "الرياض، المملكة العربية السعودية", PhoneNumber = "0111234567" },
+                    new Branch { Name = "فرع جدة", Address = "جدة، المملكة العربية السعودية", PhoneNumber = "0121234567" },
+                    new Branch { Name = "فرع الدمام", Address = "الدمام، المملكة العربية السعودية", PhoneNumber = "0131234567" }
+                };
+                await context.Branches.AddRangeAsync(branches);
+                await context.SaveChangesAsync();
+            }
+
             // Always seed fees if they don't exist (do this FIRST so fees are always available)
             await SeedFeeStructuresIfEmptyAsync(context);
             
+            // CRITICAL: Always fix invalid password hashes for test accounts BEFORE checking if users exist
+            // This ensures even already-seeded accounts get their hashes fixed
+            await FixInvalidPasswordHashesAsync(context);
+            
             // Check if users already exist
-            if (context.Users.Any(u => u.Email != null && u.Email.EndsWith("@mojaz.gov.sa"))) return;
+            if (context.Users.Any(u => u.Email != null && u.Email.EndsWith("@mojaz.gov.sa"))) 
+            {
+                // Still try to seed appointments if they are missing
+                var testUsers = await context.Users
+                    .Where(u => u.Email != null && u.Email.EndsWith("@mojaz.gov.sa"))
+                    .ToListAsync();
+                await SeedTestAppointmentsAsync(context, testUsers);
+                return;
+            }
 
             var users = new List<User>
             {
@@ -201,6 +249,25 @@ namespace Mojaz.Infrastructure.Data.Seeding
                     EnableEmail = true,
                     EnableSms = true,
                     EnablePush = true
+                },
+                new User { 
+                    FullNameAr = "أمن تجريبي", 
+                    FullNameEn = "Test Security", 
+                    NationalId = "1000000007", 
+                    Email = "security@mojaz.gov.sa", 
+                    PhoneNumber = "0500000007", 
+                    PasswordHash = TestPasswordHash, 
+                    Role = UserRole.Security, 
+                    AppRole = AppRole.Security,
+                    DateOfBirth = new DateTime(1983, 1, 1),
+                    PreferredLanguage = "ar",
+                    RegistrationMethod = RegistrationMethod.Email,
+                    IsEmailVerified = true,
+                    IsPhoneVerified = true,
+                    IsActive = true,
+                    EnableEmail = true,
+                    EnableSms = true,
+                    EnablePush = true
                 }
             };
 
@@ -277,6 +344,9 @@ namespace Mojaz.Infrastructure.Data.Seeding
 
             // Seed test applications with paid payment records
             await SeedTestApplicationsWithPaymentsAsync(context, users, categories);
+
+            // Seed test appointments for the applicant
+            await SeedTestAppointmentsAsync(context, users);
         }
 
         private static async Task SeedTestApplicationsWithPaymentsAsync(MojazDbContext context, List<User> users, List<LicenseCategory> categories)
@@ -606,6 +676,44 @@ namespace Mojaz.Infrastructure.Data.Seeding
             });
 
             await context.PaymentTransactions.AddRangeAsync(payments);
+            await context.SaveChangesAsync();
+        }
+
+        private static async Task SeedTestAppointmentsAsync(MojazDbContext context, List<User> users)
+        {
+            var applicant = users.First(u => u.Role == UserRole.Applicant);
+            var application = await context.Applications
+                .FirstOrDefaultAsync(a => a.ApplicantId == applicant.Id);
+
+            if (application == null || context.Appointments.Any(a => a.ApplicationId == application.Id)) return;
+
+            var appointments = new List<Appointment>
+            {
+                new Appointment
+                {
+                    ApplicationId = application.Id,
+                    AppointmentType = AppointmentType.MedicalExam,
+                    ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(2)),
+                    TimeSlot = "09:00",
+                    BranchId = 1,
+                    Status = AppointmentStatus.Scheduled,
+                    Notes = "موعد فحص طبي تجريبي",
+                    CreatedAt = DateTime.UtcNow
+                },
+                new Appointment
+                {
+                    ApplicationId = application.Id,
+                    AppointmentType = AppointmentType.TheoryTest,
+                    ScheduledDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)),
+                    TimeSlot = "10:30",
+                    BranchId = 2,
+                    Status = AppointmentStatus.Scheduled,
+                    Notes = "موعد اختبار نظري تجريبي",
+                    CreatedAt = DateTime.UtcNow
+                }
+            };
+
+            await context.Appointments.AddRangeAsync(appointments);
             await context.SaveChangesAsync();
         }
 

@@ -52,4 +52,13 @@ public interface IApplicationService
     
     // Staff Assignment
     Task<ApiResponse<bool>> AssignAsync(int id, AssignApplicationRequest request, int userId);
+
+    // My Applications (for applicant)
+    Task<ApiResponse<PagedResult<ApplicationDto>>> GetMyApplicationsAsync(int userId, int page = 1, int pageSize = 20, string? status = null);
+
+    // Doctor Applications (for Doctor role)
+    Task<ApiResponse<PagedResult<ApplicationDto>>> GetDoctorApplicationsAsync(int userId, int page = 1, int pageSize = 20, string? search = null);
+
+    // Examiner Applications (for Examiner role)
+    Task<ApiResponse<PagedResult<ApplicationDto>>> GetExaminerApplicationsAsync(int userId, int page = 1, int pageSize = 20, string? search = null);
 }

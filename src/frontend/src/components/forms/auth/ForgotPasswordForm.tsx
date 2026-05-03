@@ -12,6 +12,7 @@ import apiClient from '@/lib/api-client';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { RegistrationMethod } from '@/types/auth.types';
 
 const forgotPasswordSchema = z.object({
   identifier: z.string().min(5, 'يرجى إدخال البريد الإلكتروني أو رقم الهاتف المسجل'),
@@ -38,7 +39,7 @@ export default function ForgotPasswordForm({ onSuccess }: ForgotPasswordFormProp
     try {
       await apiClient.post('/auth/forgot-password', {
         identifier: data.identifier,
-        method: data.identifier.includes('@') ? 1 : 2 // 1=Email, 2=Phone (matching RegistrationMethod enum)
+        method: data.identifier.includes('@') ? RegistrationMethod.Email : RegistrationMethod.Phone
       });
       onSuccess(data.identifier);
     } catch (err: any) {

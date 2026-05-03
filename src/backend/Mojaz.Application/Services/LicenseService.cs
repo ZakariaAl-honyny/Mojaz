@@ -97,7 +97,9 @@ public class LicenseService : ILicenseService
         }
 
         // 4. Load Category for validity years
-        var category = await _licenseCategoryRepository.GetByIdAsync(application.LicenseCategoryId);
+        if (!application.LicenseCategoryId.HasValue)
+            return ApiResponse<LicenseDto>.Fail(400, "فئة الرخصة غير محددة.");
+        var category = await _licenseCategoryRepository.GetByIdAsync(application.LicenseCategoryId.Value);
         if (category == null) return ApiResponse<LicenseDto>.Fail(400, "فئة الرخصة غير موجودة.");
 
         // 5. Load Holder User
@@ -113,7 +115,7 @@ public class LicenseService : ILicenseService
         {
             HolderId = application.ApplicantId,
             ApplicationId = application.Id,
-            LicenseCategoryId = application.LicenseCategoryId,
+            LicenseCategoryId = application.LicenseCategoryId ?? 0,
             LicenseNumber = licenseNumber,
             IssuedAt = issuedAt,
             ExpiresAt = expiresAt,

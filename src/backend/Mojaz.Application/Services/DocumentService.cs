@@ -58,25 +58,29 @@ public DocumentService(
     _notificationService = notificationService;
 }
 
-public async Task<ApiResponse<DocumentDto>> UploadAsync(int applicationId, UploadDocumentRequest request, int userId)
+public async Task<ApiResponse<DocumentDto>> UploadAsync(int applicationId, UploadDocumentRequest request, int userId, string role)
     {
         var application = await _applicationRepository.GetByIdAsync(applicationId);
         if (application == null) return ApiResponse<DocumentDto>.Fail(404, "الطلب غير موجود.");
           
-        if (application.ApplicantId != userId) return ApiResponse<DocumentDto>.Fail(403, "غير مصرح لك.");
+        // Ownership check for Applicants - allow Receptionist/Manager/Admin to upload on behalf
+        if (role == "Applicant" && application.ApplicantId != userId) 
+            return ApiResponse<DocumentDto>.Fail(403, "غير مصرح لك.");
 
         // Delegate to internal upload logic
         return await UploadInternalAsync(application, request, userId);
     }
 
-    public async Task<ApiResponse<DocumentDto>> UploadByApplicationNumberAsync(string applicationNumber, UploadDocumentRequest request, int userId)
+    public async Task<ApiResponse<DocumentDto>> UploadByApplicationNumberAsync(string applicationNumber, UploadDocumentRequest request, int userId, string role)
     {
         var applications = await _applicationRepository.FindAsync(a => a.ApplicationNumber == applicationNumber);
         var application = applications.FirstOrDefault();
         
         if (application == null) return ApiResponse<DocumentDto>.Fail(404, "Application not found.");
         
-        if (application.ApplicantId != userId) return ApiResponse<DocumentDto>.Fail(403, "Unauthorized.");
+        // Ownership check for Applicants - allow Receptionist/Manager/Admin to upload on behalf
+        if (role == "Applicant" && application.ApplicantId != userId) 
+            return ApiResponse<DocumentDto>.Fail(403, "غير مصرح لك.");
 
         // Delegate to internal upload logic
         return await UploadInternalAsync(application, request, userId);

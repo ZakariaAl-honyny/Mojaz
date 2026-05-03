@@ -1,6 +1,7 @@
 import apiClient from '@/lib/api-client';
 import { ApiResponse } from '@/types/api.types';
 import { ServiceType, LicenseCategoryCode, LicenseCategoryOption, ExamCenter } from '@/types/wizard.types';
+import { serviceTypeToString } from '@/lib/enum-utils';
 import { 
   VerifyStolenReportRequest, 
   VerifyStolenReportResponse 
@@ -17,7 +18,8 @@ export interface ApplicationDraftDto {
   currentStage?: string;
   currentStageNumber?: number;
   serviceType: ServiceType;
-  licenseCategoryCode: LicenseCategoryCode | null;
+  licenseCategoryId?: number | null;      // numeric DB ID (used for wizard-data PUT)
+  licenseCategoryCode: LicenseCategoryCode | null;  // string code "A","B",etc. (used for display)
   licenseCategoryNameAr?: string;
   nationalId?: string;
   dateOfBirth?: string;
@@ -30,10 +32,16 @@ export interface ApplicationDraftDto {
   region?: string;
   applicantType?: string;
   preferredCenterId?: string;
+  branchId?: string | number; // API field (int from backend)
   testLanguage?: string;
+  preferredLanguage?: string; // API field
   appointmentPreference?: string;
   specialNeedsDeclaration?: boolean;
+  specialNeeds?: boolean | string | null; // API field
+  specialNeedsNote?: string;
   progress?: number;
+  applicantName?: string;
+  fullName?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -44,8 +52,11 @@ export interface ApplicationDraftDto {
 export interface ApplicationWithDetailsDto extends ApplicationDraftDto {
   applicantName?: string;
   fullName?: string;
+  nationalId?: string;
   dateOfBirth?: string;
   gender?: string;
+  mobileNumber?: string;
+  email?: string;
   address?: string;
   city?: string;
   region?: string;
@@ -66,24 +77,22 @@ export interface PagedResult<T> {
  * Timeline stage interface for application workflow timeline
  */
 export interface TimelineStageDto {
-  stageId: string;
-  stageNameAr: string;
-  stageNameEn: string;
-  stageOrder: number;
-  status: 'pending' | 'in_progress' | 'completed' | 'rejected' | 'skipped';
+  stageNumber: number;
+  nameAr: string;
+  nameEn: string;
+  state: 'pending' | 'in_progress' | 'completed' | 'failed' | 'future' | 'current';
   completedAt?: string;
-  completedBy?: string;
-  notes?: string;
-  isCurrentStage: boolean;
+  actorName?: string;
+  actorRole?: string;
+  outcomeNote?: string;
 }
 
 /**
  * Full application timeline with all stages
  */
 export interface ApplicationTimelineDto {
-  applicationId: string;
-  applicationNumber: string;
-  currentStageOrder: number;
+  applicationId: number;
+  currentStageNumber: number;
   stages: TimelineStageDto[];
 }
 
@@ -93,22 +102,23 @@ import { TimelineStage } from "@/components/domain/application/ApplicationTimeli
  * Converts application status to timeline stage
  */
 export function convertToTimelineStageArray(timeline: ApplicationTimelineDto): TimelineStage[] {
-  const stageStatusMap: Record<TimelineStageDto['status'], TimelineStage['status']> = {
+  const stateStatusMap: Record<string, TimelineStage['status']> = {
     'completed': 'completed',
+    'current': 'current',
     'in_progress': 'current',
     'pending': 'pending',
-    'rejected': 'failed',
-    'skipped': 'failed',
+    'failed': 'failed',
+    'future': 'pending'
   };
 
   return timeline.stages
-    .sort((a, b) => a.stageOrder - b.stageOrder)
+    .sort((a, b) => a.stageNumber - b.stageNumber)
     .map((stage) => ({
-      id: stage.stageId,
-      label: stage.stageNameAr,
-      status: stageStatusMap[stage.status] || 'pending',
+      id: stage.stageNumber.toString(),
+      label: stage.nameAr,
+      status: stateStatusMap[stage.state] || 'pending',
       timestamp: stage.completedAt,
-      reason: stage.notes,
+      reason: stage.outcomeNote,
     }));
 }
 
@@ -158,9 +168,11 @@ const ApplicationService = {
 
   /**
    * Create a new draft application (called after Step 1)
+   * Sends serviceType as string name (e.g., "NewLicense") for backend JsonStringEnumConverter.
    */
   async createApplication(serviceType: ServiceType): Promise<ApiResponse<ApplicationDraftDto>> {
-    const response = await apiClient.post('/applications/draft', { serviceType });
+    const serviceTypeStr = serviceTypeToString(serviceType);
+    const response = await apiClient.post('/applications/draft', { serviceType: serviceTypeStr });
     return response.data;
   },
 
@@ -202,10 +214,6 @@ const ApplicationService = {
     });
     return response.data;
   },
-
-  /**
-   * Verify eligibility for license category upgrade
-   */
 
   /**
    * Lookup license categories with min age requirements

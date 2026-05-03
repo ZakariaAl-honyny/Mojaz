@@ -5,7 +5,7 @@ import ApplicationService, { ApplicationDraftDto } from "@/services/application.
 import { useWizardStore } from "@/stores/wizard-store";
 import { ApiResponse } from "@/types/api.types";
 import { ServiceType, LicenseCategoryCode, Gender } from "@/lib/enums";
-import { licenseCategoryToNumber, genderToNumber } from "@/lib/enum-utils";
+import { genderToString, applicantTypeToString } from "@/lib/enum-utils";
 
 // ============================================================
 // Update Draft Request - Combined wizard step data
@@ -22,7 +22,7 @@ export interface UpdateDraftRequest {
   nationalId?: string | null;
   dateOfBirth?: string | null;
   nationality?: string | null;
-  gender?: Gender | number | null;
+  gender?: Gender | number | string | null;
   mobileNumber?: string | null;
   email?: string | null;
   address?: string | null;
@@ -30,7 +30,7 @@ export interface UpdateDraftRequest {
   region?: string | null;
   
   // Step 4: Application Details
-  applicantType?: number | null; // Mapped to backend enum (Private, Public, etc.)
+  applicantType?: number | string | null; // Mapped to backend enum (Private, Public, etc.)
   preferredCenterId?: number | null;
   branchId?: number | null;
   testLanguage?: string | null;
@@ -51,11 +51,30 @@ export function useApplicationMutation(): UseApplicationMutationReturn {
 
   const createDraftMutation = useMutation({
     mutationFn: async (serviceType: ServiceType) => {
-      const response = await ApplicationService.createApplication(serviceType);
-      if (!response.success || !response.data) {
-        throw new Error(response.message || "فشل في إنشاء مسودة الطلب.");
+      try {
+        const response = await ApplicationService.createApplication(serviceType);
+        if (!response.success || !response.data) {
+          // 409: draft already exists for this user — fetch existing draft and return it
+          if (response.statusCode === 409 || response.message?.includes('already exists')) {
+            const draftsResponse = await ApplicationService.getDrafts();
+            if (draftsResponse.success && draftsResponse.data?.items?.length) {
+              return draftsResponse.data.items[0];
+            }
+          }
+          throw new Error(response.message || "فشل في إنشاء مسودة الطلب.");
+        }
+        return response.data;
+      } catch (err: any) {
+        // Axios throws on 4xx/5xx; handle 409 conflict by recovering existing draft
+        if (err?.response?.status === 409 || err?.response?.data?.statusCode === 409) {
+          console.warn('[Draft] 409 conflict — fetching existing draft');
+          const draftsResponse = await ApplicationService.getDrafts();
+          if (draftsResponse.success && draftsResponse.data?.items?.length) {
+            return draftsResponse.data.items[0];
+          }
+        }
+        throw err;
       }
-      return response.data;
     },
     onSuccess: (data) => {
       setApplicationId(data.id);
@@ -71,41 +90,45 @@ export function useApplicationMutation(): UseApplicationMutationReturn {
       // Clean up common 400-causing issues
       const cleanedData: any = { ...data };
 
-      // 1. BranchId is now a number (auto-increment), frontend uses preferredCenterId or branchId
-      // Ensure we send branchId as a valid number or null
+      // 1. BranchId: must be a positive number or omitted
       const branchId = cleanedData.branchId || cleanedData.preferredCenterId;
-      
-      if (!branchId || typeof branchId !== 'number') {
-        cleanedData.branchId = null;
-      } else {
+      if (branchId && typeof branchId === 'number' && branchId > 0) {
         cleanedData.branchId = branchId;
+      } else {
+        delete cleanedData.branchId;
       }
       delete cleanedData.preferredCenterId;
 
-      // 2. Map applicantType string to backend enum number (Private=0, Public=1...)
-      if (typeof cleanedData.applicantType === 'string') {
-        const mapping: Record<string, number> = { 'Citizen': 0, 'Resident': 1 };
-        cleanedData.applicantType = mapping[cleanedData.applicantType] ?? 0;
+      // 2. gender — backend uses JsonStringEnumConverter, must send "Male" not 1
+      if (cleanedData.gender !== undefined && cleanedData.gender !== null) {
+        cleanedData.gender = genderToString(cleanedData.gender);
+        if (!cleanedData.gender) delete cleanedData.gender;
+      } else {
+        delete cleanedData.gender;
       }
 
-      // 3. Ensure Gender is numeric
-      if (cleanedData.gender !== undefined) {
-        cleanedData.gender = genderToNumber(cleanedData.gender);
+      // 3. applicantType — send backend string name ("Private"/"Public"), not 0/1
+      if (cleanedData.applicantType !== undefined && cleanedData.applicantType !== null) {
+        cleanedData.applicantType = applicantTypeToString(cleanedData.applicantType);
+        if (!cleanedData.applicantType) delete cleanedData.applicantType;
+      } else {
+        delete cleanedData.applicantType;
       }
 
-      // 4. Empty strings for GUIDs should be null
-      if (cleanedData.licenseCategoryId === "" || !cleanedData.licenseCategoryId) {
-        delete cleanedData.licenseCategoryId; 
+      // 4. licenseCategoryId: must be a positive integer; omit if absent/zero
+      if (!cleanedData.licenseCategoryId || typeof cleanedData.licenseCategoryId !== 'number' || cleanedData.licenseCategoryId <= 0) {
+        delete cleanedData.licenseCategoryId;
       }
-      
+
       // 5. Aliases/Compatibility
       if (cleanedData.phone && !cleanedData.mobileNumber) {
         cleanedData.mobileNumber = cleanedData.phone;
       }
       delete cleanedData.phone;
 
-      // 6. Cleanup redundant fields not in backend UpdateWizardDataRequest
+      // 6. Remove frontend-only fields not in UpdateWizardDataRequest
       delete cleanedData.licenseCategoryCode;
+      delete cleanedData.testLanguage; // backend field is preferredLanguage
 
       console.log("[Mutation] Sending update draft payload:", cleanedData);
 
@@ -153,8 +176,8 @@ export function useApplicationMutation(): UseApplicationMutationReturn {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["applications"] });
-// Sync API response back to wizard store (handles server-applied defaults / computed fields)
-        if (data) {
+      // Sync API response back to wizard store (handles server-applied defaults / computed fields)
+      if (data) {
         useWizardStore.getState().loadFromApi({
           serviceType: data.serviceType,
           licenseCategoryCode: data.licenseCategoryCode,
@@ -168,8 +191,8 @@ export function useApplicationMutation(): UseApplicationMutationReturn {
           city: data.city,
           region: data.region,
           applicantType: data.applicantType,
-          preferredCenterId: data.preferredCenterId ? Number(data.preferredCenterId) : undefined,
-          testLanguage: data.testLanguage,
+          preferredCenterId: data.branchId ? String(data.branchId) : undefined,
+          testLanguage: data.preferredLanguage,
           appointmentPreference: data.appointmentPreference,
           specialNeedsDeclaration: data.specialNeedsDeclaration,
         });

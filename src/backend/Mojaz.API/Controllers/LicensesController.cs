@@ -46,7 +46,7 @@ public class LicensesController : ControllerBase
     /// Route: api/v1/licenses/application/{appIdOrNumber}/issue
     /// </summary>
     [HttpPost("application/{appIdOrNumber}/issue")]
-    [Authorize(Roles = "Manager,Admin")]
+    [Authorize(Roles = "Manager,Admin,Receptionist")]
     [ProducesResponseType(typeof(ApiResponse<LicenseDto>), 200)]
     public async Task<IActionResult> IssueAsync(string appIdOrNumber)
     {
@@ -64,7 +64,7 @@ public class LicensesController : ControllerBase
     /// Route: api/v1/licenses/application/{appIdOrNumber}/issue-replacement
     /// </summary>
     [HttpPost("application/{appIdOrNumber}/issue-replacement")]
-    [Authorize(Roles = "Manager,Admin")]
+    [Authorize(Roles = "Manager,Admin,Receptionist")]
     [ProducesResponseType(typeof(ApiResponse<int>), 200)]
     public async Task<IActionResult> IssueReplacementAsync(string appIdOrNumber)
     {
@@ -125,7 +125,7 @@ public class LicensesController : ControllerBase
     /// Get current user's licenses
     /// </summary>
     [HttpGet]
-    [Authorize(Roles = "Applicant")]
+    [Authorize(Roles = "Applicant,Admin,Receptionist")]
     public async Task<IActionResult> GetMyLicensesAsync()
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);

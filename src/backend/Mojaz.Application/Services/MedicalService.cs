@@ -149,7 +149,8 @@ public class MedicalService : IMedicalService
 
         if (medicalExam == null || medicalExam.Count == 0)
         {
-            return ApiResponse<MedicalResultDto>.NotFound("لم يتم العثور على فحص طبي لهذا الطلب.");
+            // Return 200 with null data instead of 404 so frontend can handle gracefully
+            return ApiResponse<MedicalResultDto>.Ok(null, "لم يتم العثور على فحص طبي.");
         }
 
         var resultDto = _mapper.Map<MedicalResultDto>(medicalExam[0]);

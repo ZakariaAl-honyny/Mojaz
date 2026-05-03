@@ -62,7 +62,7 @@ public class ApplicationsController : ControllerBase
     /// Create a new application draft (Step 1 only).
     /// </summary>
     [HttpPost("draft")]
-    [Authorize(Roles = "Applicant,Receptionist")]
+    [Authorize]
     [ProducesResponseType(typeof(ApiResponse<ApplicationDto>), 201)]
     public async Task<IActionResult> CreateDraftAsync([FromBody] CreateApplicationDraftRequest request)
     {
@@ -116,7 +116,7 @@ public class ApplicationsController : ControllerBase
     /// Used during wizard progression and auto-save.
     /// </summary>  
     [HttpPut("{idOrNumber}/wizard-data")]
-    [Authorize(Roles = "Applicant")]
+    [Authorize(Roles = "Applicant,Receptionist")]
     [ProducesResponseType(typeof(ApiResponse<ApplicationWizardDto>), 200)]
     [ProducesResponseType(typeof(ApiResponse<object>), 400)]
     public async Task<IActionResult> UpdateWizardDataAsync(string idOrNumber, [FromBody] UpdateWizardDataRequest request)
@@ -125,8 +125,13 @@ public class ApplicationsController : ControllerBase
         if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var result = await _applicationService.UpdateWizardDataAsync(applicationId, request, userId);
+        var callerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var role = User.FindFirstValue(ClaimTypes.Role)!;
+        // Receptionists act on behalf of the applicant — use the application's actual owner
+        var effectiveUserId = (role == "Receptionist")
+            ? (await _applicationService.GetByIdAsync(applicationId, callerId, role)).Data?.ApplicantId ?? callerId
+            : callerId;
+        var result = await _applicationService.UpdateWizardDataAsync(applicationId, request, effectiveUserId);
         return StatusCode(result.StatusCode, result);
     }
 
@@ -152,15 +157,19 @@ public class ApplicationsController : ControllerBase
     /// Update an application.
     /// </summary>
     [HttpPut("{idOrNumber}")]
-    [Authorize(Roles = "Applicant")]
+    [Authorize(Roles = "Applicant,Receptionist")]
     public async Task<IActionResult> UpdateAsync(string idOrNumber, [FromBody] UpdateApplicationRequest request)
     {
         var applicationId = await ResolveAppIdAsync(idOrNumber);
         if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var result = await _applicationService.UpdateAsync(applicationId, request, userId);
+        var callerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var role = User.FindFirstValue(ClaimTypes.Role)!;
+        var effectiveUserId = (role == "Receptionist")
+            ? (await _applicationService.GetByIdAsync(applicationId, callerId, role)).Data?.ApplicantId ?? callerId
+            : callerId;
+        var result = await _applicationService.UpdateAsync(applicationId, request, effectiveUserId);
         return StatusCode(result.StatusCode, result);
     }
 
@@ -168,7 +177,7 @@ public class ApplicationsController : ControllerBase
     /// Final submit of a draft application (sets status to Submitted).
     /// </summary>
     [HttpPost("{idOrNumber}/submit")]
-    [Authorize(Roles = "Applicant")]
+    [Authorize(Roles = "Applicant,Receptionist")]
     [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
     public async Task<IActionResult> SubmitAsync(string idOrNumber)
     {
@@ -176,8 +185,12 @@ public class ApplicationsController : ControllerBase
         if (applicationId == 0)
             return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var result = await _applicationService.SubmitAsync(applicationId, userId);
+        var callerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var role = User.FindFirstValue(ClaimTypes.Role)!;
+        var effectiveUserId = (role == "Receptionist")
+            ? (await _applicationService.GetByIdAsync(applicationId, callerId, role)).Data?.ApplicantId ?? callerId
+            : callerId;
+        var result = await _applicationService.SubmitAsync(applicationId, effectiveUserId);
         return StatusCode(result.StatusCode, result);
     }
 
@@ -362,7 +375,7 @@ public class ApplicationsController : ControllerBase
     /// Get applications pending theory test (Stage 6).
     /// </summary>
     [HttpGet("theory-pending")]
-    [Authorize(Roles = "Admin,Examiner,Manager")]
+    [Authorize(Roles = "Admin,Receptionist,Examiner,Manager")]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<ApplicationDto>>), 200)]
     public async Task<IActionResult> GetTheoryPendingQueueAsync(
         [FromQuery] int page = 1, 
@@ -377,7 +390,7 @@ public class ApplicationsController : ControllerBase
     /// Get applications pending practical test (Stage 7).
     /// </summary>
     [HttpGet("practical-pending")]
-    [Authorize(Roles = "Admin,Examiner,Manager")]
+    [Authorize(Roles = "Admin,Receptionist,Examiner,Manager")]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<ApplicationDto>>), 200)]
     public async Task<IActionResult> GetPracticalPendingQueueAsync(
         [FromQuery] int page = 1, 
@@ -392,7 +405,7 @@ public class ApplicationsController : ControllerBase
     /// Get applications pending medical exam (Stage 4).
     /// </summary>
     [HttpGet("medical-pending")]
-    [Authorize(Roles = "Admin,Doctor,Manager")]
+    [Authorize(Roles = "Admin,Receptionist,Doctor,Manager")]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<ApplicationDto>>), 200)]
     public async Task<IActionResult> GetMedicalPendingQueueAsync(
         [FromQuery] int page = 1, 
@@ -453,7 +466,7 @@ public class ApplicationsController : ControllerBase
     /// Get applications waiting for security verification (Gate 4).
     /// </summary>
     [HttpGet("security-pending")]
-    [Authorize(Roles = "Admin,Security,Manager")]
+    [Authorize(Roles = "Admin,Receptionist,Security,Manager")]
     [ProducesResponseType(typeof(ApiResponse<PagedResult<ApplicationDto>>), 200)]
     public async Task<IActionResult> GetSecurityPendingQueueAsync(
         [FromQuery] int page = 1, 
@@ -679,5 +692,53 @@ public class ApplicationsController : ControllerBase
 
         var result = await _applicationService.GetByApplicationNumberAsync(appIdOrNumber.Trim());
         return result.Data?.FirstOrDefault()?.Id ?? 0;
+    }
+
+    /// <summary>
+    /// Get applications for the logged-in applicant (my applications).
+    /// </summary>
+    [HttpGet("my-applications")]
+    [Authorize(Roles = "Applicant")]
+    [ProducesResponseType(typeof(ApiResponse<PagedResult<ApplicationDto>>), 200)]
+    public async Task<IActionResult> GetMyApplicationsAsync(
+        [FromQuery] int page = 1, 
+        [FromQuery] int pageSize = 20,
+        [FromQuery] string? status = null)
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _applicationService.GetMyApplicationsAsync(userId, page, pageSize, status);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Get applications assigned to the logged-in Doctor (Medical exam stage).
+    /// </summary>
+    [HttpGet("doctor/applications")]
+    [Authorize(Roles = "Doctor")]
+    [ProducesResponseType(typeof(ApiResponse<PagedResult<ApplicationDto>>), 200)]
+    public async Task<IActionResult> GetDoctorApplicationsAsync(
+        [FromQuery] int page = 1, 
+        [FromQuery] int pageSize = 20,
+        [FromQuery] string? search = null)
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _applicationService.GetDoctorApplicationsAsync(userId, page, pageSize, search);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Get applications assigned to the logged-in Examiner (Theory/Practical test stages).
+    /// </summary>
+    [HttpGet("examiner/applications")]
+    [Authorize(Roles = "Examiner")]
+    [ProducesResponseType(typeof(ApiResponse<PagedResult<ApplicationDto>>), 200)]
+    public async Task<IActionResult> GetExaminerApplicationsAsync(
+        [FromQuery] int page = 1, 
+        [FromQuery] int pageSize = 20,
+        [FromQuery] string? search = null)
+    {
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var result = await _applicationService.GetExaminerApplicationsAsync(userId, page, pageSize, search);
+        return StatusCode(result.StatusCode, result);
     }
 }

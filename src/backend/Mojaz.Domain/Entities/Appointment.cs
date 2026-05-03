@@ -23,4 +23,8 @@ public class Appointment : SoftDeletableEntity
     public byte[]? RowVersion { get; set; }
 
     public virtual Application Application { get; set; } = null!;
+
+    // Navigation to branch and assigned staff (optional)
+    public virtual Branch? Branch { get; set; }
+    public virtual User? AssignedStaff { get; set; }
 }

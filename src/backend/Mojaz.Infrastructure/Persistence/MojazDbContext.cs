@@ -38,6 +38,7 @@ namespace Mojaz.Infrastructure.Persistence
         public DbSet<FeeStructure> FeeStructures { get; set; }
         public DbSet<EmailLog> EmailLogs { get; set; }
         public DbSet<SmsLog> SmsLogs { get; set; }
+        public DbSet<Branch> Branches { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

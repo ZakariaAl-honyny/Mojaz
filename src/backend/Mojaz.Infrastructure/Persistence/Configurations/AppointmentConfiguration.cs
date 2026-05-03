@@ -13,8 +13,14 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
             builder.Property(x => x.AppointmentType)
                 .IsRequired()
                 .HasColumnType("tinyint");
-            builder.Property(x => x.ScheduledDate).IsRequired();
-            builder.Property(x => x.TimeSlot).IsRequired().HasMaxLength(16);
+            builder.Property(x => x.ScheduledDate)
+                .IsRequired()
+                .HasColumnType("date");
+            builder.Property(x => x.TimeSlot)
+                .IsRequired()
+                .HasMaxLength(16);
+            builder.Property(x => x.CheckInTime)
+                .HasColumnType("time");
             builder.Property(x => x.BranchId);
             builder.Property(x => x.AssignedStaffId);
             builder.Property(x => x.Status)

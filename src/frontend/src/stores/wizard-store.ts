@@ -31,7 +31,7 @@ const initialState = {
   },
   step4: {
     applicantType: 'Citizen' as const,
-    preferredCenterId: null as number | null,
+    preferredCenterId: null as string | null,
     testLanguage: 'ar' as const,
     appointmentPreference: 'Morning' as const,
     specialNeedsDeclaration: false,
@@ -96,7 +96,7 @@ export const useWizardStore = create<WizardState>()(
         city?: string | null;
         region?: string | null;
         applicantType?: string | null;
-        preferredCenterId?: number | null;
+        preferredCenterId?: string | number | null;
         testLanguage?: string | null;
         appointmentPreference?: string | null;
         specialNeedsDeclaration?: boolean | null;
@@ -135,13 +135,42 @@ export const useWizardStore = create<WizardState>()(
 
         const newStep4 = { ...state.step4 };
         if (data.applicantType !== undefined) newStep4.applicantType = (data.applicantType ?? 'Citizen') as typeof state.step4.applicantType;
-        if (data.preferredCenterId !== undefined) newStep4.preferredCenterId = data.preferredCenterId ?? null;
+        if (data.preferredCenterId !== undefined) newStep4.preferredCenterId = data.preferredCenterId ? String(data.preferredCenterId) : null;
         if (data.testLanguage !== undefined) newStep4.testLanguage = (data.testLanguage ?? 'ar') as typeof state.step4.testLanguage;
         if (data.appointmentPreference !== undefined) newStep4.appointmentPreference = (data.appointmentPreference ?? 'Morning') as typeof state.step4.appointmentPreference;
         if (data.specialNeedsDeclaration !== undefined) newStep4.specialNeedsDeclaration = data.specialNeedsDeclaration ?? false;
         if (data.specialNeedsNote !== undefined) newStep4.specialNeedsNote = data.specialNeedsNote ?? '';
 
-        return { step1: newStep1, step2: newStep2, step3: newStep3, step4: newStep4 };
+        // Infer current and completed steps
+        const completedSteps: StepId[] = [];
+        let currentStep: StepId = 1;
+
+        if (newStep1.serviceType !== null) {
+          completedSteps.push(1);
+          currentStep = 2;
+        }
+        if (newStep2.categoryCode !== null) {
+          completedSteps.push(2);
+          currentStep = 3;
+        }
+        if (newStep3.nationalId !== '') {
+          completedSteps.push(3);
+          currentStep = 4;
+        }
+        if (newStep4.preferredCenterId !== null || newStep4.applicantType !== 'Citizen') {
+          completedSteps.push(4);
+          currentStep = 5;
+        }
+
+        return { 
+          step1: newStep1, 
+          step2: newStep2, 
+          step3: newStep3, 
+          step4: newStep4,
+          completedSteps,
+          currentStep,
+          hasLoadedFromApi: true
+        };
       }),
     }),
     {

@@ -116,7 +116,6 @@ public class NotificationService : INotificationService
     {
         var allNotifications = await _notificationRepository.FindAsync(n => n.UserId == userId);
         var totalCount = allNotifications.Count;
-        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
         
         var pagedItems = allNotifications.OrderByDescending(n => n.SentAt)
                                       .ToList()
@@ -165,10 +164,11 @@ public class NotificationService : INotificationService
         return false;
     }
 
-    public async Task<bool> MarkAllAsReadAsync(int userId)
+    public async Task<int> MarkAllAsReadAsync(int userId)
     {
         var notifications = await _notificationRepository.FindAsync(n => n.UserId == userId && !n.IsRead);
-        if (notifications.Any())
+        var count = notifications.Count();
+        if (count > 0)
         {
             foreach (var notification in notifications)
             {
@@ -176,8 +176,7 @@ public class NotificationService : INotificationService
                 _notificationRepository.Update(notification);
             }
             await _unitOfWork.SaveChangesAsync();
-            return true;
         }
-        return false;
+        return count;
     }
 }

@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
 using Mojaz.Application.DTOs.Auth;
+using Mojaz.Application.DTOs.User;
 using Mojaz.Application.Interfaces.Services;
+using Mojaz.Application.Services;
 using Mojaz.Domain.Enums;
 using Mojaz.Shared;
 using Mojaz.Shared.Constants;
@@ -18,10 +20,12 @@ namespace Mojaz.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly IUserService _userService;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, IUserService userService)
     {
         _authService = authService;
+        _userService = userService;
     }
 
     /// <summary>
@@ -80,8 +84,11 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("logout")]
-    public async Task<IActionResult> Logout([FromBody] LogoutRequest request)
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Logout([FromQuery] string? refreshToken = null)
     {
+        var request = new LogoutRequest { RefreshToken = refreshToken ?? string.Empty };
         var result = await _authService.LogoutAsync(request);
         return StatusCode(result.StatusCode, result);
     }
@@ -145,6 +152,50 @@ public class AuthController : ControllerBase
     {
         request.Method = RegistrationMethod.Phone;
         var result = await _authService.RegisterAsync(request);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Get current authenticated user's profile.
+    /// </summary>
+    [HttpGet("me")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<Application.DTOs.User.UserDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized(new ApiResponse<Application.DTOs.User.UserDto>
+            {
+                Success = false,
+                Message = "جلسة العمل غير صالحة",
+                StatusCode = StatusCodes.Status401Unauthorized
+            });
+        }
+
+        var result = await _userService.GetCurrentUserAsync(userId);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    /// <summary>
+    /// Verify email with a token, or request new verification link.
+    /// </summary>
+    [HttpPost("verify-email")]
+    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> VerifyEmail([FromBody] VerifyEmailRequest request)
+    {
+        // Extract user ID from token for authenticated requests
+        int? userId = null;
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!string.IsNullOrEmpty(userIdClaim) && int.TryParse(userIdClaim, out var parsedId))
+        {
+            userId = parsedId;
+        }
+
+        var result = await _authService.VerifyEmailAsync(request, userId);
         return StatusCode(result.StatusCode, result);
     }
 }

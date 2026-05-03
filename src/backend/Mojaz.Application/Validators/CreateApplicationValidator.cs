@@ -18,10 +18,15 @@ public class CreateApplicationValidator : AbstractValidator<CreateApplicationReq
 
         // Step 2: Category
         RuleFor(x => x.LicenseCategoryId)
-            .NotEmpty().WithMessage("License category is required.")
+            .Must(x => x.HasValue).WithMessage("License category is required.")
             .CustomAsync(async (categoryId, context, cancellationToken) =>
             {
-                var category = await categoryRepository.GetByIdAsync(categoryId);
+                if (!categoryId.HasValue)
+                {
+                    context.AddFailure("LicenseCategoryId", "License category is required.");
+                    return;
+                }
+                var category = await categoryRepository.GetByIdAsync(categoryId.Value);
                 if (category == null)
                 {
                     context.AddFailure("LicenseCategoryId", "Invalid license category.");

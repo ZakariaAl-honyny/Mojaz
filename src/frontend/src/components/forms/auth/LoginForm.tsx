@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { RegistrationMethod } from '@/types/auth.types';
 
 const loginSchema = z.object({
   identifier: z.string().min(5, 'يجب إدخال البريد الإلكتروني أو رقم الهاتف بشكل صحيح'),
@@ -58,7 +59,7 @@ export default function LoginForm() {
       const response = await apiClient.post('/auth/login', {
         identifier: identifier,
         password: data.password,
-        method: method
+        method: method === 1 ? RegistrationMethod.Email : method === 2 ? RegistrationMethod.Phone : RegistrationMethod.NationalId
       });
 
       const rawData = response.data.data;
@@ -93,7 +94,7 @@ export default function LoginForm() {
 
       user.role = roleNum;
 
-// Sync store and cookies
+      // Sync store and cookies
       setAuth(user, accessToken, refreshToken);
 
       // Redirect to main dashboard

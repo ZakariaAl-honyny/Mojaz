@@ -8,8 +8,8 @@ namespace Mojaz.Application.Interfaces.Services;
 
 public interface IDocumentService
 {
-    Task<ApiResponse<DocumentDto>> UploadAsync(int applicationId, UploadDocumentRequest request, int userId);
-    Task<ApiResponse<DocumentDto>> UploadByApplicationNumberAsync(string applicationNumber, UploadDocumentRequest request, int userId);
+    Task<ApiResponse<DocumentDto>> UploadAsync(int applicationId, UploadDocumentRequest request, int userId, string role);
+    Task<ApiResponse<DocumentDto>> UploadByApplicationNumberAsync(string applicationNumber, UploadDocumentRequest request, int userId, string role);
     Task<ApiResponse<IEnumerable<DocumentDto>>> GetByApplicationIdAsync(int applicationId, int userId, string role);
     Task<ApiResponse<IEnumerable<DocumentDto>>> GetByApplicationNumberAsync(string applicationNumber, int userId, string role);
     Task<ApiResponse<IEnumerable<DocumentRequirementDto>>> GetRequirementsAsync(int applicationId, int userId, string role);

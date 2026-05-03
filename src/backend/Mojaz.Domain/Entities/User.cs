@@ -6,6 +6,8 @@ public class User : SoftDeletableEntity
 {
     public string FullNameAr { get; set; } = string.Empty;
     public string FullNameEn { get; set; } = string.Empty;
+    // Computed full name convenience property used by mappings
+    public string FullName => string.IsNullOrWhiteSpace(FullNameEn) ? FullNameAr : (FullNameEn + (string.IsNullOrWhiteSpace(FullNameAr) ? string.Empty : " ") + FullNameAr).Trim();
     public string NationalId { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;

@@ -56,8 +56,9 @@ export const ApplicantDashboard = ({ data, userName }: ApplicantDashboardProps) 
     <div className="max-w-5xl mx-auto space-y-6 md:space-y-8 font-arabic" dir="rtl">
       
       {/* Welcome Banner */}
-      <section className="relative overflow-hidden rounded-xl md:rounded-2xl bg-[#0f1e4a] p-5 md:p-7 shadow-xl">
+      <section className="relative overflow-hidden rounded-xl md:rounded-2xl bg-[#0f1e4a] p-5 md:p-7 shadow-xl group/banner">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_#1a3a8f_0%,_transparent_70%)]" />
+        <div className="absolute -top-24 -end-24 w-64 h-64 bg-[#D4A017] rounded-full blur-[100px] opacity-[0.03] group-hover/banner:opacity-[0.06] transition-opacity duration-700" />
         
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-5 md:gap-4">
           <div className="space-y-2 md:space-y-3 max-w-xl text-center md:text-start">

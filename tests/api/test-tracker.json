@@ -1,0 +1,57 @@
+﻿{
+  "version": "1.0.0",
+  "created": "2026-04-30",
+  "baseUrl": "http://localhost:5013",
+  "controllers": {
+    "AuthController":        { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/auth", "endpoints": 11, "testCount": 46 },
+    "HealthController":      { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/health", "endpoints": 2, "testCount": 40 },
+    "ServicesController":    { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/services", "endpoints": 1, "testCount": 22 },
+    "LookupsController":      { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/lookups", "endpoints": 4, "testCount": 32 },
+    "LicenseCategoriesController": { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/license-categories", "endpoints": 1, "testCount": 30 },
+    "TestingController":     { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/testing", "endpoints": 3, "testCount": 0 },
+    "ApplicationsController": { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/applications", "endpoints": 40, "testCount": 120 },
+    "FeesController":       { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/fees", "endpoints": 5, "testCount": 30 },
+    "PaymentsController":   { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/payments", "endpoints": 10, "testCount": 33 },
+    "AppointmentsController": { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/appointments", "endpoints": 8, "testCount": 91 },
+    "DocumentsController":  { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/documents", "endpoints": 8, "testCount": 45 },
+    "MedicalExamsController": { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/medical-exams", "endpoints": 3, "testCount": 68 },
+    "TheoryTestsController": { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/theory-tests", "endpoints": 2, "testCount": 35 },
+    "PracticalTestsController": { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/practical-tests", "endpoints": 2, "testCount": 30 },
+    "TrainingController":  { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/training", "endpoints": 8, "testCount": 65 },
+    "RenewalController":    { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/licenses/renewal", "endpoints": 5, "testCount": 45 },
+    "LicensesController":   { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/licenses", "endpoints": 5, "testCount": 53 },
+    "UsersController":      { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/users", "endpoints": 10, "testCount": 58 },
+    "NotificationsController": { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/notifications", "endpoints": 6, "testCount": 56 },
+    "SettingsController":   { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/settings", "endpoints": 5, "testCount": 59 },
+    "AuditLogsController":  { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/audit-logs", "endpoints": 2, "testCount": 25 },
+    "DashboardsController":  { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/dashboards", "endpoints": 6, "testCount": 48 },
+    "ReportsController":   { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/reports", "endpoints": 10, "testCount": 60 },
+    "AdministrativeController": { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/administrative", "endpoints": 1, "testCount": 20 },
+    "DevController":        { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/dev/dev", "endpoints": 1, "testCount": 30 },
+    "UnifiedNotificationsController": { "assignedTo": "TestEngineer", "status": "completed", "retries": 0, "route": "api/v1/notifications-unified", "endpoints": 4, "testCount": 45 }
+  },
+  "totalControllers": 26,
+  "globalStatus": "tests_executed",
+  "executionSummary": {
+    "totalTestsGenerated": 1263,
+    "testsExecuted": true,
+    "executionDate": "2026-05-01",
+    "keyFindings": {
+      "working": [
+        "All 401 (unauthenticated) tests pass correctly",
+        "LicenseCategoriesController - 100% pass rate (30/30)",
+        "SettingsController - 100% pass rate (35/35)",
+        "ServicesController - 75% pass rate (12/16)",
+        "LookupsController - 61% pass rate (19/31)",
+        "All public endpoints (AllowAnonymous) work correctly"
+      ],
+      "knownIssues": [
+        "Backend has DB schema bug: RefreshToken.UserId type mismatch causing 500 on auth endpoints",
+        "Test helper bug: request.post() called incorrectly in getTokens() - needs apiContext parameter",
+        "Test accounts likely not seeded in database - all logins return 500"
+      ]
+    }
+  }
+}
+}
+

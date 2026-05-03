@@ -157,6 +157,34 @@ export const ApplicantTypeLabels: Record<ApplicantType, string> = {
 };
 
 // ============================================================
+// Application Stage Labels - المرحلة
+// ============================================================
+export const ApplicationStageLabels: Record<string, string> = {
+  // Numeric-based (from ApplicationStages enum)
+  "01-Creation": "إنشاء الطلب",
+  "02-Documents": "رفع المستندات",
+  "03-InitialPayment": "سداد الرسوم الإدارية",
+  "04-MedicalExam": "الفحص الطبي",
+  "05-Training": "الدورة التدريبية",
+  "06-TheoryTest": "الاختبار النظري",
+  "07-PracticalTest": "الاختبار العملي",
+  "08-FinalApproval": "المراجعة النهائية",
+  "09-IssuancePayment": "سداد رسوم الإصدار",
+  "10-Issuance": "إصدار الرخصة",
+  
+  // String-based (from DB/Seeder)
+  "Creation": "إنشاء الطلب",
+  "DocumentReview": "مراجعة المستندات",
+  "ReceptionReview": "مراجعة الاستقبال",
+  "MedicalExam": "الفحص الطبي",
+  "Training": "الدورة التدريبية",
+  "TheoryTest": "الاختبار النظري",
+  "PracticalTest": "الاختبار العملي",
+  "FinalDecision": "القرار النهائي",
+  "Issuance": "إصدار الرخصة"
+};
+
+// ============================================================
 // Helper function to get any enum label
 // ============================================================
 export function getEnumLabel<T extends number>(mapper: Record<T, string>, value: T | number): string {

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mojaz.Shared;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace Mojaz.API.Controllers;
 
@@ -20,10 +22,38 @@ public class HealthController : ControllerBase
     }
 
     /// <summary>
+    /// Test auth - requires valid token but no role check
+    /// </summary>
+    [HttpGet("test-auth")]
+    [Authorize]
+    public IActionResult TestAuth()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var role = User.FindFirstValue(ClaimTypes.Role);
+        var sub = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        var name = User.FindFirstValue(JwtRegisteredClaimNames.Name);
+        
+        // Get ALL claims for debugging
+        var allClaims = User.Claims.Select(c => new { type = c.Type, value = c.Value }).ToList();
+        
+        return Ok(new { 
+            success = true, 
+            userId = userId, 
+            role = role,
+            sub = sub,
+            name = name,
+            totalClaims = allClaims.Count,
+            claims = allClaims,
+            message = "Authentication worked!" 
+        });
+    }
+
+    /// <summary>
     /// Check API health status.
     /// </summary>
     /// <returns>Health status with timestamp and version</returns>
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult GetHealth()
     {
         var response = new ApiResponse<object>

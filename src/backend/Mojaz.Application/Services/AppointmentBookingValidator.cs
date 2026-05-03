@@ -303,7 +303,7 @@ public class AppointmentBookingValidator
         {
             return new Dictionary<AppointmentType, ApplicationStatus[]>
             {
-                { AppointmentType.MedicalExam, new[] { ApplicationStatus.InReview, ApplicationStatus.MedicalExam } },
+                { AppointmentType.MedicalExam, new[] { ApplicationStatus.Submitted, ApplicationStatus.DocumentReview, ApplicationStatus.InReview, ApplicationStatus.MedicalExam } },
                 { AppointmentType.TheoryTest, new[] { ApplicationStatus.Training, ApplicationStatus.TheoryTest } },
                 { AppointmentType.PracticalTest, new[] { ApplicationStatus.TheoryTest, ApplicationStatus.PracticalTest } }
             };
@@ -315,7 +315,7 @@ public class AppointmentBookingValidator
         {
             return new Dictionary<AppointmentType, ApplicationStatus[]>
             {
-                { AppointmentType.MedicalExam, new[] { ApplicationStatus.InReview, ApplicationStatus.MedicalExam } }
+                { AppointmentType.MedicalExam, new[] { ApplicationStatus.Submitted, ApplicationStatus.DocumentReview, ApplicationStatus.InReview, ApplicationStatus.MedicalExam } }
             };
         }
         
@@ -325,7 +325,7 @@ public class AppointmentBookingValidator
         {
             return new Dictionary<AppointmentType, ApplicationStatus[]>
             {
-                { AppointmentType.MedicalExam, new[] { ApplicationStatus.InReview, ApplicationStatus.MedicalExam } }
+                { AppointmentType.MedicalExam, new[] { ApplicationStatus.Submitted, ApplicationStatus.DocumentReview, ApplicationStatus.InReview, ApplicationStatus.MedicalExam } }
             };
         }
         
@@ -334,7 +334,7 @@ public class AppointmentBookingValidator
         {
             return new Dictionary<AppointmentType, ApplicationStatus[]>
             {
-                { AppointmentType.MedicalExam, new[] { ApplicationStatus.InReview, ApplicationStatus.MedicalExam } },
+                { AppointmentType.MedicalExam, new[] { ApplicationStatus.Submitted, ApplicationStatus.DocumentReview, ApplicationStatus.InReview, ApplicationStatus.MedicalExam } },
                 { AppointmentType.TheoryTest, new[] { ApplicationStatus.Training, ApplicationStatus.TheoryTest } },
                 { AppointmentType.PracticalTest, new[] { ApplicationStatus.TheoryTest, ApplicationStatus.PracticalTest } }
             };
@@ -345,7 +345,7 @@ public class AppointmentBookingValidator
         {
             return new Dictionary<AppointmentType, ApplicationStatus[]>
             {
-                { AppointmentType.MedicalExam, new[] { ApplicationStatus.InReview, ApplicationStatus.MedicalExam } }
+                { AppointmentType.MedicalExam, new[] { ApplicationStatus.Submitted, ApplicationStatus.DocumentReview, ApplicationStatus.InReview, ApplicationStatus.MedicalExam } }
             };
         }
         
@@ -356,14 +356,14 @@ public class AppointmentBookingValidator
         {
             return new Dictionary<AppointmentType, ApplicationStatus[]>
             {
-                { AppointmentType.MedicalExam, new[] { ApplicationStatus.InReview, ApplicationStatus.MedicalExam } }
+                { AppointmentType.MedicalExam, new[] { ApplicationStatus.Submitted, ApplicationStatus.DocumentReview, ApplicationStatus.InReview, ApplicationStatus.MedicalExam } }
             };
         }
         
         // Default: New License workflow (fallback)
         return new Dictionary<AppointmentType, ApplicationStatus[]>
         {
-            { AppointmentType.MedicalExam, new[] { ApplicationStatus.InReview, ApplicationStatus.MedicalExam } },
+            { AppointmentType.MedicalExam, new[] { ApplicationStatus.Submitted, ApplicationStatus.DocumentReview, ApplicationStatus.InReview, ApplicationStatus.MedicalExam } },
             { AppointmentType.TheoryTest, new[] { ApplicationStatus.Training, ApplicationStatus.TheoryTest } },
             { AppointmentType.PracticalTest, new[] { ApplicationStatus.TheoryTest, ApplicationStatus.PracticalTest } }
         };

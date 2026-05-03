@@ -386,7 +386,7 @@ return ApiResponse<int>.NotFound("الرخصة غير موجودة.");
             }
 
             // Get category
-            var category = await _licenseCategoryRepository.GetByIdAsync(application.LicenseCategoryId);
+            var category = await _licenseCategoryRepository.GetByIdAsync(application.LicenseCategoryId ?? 0);
             if (category == null)
             {
                 return ApiResponse<int>.NotFound("فئة الرخصة غير موجودة.");
@@ -412,7 +412,7 @@ return ApiResponse<int>.NotFound("الرخصة غير موجودة.");
                 LicenseNumber = newLicenseNumber,
                 ApplicationId = applicationId,
                 HolderId = application.ApplicantId,
-                LicenseCategoryId = application.LicenseCategoryId,
+                LicenseCategoryId = application.LicenseCategoryId ?? 0,
                 IssuedAt = issuedAt,
                 ExpiresAt = expiresAt,
                 IssuedBy = processedById,

@@ -43,6 +43,7 @@ export const RolePermissions = {
   canTrackAttendance: (role: UserRole | number) => [
     UserRole.Receptionist,
     UserRole.Security,
+    UserRole.Manager,
     UserRole.Admin
   ].includes(Number(role)),
 

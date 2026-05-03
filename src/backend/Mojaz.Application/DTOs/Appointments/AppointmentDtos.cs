@@ -20,6 +20,11 @@ public class AppointmentDto
     public bool ReminderSent { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    // Additional properties used by mapping/profile and services
+    public string? ApplicationNumber { get; set; }
+    public string? ApplicantName { get; set; }
+    public string? NationalId { get; set; }
+    public string? PhoneNumber { get; set; }
 }
 
 public class AvailableSlotDto

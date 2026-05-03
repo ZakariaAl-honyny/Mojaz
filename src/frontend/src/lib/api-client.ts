@@ -34,7 +34,7 @@ function getToken(): string | null {
 // Create axios instance - SIMPLE & RELIABLE
 const apiClient = axios.create({
   // Configure baseURL - can be overridden
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://localhost:5013/api/v1',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5013/api/v1',
   headers: {
     'Content-Type': 'application/json',
     'Accept-Language': 'ar',
@@ -460,20 +460,6 @@ apiClient.interceptors.response.use(
       return Promise.resolve({ data: DEMO_SETTINGS });
     }
     
-    // ============================================================
-    // EXISTING DEMO FALLBACKS - For payment, appointments, etc.
-    // ============================================================
-    
-    if (url.includes('/pay') || url.includes('check-eligibility') || 
-        url.includes('appointment') || url.includes('my-appointments') || 
-        url.includes('queue') || url.includes('documents')) {
-      console.log('[API Demo] Returning mock success for:', url);
-      return Promise.resolve({
-        data: { success: true, data: [], message: 'Demo mode', statusCode: 200 }
-      });
-    }
-    
-    // ============================================================
     // REAL ERROR HANDLING - For non-demo endpoints
     // ============================================================
     

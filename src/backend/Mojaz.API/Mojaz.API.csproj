@@ -7,6 +7,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Mojaz.API.xml</DocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
+    <!-- Required for RazorLight email template compilation -->
+    <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
   <ItemGroup>

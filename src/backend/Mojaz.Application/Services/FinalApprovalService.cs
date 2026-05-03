@@ -210,7 +210,7 @@ public class FinalApprovalService : IFinalApprovalService
             
             if (activeLicense != null)
             {
-                var toCategoryEntity = await _unitOfWork.Repository<LicenseCategory>().GetByIdAsync(application.LicenseCategoryId);
+                var toCategoryEntity = await _unitOfWork.Repository<LicenseCategory>().GetByIdAsync(application.LicenseCategoryId ?? 0);
                 var fromCategoryEntity = await _unitOfWork.Repository<LicenseCategory>().GetByIdAsync(activeLicense.LicenseCategoryId);
 
                 if (toCategoryEntity != null && fromCategoryEntity != null)

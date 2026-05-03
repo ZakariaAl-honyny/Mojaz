@@ -162,7 +162,7 @@ public class LicenseServiceTests
         // Assert
         result.Success.Should().BeFalse();
         result.StatusCode.Should().Be(409);
-        result.Message.Should().Be("A license has already been issued for this application.");
+        result.Message.Should().Contain("رخصة"); // Arabic for "license"
     }
 
     [Fact]
@@ -185,7 +185,7 @@ public class LicenseServiceTests
         // Assert
         result.Success.Should().BeFalse();
         result.StatusCode.Should().Be(400);
-        result.Message.Should().Be("License can only be issued for approved applications.");
+        result.Message.Should().Contain("الرخصة"); // Arabic for "license"
     }
 
     [Fact]

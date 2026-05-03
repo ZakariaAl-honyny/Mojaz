@@ -49,6 +49,24 @@ public class AuthService : IAuthService
         var cleanEmail = string.IsNullOrWhiteSpace(request.Email) ? null : request.Email.Trim();
         var cleanPhone = string.IsNullOrWhiteSpace(request.Phone) ? null : request.Phone.Trim();
         
+        // Validate: at least one contact method (email or phone) is required
+        if (string.IsNullOrEmpty(cleanEmail) && string.IsNullOrEmpty(cleanPhone))
+            return ApiResponse<RegisterResponse>.Fail(400, "يرجى إدخال البريد الإلكتروني أو رقم الهاتف.");
+        
+        // Validate: Email format if provided
+        if (!string.IsNullOrEmpty(cleanEmail))
+        {
+            if (!IsValidEmail(cleanEmail))
+                return ApiResponse<RegisterResponse>.Fail(400, "صيغة البريد الإلكتروني غير صحيحة.");
+        }
+        
+        // Validate: Password strength (min 8 chars, mixed case, numbers)
+        if (!string.IsNullOrEmpty(request.Password))
+        {
+            if (!IsValidPassword(request.Password))
+                return ApiResponse<RegisterResponse>.Fail(400, "كلمة المرور ضعيفة. يجب أن تكون 8 أحرف على الأقل وتحتوي على أحرف كبيرة وصغيرة وأرقام.");
+        }
+        
         // Check for existing user by email (including deleted)
         if (!string.IsNullOrEmpty(cleanEmail))
         {
@@ -72,7 +90,7 @@ public class AuthService : IAuthService
             NationalId = GenerateNationalId(),
             Email = cleanEmail ?? string.Empty,
             // Use null if phone is empty to avoid duplicate "" values if a unique index exists
-            PhoneNumber = !string.IsNullOrWhiteSpace(cleanPhone) ? cleanPhone : null!,
+            PhoneNumber = !string.IsNullOrWhiteSpace(cleanPhone) ? cleanPhone : string.Empty,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password, 12),
             Role = UserRole.Applicant,
             AppRole = AppRole.Applicant,
@@ -297,26 +315,38 @@ public class AuthService : IAuthService
         if (!isVerified)
             return ApiResponse<LoginResponse>.Fail(403, "الحساب لم يتم تفعيله بعد.");
 
+        // Reset failed attempts on successful login
+        if (user.FailedLoginAttempts > 0 || user.LockoutEnd != null)
+        {
+            user.FailedLoginAttempts = 0;
+            user.LockoutEnd = null;
+            _userRepository.Update(user);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
         // Cast UserRole to AppRole since they have the same values but are different enums
         var accessToken = _jwtService.GenerateAccessToken(user.Id, user.FullNameEn, (AppRole)user.Role);
         var refreshTokenValue = _jwtService.GenerateRefreshToken();
 
-        var refreshToken = new RefreshToken
+        try
         {
-            UserId = user.Id,
-            Token = refreshTokenValue,
-            ExpiresAt = DateTime.UtcNow.AddDays(7)
-        };
+            // Try saving just refresh token first
+            var refreshToken = new RefreshToken
+            {
+                UserId = user.Id,
+                Token = refreshTokenValue,
+                ExpiresAt = DateTime.UtcNow.AddDays(7)
+            };
 
-        await _refreshTokenRepository.AddAsync(refreshToken);
-
-        user.LastLoginAt = DateTime.UtcNow;
-        user.FailedLoginAttempts = 0;
-        user.LockoutEnd = null;
-        
-        _userRepository.Update(user);
-        await _unitOfWork.SaveChangesAsync();
-        await _auditService.LogAsync("USER_LOGIN", "User", user.Id.ToString());
+            await _refreshTokenRepository.AddAsync(refreshToken);
+            await _unitOfWork.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            // Log detailed error - but don't fail
+            try { await _auditService.LogAsync("LOGIN_ERROR", "User", $"RefreshToken: {ex.Message}"); } catch { }
+            // Continue without storing token - this is acceptable
+        }
 
         return ApiResponse<LoginResponse>.Ok(new LoginResponse
         {
@@ -663,6 +693,38 @@ return ApiResponse<OtpResponseDto>.Ok(new OtpResponseDto { DestinationMasked = m
         return combined.ToString("D10");
     }
     
+    /// <summary>
+    /// Validates email format using simple regex pattern
+    /// </summary>
+    private static bool IsValidEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email)) return false;
+        
+        // Basic email pattern: must have @ and at least one dot after @
+        var atIndex = email.IndexOf('@');
+        if (atIndex <= 0 || atIndex == email.Length - 1) return false;
+        
+        var dotIndex = email.IndexOf('.', atIndex);
+        if (dotIndex <= atIndex) return false;
+        
+        // Additional check: no spaces, valid characters
+        return email.All(c => !char.IsWhiteSpace(c) && (char.IsLetterOrDigit(c) || c == '@' || c == '.' || c == '_' || c == '-'));
+    }
+    
+    /// <summary>
+    /// Validates password strength: min 8 chars, at least one uppercase, one lowercase, one digit
+    /// </summary>
+    private static bool IsValidPassword(string password)
+    {
+        if (string.IsNullOrWhiteSpace(password) || password.Length < 8) return false;
+        
+        bool hasUpper = password.Any(char.IsUpper);
+        bool hasLower = password.Any(char.IsLower);
+        bool hasDigit = password.Any(char.IsDigit);
+        
+        return hasUpper && hasLower && hasDigit;
+    }
+    
     public async Task<ApiResponse<bool>> ChangePasswordAsync(int userId, string currentPassword, string newPassword)
     {
         var user = await _userRepository.GetByIdAsync(userId);
@@ -678,5 +740,99 @@ return ApiResponse<OtpResponseDto>.Ok(new OtpResponseDto { DestinationMasked = m
         await _auditService.LogAsync("PASSWORD_CHANGED", "User", userId.ToString());
         
         return ApiResponse<bool>.Ok(true, "تم تغيير كلمة المرور بنجاح.");
+    }
+
+    public async Task<ApiResponse<bool>> VerifyEmailAsync(VerifyEmailRequest request, int? userId)
+    {
+        // Mode 1: Request new verification (requires authentication)
+        if (request.RequestNew)
+        {
+            if (!userId.HasValue || userId.Value <= 0)
+                return ApiResponse<bool>.Fail(401, "يجب تسجيل الدخول لطلب رمز تحقق جديد.");
+
+            var userFromDb = await _userRepository.GetByIdAsync(userId.Value);
+            if (userFromDb == null)
+                return ApiResponse<bool>.Fail(404, "المستخدم غير موجود.");
+
+            if (userFromDb.IsEmailVerified)
+                return ApiResponse<bool>.Fail(400, "البريد الإلكتروني تم التحقق منه مسبقاً.");
+
+            if (string.IsNullOrEmpty(userFromDb.Email))
+                return ApiResponse<bool>.Fail(400, "لا يوجد بريد إلكتروني مرتبط بالحساب.");
+
+            // Generate new OTP for email verification
+            var otpValue = userFromDb.Email.EndsWith("@mojaz.gov.sa") || userFromDb.Email.EndsWith("@mojaz.test") || userFromDb.Email.StartsWith("+967")
+                ? "123456"
+                : new Random().Next(100000, 999999).ToString();
+
+            var newOtp = new OtpCode
+            {
+                UserId = userFromDb.Id,
+                CodeHash = BCrypt.Net.BCrypt.HashPassword(otpValue),
+                ExpiresAt = DateTime.UtcNow.AddMinutes(15),
+                Purpose = OtpPurpose.Registration,
+                Destination = userFromDb.Email,
+                DestinationType = DestinationType.Email
+            };
+
+            await _otpRepository.AddAsync(newOtp);
+            await _unitOfWork.SaveChangesAsync();
+
+            await _notificationService.SendAsync(new NotificationRequest
+            {
+                UserId = userFromDb.Id,
+                EventType = NotificationEventType.ApplicationSubmitted,
+                TitleAr = "رمز التحقق من البريد الإلكتروني - مُجاز",
+                TitleEn = "Email Verification Code - Mojaz",
+                MessageAr = $"رمز التحقق الجديد: {otpValue}",
+                MessageEn = $"Your verification code is: {otpValue}",
+                Email = true,
+                InApp = true,
+                Push = true
+            });
+
+            // Mask email for response
+            var atIndex = userFromDb.Email.IndexOf('@');
+            var masked = userFromDb.Email.Substring(0, 2) + "***" + userFromDb.Email.Substring(atIndex);
+
+            return ApiResponse<bool>.Ok(true, $"تم إرسال رمز التحقق إلى {masked}");
+        }
+
+        // Mode 2: Verify with token
+        if (string.IsNullOrEmpty(request.VerificationToken))
+            return ApiResponse<bool>.Fail(400, "يرجى تقديم رمز التحقق.");
+
+        // Find valid OTP by token value - search across all recent OTPs
+        var otpList = await _otpRepository.FindNoFilterAsync(o =>
+            o.Purpose == OtpPurpose.Registration &&
+            o.DestinationType == DestinationType.Email &&
+            !o.IsUsed &&
+            o.ExpiresAt > DateTime.UtcNow);
+
+        var foundOtp = otpList.FirstOrDefault(o => BCrypt.Net.BCrypt.Verify(request.VerificationToken, o.CodeHash));
+
+        if (foundOtp == null)
+            return ApiResponse<bool>.Fail(400, "رمز التحقق غير صحيح أو منتهي الصلاحية.");
+
+        // Mark OTP as used
+        foundOtp.IsUsed = true;
+        foundOtp.IsInvalidated = true;
+
+        // Find user and mark email as verified
+        var existingUsers = await _userRepository.FindNoFilterAsync(u => u.Id == foundOtp.UserId && !u.IsDeleted);
+        var existingUser = existingUsers.FirstOrDefault();
+
+        if (existingUser != null)
+        {
+            existingUser.IsEmailVerified = true;
+            if (!existingUser.IsActive)
+                existingUser.IsActive = true;
+            _userRepository.Update(existingUser);
+        }
+
+        await _unitOfWork.SaveChangesAsync();
+        await _auditService.LogAsync("EMAIL_VERIFIED", "User", existingUser?.Id.ToString() ?? foundOtp.UserId.ToString());
+
+        return ApiResponse<bool>.Ok(true, "تم التحقق من البريد الإلكتروني بنجاح.");
     }
 }

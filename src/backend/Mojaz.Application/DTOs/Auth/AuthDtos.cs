@@ -39,3 +39,9 @@ public class ResetPasswordRequest
     public string Code { get; set; } = string.Empty;
     public string NewPassword { get; set; } = string.Empty;
 }
+
+public class VerifyEmailRequest
+{
+    public string? VerificationToken { get; set; }
+    public bool RequestNew { get; set; }
+}

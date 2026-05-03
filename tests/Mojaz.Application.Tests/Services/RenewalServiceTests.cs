@@ -194,7 +194,7 @@ public class RenewalServiceTests
             ApplicantId = holder.Id,
             OldLicenseId = oldLicense.Id,
             LicenseCategoryId = category.Id,
-            MedicalExaminationId = 14,
+            MedicalExamination = new MedicalExamination { Id = 14 },
             RenewalFeePaid = true,
             Status = ApplicationStatus.Payment
         };

@@ -8,7 +8,7 @@ public class Application : SoftDeletableEntity
     public string ApplicationNumber { get; set; } = string.Empty;
     public int ApplicantId { get; set; }
     public ServiceType ServiceType { get; set; }
-    public int LicenseCategoryId { get; set; }
+    public int? LicenseCategoryId { get; set; } // Nullable - required in Step 2
     public int? BranchId { get; set; }
     public ApplicationStatus Status { get; set; } = ApplicationStatus.Draft;
     public string CurrentStage { get; set; } = string.Empty;
@@ -51,4 +51,17 @@ public class Application : SoftDeletableEntity
     public virtual ICollection<ApplicationStatusHistory> StatusHistory { get; set; } = [];
     public virtual ICollection<TheoryTest> TheoryTests { get; set; } = [];
     public virtual ICollection<PracticalTest> PracticalTests { get; set; } = [];
+
+    // TPH Discriminator (added by migration for Renewal/Replacement support)
+    public string? Discriminator { get; set; }
+
+    // Renewal/Replacement nullable columns (added by migration)
+    public int? OldLicenseId { get; set; }
+    public int? NewLicenseId { get; set; }
+    public bool? RenewalFeePaid { get; set; }
+
+    // Exemptions (nullable for future use)
+    public bool? TrainingExempt { get; set; }
+    public bool? TheoryExempt { get; set; }
+    public bool? PracticalExempt { get; set; }
 }

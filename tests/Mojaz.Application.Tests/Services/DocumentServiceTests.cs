@@ -95,7 +95,7 @@ public class DocumentServiceTests
         };
 
         // Act
-        var result = await service.UploadAsync(applicationId, request, userId);
+        var result = await service.UploadAsync(applicationId, request, userId, "Applicant");
 
         // Assert
         result.Success.Should().BeTrue();
@@ -134,7 +134,7 @@ public class DocumentServiceTests
         };
 
         // Act
-        var result = await service.UploadAsync(applicationId, request, userId);
+        var result = await service.UploadAsync(applicationId, request, userId, "Applicant");
 
         // Assert
         result.Success.Should().BeFalse();
@@ -170,7 +170,7 @@ public class DocumentServiceTests
         };
 
         // Act
-        var result = await service.UploadAsync(applicationId, request, userId);
+        var result = await service.UploadAsync(applicationId, request, userId, "Applicant");
 
         // Assert
         result.Success.Should().BeFalse();
@@ -207,7 +207,7 @@ public class DocumentServiceTests
         };
 
         // Act
-        var result = await service.UploadAsync(applicationId, request, userId);
+        var result = await service.UploadAsync(applicationId, request, userId, "Applicant");
 
         // Assert
         result.Success.Should().BeFalse();

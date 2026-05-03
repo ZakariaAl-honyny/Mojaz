@@ -53,32 +53,49 @@ namespace Mojaz.API.Controllers
         [ProducesResponseType(typeof(ApiResponse<AppointmentDto>), StatusCodes.Status201Created)]
         public async Task<IActionResult> CreateAsync(string appIdOrNumber, [FromBody] CreateAppointmentRequest request)
         {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var role = User.FindFirstValue(ClaimTypes.Role)!;
+
+            Console.WriteLine($"[AppointmentsAPI] Create request for App: {appIdOrNumber} by User: {userId} ({role})");
+
             var appId = await ResolveAppIdAsync(appIdOrNumber);
             if (appId == 0)
+            {
+                Console.WriteLine($"[AppointmentsAPI] Error: Application {appIdOrNumber} not found.");
                 return NotFound(ApiResponse<object>.Fail(404, "الطلب غير موجود."));
+            }
 
             if (request == null)
                 return BadRequest(ApiResponse<object>.Fail(400, "بيانات الطلب غير صالحة."));
 
+            // Ownership Validation
+            if (role == "Applicant")
+            {
+                var application = await _applicationService.GetByIdAsync(appId, userId, role);
+                if (application == null || application.Data?.ApplicantId != userId)
+                {
+                    Console.WriteLine($"[AppointmentsAPI] Security: User {userId} tried to book for application {appId} owned by someone else.");
+                    return Forbid();
+                }
+            }
+
             request.ApplicationId = appId;
+            
             try 
             {
+                Console.WriteLine($"[AppointmentsAPI] Attempting to create {request.Type} appointment for AppId: {appId} on {request.ScheduledDate} {request.TimeSlot}");
                 var result = await _appointmentService.CreateAppointmentAsync(request);
+                Console.WriteLine($"[AppointmentsAPI] Success! Appointment created with ID: {result.Id}");
                 return StatusCode(201, ApiResponse<AppointmentDto>.Ok(result));
             }
             catch (Mojaz.Shared.Exceptions.ValidationException valEx)
             {
-                // Let the global handler handle this as 400
-                throw;
-            }
-            catch (Mojaz.Shared.Exceptions.NotFoundException nfEx)
-            {
-                // Let the global handler handle this as 404
-                throw;
+                Console.WriteLine($"[AppointmentsAPI] Validation Error: {string.Join(", ", valEx.Errors)}");
+                return BadRequest(ApiResponse<object>.Fail(400, "فشل التحقق من البيانات", valEx.Errors));
             }
             catch (Exception ex)
             {
-                // Return detailed error for debugging (only for true 500s)
+                Console.WriteLine($"[AppointmentsAPI] Exception: {ex.Message}");
                 var errorMsg = ex.InnerException?.Message ?? ex.Message;
                 return StatusCode(500, ApiResponse<object>.Fail(500, $"خطأ داخلي في الخادم: {errorMsg}", new List<string> { ex.StackTrace ?? "" }));
             }
@@ -127,7 +144,7 @@ namespace Mojaz.API.Controllers
         /// Global appointment management
         /// </summary>
         [HttpGet]
-        [Authorize(Roles = "Receptionist,Doctor,Examiner,Manager,Admin")]
+        [Authorize(Roles = "Receptionist,Doctor,Examiner,Manager,Admin,Security,Applicant")]
         public async Task<IActionResult> GetAllAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] AppointmentStatus? status = null, [FromQuery] AppointmentType? type = null, [FromQuery] DateOnly? from = null, [FromQuery] DateOnly? to = null, [FromQuery] string? search = null)
         {
             var result = await _appointmentService.GetAppointmentsAsync(page, pageSize, status, type, from, to, search);
@@ -135,10 +152,25 @@ namespace Mojaz.API.Controllers
         }
 
         /// <summary>
+        /// Get a single appointment by ID
+        /// </summary>
+        [HttpGet("{id}")]
+        [Authorize(Roles = "Receptionist,Doctor,Examiner,Manager,Admin,Security,Applicant")]
+        public async Task<IActionResult> GetByIdAsync(int id)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var role = User.FindFirstValue(ClaimTypes.Role)!;
+            var result = await _appointmentService.GetAppointmentByIdAsync(id, userId, role);
+            if (result == null)
+                return NotFound(ApiResponse<object>.Fail(404, "الموعد غير موجود."));
+            return Ok(ApiResponse<AppointmentDto>.Ok(result));
+        }
+
+        /// <summary>
         /// Check-in, Reschedule, Cancel
         /// </summary>
         [HttpPatch("{id}/check-in")]
-        [Authorize(Roles = "Receptionist,Security,Doctor,Examiner,Manager,Admin")]
+        [Authorize(Roles = "Receptionist,Manager,Admin")]
         [ProducesResponseType(typeof(ApiResponse<AppointmentDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> CheckInAsync(int id) 
         {

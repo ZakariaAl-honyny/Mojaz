@@ -95,17 +95,18 @@ export interface TimelineEventDto {
 export interface MedicalExamDto {
   id: number;
   applicationId: number;
-  examinerId: number;
-  examinerName: string;
-  visionStatus: number;
-  hearingStatus: number;
-  physicalStatus: number;
-  generalHealthStatus: number;
-  overallStatus: number;
-  physicianNotes?: string;
-  examDate: string;
-  expiryDate: string;
-  isValid: boolean;
+  doctorId: number;
+  doctorName?: string;
+  examinedAt: string;
+  fitnessResult: number;
+  bloodType?: string;
+  notes?: string;
+  reportReference?: string;
+  validUntil?: string;
+  updatedAt?: string;
+  visionTestResult?: string;
+  colorBlindTestResult?: string;
+  bloodPressureNormal?: boolean;
 }
 
 // Theory Test DTOs

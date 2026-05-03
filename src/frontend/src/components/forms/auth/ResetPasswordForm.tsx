@@ -12,6 +12,7 @@ import { authService } from '@/services/auth.service';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { RegistrationMethod } from '@/types/auth.types';
 
 const resetPasswordSchema = z.object({
   newPassword: z.string().min(8, "يجب أن تكون كلمة المرور 8 أحرف على الأقل"),
@@ -81,7 +82,7 @@ export default function ResetPasswordForm({ identifier }: ResetPasswordFormProps
     try {
       await authService.forgotPassword({
         identifier: identifier.trim(),
-        method: identifier.includes('@') ? 1 : 2
+        method: identifier.includes('@') ? RegistrationMethod.Email : RegistrationMethod.Phone
       });
       setSuccess('تم إعادة إرسال الرمز بنجاح');
       setCooldown(60);

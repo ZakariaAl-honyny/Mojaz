@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWizardStore } from '@/stores/wizard-store';
 import { useApplicationWizard } from '@/hooks/useApplicationWizard';
@@ -27,7 +28,35 @@ export function WizardShell() {
   const applicationId = useWizardStore(state => state.applicationId);
   const isSaving = useWizardStore(state => state.isSaving);
   const { goTo, direction } = useApplicationWizard();
+  const searchParams = useSearchParams();
+  const resetWizard = useWizardStore(state => state.resetWizard);
+  const setApplicationId = useWizardStore(state => state.setApplicationId);
+  const setHasLoadedFromApi = useWizardStore(state => state.setHasLoadedFromApi);
   
+  // Handle 'edit' query parameter to resume a draft or reset for a new one
+  useEffect(() => {
+    const editIdStr = searchParams.get('edit');
+    
+    if (editIdStr) {
+      const editId = parseInt(editIdStr, 10);
+      if (!isNaN(editId) && editId !== applicationId) {
+        // Reset the wizard first to clear any existing state
+        resetWizard();
+        // Set the new application ID which will trigger data fetch in useApplicationWizard
+        setApplicationId(editId);
+        setHasLoadedFromApi(false);
+      }
+    } else {
+      // If we are at /applications/new (which we are if this component is mounted) 
+      // and there is NO edit parameter, and we have an existing applicationId, 
+      // it means we probably want to start fresh.
+      if (applicationId) {
+        console.log("[Wizard] No edit ID provided, resetting for new application.");
+        resetWizard();
+      }
+    }
+  }, [searchParams, applicationId, resetWizard, setApplicationId, setHasLoadedFromApi]);
+
   useWizardAutoSave();
 
   const handleBeforeUnload = useCallback((e: BeforeUnloadEvent) => {

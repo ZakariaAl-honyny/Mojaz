@@ -6,6 +6,28 @@
 - **Light-Mode Only:** Agents must actively strip any `dark:` variants from the codebase during refactoring.
 - **RTL Hardcoding:** Do not use conditional logic for direction; the system is permanently RTL.
 
+# 🛑 GLOBAL DIRECTIVE: BACKEND CODE FREEZE (STRICT READ-ONLY)
+
+**STATUS:** The ASP.NET Core Backend API is officially STABLE, TESTED, and LOCKED.
+
+## 1. THE ZERO-MODIFICATION RULE
+All AI Agents, Orchestrators, and Sub-agents are **STRICTLY FORBIDDEN** from modifying, refactoring, deleting, or adding any code within the Backend directories (including but not limited to `/Controllers`, `/Models`, `/Services`, `/Data`, `Program.cs`, and DB Migrations).
+- DO NOT propose fixes for the backend.
+- DO NOT attempt to change database schemas.
+- If an API request fails during Frontend integration, you MUST assume the error is in the Frontend payload (e.g., wrong data type, missing token, incorrect URL) and fix the Frontend. **The Backend is considered flawless for the scope of this phase.**
+
+## 2. AUTHORIZED ACCESS (READ-ONLY FOR CONTRACTS)
+Agents are highly encouraged to **READ** the Backend files to understand the API contracts. 
+- You MAY read `DTOs` (Data Transfer Objects) to generate correct TypeScript interfaces.
+- You MAY read `Controllers` to understand HTTP methods, routes, and required parameters.
+- You MAY read `Enums` to map status codes correctly in the UI.
+- You **MAY NOT** write or save any changes to these files under any circumstances.
+
+## 3. PRIMARY FOCUS: FRONTEND INTEGRATION
+Your entire write/modify authority is now restricted to the Frontend directories (Next.js, React components, Tailwind styling, Axios API services, etc.). All logic matching, data mapping, and bug fixing must occur here.
+
+**VIOLATION CLAUSE:** 
+If you encounter a critical blocker where you mathematically prove the Backend MUST be changed to proceed, you MUST stop completely and state: *"CRITICAL: Backend modification required."* Wait for explicit human approval. DO NOT execute the change yourself.
 
 > This file defines instructions, rules, and conventions for AI coding agents
 > (Cursor, Copilot, Claude, etc.) working on the Mojaz platform.

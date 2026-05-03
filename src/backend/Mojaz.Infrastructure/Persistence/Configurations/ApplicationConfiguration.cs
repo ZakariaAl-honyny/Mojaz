@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Mojaz.Domain.Entities;
+using Mojaz.Domain.Enums;
 using DomainApplication = Mojaz.Domain.Entities.Application;
 
 namespace Mojaz.Infrastructure.Persistence.Configurations
@@ -11,6 +12,9 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
         {
             builder.ToTable("Applications");
             builder.HasKey(a => a.Id);
+            
+            // TPH is automatically configured when derived types exist
+            // EF Core will use ServiceType enum as discriminator
             
             // Relationships with proper navigation
             builder.HasOne(a => a.Applicant)
@@ -23,7 +27,7 @@ namespace Mojaz.Infrastructure.Persistence.Configurations
                 .WithMany()
                 .HasForeignKey(a => a.LicenseCategoryId)
                 .OnDelete(DeleteBehavior.Restrict)
-                .HasPrincipalKey(c => c.Id);
+                .IsRequired(false);
             
             // Indexes
             builder.HasIndex(a => a.ApplicantId).HasDatabaseName("IX_Applications_ApplicantId");
@@ -56,6 +60,9 @@ builder.Property(a => a.DataAccuracyConfirmed).IsRequired();
             // Staff Assignment fields
             builder.Property(a => a.AssignmentNotes).HasMaxLength(500);
             builder.HasIndex(a => a.AssignedToId).HasDatabaseName("IX_Applications_AssignedToId");
+
+            // TPH Discriminator column (added by migration)
+            builder.Property(a => a.Discriminator).HasMaxLength(21);
         }
     }
 }

@@ -15,6 +15,7 @@ using Mojaz.Domain.Entities;
 using Mojaz.Domain.Enums;
 using Mojaz.Domain.Interfaces;
 using Mojaz.Shared.Constants;
+using Mojaz.Shared.Exceptions;
 using Moq;
 using Xunit;
 
@@ -78,7 +79,7 @@ public class FinalApprovalServiceTests
         var application = new Mojaz.Domain.Entities.Application 
         { 
             Id = applicationId, 
-            CurrentStage = "08-FinalApproval", 
+            CurrentStage = ApplicationStages.Stage08FinalApproval, 
             Status = ApplicationStatus.InReview,
             ApplicationNumber = "MOJ-2025-12345678",
             LicenseCategoryId = categoryId
@@ -102,7 +103,7 @@ public class FinalApprovalServiceTests
         result.Success.Should().BeTrue();
         application.FinalDecision.Should().Be(FinalDecisionType.Approved);
         application.Status.Should().Be(ApplicationStatus.Approved);
-        application.CurrentStage.Should().Be("09-IssuancePayment");
+        application.CurrentStage.Should().Be(ApplicationStages.Stage09IssuancePayment);
         _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         _notificationServiceMock.Verify(x => x.SendAsync(It.IsAny<NotificationRequest>()), Times.Once);
     }
@@ -116,7 +117,7 @@ public class FinalApprovalServiceTests
         var application = new Mojaz.Domain.Entities.Application 
         { 
             Id = applicationId, 
-            CurrentStage = "08-FinalApproval",
+            CurrentStage = ApplicationStages.Stage08FinalApproval,
             ApplicationNumber = "MOJ-2025-12345678"
         };
         
@@ -129,7 +130,7 @@ public class FinalApprovalServiceTests
         _gate4ValidationServiceMock.Setup(x => x.ValidateAsync(applicationId)).ReturnsAsync(new Gate4ValidationResult 
         { 
             IsFullyPassed = false, 
-            Conditions = new List<Gate4Condition> { new Gate4Condition { Key = "Test", IsPassed = false, LabelEn = "Test", FailureMessageEn = "Fail" } } 
+            Conditions = new List<Gate4Condition> { new Gate4Condition { Key = "Test", IsPassed = false, LabelAr = "اختبار", FailureMessageAr = "فشل" } } 
         });
         
         // Act
@@ -137,7 +138,7 @@ public class FinalApprovalServiceTests
 
         // Assert
         result.Success.Should().BeFalse();
-        result.Message.Should().Contain("Gate 4 validation failed");
+        result.Message.Should().Contain("البوابة الرابعة"); // Arabic for "Gate 4"
         application.FinalDecision.Should().BeNull(); // Should not have updated
     }
 
@@ -150,7 +151,7 @@ public class FinalApprovalServiceTests
         var application = new Mojaz.Domain.Entities.Application 
         { 
             Id = applicationId, 
-            CurrentStage = "08-FinalApproval", 
+            CurrentStage = ApplicationStages.Stage08FinalApproval, 
             Status = ApplicationStatus.InReview 
         };
         
@@ -170,7 +171,7 @@ public class FinalApprovalServiceTests
         result.Success.Should().BeTrue();
         application.FinalDecision.Should().Be(FinalDecisionType.Rejected);
         application.Status.Should().Be(ApplicationStatus.Rejected);
-        application.CurrentStage.Should().Be("08-FinalApproval"); // Stays in current stage
+        application.CurrentStage.Should().Be(ApplicationStages.Stage08FinalApproval); // Stays in current stage
         _unitOfWorkMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -183,7 +184,7 @@ public class FinalApprovalServiceTests
         var application = new Mojaz.Domain.Entities.Application 
         { 
             Id = applicationId, 
-            CurrentStage = "08-FinalApproval", 
+            CurrentStage = ApplicationStages.Stage08FinalApproval, 
             Status = ApplicationStatus.InReview 
         };
         
@@ -217,7 +218,7 @@ public class FinalApprovalServiceTests
         var application = new Mojaz.Domain.Entities.Application 
         { 
             Id = applicationId, 
-            CurrentStage = "08-FinalApproval",
+            CurrentStage = ApplicationStages.Stage08FinalApproval,
             FinalDecision = FinalDecisionType.Approved
         };
         
@@ -231,5 +232,6 @@ public class FinalApprovalServiceTests
         // Assert
         result.Success.Should().BeFalse();
         result.StatusCode.Should().Be(409);
+        result.Message.Should().Contain("اعتماد هذا الطلب نهائياً"); // Arabic for "finalized this application"
     }
 }

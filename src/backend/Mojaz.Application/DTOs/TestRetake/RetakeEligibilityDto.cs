@@ -8,7 +8,7 @@ public class RetakeEligibilityDto
 {
     public int ApplicationId { get; set; }
     public string ApplicationNumber { get; set; } = string.Empty;
-    public int LicenseCategoryId { get; set; }
+    public int? LicenseCategoryId { get; set; }
     public string LicenseCategoryCode { get; set; } = string.Empty;
     public string LicenseCategoryName { get; set; } = string.Empty;
     

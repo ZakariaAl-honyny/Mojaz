@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mojaz.Application.Interfaces.Repositories;
@@ -34,24 +35,50 @@ namespace Mojaz.Infrastructure.Extensions
             services.AddScoped<IEmailService, SendGridEmailService>();
             services.AddScoped<IEmailLogRepository, EmailLogRepository>();
             
-            services.AddSingleton<IRazorLightEngine>(_ => 
+            services.AddSingleton<IRazorLightEngine>(sp => 
             {
-                var baseDir = AppContext.BaseDirectory;
-                // Try different possible locations for EmailTemplates
-                string templatePath = Path.Combine(baseDir, "..", "..", "..", "Mojaz.Infrastructure", "EmailTemplates");
+                // Get the hosting environment to find the content root
+                var environment = sp.GetService<IWebHostEnvironment>();
+                string templatePath = string.Empty;
+                
+                // First try: ContentRootPath/EmailTemplates (most reliable)
+                if (environment != null)
+                {
+                    templatePath = Path.Combine(environment.ContentRootPath, "..", "Mojaz.Infrastructure", "EmailTemplates");
+                    // Normalize the path
+                    templatePath = Path.GetFullPath(templatePath);
+                }
+                
+                // Second try: Check relative to the executing assembly location (Infrastructure.dll)
                 if (!Directory.Exists(templatePath))
                 {
-                    templatePath = Path.Combine(baseDir, "..", "..", "Mojaz.Infrastructure", "EmailTemplates");
+                    var assemblyLocation = Path.GetDirectoryName(typeof(EmailServiceExtensions).Assembly.Location);
+                    templatePath = Path.Combine(assemblyLocation ?? string.Empty, "EmailTemplates");
                 }
+                
+                // Third try: Look in the bin directory of Infrastructure project
                 if (!Directory.Exists(templatePath))
                 {
-                    templatePath = Path.Combine(baseDir, "EmailTemplates");
+                    templatePath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", 
+                        "Mojaz.Infrastructure", "EmailTemplates");
+                    templatePath = Path.GetFullPath(templatePath);
                 }
+                
+                // Fourth try: Direct from solution root
                 if (!Directory.Exists(templatePath))
                 {
-                    // Final fallback - use absolute path
-                    templatePath = @"C:\Users\ALlahabi\Desktop\cmder\Mojaz\src\backend\Mojaz.Infrastructure\EmailTemplates";
+                    var solutionRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+                    templatePath = Path.Combine(solutionRoot, "src", "backend", "Mojaz.Infrastructure", "EmailTemplates");
                 }
+                
+                // Validate directory exists before creating engine
+                if (!Directory.Exists(templatePath))
+                {
+                    throw new DirectoryNotFoundException(
+                        $"EmailTemplates directory not found. Searched paths include: {templatePath}. " +
+                        "Please ensure the EmailTemplates folder exists in the Mojaz.Infrastructure project.");
+                }
+                
                 return new RazorLightEngineBuilder()
                     .UseFileSystemProject(templatePath)
                     .UseMemoryCachingProvider()

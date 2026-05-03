@@ -27,10 +27,10 @@ public class IntegrationTestBase : IDisposable
                 var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<MojazDbContext>));
                 if (descriptor != null) services.Remove(descriptor);
 
-                // Add In-Memory Database for testing
+                // Add In-Memory Database for testing (unique per test run)
                 services.AddDbContext<MojazDbContext>(options =>
                 {
-                    options.UseInMemoryDatabase("IntegrationTestDb");
+                    options.UseInMemoryDatabase("IntegrationTestDb_" + Guid.NewGuid().ToString());
                 });
 
                 // Remove existing authentication services to ensure TestAuthHandler is used

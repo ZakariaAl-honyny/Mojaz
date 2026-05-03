@@ -175,6 +175,25 @@ public class PaymentService : IPaymentService
         if (role == "Applicant" && application.ApplicantId != userId)
             return ApiResponse<PaymentDto>.Fail(403, "غير مصرح لك.");
 
+        // Robust idempotency: Check if there's already a pending payment for this application
+        var existingPending = await _paymentRepository.FindAsync(p => 
+            p.ApplicationId == applicationId && 
+            p.Status == PaymentStatus.Pending &&
+            !p.IsDeleted);
+        
+        var payment = existingPending.FirstOrDefault();
+        if (payment != null)
+        {
+            return ApiResponse<PaymentDto>.Ok(new PaymentDto 
+            { 
+                Id = payment.Id, 
+                ApplicationId = applicationId,
+                Amount = payment.Amount,
+                Status = PaymentStatus.Pending,
+                TransactionReference = payment.TransactionReference ?? string.Empty
+            });
+        }
+
         // Read actual fee from FeeStructures table based on request.FeeType and request.LicenseCategoryId
         var feeStructure = await _feeRepository.GetActiveFeeAsync(request.FeeType, application.LicenseCategoryId);
         decimal amount = feeStructure?.Amount ?? 0;
@@ -184,13 +203,14 @@ public class PaymentService : IPaymentService
             return ApiResponse<PaymentDto>.Fail(400, "لم يتم العثور على رسوم نشطة لهذا النوع. يرجى التواصل مع الدعم.");
         }
 
-        var payment = new PaymentTransaction
+        payment = new PaymentTransaction
         {
             ApplicationId = applicationId,
             Amount = amount,
             Status = PaymentStatus.Pending,
             PaymentMethod = request.FeeType.ToString(),
-            TransactionReference = $"TXN_{Random.Shared.Next(100000, 999999)}"
+            // Use timestamp + random to ensure uniqueness and avoid conflicts
+            TransactionReference = $"TXN_{DateTime.UtcNow:yyyyMMddHHmmss}_{Random.Shared.Next(1000, 9999)}"
         };
 
         await _paymentRepository.AddAsync(payment);
@@ -216,6 +236,25 @@ public class PaymentService : IPaymentService
         if (role == "Applicant" && app.ApplicantId != userId)
             return ApiResponse<PaymentDto>.Fail(403, "غير مصرح لك.");
 
+        // Robust idempotency: Check if there's already a pending payment for this application
+        var existingPending = await _paymentRepository.FindAsync(p => 
+            p.ApplicationId == app.Id && 
+            p.Status == PaymentStatus.Pending &&
+            !p.IsDeleted);
+        
+        var payment = existingPending.FirstOrDefault();
+        if (payment != null)
+        {
+            return ApiResponse<PaymentDto>.Ok(new PaymentDto 
+            { 
+                Id = payment.Id, 
+                ApplicationId = app.Id,
+                Amount = payment.Amount,
+                Status = PaymentStatus.Pending,
+                TransactionReference = payment.TransactionReference ?? string.Empty
+            });
+        }
+
         // Read actual fee from FeeStructures table based on request.FeeType and request.LicenseCategoryId
         var feeStructure = await _feeRepository.GetActiveFeeAsync(request.FeeType, app.LicenseCategoryId);
         decimal amount = feeStructure?.Amount ?? 0;
@@ -225,13 +264,14 @@ public class PaymentService : IPaymentService
             return ApiResponse<PaymentDto>.Fail(400, "يجب تحديد مبلغ الدفع.");
         }
 
-        var payment = new PaymentTransaction
+        payment = new PaymentTransaction
         {
             ApplicationId = app.Id,
             Amount = amount,
             Status = PaymentStatus.Pending,
             PaymentMethod = request.FeeType.ToString(),
-            TransactionReference = $"TXN_{Random.Shared.Next(100000, 999999)}"
+            // Use timestamp + random to ensure uniqueness and avoid conflicts
+            TransactionReference = $"TXN_{DateTime.UtcNow:yyyyMMddHHmmss}_{Random.Shared.Next(1000, 9999)}"
         };
 
         await _paymentRepository.AddAsync(payment);
@@ -507,8 +547,8 @@ public class PaymentService : IPaymentService
                 return ApiResponse<PaymentDto>.Fail(403, "غير مصرح لك.");
         }
 
-        // Only process pending payments
-        if (payment.Status != PaymentStatus.Pending)
+        // Only process pending or failed payments (allow retry of failed payments)
+        if (payment.Status != PaymentStatus.Pending && payment.Status != PaymentStatus.Failed)
             return ApiResponse<PaymentDto>.Fail(400, $"لا يمكن معالجة الدفع الحالي. الحالة: {payment.Status}");
 
         // Simulate successful payment

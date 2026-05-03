@@ -7,11 +7,15 @@ interface DashboardSurfaceProps {
   children: React.ReactNode;
   className?: string;
   withGrain?: boolean;
+  dir?: 'rtl' | 'ltr';
 }
 
-export const DashboardSurface = ({ children, className, withGrain = true }: DashboardSurfaceProps) => {
+export const DashboardSurface = ({ children, className, withGrain = true, dir }: DashboardSurfaceProps) => {
   return (
-    <div className={cn("relative min-h-screen w-full overflow-hidden bg-[#F4F7FA]", className)}>
+    <div 
+      className={cn("relative min-h-screen w-full overflow-hidden bg-[#F4F7FA]", className)}
+      dir={dir}
+    >
       {/* Background Mesh Gradients - King Blue Institutional Theme */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div 

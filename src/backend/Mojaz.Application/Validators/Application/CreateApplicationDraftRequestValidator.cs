@@ -13,7 +13,6 @@ public class CreateApplicationDraftRequestValidator : AbstractValidator<CreateAp
     public CreateApplicationDraftRequestValidator()
     {
         RuleFor(x => x.ServiceType)
-            .NotEmpty().WithMessage("نوع الخدمة مطلوب")
             .IsInEnum().WithMessage("نوع خدمة غير صالح");
     }
 }

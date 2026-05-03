@@ -87,7 +87,7 @@ public class TestRetakeService : ITestRetakeService
             }
 
             // Get category info
-            var category = await _licenseCategoryRepository.GetByIdAsync(application.LicenseCategoryId);
+            var category = await _licenseCategoryRepository.GetByIdAsync(application.LicenseCategoryId ?? 0);
             var categoryCode = category?.Code.ToString() ?? "";
             var categoryName = category?.NameAr ?? "";
 

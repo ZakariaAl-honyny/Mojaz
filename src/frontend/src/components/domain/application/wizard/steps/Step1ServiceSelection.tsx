@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { step1Schema, Step1FormValues } from '@/lib/validations/wizard.schema';
@@ -19,7 +19,8 @@ export default function Step1ServiceSelection() {
     watch,
     formState: { errors },
     trigger,
-    setFocus
+    setFocus,
+    reset
   } = useForm<Step1FormValues>({
     resolver: zodResolver(step1Schema),
     defaultValues: {
@@ -30,6 +31,15 @@ export default function Step1ServiceSelection() {
 
   const selectedService = watch('serviceType');
 
+  // Sync form with store only on initial load (not on every change to avoid loop)
+  const hasInitialized = useRef(false);
+  useEffect(() => {
+    if (step1.serviceType && !hasInitialized.current) {
+      hasInitialized.current = true;
+      reset({ serviceType: step1.serviceType });
+    }
+  }, [step1.serviceType]);
+
   useEffect(() => {
     setStepValidator(1, { trigger, setFocus });
     return () => {
@@ -38,10 +48,10 @@ export default function Step1ServiceSelection() {
   }, [trigger, setFocus, setStepValidator]);
 
   useEffect(() => {
-    if (selectedService) {
+    if (selectedService && selectedService !== step1.serviceType) {
       setStep1({ serviceType: selectedService });
     }
-  }, [selectedService, setStep1]);
+  }, [selectedService, step1.serviceType, setStep1]);
 
   return (
     <div className="space-y-3 font-arabic" dir="rtl">

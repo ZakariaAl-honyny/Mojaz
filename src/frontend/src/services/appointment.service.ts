@@ -39,9 +39,9 @@ export interface DaySlotsDto {
 }
 
 export interface CreateAppointmentRequest {
-  applicationId: string;
+  applicationId: number;
   type: AppointmentType;
-  branchId: string;
+  branchId: number;
   scheduledDate: string;
   timeSlot: string;
   notes?: string;

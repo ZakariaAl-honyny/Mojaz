@@ -2,7 +2,7 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useWizardStore } from '@/stores/wizard-store';
 import { createStep2Schema, type Step2FormValues } from '@/lib/validations/step2Schema';
 import { useQuery } from '@tanstack/react-query';
@@ -86,9 +86,18 @@ export function Step2LicenseCategory() {
     mode: 'onChange',
   });
 
-  const { watch, setValue, formState: { errors }, trigger, setFocus } = form;
+  const { watch, setValue, formState: { errors }, trigger, setFocus, reset } = form;
 
   const selectedCategory = watch('categoryCode');
+
+  // Sync form with store only on initial load (not on every change to avoid loop)
+  const catInitialized = useRef(false);
+  useEffect(() => {
+    if (step2.categoryCode && !catInitialized.current) {
+      catInitialized.current = true;
+      reset({ categoryCode: step2.categoryCode });
+    }
+  }, [step2.categoryCode]);
 
   // New: Eligibility Validation from API (with mock fallback for demo)
   const { data: eligibilityResponse, isFetching: eligibilityLoading } = useQuery({
@@ -131,10 +140,10 @@ export function Step2LicenseCategory() {
 
   // Sync with store
   useEffect(() => {
-    if (selectedCategory) {
+    if (selectedCategory && selectedCategory !== step2.categoryCode) {
       setStep2({ categoryCode: selectedCategory });
     }
-  }, [selectedCategory, setStep2]);
+  }, [selectedCategory, step2.categoryCode, setStep2]);
 
 
   const disabledCategories = useMemo(() => {
@@ -245,7 +254,7 @@ export function Step2LicenseCategory() {
               {existingAppId && (
                 <div className="pt-2">
                   <Link
-                    href={`/${locale}/applicant/applications/${existingAppId}`}
+                    href={`/applications/${existingAppId}`}
                     className="inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-red-600 text-white font-black text-sm hover:bg-red-700 transition-all shadow-lg shadow-red-600/20 group"
                   >
                     <span>استكمال المعاملة السابقة</span>
@@ -348,7 +357,7 @@ export function Step2LicenseCategory() {
 
                 {existingAppId && (
                   <Link
-                    href={`/${locale}/applicant/applications/${existingAppId}`}
+                    href={`/applications/${existingAppId}`}
                     className="inline-flex items-center gap-2 text-xs font-black text-red-600 hover:underline"
                   >
                     <span>عرض المعاملة الحالية #{(eligibilityData as any)?.existingApplicationNumber}</span>

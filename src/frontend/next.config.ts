@@ -37,6 +37,11 @@ const nextConfig: NextConfig = {
         destination: '/admin/system-settings',
         permanent: true,
       },
+      {
+        source: '/ar/:path*',
+        destination: '/:path*',
+        permanent: true,
+      },
     ];
   },
 };

@@ -15,7 +15,6 @@ namespace Mojaz.API.Controllers
 {
     [ApiController]
     [Route("api/v1/theory-tests")]
-    [Authorize]
     [Produces("application/json")]
     public class TheoryTestsController : ControllerBase
     {
@@ -58,7 +57,7 @@ namespace Mojaz.API.Controllers
         /// Route: api/v1/theory-tests/application/{appIdOrNumber}/history
         /// </summary>
         [HttpGet("application/{appIdOrNumber}/history")]
-        [Authorize(Roles = "Applicant,Receptionist,Doctor,Examiner,Manager,Security,Admin,SuperAdmin,Support")]
+        [Authorize(Roles = "Applicant,Receptionist,Doctor,Examiner,Manager,Security,Admin")]
         [ProducesResponseType(typeof(ApiResponse<PagedResult<TheoryTestDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]

@@ -8,9 +8,9 @@ export { UserRole } from '@/lib/enums';
 // RegistrationMethod - matches backend numeric values
 // ============================================================
 export enum RegistrationMethod {
-  NationalId = 0,
-  Email = 1,
-  Phone = 2
+  NationalId = 'NationalId',
+  Email = 'Email',
+  Phone = 'Phone'
 }
 
 export enum OtpPurpose {

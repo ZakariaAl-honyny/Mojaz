@@ -84,6 +84,40 @@ public class DashboardsController : ControllerBase
     }
 
     /// <summary>
+    /// Get dashboard for the current user (default route - returns role-appropriate dashboard).
+    /// </summary>
+    [HttpGet]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+    public async Task<IActionResult> GetDefaultAsync()
+    {
+        var userRole = User.FindFirstValue(ClaimTypes.Role);
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        
+        // Route to appropriate dashboard based on role
+        if (userRole == "Applicant")
+        {
+            var result = await _dashboardService.GetApplicantDashboardAsync(userId);
+            return StatusCode(result.StatusCode, result);
+        }
+        else if (userRole == "Admin")
+        {
+            var result = await _dashboardService.GetAdminDashboardAsync();
+            return StatusCode(result.StatusCode, result);
+        }
+        else if (userRole == "Manager")
+        {
+            var result = await _dashboardService.GetManagerDashboardAsync();
+            return StatusCode(result.StatusCode, result);
+        }
+        else
+        {
+            var result = await _dashboardService.GetEmployeeDashboardAsync(userId);
+            return StatusCode(result.StatusCode, result);
+        }
+    }
+
+    /// <summary>
     /// Get general statistics (accessible by all authenticated users)
     /// </summary>
     [HttpGet("stats")]

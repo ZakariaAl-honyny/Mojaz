@@ -1,21 +1,133 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mojaz.Application.DTOs.Email.Templates;
 using Mojaz.Application.Interfaces.Services;
+using Mojaz.Domain.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Mojaz.API.Controllers;
 
 [ApiController]
 [Route("api/v1/dev/[controller]")]
+[Authorize]
 public class DevController : ControllerBase
 {
     private readonly IEmailService _emailService;
     private readonly IWebHostEnvironment _env;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public DevController(IEmailService emailService, IWebHostEnvironment env)
+    public DevController(IEmailService emailService, IWebHostEnvironment env, IUnitOfWork unitOfWork)
     {
         _emailService = emailService;
         _env = env;
+        _unitOfWork = unitOfWork;
+    }
+
+    /// <summary>
+    /// Test endpoint with custom auth via query param (bypass JWT)
+    /// </summary>
+    [HttpGet("test-auth")]
+    [AllowAnonymous]
+    public IActionResult TestAuth([FromQuery] string token)
+    {
+        if (string.IsNullOrEmpty(token))
+            return Ok(new { message = "No token provided", working = true });
+            
+        return Ok(new { 
+            message = "Server is responding!", 
+            receivedTokenLength = token.Length,
+            working = true 
+        });
+    }
+
+    /// <summary>
+    /// Debug endpoint to check auth status - NO AUTHORIZATION
+    /// </summary>
+    [HttpGet("auth-status-no-auth")]
+    [AllowAnonymous]
+    public IActionResult GetAuthStatusNoAuth()
+    {
+        if (!_env.IsDevelopment())
+            return NotFound();
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var role = User.FindFirstValue(ClaimTypes.Role) ?? User.FindFirstValue("role");
+        var name = User.FindFirstValue(ClaimTypes.Name);
+        var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+
+        return Ok(new
+        {
+            message = "This endpoint has [AllowAnonymous]",
+            isAuthenticated,
+            userId,
+            role,
+            name,
+            allClaims = User.Claims.Select(c => new { type = c.Type, value = c.Value }).ToList()
+        });
+    }
+
+    /// <summary>
+    /// Debug endpoint to check auth status
+    /// </summary>
+    [HttpGet("auth-status")]
+    public IActionResult GetAuthStatus()
+    {
+        if (!_env.IsDevelopment())
+            return NotFound();
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var role = User.FindFirstValue(ClaimTypes.Role) ?? User.FindFirstValue("role");
+        var name = User.FindFirstValue(ClaimTypes.Name);
+        var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+
+        return Ok(new
+        {
+            isAuthenticated,
+            userId,
+            role,
+            name,
+            allClaims = User.Claims.Select(c => new { type = c.Type, value = c.Value }).ToList()
+        });
+    }
+
+    /// <summary>
+    /// Get recent OTP codes for debugging (DEV ONLY)
+    /// </summary>
+    [HttpGet("otps")]
+    public async Task<IActionResult> GetRecentOtps([FromQuery] string? destination = null, [FromQuery] int limit = 10)
+    {
+        if (!_env.IsDevelopment())
+            return NotFound();
+
+        var otpRepo = _unitOfWork.Repository<Mojaz.Domain.Entities.OtpCode>();
+        var query = otpRepo.Query();
+
+        if (!string.IsNullOrEmpty(destination))
+            query = query.Where(o => o.Destination.Contains(destination));
+
+        var otps = query
+            .OrderByDescending(o => o.CreatedAt)
+            .Take(limit)
+            .Select(o => new 
+            {
+                o.Id,
+                o.Destination,
+                Purpose = o.Purpose.ToString(),
+                IsUsed = o.IsUsed,
+                IsInvalidated = o.IsInvalidated,
+                o.ExpiresAt,
+                o.CreatedAt,
+                // For test domains, show the expected OTP value
+                TestOtp = o.Destination.EndsWith("@mojaz.gov.sa") || o.Destination.EndsWith("@mojaz.test") || o.Destination.StartsWith("+967") 
+                    ? "123456" 
+                    : "(hashed - check database directly for non-test OTPs)"
+            })
+            .ToList();
+
+        return Ok(new { count = otps.Count, otps });
     }
 
     [HttpGet("email-preview/{templateName}")]
@@ -62,5 +174,36 @@ public class DevController : ControllerBase
 
         var html = await _emailService.RenderTemplateAsync(templateName, model);
         return Content(html, "text/html");
+    }
+
+    /// <summary>
+    /// Send a test email (DEV ONLY)
+    /// </summary>
+    [HttpPost("send-test-email")]
+    public async Task<IActionResult> SendTestEmail([FromBody] SendTestEmailRequest request)
+    {
+        if (!_env.IsDevelopment())
+            return NotFound();
+
+        try
+        {
+            await _emailService.SendEmailAsync(
+                request.To, 
+                request.Subject ?? "Test Email - Mojaz", 
+                request.Body ?? "This is a test email from Mojaz platform."
+            );
+            return Ok(new { success = true, message = $"Email sent to {request.To}" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { success = false, error = ex.Message });
+        }
+    }
+
+    public class SendTestEmailRequest
+    {
+        public string To { get; set; } = string.Empty;
+        public string? Subject { get; set; }
+        public string? Body { get; set; }
     }
 }

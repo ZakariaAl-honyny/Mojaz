@@ -46,7 +46,8 @@ namespace Mojaz.API.Controllers
                 return NotFound(ApiResponse<object>.Fail(404, "Application not found."));
 
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-            var result = await _documentService.UploadAsync(applicationId, request, userId);
+            var role = User.FindFirstValue(ClaimTypes.Role)!;
+            var result = await _documentService.UploadAsync(applicationId, request, userId, role);
             return StatusCode(result.StatusCode, result);
         }
 

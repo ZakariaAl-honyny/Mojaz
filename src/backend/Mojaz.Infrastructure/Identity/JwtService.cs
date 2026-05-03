@@ -21,6 +21,16 @@ public class JwtService : IJwtService
     public string GenerateAccessToken(int userId, string fullName, AppRole role)
     {
         var secretKey = _configuration["JwtSettings:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey is missing.");
+        
+        // Allow environment variable override
+        var envSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+        if (!string.IsNullOrEmpty(envSecretKey))
+        {
+            secretKey = envSecretKey;
+        }
+        
+        Console.WriteLine($"[JWT SERVICE] Generating token with secret: {secretKey.Substring(0, Math.Min(10, secretKey.Length))}...");
+        
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

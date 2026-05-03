@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from '@tanstack/react-query';
@@ -76,7 +76,7 @@ export default function Step3PersonalInfo() {
 
   const isLoading = loadingNationalities || loadingRegions;
 
-  const { register, getValues, setValue, trigger, setFocus, watch, formState: { errors, isValid } } = useForm({
+  const { register, getValues, setValue, trigger, setFocus, watch, reset, formState: { errors, isValid } } = useForm({
     resolver: zodResolver(step3Schema),
     defaultValues: {
       nationalId: step3.nationalId,
@@ -101,31 +101,59 @@ export default function Step3PersonalInfo() {
     };
   }, [trigger, setFocus, setStepValidator]);
 
+  // Sync form with store when store updates (e.g. after API load)
+  // Use a ref to track if the store change was likely caused by our own watch() effect
+  const lastStoreSyncRef = useRef<string>('');
+
   useEffect(() => {
-    const values = getValues();
-    setStep3({
-      nationalId: values.nationalId || '',
-      dateOfBirth: values.dateOfBirth || '',
-      nationality: values.nationality || '',
-      // Gender is already numeric enum from form
-      gender: values.gender,
-      mobileNumber: values.mobileNumber || '',
-      email: values.email || '',
-      address: values.address || '',
-      city: values.city || '',
-      region: values.region || '',
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const currentStoreHash = JSON.stringify(step3);
+    if (currentStoreHash !== lastStoreSyncRef.current) {
+      if (step3.nationalId || step3.email || step3.mobileNumber) {
+        reset({
+          nationalId: step3.nationalId,
+          dateOfBirth: step3.dateOfBirth,
+          nationality: step3.nationality,
+          gender: step3.gender,
+          mobileNumber: step3.mobileNumber,
+          email: step3.email || '',
+          address: step3.address,
+          city: step3.city,
+          region: step3.region,
+        });
+        lastStoreSyncRef.current = currentStoreHash;
+      }
+    }
+  }, [step3, reset]);
+
+  // Handle changes and sync back to store
+  const formValues = watch();
+  useEffect(() => {
+    // Only sync if we have meaningful data to prevent overwriting with empty defaults on mount
+    if (formValues.nationalId || formValues.email || formValues.mobileNumber) {
+      const currentFormHash = JSON.stringify(formValues);
+      
+      // Prevent sync if the form values are already what we have in the store
+      if (currentFormHash !== lastStoreSyncRef.current) {
+        setStep3({
+          nationalId: formValues.nationalId || '',
+          dateOfBirth: formValues.dateOfBirth || '',
+          nationality: formValues.nationality || '',
+          gender: formValues.gender,
+          mobileNumber: formValues.mobileNumber || '',
+          email: formValues.email || '',
+          address: formValues.address || '',
+          city: formValues.city || '',
+          region: formValues.region || '',
+        });
+        lastStoreSyncRef.current = currentFormHash;
+      }
+    }
+  }, [formValues, setStep3]);
 
   // Handle gender change from RadioGroup - set numeric enum value
   const handleGenderChange = (value: string) => {
     const genderValue = value === 'Female' ? Gender.Female : Gender.Male;
-    setValue('gender', genderValue);
-    setStep3({
-      ...step3,
-      gender: genderValue,
-    });
+    setValue('gender', genderValue, { shouldValidate: true });
   };
 
   if (isLoading) {

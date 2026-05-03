@@ -66,7 +66,7 @@ namespace Mojaz.Application.Services
                 if (activeLicense == null)
                     return ApiResponse<TrainingRecordDto>.Fail(400, "لا توجد رخصة نشطة لترقية الفئة.");
 
-                var toCategoryEntity = await _categoryRepository.GetByIdAsync(application.LicenseCategoryId);
+                var toCategoryEntity = await _categoryRepository.GetByIdAsync(application.LicenseCategoryId ?? 0);
                 var fromCategoryEntity = await _categoryRepository.GetByIdAsync(activeLicense.LicenseCategoryId);
 
                 if (toCategoryEntity == null || fromCategoryEntity == null)
@@ -76,7 +76,7 @@ namespace Mojaz.Application.Services
             }
             else
             {
-                var category = await _categoryRepository.GetByIdAsync(application.LicenseCategoryId);
+var category = await _categoryRepository.GetByIdAsync(application.LicenseCategoryId ?? 0);
                 var categoryCode = category?.Code.ToString() ?? "B";
                 var requiredHoursStr = await _settingsService.GetAsync($"MIN_TRAINING_HOURS_CATEGORY_{categoryCode}");
                 requiredHours = int.TryParse(requiredHoursStr, out var h) ? h : 20;
@@ -235,7 +235,7 @@ namespace Mojaz.Application.Services
             if (existing != null && existing.TrainingStatus == TrainingStatus.Completed)
                 return ApiResponse<TrainingRecordDto>.Fail(400, "التدريب مكتمل بالفعل. لا حاجة للإعفاء.");
 
-            var category = await _categoryRepository.GetByIdAsync(application.LicenseCategoryId);
+            var category = await _categoryRepository.GetByIdAsync(application.LicenseCategoryId ?? 0);
             var categoryCode = category?.Code.ToString() ?? "B";
             var requiredHoursStr = await _settingsService.GetAsync($"MIN_TRAINING_HOURS_CATEGORY_{categoryCode}");
             int requiredHours = int.TryParse(requiredHoursStr, out var h) ? h : 20;
@@ -249,17 +249,19 @@ namespace Mojaz.Application.Services
                     TrainingStatus = TrainingStatus.ExemptionPending
                 };
                 await _trainingRepository.AddAsync(existing);
+                await _unitOfWork.SaveChangesAsync(); // Save to generate ID
             }
-
-            existing.TrainingStatus = TrainingStatus.ExemptionPending;
-            existing.IsExempted = false;
-            existing.ExemptionReason = request.ExemptionReason;
-            existing.ExemptionDocumentId = request.ExemptionDocumentId;
-            existing.ExemptionApprovedBy = null;
-            existing.ExemptionApprovedAt = null;
-
-            _trainingRepository.Update(existing);
-            await _unitOfWork.SaveChangesAsync();
+            else
+            {
+                existing.TrainingStatus = TrainingStatus.ExemptionPending;
+                existing.IsExempted = false;
+                existing.ExemptionReason = request.ExemptionReason;
+                existing.ExemptionDocumentId = request.ExemptionDocumentId;
+                existing.ExemptionApprovedBy = null;
+                existing.ExemptionApprovedAt = null;
+                _trainingRepository.Update(existing);
+                await _unitOfWork.SaveChangesAsync();
+            }
 
             await _auditService.LogAsync("REQUEST_EXEMPTION", "TrainingRecord", existing.Id.ToString(), null, request.ExemptionReason);
 
