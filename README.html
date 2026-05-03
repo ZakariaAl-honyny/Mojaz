@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مُجاز — Mojaz Platform | منصة إدارة رخص القيادة الحكومية</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a3a8f;
+            --primary-light: #2d5bb9;
+            --primary-dark: #0f2457;
+            --secondary: #D4A017;
+            --secondary-light: #E5B84D;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --info: #3B82F6;
+            --bg-light: #F9FAFB;
+            --bg-white: #FFFFFF;
+            --text-dark: #1F2937;
+            --text-gray: #6B7280;
+            --border: #E5E7EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans Arabic', 'Cairo', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.7;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-logo {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .hero-logo svg {
+            width: 80px;
+            height: 80px;
+            color: var(--primary);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .hero h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Navigation */
+        .nav {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--secondary);
+            display: inline-block;
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon svg {
+            width: 30px;
+            height: 30px;
+            color: white;
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.25rem;
+        }
+
+        /* Tech Stack */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .tech-item:hover {
+            transform: scale(1.05);
+        }
+
+        .tech-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            text-align: start;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:hover {
+            background: var(--bg-light);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin: 5px;
+        }
+
+        .badge-primary { background: var(--primary); color: white; }
+        .badge-success { background: #D1FAE5; color: #065F46; }
+        .badge-warning { background: #FEF3C7; color: #92400E; }
+        .badge-secondary { background: var(--secondary); color: white; }
+
+        /* Screenshots */
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .screenshot-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .screenshot-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--secondary);
+        }
+
+        .screenshot-card p {
+            padding: 20px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Code Block */
+        pre {
+            background: #1E293B;
+            color: #E2E8F0;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Workflow */
+        .workflow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: var(--primary-dark);
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-light);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero h2 { font-size: 1.2rem; }
+            .nav-links { display: none; }
+            .hero-stats { gap: 20px; }
+            .section-title { font-size: 1.5rem; }
+        }
+
+        /* RTL Support */
+        [dir="rtl"] {
+            text-align: right;
+        }
+
+        [dir="rtl"] .section-title {
+            border-bottom: none;
+            border-right: 3px solid var(--secondary);
+            padding-right: 0;
+            padding-left: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <h1>مُجاز — Mojaz</h1>
+            <h2>منصة إدارة رخص القيادة الحكومية | Government Driving License Management System</h2>
+            
+            <div style="margin-top: 30px;">
+                <span class="badge badge-secondary">الإصدار 1.0.0</span>
+                <span class="badge badge-success">MVP</span>
+                <span class="badge badge-primary">Asp.NET Core 8</span>
+                <span class="badge badge-primary">Next.js 15</span>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">أدوار المستخدمين</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">خدمات أساسية</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">فئات الرخصة</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">مراحل العمل</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">مُجاز</a>
+            <ul class="nav-links">
+                <li><a href="#overview">النظرة العامة</a></li>
+                <li><a href="#features">المميزات</a></li>
+                <li><a href="#tech">التقنيات</a></li>
+                <li><a href="#screenshots">الصور</a></li>
+                <li><a href="#architecture">البنية</a></li>
+                <li><a href="#quick-start">البدء</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Overview Section -->
+        <section id="overview">
+            <h2 class="section-title">النظرة العامة</h2>
+            <div class="card" style="text-align: center; padding: 40px;">
+                <p style="font-size: 1.2rem; color: var(--text-gray);">
+                    <strong>مُجاز</strong> (*Mojaz*) — تعني بالعربية "المرخّص" أو "المصرّح له"
+                </p>
+                <p style="margin-top: 20px; font-size: 1.1rem;">
+                    منصة حكومية رقمية شاملة لإدارة دورة حياة رخصة القيادة بالكامل — من التقديم للإصدار — 
+                    بشكل كامل عبر الإنترنت. مستوحاة من تصميم نظام أبشر، توفر تجربة حكومية رسمية حديثة 
+                    مع دعم كامل للعربية (RTL) والإنجليزية (LTR).
+                </p>
+            </div>
+        </section>
+
+        <!-- Screenshots Section -->
+        <section id="screenshots">
+            <h2 class="section-title">معاينة المنصة</h2>
+            <div class="screenshot-grid">
+                <div class="screenshot-card">
+                    <img src="Screenshots/LandingPage.png" alt="صفحة الدخول">
+                    <p>صفحة الدخول الرئيسية</p>
+                </div>
+                <div class="screenshot-card">
+                    <img src="Screenshots/Login.png" alt="تسجيل الدخول">
+                    <p>تسجيل الدخول</p>
+                </div>
+                <div class="screenshot-card">
+                    <img src="Screenshots/ApplicantDashboard.png" alt="لوحة المتقدم">
+                    <p>لوحة المتقدم</p>
+                </div>
+                <div class="screenshot-card">
+                    <img src="Screenshots/AdminDashboard.png" alt="لوحة المدير">
+                    <p>لوحة المدير</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features">
+            <h2 class="section-title">المميزات</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <h3>تطبيقات إلكترونية</h3>
+                    <p>إكمال معالج التقدم من 5 خطوات لإصدار رخصة جديدة</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                    </div>
+                    <h3>رفع المستندات</h3>
+                    <p>تقديم جميع المستندات المطلوبة رقمياً</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    </div>
+                    <h3>حجز المواعيد</h3>
+                    <p>جدولة الفحوصات الطبية والاختبارات عبر الإنترنت</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <h3>الدفع الإلكتروني</h3>
+                    <p>دفع الرسوم في نقاط متعددة مع إيصالات</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    </div>
+                    <h3>تتبع الوقت الفعلي</h3>
+                    <p>خط زمني مباشر لمراحل الطلب</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <h3>رخصة رقمية</h3>
+                    <p>تحميل الرخصة كملف PDF احترافي</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack Section -->
+        <section id="tech">
+            <h2 class="section-title">تقنيات النظام</h2>
+            <h3 style="margin-bottom: 20px; color: var(--primary);">الخلفي (Backend)</h3>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <div class="tech-icon">⚙️</div>
+                    <h4>ASP.NET Core 8</h4>
+                    <p>إطار عمل الويب</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🏗️</div>
+                    <h4>Clean Architecture</h4>
+                    <p>النمط المعماري</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🗄️</div>
+                    <h4>EF Core 8</h4>
+                    <p>ORM</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🗃️</div>
+                    <h4>SQL Server 2022</h4>
+                    <p>قاعدة البيانات</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🔐</div>
+                    <h4>JWT + Refresh</h4>
+                    <p>المصادقة</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">✅</div>
+                    <h4>FluentValidation</h4>
+                    <p>التحقق من المدخلات</p>
+                </div>
+            </div>
+
+            <h3 style="margin: 40px 0 20px; color: var(--primary);">الواجهة (Frontend)</h3>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <div class="tech-icon">▲</div>
+                    <h4>Next.js 15</h4>
+                    <p>إطار العمل</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">📘</div>
+                    <h4>TypeScript 5</h4>
+                    <p>الأمان في الأنواع</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🎨</div>
+                    <h4>Tailwind CSS 4</h4>
+                    <p>التنسيق</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🧩</div>
+                    <h4>shadcn/ui</h4>
+                    <p>مكونات UI</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">📡</div>
+                    <h4>React Query 5</h4>
+                    <p>حالة الخادم</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🗣️</div>
+                    <h4>next-intl</h4>
+                    <p>الدعم اللغوي</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Section -->
+        <section id="architecture">
+            <h2 class="section-title">البنية المعمارية</h2>
+            <div class="card" style="text-align: center; padding: 40px;">
+                <h3 style="color: var(--primary); margin-bottom: 20px;">Clean Architecture (الخلفي)</h3>
+                <pre style="text-align: start;">┌─────────────────────────────────────────┐
+│           Mojaz.API                      │
+│    Controllers · Middleware · Program    │
+├─────────────────────────────────────────┤
+│         Mojaz.Infrastructure             │
+│  EF Core · Repositories · Services     │
+│  SendGrid · Twilio · Firebase           │
+├─────────────────────────────────────────┤
+│          Mojaz.Application              │
+│   Services · DTOs · Validators          │
+├─────────────────┬───────────────────────┤
+│   Mojaz.Domain   │    Mojaz.Shared      │
+│ Entities · Enums │ ApiResponse · Errors │
+└─────────────────┴───────────────────────┘</pre>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section>
+            <h2 class="section-title">الخدمات</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>الخدمة</th>
+                            <th>بالعربية</th>
+                            <th>الوصف</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>01</td>
+                            <td>إصدار رخصة جديدة</td>
+                            <td>إصدار رخصة جديدة</td>
+                            <td>سير عمل كامل من 10 مراحل</td>
+                        </tr>
+                        <tr>
+                            <td>02</td>
+                            <td>تجديد الرخصة</td>
+                            <td>تجديد الرخصة</td>
+                            <td>تجديد للرخص المنتهية</td>
+                        </tr>
+                        <tr>
+                            <td>03</td>
+                            <td>بدل فاقد/تالف</td>
+                            <td>بدل فاقد/تالف</td>
+                            <td>استبدال الرخصة المفقودة</td>
+                        </tr>
+                        <tr>
+                            <td>04</td>
+                            <td>ترقية الفئة</td>
+                            <td>ترقية الفئة</td>
+                            <td>الانتقال لفئة أعلى</td>
+                        </tr>
+                        <tr>
+                            <td>05</td>
+                            <td>إعادة الاختبار</td>
+                            <td>إعادة الاختبار</td>
+                            <td>إعادة التفعيل بعد الرسوب</td>
+                        </tr>
+                        <tr>
+                            <td>06</td>
+                            <td>حجز المواعيد</td>
+                            <td>حجز موعد</td>
+                            <td>حجز فحوصات واختبارات</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- User Roles Section -->
+        <section>
+            <h2 class="section-title">أدوار المستخدمين</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>المتقدم</h3>
+                    <p>تقديم الطلبات، تتبع الحالة، دفع الرسوم</p>
+                </div>
+                <div class="card">
+                    <h3>موظف الاستقبال</h3>
+                    <p>مراجعة الطلبات، التحقق من المستندات</p>
+                </div>
+                <div class="card">
+                    <h3>الطبيب</h3>
+                    <p>إجراء الفحوصات الطبية، تسجيل النتائج</p>
+                </div>
+                <div class="card">
+                    <h3>الفاحص</h3>
+                    <td>إجراء الاختبارات، تسجيل النتائج</td>
+                </div>
+                <div class="card">
+                    <h3>المدير</h3>
+                    <p>الإشراف، الاستثناءات، التقارير</p>
+                </div>
+                <div class="card">
+                    <h3>مسؤول النظام</h3>
+                    <p>إعداد النظام، إدارة المستخدمين</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workflow Section -->
+        <section>
+            <h2 class="section-title">سير العمل</h2>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>إنشاء الطلب</h4>
+                        <p>تقديم طلب الحصول على رخصة جديدة</p>
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>رفع المستندات</h4>
+                        <p>تحميل المستندات المطلوبة ومراجعتها</p>
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>الدفع الأولي</h4>
+                        <p>دفع رسوم تقديم الطلب</p>
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>الفحص الطبي</h4>
+                        <p>إجراء فحص طبي شامل</p>
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>تدريب القيادة</h4>
+                        <p>إكمال تدريب مدرسة القيادة</p>
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h4>الاختبار النظري</h4>
+                        <td>اجتياز اختبار القيادة النظري</td>
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">7</div>
+                    <div class="step-content">
+                        <h4>الاختبار العملي</h4>
+                        <p>اجتياز اختبار القيادة العملي</p>
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">8</div>
+                    <div class="step-content">
+                        <h4>الموافقة النهائية</h4>
+                        <p>اعتماد الطلب من المدير</p>
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">9</div>
+                    <div class="step-content">
+                        <h4>دفع الرسوم</h4>
+                        <p>دفع رسوم إصدار الرخصة</p>
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">10</div>
+                    <div class="step-content">
+                        <h4>إصدار الرخصة</h4>
+                        <p>استلام الرخصة الرقمية PDF</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Start Section -->
+        <section id="quick-start">
+            <h2 class="section-title">البدء السريع</h2>
+            <div class="card" style="padding: 30px;">
+                <h3 style="margin-bottom: 20px;">المتطلبات</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 10px 0; border-bottom: 1px solid var(--border);">✅ .NET SDK 8.0+</li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid var(--border);">✅ Node.js 20 LTS+</li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid var(--border);">✅ Docker Desktop</li>
+                    <li style="padding: 10px 0;">✅ Git</li>
+                </ul>
+
+                <h3 style="margin: 30px 0 20px;">التثبيت</h3>
+                <pre># استنساخ المشروع
+git clone https://github.com/ZakariaAl-honyny/Mojaz.git
+cd mojaz
+
+# تشغيل قاعدة البيانات
+docker-compose up -d sqlserver
+
+# تشغيل الخفي
+cd src/backend/Mojaz.API
+dotnet run
+
+# تشغيل الواجهة
+cd src/frontend
+npm run dev</pre>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section>
+            <h2 class="section-title">روابط مفيدة</h2>
+            <div class="card-grid">
+                <div class="card" style="text-align: center;">
+                    <h3>🐛 الإبلاغ عن الأخطاء</h3>
+                    <p><a href="https://github.com/ZakariaAl-honyny/Mojaz/issues">GitHub Issues</a></p>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <h3>📖 التوثيق</h3>
+                    <p><a href="./docs">مجلد docs</a></p>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <h3>📧 تواصل</h3>
+                    <p>security@mojaz.gov.sa</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">مُجاز — Mojaz</div>
+            <p>منصة حكومية رقمية من الجيل القادم</p>
+            <p style="margin-top: 20px; opacity: 0.8;">
+                مبني بـ ❤️ للسعودية 🇸🇦
+            </p>
+            <p style="margin-top: 30px; font-size: 0.9rem; opacity: 0.6;">
+                © 2025 Mojaz Platform. جميع الحقوق محفوظة.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
